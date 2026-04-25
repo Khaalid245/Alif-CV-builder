@@ -253,13 +253,13 @@ class GeneratedCV(models.Model):
         ACADEMIC = 'academic', 'Academic'
 
     id             = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    student        = models.ForeignKey(
-        'users.User',
+    cv             = models.ForeignKey(
+        CVProfile,
         on_delete=models.CASCADE,
         related_name='generated_cvs',
     )
     template       = models.CharField(max_length=10, choices=Template.choices)
-    pdf_url        = models.CharField(max_length=500)
+    file_path      = models.CharField(max_length=500, blank=True, default='')
     file_size      = models.IntegerField(default=0, help_text='File size in bytes')
     download_count = models.IntegerField(default=0)
     generated_at   = models.DateTimeField(auto_now_add=True)
@@ -267,6 +267,10 @@ class GeneratedCV(models.Model):
     class Meta:
         db_table = 'cv_generated'
         ordering = ['-generated_at']
+        indexes = [
+            models.Index(fields=['template'],     name='idx_generatedcv_template'),
+            models.Index(fields=['generated_at'], name='idx_generatedcv_generated_at'),
+        ]
 
     def __str__(self):
-        return f'{self.template} CV — {self.student.email}'
+        return f'{self.template} CV — {self.cv.student.email}'

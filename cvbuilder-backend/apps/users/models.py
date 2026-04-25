@@ -45,15 +45,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff    = models.BooleanField(default=False)
 
     # ── Consent Tracking (legally required) ───────────────────────────────────
-    terms_accepted            = models.BooleanField(default=False)
-    terms_accepted_at         = models.DateTimeField(null=True, blank=True)
-    privacy_policy_accepted   = models.BooleanField(default=False)
-    privacy_policy_accepted_at = models.DateTimeField(null=True, blank=True)
-    data_processing_consent   = models.BooleanField(default=False)
-    data_processing_consent_at = models.DateTimeField(null=True, blank=True)
+    terms_consent            = models.BooleanField(default=False)
+    terms_consent_date       = models.DateTimeField(null=True, blank=True)
+    marketing_consent        = models.BooleanField(default=False)
+    marketing_consent_date   = models.DateTimeField(null=True, blank=True)
+    data_processing_consent  = models.BooleanField(default=False)
+    data_processing_consent_date = models.DateTimeField(null=True, blank=True)
 
     # ── Data Deletion Request (GDPR-style ethical requirement) ────────────────
-    deletion_requested    = models.BooleanField(default=False)
     deletion_requested_at = models.DateTimeField(null=True, blank=True)
 
     # ── Soft Delete (never hard delete student data) ──────────────────────────
@@ -75,6 +74,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name = 'User'
         verbose_name_plural = 'Users'
         ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['status'],     name='idx_user_status'),
+            models.Index(fields=['created_at'], name='idx_user_created_at'),
+            models.Index(fields=['role'],       name='idx_user_role'),
+        ]
 
     def __str__(self):
         return f'{self.email} ({self.get_role_display()})'
@@ -91,11 +95,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.deleted_at        = timezone.now()
         self.is_active         = False
         # Clear the pending deletion request — it has been processed
-        self.deletion_requested    = False
         self.deletion_requested_at = None
         self.save(update_fields=[
             'is_deleted', 'deleted_at', 'is_active',
-            'deletion_requested', 'deletion_requested_at', 'updated_at',
+            'deletion_requested_at', 'updated_at',
         ])
 
     def record_login(self):
@@ -112,20 +115,23 @@ class AuditLog(models.Model):
     """
 
     class Action(models.TextChoices):
-        LOGIN            = 'login',            'Login'
-        LOGOUT           = 'logout',           'Logout'
-        REGISTER         = 'register',         'Register'
-        CV_CREATED       = 'cv_created',       'CV Created'
-        CV_UPDATED       = 'cv_updated',       'CV Updated'
-        PDF_GENERATED    = 'pdf_generated',    'PDF Generated'
-        PDF_DOWNLOADED   = 'pdf_downloaded',   'PDF Downloaded'
-        ACCOUNT_DELETED  = 'account_deleted',  'Account Deleted'
-        PASSWORD_CHANGED = 'password_changed', 'Password Changed'
-        DELETION_REQUESTED = 'deletion_requested', 'Deletion Requested'
+        LOGIN               = 'login',               'Login'
+        LOGIN_FAILED        = 'login_failed',        'Login Failed'
+        LOGOUT              = 'logout',              'Logout'
+        REGISTER            = 'register',            'Register'
+        CV_CREATED          = 'cv_created',          'CV Created'
+        CV_UPDATED          = 'cv_updated',          'CV Updated'
+        PDF_GENERATED       = 'pdf_generated',       'PDF Generated'
+        PDF_DOWNLOADED      = 'pdf_downloaded',      'PDF Downloaded'
+        ACCOUNT_DELETED     = 'account_deleted',     'Account Deleted'
+        ACCOUNT_SUSPENDED   = 'account_suspended',   'Account Suspended'
+        ACCOUNT_REACTIVATED = 'account_reactivated', 'Account Reactivated'
+        PASSWORD_CHANGED    = 'password_changed',    'Password Changed'
+        DELETION_REQUESTED  = 'deletion_requested',  'Deletion Requested'
 
-    id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id      = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     # SET_NULL so audit logs survive even if the user is soft-deleted
-    user       = models.ForeignKey(
+    student = models.ForeignKey(
         'users.User',
         on_delete=models.SET_NULL,
         null=True,
@@ -143,15 +149,19 @@ class AuditLog(models.Model):
         verbose_name = 'Audit Log'
         verbose_name_plural = 'Audit Logs'
         ordering = ['-timestamp']
+        indexes = [
+            models.Index(fields=['action'],    name='idx_auditlog_action'),
+            models.Index(fields=['timestamp'], name='idx_auditlog_timestamp'),
+        ]
 
     def __str__(self):
-        return f'[{self.timestamp}] {self.action} — {self.user}'
+        return f'[{self.timestamp}] {self.action} — {self.student}'
 
     @classmethod
-    def log(cls, user, action, request=None, extra_data=None):
+    def log(cls, student, action, request=None, extra_data=None):
         """
         Convenience class method to create an audit log entry.
-        Usage: AuditLog.log(user, AuditLog.Action.LOGIN, request)
+        Usage: AuditLog.log(student, AuditLog.Action.LOGIN, request)
         """
         ip_address = None
         user_agent = ''
@@ -161,7 +171,7 @@ class AuditLog(models.Model):
             user_agent = request.META.get('HTTP_USER_AGENT', '')
 
         return cls.objects.create(
-            user=user,
+            student=student,
             action=action,
             ip_address=ip_address,
             user_agent=user_agent,
