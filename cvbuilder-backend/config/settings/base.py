@@ -181,7 +181,7 @@ SIMPLE_JWT = {
 }
 
 # ─── CORS Configuration ───────────────────────────────────────────────────────
-CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', cast=Csv())
+# CORS settings are configured in environment-specific files
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = [
     'accept',

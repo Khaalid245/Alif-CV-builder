@@ -12,8 +12,10 @@ DEBUG = True
 # ─── Development-only Apps ────────────────────────────────────────────────────
 INSTALLED_APPS += []  # Add dev tools here if needed (e.g. django-debug-toolbar)
 
-# ─── Relaxed CORS for local development ───────────────────────────────────────
-CORS_ALLOW_ALL_ORIGINS = False  # Still explicit even in dev
+# ─── CORS for local development ──────────────────────────────────────────────
+# Use the origins from .env file
+CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', cast=Csv())
+CORS_ALLOW_ALL_ORIGINS = config('CORS_ALLOW_ALL_ORIGINS', default=False, cast=bool)
 
 # ─── Email Backend (console — no real emails in dev) ──────────────────────────
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

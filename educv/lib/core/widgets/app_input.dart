@@ -1,90 +1,126 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../theme/app_colors.dart';
+import '../theme/app_spacing.dart';
 import '../theme/app_typography.dart';
 
 class AppInput extends StatelessWidget {
-  final String? label;
-  final String? hint;
-  final String? initialValue;
+  final String label;
+  final String hint;
   final TextEditingController? controller;
+  final String? value; // For read-only display
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
-  final void Function(String?)? onSaved;
-  final void Function()? onTap;
+  final VoidCallback? onTap;
+  final VoidCallback? onEditingComplete;
   final TextInputType keyboardType;
+  final TextInputAction textInputAction;
   final bool obscureText;
-  final bool readOnly;
   final bool enabled;
-  final int? maxLines;
+  final int maxLines;
   final int? maxLength;
-  final Widget? prefixIcon;
   final Widget? suffixIcon;
-  final List<TextInputFormatter>? inputFormatters;
+  final Widget? prefixIcon;
   final FocusNode? focusNode;
-  final TextCapitalization textCapitalization;
+  final bool isRequired;
 
   const AppInput({
     super.key,
-    this.label,
-    this.hint,
-    this.initialValue,
+    required this.label,
+    required this.hint,
     this.controller,
+    this.value,
     this.validator,
     this.onChanged,
-    this.onSaved,
     this.onTap,
+    this.onEditingComplete,
     this.keyboardType = TextInputType.text,
+    this.textInputAction = TextInputAction.next,
     this.obscureText = false,
-    this.readOnly = false,
     this.enabled = true,
     this.maxLines = 1,
     this.maxLength,
-    this.prefixIcon,
     this.suffixIcon,
-    this.inputFormatters,
+    this.prefixIcon,
     this.focusNode,
-    this.textCapitalization = TextCapitalization.none,
+    this.isRequired = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    // Create a controller if value is provided but no controller
+    TextEditingController? effectiveController = controller;
+    if (value != null && controller == null) {
+      effectiveController = TextEditingController(text: value);
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (label != null) ...[
-          Text(
-            label!,
-            style: AppTypography.label,
-          ),
-          const SizedBox(height: 6),
-        ],
+        Row(
+          children: [
+            Text(
+              label,
+              style: AppTypography.label,
+            ),
+            if (isRequired)
+              Text(
+                ' *',
+                style: AppTypography.label.copyWith(color: AppColors.error),
+              ),
+          ],
+        ),
+        const SizedBox(height: 6),
         TextFormField(
-          controller: controller,
-          initialValue: controller == null ? initialValue : null,
+          controller: effectiveController,
           validator: validator,
           onChanged: onChanged,
-          onSaved: onSaved,
           onTap: onTap,
+          onEditingComplete: onEditingComplete,
           keyboardType: keyboardType,
+          textInputAction: textInputAction,
           obscureText: obscureText,
-          readOnly: readOnly,
           enabled: enabled,
           maxLines: maxLines,
           maxLength: maxLength,
-          inputFormatters: inputFormatters,
           focusNode: focusNode,
-          textCapitalization: textCapitalization,
           style: AppTypography.body,
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: AppTypography.body.copyWith(
               color: AppColors.textHint,
             ),
-            prefixIcon: prefixIcon,
             suffixIcon: suffixIcon,
-            counterText: maxLength != null ? null : '',
+            prefixIcon: prefixIcon,
+            filled: true,
+            fillColor: enabled ? AppColors.surface : AppColors.divider,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+              borderSide: const BorderSide(color: AppColors.divider),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+              borderSide: const BorderSide(color: AppColors.divider),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+              borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+              borderSide: const BorderSide(color: AppColors.error, width: 1.5),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+              borderSide: const BorderSide(color: AppColors.error, width: 1.5),
+            ),
+            contentPadding: const EdgeInsets.all(14),
+            errorStyle: AppTypography.caption.copyWith(
+              color: AppColors.error,
+            ),
+            counterStyle: AppTypography.caption.copyWith(
+              color: AppColors.textSecondary,
+            ),
           ),
         ),
       ],
@@ -93,22 +129,24 @@ class AppInput extends StatelessWidget {
 }
 
 class AppPasswordInput extends StatefulWidget {
-  final String? label;
-  final String? hint;
-  final TextEditingController? controller;
+  final String label;
+  final String hint;
+  final TextEditingController controller;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
-  final void Function(String?)? onSaved;
+  final VoidCallback? onEditingComplete;
+  final TextInputAction textInputAction;
   final FocusNode? focusNode;
 
   const AppPasswordInput({
     super.key,
-    this.label,
-    this.hint,
-    this.controller,
+    required this.label,
+    required this.hint,
+    required this.controller,
     this.validator,
     this.onChanged,
-    this.onSaved,
+    this.onEditingComplete,
+    this.textInputAction = TextInputAction.next,
     this.focusNode,
   });
 
@@ -127,13 +165,15 @@ class _AppPasswordInputState extends State<AppPasswordInput> {
       controller: widget.controller,
       validator: widget.validator,
       onChanged: widget.onChanged,
-      onSaved: widget.onSaved,
+      onEditingComplete: widget.onEditingComplete,
+      textInputAction: widget.textInputAction,
       focusNode: widget.focusNode,
       obscureText: _obscureText,
       suffixIcon: IconButton(
         icon: Icon(
-          _obscureText ? Icons.visibility : Icons.visibility_off,
-          color: AppColors.textHint,
+          _obscureText ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+          color: AppColors.primary,
+          size: 20,
         ),
         onPressed: () {
           setState(() {

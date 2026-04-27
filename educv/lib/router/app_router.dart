@@ -2,66 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-// Placeholder screens
-class SplashScreen extends StatelessWidget {
-  const SplashScreen({super.key});
+import '../core/storage/secure_storage.dart';
+import '../features/auth/presentation/screens/login_screen.dart';
+import '../features/auth/presentation/screens/register_screen.dart';
+import '../features/auth/presentation/screens/splash_screen.dart';
+import '../features/cv/presentation/screens/cv_dashboard_screen.dart';
+import '../features/cv/presentation/screens/cv_form_screen.dart';
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Splash')),
-      body: const Center(child: Text('SplashScreen')),
-    );
-  }
-}
-
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
-      body: const Center(child: Text('LoginScreen')),
-    );
-  }
-}
-
-class RegisterScreen extends StatelessWidget {
-  const RegisterScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Register')),
-      body: const Center(child: Text('RegisterScreen')),
-    );
-  }
-}
-
-class CVDashboardScreen extends StatelessWidget {
-  const CVDashboardScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('CV Dashboard')),
-      body: const Center(child: Text('CVDashboardScreen')),
-    );
-  }
-}
-
-class CVFormScreen extends StatelessWidget {
-  const CVFormScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('CV Form')),
-      body: const Center(child: Text('CVFormScreen')),
-    );
-  }
-}
+// Placeholder screens for routes not yet implemented
 
 class CVPreviewScreen extends StatelessWidget {
   const CVPreviewScreen({super.key});
@@ -162,7 +110,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: AppRoutes.cvForm,
-        builder: (context, state) => const CVFormScreen(),
+        builder: (context, state) {
+          final stepParam = state.uri.queryParameters['step'];
+          final initialStep = stepParam != null ? int.tryParse(stepParam) ?? 0 : 0;
+          return CVFormScreen(initialStep: initialStep);
+        },
       ),
       GoRoute(
         path: AppRoutes.cvPreview,
@@ -188,10 +140,41 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         },
       ),
     ],
-    redirect: (context, state) {
-      // TODO: Implement auth guards in Phase 8
-      // For now, allow all routes
-      return null;
+    redirect: (context, state) async {
+      final currentPath = state.uri.path;
+      
+      // Allow splash screen always
+      if (currentPath == AppRoutes.splash) {
+        return null;
+      }
+      
+      // Check if user is authenticated
+      final secureStorage = ref.read(secureStorageProvider);
+      final accessToken = await secureStorage.getAccessToken();
+      final isAuthenticated = accessToken != null;
+      
+      // If not authenticated and trying to access protected routes
+      if (!isAuthenticated) {
+        if (currentPath.startsWith('/cv/') || currentPath.startsWith('/admin/')) {
+          return AppRoutes.login;
+        }
+        return null; // Allow login and register
+      }
+      
+      // If authenticated and trying to access auth routes
+      if (isAuthenticated) {
+        if (currentPath == AppRoutes.login || currentPath == AppRoutes.register) {
+          // Get user role to determine redirect
+          final userRole = await secureStorage.getUserRole();
+          if (userRole == 'admin') {
+            return AppRoutes.adminDashboard;
+          } else {
+            return AppRoutes.cvDashboard;
+          }
+        }
+      }
+      
+      return null; // No redirect needed
     },
   );
 });

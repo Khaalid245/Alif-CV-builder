@@ -28,6 +28,29 @@ class AppButton extends StatelessWidget {
     this.height,
   });
 
+  // Named constructors for convenience
+  const AppButton.primary(
+    this.text, {
+    super.key,
+    this.onPressed,
+    this.isLoading = false,
+    this.isFullWidth = false,
+    this.icon,
+    this.width,
+    this.height,
+  }) : variant = AppButtonVariant.primary;
+
+  const AppButton.secondary(
+    this.text, {
+    super.key,
+    this.onPressed,
+    this.isLoading = false,
+    this.isFullWidth = false,
+    this.icon,
+    this.width,
+    this.height,
+  }) : variant = AppButtonVariant.secondary;
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(

@@ -9,20 +9,27 @@ class EmptyState extends StatelessWidget {
   final IconData icon;
   final String title;
   final String message;
+  final String? subtitle; // Alias for message
   final String? actionText;
+  final String? actionLabel; // Alias for actionText
   final VoidCallback? onAction;
 
   const EmptyState({
     super.key,
     required this.icon,
     required this.title,
-    required this.message,
+    this.message = '',
+    this.subtitle,
     this.actionText,
+    this.actionLabel,
     this.onAction,
   });
 
   @override
   Widget build(BuildContext context) {
+    final effectiveMessage = subtitle ?? message;
+    final effectiveActionText = actionLabel ?? actionText;
+    
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.xl),
@@ -32,7 +39,7 @@ class EmptyState extends StatelessWidget {
             Icon(
               icon,
               size: 64,
-              color: AppColors.textHint,
+              color: AppColors.primary,
             ),
             const SizedBox(height: AppSpacing.lg),
             Text(
@@ -42,16 +49,17 @@ class EmptyState extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.sm),
             Text(
-              message,
-              style: AppTypography.body,
+              effectiveMessage,
+              style: AppTypography.body.copyWith(
+                color: AppColors.textSecondary,
+              ),
               textAlign: TextAlign.center,
             ),
-            if (actionText != null && onAction != null) ...[
+            if (effectiveActionText != null && onAction != null) ...[
               const SizedBox(height: AppSpacing.lg),
-              AppButton(
-                text: actionText!,
+              AppButton.primary(
+                effectiveActionText!,
                 onPressed: onAction,
-                variant: AppButtonVariant.primary,
               ),
             ],
           ],

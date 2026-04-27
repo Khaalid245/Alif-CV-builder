@@ -277,7 +277,7 @@ class RequestDeletionView(APIView):
 
     def post(self, request):
         # Prevent duplicate deletion requests
-        if request.user.deletion_requested:
+        if request.user.deletion_requested_at:
             return error_response(
                 'A deletion request has already been submitted for this account.',
                 status_code=status.HTTP_400_BAD_REQUEST,
@@ -297,9 +297,8 @@ class RequestDeletionView(APIView):
         reason = serializer.validated_data.get('reason', '')
 
         # Flag the account — admin will process the actual deletion
-        request.user.deletion_requested    = True
         request.user.deletion_requested_at = timezone.now()
-        request.user.save(update_fields=['deletion_requested', 'deletion_requested_at', 'updated_at'])
+        request.user.save(update_fields=['deletion_requested_at', 'updated_at'])
 
         AuditLog.log(
             request.user,

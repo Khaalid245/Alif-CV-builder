@@ -7,6 +7,7 @@ class AppColors {
   static const Color primaryDark = Color(0xFF0D47A1);
 
   // Text
+  static const Color text = Color(0xFF0A0A0A); // Alias for textPrimary
   static const Color textPrimary = Color(0xFF0A0A0A);
   static const Color textSecondary = Color(0xFF4A4A4A);
   static const Color textHint = Color(0xFF9E9E9E);

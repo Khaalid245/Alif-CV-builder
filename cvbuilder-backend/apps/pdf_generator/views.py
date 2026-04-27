@@ -5,7 +5,6 @@ Keeps all business logic in services.py — views only handle HTTP concerns.
 import logging
 from pathlib import Path
 
-from django.conf import settings
 from django.db import transaction
 from django.http import FileResponse
 from rest_framework import status
@@ -14,7 +13,7 @@ from rest_framework.throttling import UserRateThrottle
 from rest_framework.views import APIView
 
 from apps.core.responses import success_response, error_response
-from apps.cv.models import GeneratedCV
+from apps.cv.models import CVProfile, GeneratedCV
 from apps.users.models import AuditLog
 from .serializers import GeneratedCVSerializer
 from .services import CVGenerationService, CVGenerationError
@@ -51,12 +50,13 @@ class GenerateCVView(APIView):
 
         # Save GeneratedCV records and audit log atomically
         with transaction.atomic():
+            cv = CVProfile.objects.get(student=request.user)
             generated_cvs = []
             for result in results:
                 record = GeneratedCV.objects.create(
-                    student   = request.user,
+                    cv        = cv,
                     template  = result['template'],
-                    pdf_url   = result['pdf_url'],
+                    file_path = result['file_path'],
                     file_size = result['file_size'],
                 )
                 generated_cvs.append(record)
@@ -94,16 +94,14 @@ class DownloadCVView(APIView):
 
     def get(self, request, pk):
         # Ownership enforced — student can only access their own records
-        record = GeneratedCV.objects.filter(pk=pk, student=request.user).first()
+        record = GeneratedCV.objects.filter(pk=pk, cv__student=request.user).first()
         if not record:
             return error_response(
                 'CV not found.',
                 status_code=status.HTTP_404_NOT_FOUND,
             )
 
-        # Use removeprefix for safe exact-string stripping (not lstrip which strips chars)
-        relative_path = record.pdf_url.removeprefix(settings.MEDIA_URL)
-        pdf_path = Path(settings.MEDIA_ROOT) / relative_path
+        pdf_path = Path(record.file_path)
         if not pdf_path.exists():
             logger.error('PDF file missing on disk: %s | record id: %s', pdf_path, pk)
             return error_response(
@@ -143,7 +141,7 @@ class CVHistoryView(APIView):
     def get(self, request):
         # Paginate to most recent 20 — prevents large responses for frequent generators
         records = GeneratedCV.objects.filter(
-            student=request.user
+            cv__student=request.user
         ).order_by('-generated_at')[:20]
 
         serializer = GeneratedCVSerializer(

@@ -1,7 +1,15 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ApiConstants {
-  static String get baseUrl => dotenv.env['API_BASE_URL'] ?? '';
+  static String get baseUrl {
+    // Force localhost for development to avoid CORS issues
+    const url = 'http://localhost:8000/api/v1';
+    if (kDebugMode) {
+      debugPrint('API Base URL: $url');
+    }
+    return url;
+  }
 
   // Auth
   static const String register = '/auth/register/';
@@ -26,8 +34,8 @@ class ApiConstants {
   static const String cvHistory = '/cv/history/';
 
   // Admin
-  static const String adminStats = '/admin/stats/overview/';
-  static const String adminStudents = '/admin/students/';
-  static const String adminAuditLogs = '/admin/audit-logs/';
-  static const String adminHealth = '/admin/health/';
+  static const String adminStats = '/administration/stats/overview/';
+  static const String adminStudents = '/administration/students/';
+  static const String adminAuditLogs = '/administration/audit-logs/';
+  static const String adminHealth = '/administration/health/';
 }

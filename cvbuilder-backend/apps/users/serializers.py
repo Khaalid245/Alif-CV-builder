@@ -19,10 +19,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'id', 'email', 'full_name', 'student_id', 'role', 'status',
-            'terms_accepted', 'terms_accepted_at',
-            'privacy_policy_accepted', 'privacy_policy_accepted_at',
-            'data_processing_consent', 'data_processing_consent_at',
-            'deletion_requested', 'deletion_requested_at',
+            'terms_consent', 'terms_consent_date',
+            'marketing_consent', 'marketing_consent_date',
+            'data_processing_consent', 'data_processing_consent_date',
+            'deletion_requested_at',
             'created_at', 'updated_at', 'last_login_at',
         ]
         read_only_fields = fields
@@ -41,9 +41,9 @@ class RegisterSerializer(serializers.Serializer):
     confirm_password   = serializers.CharField(write_only=True)
 
     # Consent — all three are required to be True
-    terms_accepted           = serializers.BooleanField()
-    privacy_policy_accepted  = serializers.BooleanField()
-    data_processing_consent  = serializers.BooleanField()
+    terms_consent           = serializers.BooleanField()
+    marketing_consent       = serializers.BooleanField()
+    data_processing_consent = serializers.BooleanField()
 
     def validate_email(self, value):
         if User.objects.filter(email=value.lower()).exists():
@@ -55,14 +55,14 @@ class RegisterSerializer(serializers.Serializer):
             raise serializers.ValidationError('This student ID is already registered.')
         return value
 
-    def validate_terms_accepted(self, value):
+    def validate_terms_consent(self, value):
         if not value:
             raise serializers.ValidationError('You must accept the terms and conditions.')
         return value
 
-    def validate_privacy_policy_accepted(self, value):
+    def validate_marketing_consent(self, value):
         if not value:
-            raise serializers.ValidationError('You must accept the privacy policy.')
+            raise serializers.ValidationError('You must accept the marketing consent.')
         return value
 
     def validate_data_processing_consent(self, value):
@@ -88,12 +88,12 @@ class RegisterSerializer(serializers.Serializer):
             full_name=validated_data['full_name'],
             student_id=validated_data['student_id'],
             # Consent with timestamps
-            terms_accepted=True,
-            terms_accepted_at=now,
-            privacy_policy_accepted=True,
-            privacy_policy_accepted_at=now,
+            terms_consent=True,
+            terms_consent_date=now,
+            marketing_consent=True,
+            marketing_consent_date=now,
             data_processing_consent=True,
-            data_processing_consent_at=now,
+            data_processing_consent_date=now,
         )
         return user
 
