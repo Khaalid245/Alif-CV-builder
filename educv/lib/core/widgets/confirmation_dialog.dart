@@ -43,16 +43,18 @@ class ConfirmationDialog extends StatelessWidget {
           text: cancelText,
           variant: AppButtonVariant.text,
           onPressed: () {
-            Navigator.of(context).pop();
-            onCancel?.call();
+            if (onCancel != null) {
+              onCancel!.call();
+            } else {
+              Navigator.of(context).pop();
+            }
           },
         ),
         const SizedBox(width: AppSpacing.sm),
         AppButton(
           text: confirmText,
-          variant: isDestructive ? AppButtonVariant.primary : AppButtonVariant.primary,
+          variant: isDestructive ? AppButtonVariant.danger : AppButtonVariant.primary,
           onPressed: () {
-            Navigator.of(context).pop();
             onConfirm();
           },
         ),
@@ -102,6 +104,7 @@ class DeleteConfirmationDialog extends StatelessWidget {
       cancelText: 'Cancel',
       isDestructive: true,
       onConfirm: onConfirm,
+      onCancel: () => Navigator.of(context).pop(false),
     );
   }
 

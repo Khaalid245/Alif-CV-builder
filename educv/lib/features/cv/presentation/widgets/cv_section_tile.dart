@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_typography.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 import '../../../../core/widgets/section_card.dart';
 
 class CVSectionTile extends StatelessWidget {
   final String title;
-  final String? subtitle;
+  final String subtitle;
   final String? trailing;
   final Widget? badge;
   final VoidCallback? onEdit;
@@ -15,7 +17,7 @@ class CVSectionTile extends StatelessWidget {
   const CVSectionTile({
     super.key,
     required this.title,
-    this.subtitle,
+    required this.subtitle,
     this.trailing,
     this.badge,
     this.onEdit,
@@ -42,22 +44,20 @@ class CVSectionTile extends StatelessWidget {
                       ),
                     ),
                     if (badge != null) ...[
-                      SizedBox(width: AppSpacing.sm),
+                      const SizedBox(width: AppSpacing.xs),
                       badge!,
                     ],
                   ],
                 ),
-                if (subtitle != null) ...[
-                  SizedBox(height: AppSpacing.xs),
-                  Text(
-                    subtitle!,
-                    style: AppTypography.body.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
+                const SizedBox(height: 4),
+                Text(
+                  subtitle,
+                  style: AppTypography.body.copyWith(
+                    color: AppColors.textSecondary,
                   ),
-                ],
+                ),
                 if (trailing != null) ...[
-                  SizedBox(height: AppSpacing.xs),
+                  const SizedBox(height: 4),
                   Text(
                     trailing!,
                     style: AppTypography.caption.copyWith(
@@ -68,30 +68,36 @@ class CVSectionTile extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(width: AppSpacing.md),
+          const SizedBox(width: AppSpacing.sm),
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               if (onEdit != null)
                 GestureDetector(
                   onTap: onEdit,
-                  child: Icon(
-                    Icons.edit,
-                    size: 20,
-                    color: AppColors.primary,
+                  child: Container(
+                    padding: const EdgeInsets.all(AppSpacing.xs),
+                    child: Icon(
+                      LucideIcons.edit,
+                      size: 20,
+                      color: AppColors.primary,
+                    ),
                   ),
                 ),
-              if (onEdit != null && onDelete != null)
-                SizedBox(width: AppSpacing.sm),
-              if (onDelete != null)
+              if (onDelete != null) ...[
+                const SizedBox(width: 4),
                 GestureDetector(
                   onTap: onDelete,
-                  child: Icon(
-                    Icons.delete,
-                    size: 20,
-                    color: AppColors.error,
+                  child: Container(
+                    padding: const EdgeInsets.all(AppSpacing.xs),
+                    child: Icon(
+                      LucideIcons.trash2,
+                      size: 20,
+                      color: AppColors.error,
+                    ),
                   ),
                 ),
+              ],
             ],
           ),
         ],

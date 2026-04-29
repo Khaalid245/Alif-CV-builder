@@ -1,117 +1,171 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:url_launcher/url_launcher.dart';
-import '../../../../../core/theme/app_colors.dart';
-import '../../../../../core/theme/app_typography.dart';
-import '../../../../../core/theme/app_spacing.dart';
-import '../../../../../core/widgets/app_input.dart';
-import '../../../../../core/widgets/empty_state.dart';
-import '../../providers/cv_provider.dart';
-import '../../../data/models/cv_models.dart';
-import '../cv_section_tile.dart';
-import '../add_item_button.dart';
-import '../step_bottom_sheet.dart';
-import '../month_year_picker.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import 'package:intl/intl.dart';
 
-class CertificationsStep extends ConsumerWidget {
+import '../../../../../core/theme/app_colors.dart';
+import '../../../../../core/theme/app_spacing.dart';
+import '../../../../../core/theme/app_typography.dart';
+import '../../../../../core/utils/snackbar_helper.dart';
+import '../../../../../core/widgets/app_input.dart';
+import '../../../data/models/cv_models.dart';
+import '../../providers/cv_provider.dart';
+import '../add_item_button.dart';
+import '../cv_section_tile.dart';
+import '../empty_state.dart';
+import '../month_year_picker.dart';
+import '../step_bottom_sheet.dart';
+
+class CertificationsStep extends ConsumerStatefulWidget {
   const CertificationsStep({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final certificationsAsync = ref.watch(certificationsProvider);
-    
-    return certificationsAsync.when(
-      loading: () => Center(child: CircularProgressIndicator()),
-      error: (error, stack) => Center(
-        child: Text('Error: $error'),
-      ),
-      data: (certifications) => SingleChildScrollView(
-        padding: EdgeInsets.all(AppSpacing.lg),
-        child: Column(
-          children: [
-            if (certifications.isEmpty)
-              EmptyState(
-                icon: Icons.emoji_events,
-                title: 'No certifications added',
-                subtitle: 'Add professional certificates and courses',
-                actionLabel: 'Add Certification',
-                onAction: () => _showCertificationSheet(context, ref),
-              )
-            else ...[
-              ...certifications.map((cert) => Padding(
-                padding: EdgeInsets.only(bottom: AppSpacing.md),
-                child: _CertificationTile(
-                  certification: cert,
-                  onEdit: () => _showCertificationSheet(context, ref, certification: cert),
-                  onDelete: () => _showDeleteConfirmation(context, ref, cert),
-                ),
-              )),
-              
-              SizedBox(height: AppSpacing.md),
-            ],
-            
-            AddItemButton(
-              label: 'Add Certification',
-              onTap: () => _showCertificationSheet(context, ref),
-            ),
-            
-            SizedBox(height: AppSpacing.xxl),
-          ],
+  ConsumerState<CertificationsStep> createState() => _CertificationsStepState();
+}
+
+class _CertificationsStepState extends ConsumerState<CertificationsStep> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(certificationsProvider.notifier).fetch();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final certificationsState = ref.watch(certificationsProvider);
+
+    return certificationsState.when(
+      data: (certificationsList) => _buildContent(certificationsList),
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, _) => Center(
+        child: Text(
+          'Error loading certifications: $error',
+          style: AppTypography.body.copyWith(color: AppColors.error),
         ),
       ),
     );
   }
 
-  void _showCertificationSheet(BuildContext context, WidgetRef ref, {CertificationModel? certification}) {
+  Widget _buildContent(List<CertificationModel> certificationsList) {
+    if (certificationsList.isEmpty) {
+      return EmptyState(
+        icon: LucideIcons.award,
+        title: 'No certifications added',
+        subtitle: 'Add professional certificates and courses',
+        actionText: 'Add Certification',
+        onAction: () => _showCertificationSheet(),
+      );
+    }
+
+    return Column(
+      children: [
+        Expanded(
+          child: ListView.builder(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            itemCount: certificationsList.length,
+            itemBuilder: (context, index) {
+              final certification = certificationsList[index];
+              return Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                child: _buildCertificationTile(certification),
+              );
+            },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          child: AddItemButton(
+            text: 'Add Certification',
+            onTap: () => _showCertificationSheet(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCertificationTile(CertificationModel certification) {
+    final issueDate = DateFormat('MMM yyyy').format(certification.issueDate);
+    final isExpired = certification.expiryDate != null && 
+        certification.expiryDate!.isBefore(DateTime.now());
+    
+    String dateText = 'Issued: $issueDate';
+    if (certification.expiryDate != null) {
+      final expiryDate = DateFormat('MMM yyyy').format(certification.expiryDate!);
+      dateText += '\nExpires: $expiryDate';
+    } else {
+      dateText += '\nNo Expiry';
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+      child: CVSectionTile(
+        title: certification.name,
+        subtitle: certification.issuer,
+        trailing: dateText,
+        badge: isExpired ? _buildExpiredBadge() : null,
+        onEdit: () => _showCertificationSheet(certification: certification),
+        onDelete: () => _showDeleteConfirmation(certification),
+      ),
+    );
+  }
+
+  Widget _buildExpiredBadge() {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.xs,
+        vertical: 2,
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.error.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Text(
+        'Expired',
+        style: AppTypography.caption.copyWith(
+          color: AppColors.error,
+          fontSize: 10,
+        ),
+      ),
+    );
+  }
+
+  void _showCertificationSheet({CertificationModel? certification}) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => _CertificationBottomSheet(
-        certification: certification,
-        onSave: (data) async {
-          try {
-            if (certification != null) {
-              await ref.read(certificationsProvider.notifier).updateCertification(certification.id, data);
-            } else {
-              await ref.read(certificationsProvider.notifier).add(data);
-            }
-            Navigator.pop(context);
-          } catch (e) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Error saving certification: $e')),
-            );
-          }
-        },
-      ),
+      builder: (context) => _CertificationBottomSheet(certification: certification),
     );
   }
 
-  void _showDeleteConfirmation(BuildContext context, WidgetRef ref, CertificationModel certification) {
+  void _showDeleteConfirmation(CertificationModel certification) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Remove Certification'),
-        content: Text('This will permanently remove this certification.'),
+        title: Text('Remove Certification', style: AppTypography.h3),
+        content: Text(
+          'This will permanently remove "${certification.name}" from your certifications.',
+          style: AppTypography.body,
+        ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('Keep'),
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(
+              'Keep',
+              style: AppTypography.body.copyWith(color: AppColors.textSecondary),
+            ),
           ),
           TextButton(
-            onPressed: () async {
-              Navigator.pop(context);
-              try {
-                await ref.read(certificationsProvider.notifier).delete(certification.id);
-              } catch (e) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Error deleting certification: $e')),
-                );
-              }
+            onPressed: () {
+              Navigator.of(context).pop();
+              ref.read(certificationsProvider.notifier).delete(certification.id);
+              SnackbarHelper.showSuccess(context, 'Certification removed');
             },
             child: Text(
               'Remove',
-              style: TextStyle(color: AppColors.error),
+              style: AppTypography.body.copyWith(color: AppColors.error),
             ),
           ),
         ],
@@ -120,190 +174,21 @@ class CertificationsStep extends ConsumerWidget {
   }
 }
 
-class _CertificationTile extends StatelessWidget {
-  final CertificationModel certification;
-  final VoidCallback onEdit;
-  final VoidCallback onDelete;
-
-  const _CertificationTile({
-    required this.certification,
-    required this.onEdit,
-    required this.onDelete,
-  });
-
-  String _formatDate(DateTime date) {
-    const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-    ];
-    return '${months[date.month - 1]} ${date.year}';
-  }
-
-  bool _isExpired() {
-    if (certification.expiryDate == null) return false;
-    return certification.expiryDate!.isBefore(DateTime.now());
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: AppColors.background,
-        border: Border.all(color: AppColors.divider),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        certification.name,
-                        style: AppTypography.h3,
-                      ),
-                    ),
-                    if (_isExpired()) ...[
-                      SizedBox(width: AppSpacing.sm),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: AppSpacing.sm,
-                          vertical: AppSpacing.xs,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.error,
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Text(
-                          'Expired',
-                          style: AppTypography.caption.copyWith(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  GestureDetector(
-                    onTap: onEdit,
-                    child: Icon(
-                      Icons.edit,
-                      size: 20,
-                      color: AppColors.primary,
-                    ),
-                  ),
-                  SizedBox(width: AppSpacing.sm),
-                  GestureDetector(
-                    onTap: onDelete,
-                    child: Icon(
-                      Icons.delete,
-                      size: 20,
-                      color: AppColors.error,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          
-          SizedBox(height: AppSpacing.xs),
-          
-          Text(
-            certification.issuer,
-            style: AppTypography.body.copyWith(
-              color: AppColors.textSecondary,
-            ),
-          ),
-          
-          SizedBox(height: AppSpacing.xs),
-          
-          Text(
-            'Issued: ${_formatDate(certification.issueDate)}',
-            style: AppTypography.caption.copyWith(
-              color: AppColors.textSecondary,
-            ),
-          ),
-          
-          if (certification.expiryDate != null) ...[
-            Text(
-              'Expires: ${_formatDate(certification.expiryDate!)}',
-              style: AppTypography.caption.copyWith(
-                color: AppColors.textSecondary,
-              ),
-            ),
-          ] else ...[
-            Text(
-              'No Expiry',
-              style: AppTypography.caption.copyWith(
-                color: AppColors.textSecondary,
-              ),
-            ),
-          ],
-          
-          if (certification.credentialUrl != null) ...[
-            SizedBox(height: AppSpacing.xs),
-            GestureDetector(
-              onTap: () async {
-                final uri = Uri.parse(certification.credentialUrl!);
-                if (await canLaunchUrl(uri)) {
-                  await launchUrl(uri);
-                }
-              },
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.link,
-                    size: 12,
-                    color: AppColors.primary,
-                  ),
-                  SizedBox(width: AppSpacing.xs),
-                  Text(
-                    'View Credential',
-                    style: AppTypography.caption.copyWith(
-                      color: AppColors.primary,
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-class _CertificationBottomSheet extends StatefulWidget {
+class _CertificationBottomSheet extends ConsumerStatefulWidget {
   final CertificationModel? certification;
-  final Function(Map<String, dynamic>) onSave;
 
-  const _CertificationBottomSheet({
-    this.certification,
-    required this.onSave,
-  });
+  const _CertificationBottomSheet({this.certification});
 
   @override
-  State<_CertificationBottomSheet> createState() => _CertificationBottomSheetState();
+  ConsumerState<_CertificationBottomSheet> createState() => _CertificationBottomSheetState();
 }
 
-class _CertificationBottomSheetState extends State<_CertificationBottomSheet> {
+class _CertificationBottomSheetState extends ConsumerState<_CertificationBottomSheet> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _issuerController = TextEditingController();
   final _credentialUrlController = TextEditingController();
-  
+
   DateTime? _issueDate;
   DateTime? _expiryDate;
   bool _noExpiry = false;
@@ -313,58 +198,34 @@ class _CertificationBottomSheetState extends State<_CertificationBottomSheet> {
   void initState() {
     super.initState();
     if (widget.certification != null) {
-      final cert = widget.certification!;
-      _nameController.text = cert.name;
-      _issuerController.text = cert.issuer;
-      _credentialUrlController.text = cert.credentialUrl ?? '';
-      _issueDate = cert.issueDate;
-      _expiryDate = cert.expiryDate;
-      _noExpiry = cert.expiryDate == null;
+      _loadExistingData();
     }
   }
 
-  void _save() async {
-    if (!_formKey.currentState!.validate()) return;
-    if (_issueDate == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please select an issue date')),
-      );
-      return;
-    }
-    
-    setState(() => _isLoading = true);
-    
-    final data = {
-      'name': _nameController.text.trim(),
-      'issuer': _issuerController.text.trim(),
-      'issue_date': _issueDate!.toIso8601String().split('T')[0],
-      'expiry_date': _noExpiry ? null : _expiryDate?.toIso8601String().split('T')[0],
-      'credential_url': _credentialUrlController.text.trim(),
-    };
-    
-    await widget.onSave(data);
-    setState(() => _isLoading = false);
+  void _loadExistingData() {
+    final certification = widget.certification!;
+    _nameController.text = certification.name;
+    _issuerController.text = certification.issuer;
+    _credentialUrlController.text = certification.credentialUrl;
+    _issueDate = certification.issueDate;
+    _expiryDate = certification.expiryDate;
+    _noExpiry = certification.expiryDate == null;
   }
 
-  String? _validateUrl(String? value) {
-    if (value == null || value.isEmpty) return null;
-    
-    final urlPattern = RegExp(
-      r'^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$'
-    );
-    
-    if (!urlPattern.hasMatch(value)) {
-      return 'Please enter a valid URL';
-    }
-    return null;
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _issuerController.dispose();
+    _credentialUrlController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return StepBottomSheet(
-      title: widget.certification != null ? 'Edit Certification' : 'Add Certification',
+      title: widget.certification == null ? 'Add Certification' : 'Edit Certification',
       isLoading: _isLoading,
-      onSave: _save,
+      onSave: _saveCertification,
       child: Form(
         key: _formKey,
         child: Column(
@@ -373,45 +234,30 @@ class _CertificationBottomSheetState extends State<_CertificationBottomSheet> {
               label: 'Certification Name',
               hint: 'e.g. AWS Solutions Architect',
               controller: _nameController,
-              isRequired: true,
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Certification name is required';
-                }
-                return null;
-              },
+              validator: (value) => value?.isEmpty == true ? 'Certification name is required' : null,
             ),
             
-            SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.md),
             
             AppInput(
               label: 'Issuing Organization',
               hint: 'e.g. Amazon Web Services',
               controller: _issuerController,
-              isRequired: true,
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Issuing organization is required';
-                }
-                return null;
-              },
+              validator: (value) => value?.isEmpty == true ? 'Issuing organization is required' : null,
             ),
             
-            SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.md),
             
             MonthYearPicker(
               label: 'Issue Date',
-              value: _issueDate,
-              onChanged: (date) {
-                setState(() {
-                  _issueDate = date;
-                });
-              },
-              isRequired: true,
+              selectedDate: _issueDate,
+              onChanged: (date) => setState(() => _issueDate = date),
+              validator: (value) => _issueDate == null ? 'Issue date is required' : null,
             ),
             
-            SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.md),
             
+            // No Expiry Toggle
             Row(
               children: [
                 Expanded(
@@ -436,27 +282,26 @@ class _CertificationBottomSheetState extends State<_CertificationBottomSheet> {
             ),
             
             if (!_noExpiry) ...[
-              SizedBox(height: AppSpacing.md),
-              
+              const SizedBox(height: AppSpacing.md),
               MonthYearPicker(
                 label: 'Expiry Date',
-                value: _expiryDate,
-                onChanged: (date) {
-                  setState(() {
-                    _expiryDate = date;
-                  });
-                },
-                isRequired: !_noExpiry,
+                selectedDate: _expiryDate,
+                onChanged: (date) => setState(() => _expiryDate = date),
+                validator: (value) => !_noExpiry && _expiryDate == null ? 'Expiry date is required' : null,
               ),
             ],
             
-            SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.md),
             
             AppInput(
               label: 'Credential URL (Optional)',
               hint: 'Link to your certificate online',
               controller: _credentialUrlController,
               keyboardType: TextInputType.url,
+              prefixIcon: const Icon(
+                LucideIcons.link,
+                color: AppColors.textSecondary,
+              ),
               validator: _validateUrl,
             ),
           ],
@@ -465,11 +310,55 @@ class _CertificationBottomSheetState extends State<_CertificationBottomSheet> {
     );
   }
 
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _issuerController.dispose();
-    _credentialUrlController.dispose();
-    super.dispose();
+  String? _validateUrl(String? value) {
+    if (value == null || value.isEmpty) return null;
+    
+    String url = value;
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      url = 'https://$url';
+    }
+    
+    final urlPattern = r'^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$';
+    if (!RegExp(urlPattern).hasMatch(url)) {
+      return 'Please enter a valid URL';
+    }
+    return null;
+  }
+
+  Future<void> _saveCertification() async {
+    if (!_formKey.currentState!.validate()) return;
+    if (_issueDate == null) return;
+    if (!_noExpiry && _expiryDate == null) return;
+
+    setState(() => _isLoading = true);
+
+    try {
+      String credentialUrl = _credentialUrlController.text.trim();
+      if (credentialUrl.isNotEmpty && !credentialUrl.startsWith('http://') && !credentialUrl.startsWith('https://')) {
+        credentialUrl = 'https://$credentialUrl';
+      }
+
+      final data = {
+        'name': _nameController.text.trim(),
+        'issuer': _issuerController.text.trim(),
+        'issue_date': _issueDate!.toIso8601String().split('T')[0],
+        'expiry_date': _noExpiry ? null : _expiryDate?.toIso8601String().split('T')[0],
+        'credential_url': credentialUrl,
+      };
+
+      if (widget.certification == null) {
+        await ref.read(certificationsProvider.notifier).add(data);
+        SnackbarHelper.showSuccess(context, 'Certification added successfully');
+      } else {
+        await ref.read(certificationsProvider.notifier).updateItem(widget.certification!.id, data);
+        SnackbarHelper.showSuccess(context, 'Certification updated successfully');
+      }
+
+      Navigator.of(context).pop();
+    } catch (e) {
+      SnackbarHelper.showError(context, 'Failed to save certification');
+    } finally {
+      setState(() => _isLoading = false);
+    }
   }
 }

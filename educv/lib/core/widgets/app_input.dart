@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
@@ -171,7 +172,7 @@ class _AppPasswordInputState extends State<AppPasswordInput> {
       obscureText: _obscureText,
       suffixIcon: IconButton(
         icon: Icon(
-          _obscureText ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+          _obscureText ? LucideIcons.eye : LucideIcons.eyeOff,
           color: AppColors.primary,
           size: 20,
         ),

@@ -1,127 +1,165 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../../core/theme/app_colors.dart';
-import '../../../../../core/theme/app_typography.dart';
-import '../../../../../core/theme/app_spacing.dart';
-import '../../../../../core/widgets/app_input.dart';
-import '../../../../../core/widgets/empty_state.dart';
-import '../../providers/cv_provider.dart';
-import '../../../data/models/cv_models.dart';
-import '../cv_section_tile.dart';
-import '../add_item_button.dart';
-import '../step_bottom_sheet.dart';
-import '../month_year_picker.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import 'package:intl/intl.dart';
 
-class ExperienceStep extends ConsumerWidget {
+import '../../../../../core/theme/app_colors.dart';
+import '../../../../../core/theme/app_spacing.dart';
+import '../../../../../core/theme/app_typography.dart';
+import '../../../../../core/utils/snackbar_helper.dart';
+import '../../../../../core/widgets/app_input.dart';
+import '../../../data/models/cv_models.dart';
+import '../../providers/cv_provider.dart';
+import '../add_item_button.dart';
+import '../cv_section_tile.dart';
+import '../empty_state.dart';
+import '../month_year_picker.dart';
+import '../step_bottom_sheet.dart';
+
+class ExperienceStep extends ConsumerStatefulWidget {
   const ExperienceStep({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final experienceAsync = ref.watch(experienceProvider);
-    
-    return experienceAsync.when(
-      loading: () => Center(child: CircularProgressIndicator()),
-      error: (error, stack) => Center(
-        child: Text('Error: $error'),
-      ),
-      data: (experience) => SingleChildScrollView(
-        padding: EdgeInsets.all(AppSpacing.lg),
-        child: Column(
-          children: [
-            if (experience.isEmpty)
-              EmptyState(
-                icon: Icons.work,
-                title: 'No experience added',
-                subtitle: 'Add internships, jobs or volunteer work',
-                actionLabel: 'Add Experience',
-                onAction: () => _showExperienceSheet(context, ref),
-              )
-            else ...[
-              ...experience.map((exp) => Padding(
-                padding: EdgeInsets.only(bottom: AppSpacing.md),
-                child: CVSectionTile(
-                  title: '${exp.jobTitle} at ${exp.company}',
-                  subtitle: exp.location,
-                  trailing: '${_formatDate(exp.startDate)} – ${exp.isCurrent ? 'Present' : _formatDate(exp.endDate!)}',
-                  badge: exp.isCurrent ? _CurrentBadge() : null,
-                  onEdit: () => _showExperienceSheet(context, ref, experience: exp),
-                  onDelete: () => _showDeleteConfirmation(context, ref, exp),
-                ),
-              )),
-              
-              SizedBox(height: AppSpacing.md),
-            ],
-            
-            AddItemButton(
-              label: 'Add Experience',
-              onTap: () => _showExperienceSheet(context, ref),
-            ),
-            
-            SizedBox(height: AppSpacing.xxl),
-          ],
+  ConsumerState<ExperienceStep> createState() => _ExperienceStepState();
+}
+
+class _ExperienceStepState extends ConsumerState<ExperienceStep> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(experienceProvider.notifier).fetch();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final experienceState = ref.watch(experienceProvider);
+
+    return experienceState.when(
+      data: (experienceList) => _buildContent(experienceList),
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, _) => Center(
+        child: Text(
+          'Error loading experience: $error',
+          style: AppTypography.body.copyWith(color: AppColors.error),
         ),
       ),
     );
   }
 
-  String _formatDate(DateTime date) {
-    const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-    ];
-    return '${months[date.month - 1]} ${date.year}';
+  Widget _buildContent(List<ExperienceModel> experienceList) {
+    if (experienceList.isEmpty) {
+      return EmptyState(
+        icon: LucideIcons.briefcase,
+        title: 'No experience added',
+        subtitle: 'Add internships, jobs or volunteer work',
+        actionText: 'Add Experience',
+        onAction: () => _showExperienceSheet(),
+      );
+    }
+
+    return Column(
+      children: [
+        Expanded(
+          child: ListView.builder(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            itemCount: experienceList.length,
+            itemBuilder: (context, index) {
+              final experience = experienceList[index];
+              return Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                child: _buildExperienceTile(experience),
+              );
+            },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          child: AddItemButton(
+            text: 'Add Experience',
+            onTap: () => _showExperienceSheet(),
+          ),
+        ),
+      ],
+    );
   }
 
-  void _showExperienceSheet(BuildContext context, WidgetRef ref, {ExperienceModel? experience}) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => _ExperienceBottomSheet(
-        experience: experience,
-        onSave: (data) async {
-          try {
-            if (experience != null) {
-              await ref.read(experienceProvider.notifier).updateExperience(experience.id, data);
-            } else {
-              await ref.read(experienceProvider.notifier).add(data);
-            }
-            Navigator.pop(context);
-          } catch (e) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Error saving experience: $e')),
-            );
-          }
-        },
+  Widget _buildExperienceTile(ExperienceModel experience) {
+    final startDate = DateFormat('MMM yyyy').format(experience.startDate);
+    final endDate = experience.isCurrent 
+        ? 'Present'
+        : experience.endDate != null 
+            ? DateFormat('MMM yyyy').format(experience.endDate!)
+            : 'Present';
+    
+    final dateText = '$startDate – $endDate';
+
+    return CVSectionTile(
+      title: '${experience.jobTitle} at ${experience.company}',
+      subtitle: experience.location.isNotEmpty ? experience.location : experience.company,
+      trailing: dateText,
+      badge: experience.isCurrent ? _buildCurrentBadge() : null,
+      onEdit: () => _showExperienceSheet(experience: experience),
+      onDelete: () => _showDeleteConfirmation(experience),
+    );
+  }
+
+  Widget _buildCurrentBadge() {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.xs,
+        vertical: 2,
+      ),
+      decoration: BoxDecoration(
+        color: const Color(0xFFE8F0FE),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Text(
+        'Current',
+        style: AppTypography.caption.copyWith(
+          color: AppColors.primary,
+          fontSize: 10,
+        ),
       ),
     );
   }
 
-  void _showDeleteConfirmation(BuildContext context, WidgetRef ref, ExperienceModel experience) {
+  void _showExperienceSheet({ExperienceModel? experience}) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => _ExperienceBottomSheet(experience: experience),
+    );
+  }
+
+  void _showDeleteConfirmation(ExperienceModel experience) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Remove Experience'),
-        content: Text('This will permanently remove this entry.'),
+        title: Text('Remove Experience', style: AppTypography.h3),
+        content: Text(
+          'This will permanently remove this entry.',
+          style: AppTypography.body,
+        ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('Keep'),
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(
+              'Keep',
+              style: AppTypography.body.copyWith(color: AppColors.textSecondary),
+            ),
           ),
           TextButton(
-            onPressed: () async {
-              Navigator.pop(context);
-              try {
-                await ref.read(experienceProvider.notifier).delete(experience.id);
-              } catch (e) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Error deleting experience: $e')),
-                );
-              }
+            onPressed: () {
+              Navigator.of(context).pop();
+              ref.read(experienceProvider.notifier).delete(experience.id);
+              SnackbarHelper.showSuccess(context, 'Experience removed');
             },
             child: Text(
               'Remove',
-              style: TextStyle(color: AppColors.error),
+              style: AppTypography.body.copyWith(color: AppColors.error),
             ),
           ),
         ],
@@ -130,50 +168,22 @@ class ExperienceStep extends ConsumerWidget {
   }
 }
 
-class _CurrentBadge extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: AppSpacing.sm,
-        vertical: AppSpacing.xs,
-      ),
-      decoration: BoxDecoration(
-        color: Color(0xFFE8F0FE),
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: Text(
-        'Current',
-        style: AppTypography.caption.copyWith(
-          color: AppColors.primary,
-          fontSize: 10,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-    );
-  }
-}
-
-class _ExperienceBottomSheet extends StatefulWidget {
+class _ExperienceBottomSheet extends ConsumerStatefulWidget {
   final ExperienceModel? experience;
-  final Function(Map<String, dynamic>) onSave;
 
-  const _ExperienceBottomSheet({
-    this.experience,
-    required this.onSave,
-  });
+  const _ExperienceBottomSheet({this.experience});
 
   @override
-  State<_ExperienceBottomSheet> createState() => _ExperienceBottomSheetState();
+  ConsumerState<_ExperienceBottomSheet> createState() => _ExperienceBottomSheetState();
 }
 
-class _ExperienceBottomSheetState extends State<_ExperienceBottomSheet> {
+class _ExperienceBottomSheetState extends ConsumerState<_ExperienceBottomSheet> {
   final _formKey = GlobalKey<FormState>();
   final _jobTitleController = TextEditingController();
   final _companyController = TextEditingController();
   final _locationController = TextEditingController();
   final _descriptionController = TextEditingController();
-  
+
   DateTime? _startDate;
   DateTime? _endDate;
   bool _isCurrent = false;
@@ -183,48 +193,36 @@ class _ExperienceBottomSheetState extends State<_ExperienceBottomSheet> {
   void initState() {
     super.initState();
     if (widget.experience != null) {
-      final exp = widget.experience!;
-      _jobTitleController.text = exp.jobTitle;
-      _companyController.text = exp.company;
-      _locationController.text = exp.location ?? '';
-      _descriptionController.text = exp.description;
-      _startDate = exp.startDate;
-      _endDate = exp.endDate;
-      _isCurrent = exp.isCurrent;
+      _loadExistingData();
     }
   }
 
-  void _save() async {
-    if (!_formKey.currentState!.validate()) return;
-    if (_startDate == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please select a start date')),
-      );
-      return;
-    }
-    
-    setState(() => _isLoading = true);
-    
-    final data = {
-      'job_title': _jobTitleController.text.trim(),
-      'company': _companyController.text.trim(),
-      'location': _locationController.text.trim(),
-      'start_date': _startDate!.toIso8601String().split('T')[0],
-      'end_date': _isCurrent ? null : _endDate?.toIso8601String().split('T')[0],
-      'is_current': _isCurrent,
-      'description': _descriptionController.text.trim(),
-    };
-    
-    await widget.onSave(data);
-    setState(() => _isLoading = false);
+  void _loadExistingData() {
+    final experience = widget.experience!;
+    _jobTitleController.text = experience.jobTitle;
+    _companyController.text = experience.company;
+    _locationController.text = experience.location;
+    _descriptionController.text = experience.description;
+    _startDate = experience.startDate;
+    _endDate = experience.endDate;
+    _isCurrent = experience.isCurrent;
+  }
+
+  @override
+  void dispose() {
+    _jobTitleController.dispose();
+    _companyController.dispose();
+    _locationController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return StepBottomSheet(
-      title: widget.experience != null ? 'Edit Experience' : 'Add Experience',
+      title: widget.experience == null ? 'Add Experience' : 'Edit Experience',
       isLoading: _isLoading,
-      onSave: _save,
+      onSave: _saveExperience,
       child: Form(
         key: _formKey,
         child: Column(
@@ -233,31 +231,19 @@ class _ExperienceBottomSheetState extends State<_ExperienceBottomSheet> {
               label: 'Job Title',
               hint: 'e.g. Software Engineer Intern',
               controller: _jobTitleController,
-              isRequired: true,
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Job title is required';
-                }
-                return null;
-              },
+              validator: (value) => value?.isEmpty == true ? 'Job title is required' : null,
             ),
             
-            SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.md),
             
             AppInput(
               label: 'Company',
               hint: 'e.g. Google',
               controller: _companyController,
-              isRequired: true,
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Company is required';
-                }
-                return null;
-              },
+              validator: (value) => value?.isEmpty == true ? 'Company is required' : null,
             ),
             
-            SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.md),
             
             AppInput(
               label: 'Location (Optional)',
@@ -265,21 +251,18 @@ class _ExperienceBottomSheetState extends State<_ExperienceBottomSheet> {
               controller: _locationController,
             ),
             
-            SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.md),
             
             MonthYearPicker(
               label: 'Start Date',
-              value: _startDate,
-              onChanged: (date) {
-                setState(() {
-                  _startDate = date;
-                });
-              },
-              isRequired: true,
+              selectedDate: _startDate,
+              onChanged: (date) => setState(() => _startDate = date),
+              validator: (value) => _startDate == null ? 'Start date is required' : null,
             ),
             
-            SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.md),
             
+            // Currently Working Toggle
             Row(
               children: [
                 Expanded(
@@ -304,21 +287,16 @@ class _ExperienceBottomSheetState extends State<_ExperienceBottomSheet> {
             ),
             
             if (!_isCurrent) ...[
-              SizedBox(height: AppSpacing.md),
-              
+              const SizedBox(height: AppSpacing.md),
               MonthYearPicker(
                 label: 'End Date',
-                value: _endDate,
-                onChanged: (date) {
-                  setState(() {
-                    _endDate = date;
-                  });
-                },
-                isRequired: !_isCurrent,
+                selectedDate: _endDate,
+                onChanged: (date) => setState(() => _endDate = date),
+                validator: (value) => !_isCurrent && _endDate == null ? 'End date is required' : null,
               ),
             ],
             
-            SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.md),
             
             AppInput(
               label: 'What did you do?',
@@ -326,13 +304,7 @@ class _ExperienceBottomSheetState extends State<_ExperienceBottomSheet> {
               controller: _descriptionController,
               maxLines: 5,
               maxLength: 600,
-              isRequired: true,
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Description is required';
-                }
-                return null;
-              },
+              validator: (value) => value?.isEmpty == true ? 'Description is required' : null,
             ),
           ],
         ),
@@ -340,12 +312,37 @@ class _ExperienceBottomSheetState extends State<_ExperienceBottomSheet> {
     );
   }
 
-  @override
-  void dispose() {
-    _jobTitleController.dispose();
-    _companyController.dispose();
-    _locationController.dispose();
-    _descriptionController.dispose();
-    super.dispose();
+  Future<void> _saveExperience() async {
+    if (!_formKey.currentState!.validate()) return;
+    if (_startDate == null) return;
+    if (!_isCurrent && _endDate == null) return;
+
+    setState(() => _isLoading = true);
+
+    try {
+      final data = {
+        'job_title': _jobTitleController.text.trim(),
+        'company': _companyController.text.trim(),
+        'location': _locationController.text.trim(),
+        'start_date': _startDate!.toIso8601String().split('T')[0],
+        'end_date': _isCurrent ? null : _endDate?.toIso8601String().split('T')[0],
+        'is_current': _isCurrent,
+        'description': _descriptionController.text.trim(),
+      };
+
+      if (widget.experience == null) {
+        await ref.read(experienceProvider.notifier).add(data);
+        SnackbarHelper.showSuccess(context, 'Experience added successfully');
+      } else {
+        await ref.read(experienceProvider.notifier).updateItem(widget.experience!.id, data);
+        SnackbarHelper.showSuccess(context, 'Experience updated successfully');
+      }
+
+      Navigator.of(context).pop();
+    } catch (e) {
+      SnackbarHelper.showError(context, 'Failed to save experience');
+    } finally {
+      setState(() => _isLoading = false);
+    }
   }
 }

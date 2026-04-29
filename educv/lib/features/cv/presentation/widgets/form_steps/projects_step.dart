@@ -1,117 +1,149 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:url_launcher/url_launcher.dart';
-import '../../../../../core/theme/app_colors.dart';
-import '../../../../../core/theme/app_typography.dart';
-import '../../../../../core/theme/app_spacing.dart';
-import '../../../../../core/widgets/app_input.dart';
-import '../../../../../core/widgets/empty_state.dart';
-import '../../providers/cv_provider.dart';
-import '../../../data/models/cv_models.dart';
-import '../cv_section_tile.dart';
-import '../add_item_button.dart';
-import '../step_bottom_sheet.dart';
-import '../month_year_picker.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import 'package:intl/intl.dart';
 
-class ProjectsStep extends ConsumerWidget {
+import '../../../../../core/theme/app_colors.dart';
+import '../../../../../core/theme/app_spacing.dart';
+import '../../../../../core/theme/app_typography.dart';
+import '../../../../../core/utils/snackbar_helper.dart';
+import '../../../../../core/widgets/app_input.dart';
+import '../../../data/models/cv_models.dart';
+import '../../providers/cv_provider.dart';
+import '../add_item_button.dart';
+import '../cv_section_tile.dart';
+import '../empty_state.dart';
+import '../month_year_picker.dart';
+import '../step_bottom_sheet.dart';
+
+class ProjectsStep extends ConsumerStatefulWidget {
   const ProjectsStep({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final projectsAsync = ref.watch(projectsProvider);
-    
-    return projectsAsync.when(
-      loading: () => Center(child: CircularProgressIndicator()),
-      error: (error, stack) => Center(
-        child: Text('Error: $error'),
-      ),
-      data: (projects) => SingleChildScrollView(
-        padding: EdgeInsets.all(AppSpacing.lg),
-        child: Column(
-          children: [
-            if (projects.isEmpty)
-              EmptyState(
-                icon: Icons.code,
-                title: 'No projects added',
-                subtitle: 'Showcase your personal and academic projects',
-                actionLabel: 'Add Project',
-                onAction: () => _showProjectSheet(context, ref),
-              )
-            else ...[
-              ...projects.map((project) => Padding(
-                padding: EdgeInsets.only(bottom: AppSpacing.md),
-                child: _ProjectTile(
-                  project: project,
-                  onEdit: () => _showProjectSheet(context, ref, project: project),
-                  onDelete: () => _showDeleteConfirmation(context, ref, project),
-                ),
-              )),
-              
-              SizedBox(height: AppSpacing.md),
-            ],
-            
-            AddItemButton(
-              label: 'Add Project',
-              onTap: () => _showProjectSheet(context, ref),
-            ),
-            
-            SizedBox(height: AppSpacing.xxl),
-          ],
+  ConsumerState<ProjectsStep> createState() => _ProjectsStepState();
+}
+
+class _ProjectsStepState extends ConsumerState<ProjectsStep> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(projectsProvider.notifier).fetch();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final projectsState = ref.watch(projectsProvider);
+
+    return projectsState.when(
+      data: (projectsList) => _buildContent(projectsList),
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, _) => Center(
+        child: Text(
+          'Error loading projects: $error',
+          style: AppTypography.body.copyWith(color: AppColors.error),
         ),
       ),
     );
   }
 
-  void _showProjectSheet(BuildContext context, WidgetRef ref, {ProjectModel? project}) {
+  Widget _buildContent(List<ProjectModel> projectsList) {
+    if (projectsList.isEmpty) {
+      return EmptyState(
+        icon: LucideIcons.code2,
+        title: 'No projects added',
+        subtitle: 'Showcase your personal and academic projects',
+        actionText: 'Add Project',
+        onAction: () => _showProjectSheet(),
+      );
+    }
+
+    return Column(
+      children: [
+        Expanded(
+          child: ListView.builder(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            itemCount: projectsList.length,
+            itemBuilder: (context, index) {
+              final project = projectsList[index];
+              return Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                child: _buildProjectTile(project),
+              );
+            },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          child: AddItemButton(
+            text: 'Add Project',
+            onTap: () => _showProjectSheet(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildProjectTile(ProjectModel project) {
+    String? dateText;
+    if (project.startDate != null) {
+      final startDate = DateFormat('MMM yyyy').format(project.startDate!);
+      final endDate = project.endDate != null 
+          ? DateFormat('MMM yyyy').format(project.endDate!)
+          : 'Ongoing';
+      dateText = '$startDate – $endDate';
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+      child: CVSectionTile(
+        title: project.title,
+        subtitle: project.description.length > 100 
+            ? '${project.description.substring(0, 100)}...'
+            : project.description,
+        trailing: dateText,
+        onEdit: () => _showProjectSheet(project: project),
+        onDelete: () => _showDeleteConfirmation(project),
+      ),
+    );
+  }
+
+  void _showProjectSheet({ProjectModel? project}) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => _ProjectBottomSheet(
-        project: project,
-        onSave: (data) async {
-          try {
-            if (project != null) {
-              await ref.read(projectsProvider.notifier).updateProject(project.id, data);
-            } else {
-              await ref.read(projectsProvider.notifier).add(data);
-            }
-            Navigator.pop(context);
-          } catch (e) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Error saving project: $e')),
-            );
-          }
-        },
-      ),
+      builder: (context) => _ProjectBottomSheet(project: project),
     );
   }
 
-  void _showDeleteConfirmation(BuildContext context, WidgetRef ref, ProjectModel project) {
+  void _showDeleteConfirmation(ProjectModel project) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Remove Project'),
-        content: Text('This will permanently remove this project.'),
+        title: Text('Remove Project', style: AppTypography.h3),
+        content: Text(
+          'This will permanently remove "${project.title}" from your projects.',
+          style: AppTypography.body,
+        ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('Keep'),
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(
+              'Keep',
+              style: AppTypography.body.copyWith(color: AppColors.textSecondary),
+            ),
           ),
           TextButton(
-            onPressed: () async {
-              Navigator.pop(context);
-              try {
-                await ref.read(projectsProvider.notifier).delete(project.id);
-              } catch (e) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Error deleting project: $e')),
-                );
-              }
+            onPressed: () {
+              Navigator.of(context).pop();
+              ref.read(projectsProvider.notifier).delete(project.id);
+              SnackbarHelper.showSuccess(context, 'Project removed');
             },
             child: Text(
               'Remove',
-              style: TextStyle(color: AppColors.error),
+              style: AppTypography.body.copyWith(color: AppColors.error),
             ),
           ),
         ],
@@ -120,154 +152,21 @@ class ProjectsStep extends ConsumerWidget {
   }
 }
 
-class _ProjectTile extends StatelessWidget {
-  final ProjectModel project;
-  final VoidCallback onEdit;
-  final VoidCallback onDelete;
-
-  const _ProjectTile({
-    required this.project,
-    required this.onEdit,
-    required this.onDelete,
-  });
-
-  String _formatDate(DateTime date) {
-    const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-    ];
-    return '${months[date.month - 1]} ${date.year}';
-  }
-
-  String? _getDateRange() {
-    if (project.startDate == null) return null;
-    
-    final start = _formatDate(project.startDate!);
-    final end = project.endDate != null ? _formatDate(project.endDate!) : 'Ongoing';
-    
-    return '$start – $end';
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: AppColors.background,
-        border: Border.all(color: AppColors.divider),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  project.title,
-                  style: AppTypography.h3,
-                ),
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  GestureDetector(
-                    onTap: onEdit,
-                    child: Icon(
-                      Icons.edit,
-                      size: 20,
-                      color: AppColors.primary,
-                    ),
-                  ),
-                  SizedBox(width: AppSpacing.sm),
-                  GestureDetector(
-                    onTap: onDelete,
-                    child: Icon(
-                      Icons.delete,
-                      size: 20,
-                      color: AppColors.error,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          
-          SizedBox(height: AppSpacing.xs),
-          
-          Text(
-            project.description,
-            style: AppTypography.body.copyWith(
-              color: AppColors.textSecondary,
-            ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-          
-          if (project.link != null) ...[
-            SizedBox(height: AppSpacing.xs),
-            GestureDetector(
-              onTap: () async {
-                final uri = Uri.parse(project.link!);
-                if (await canLaunchUrl(uri)) {
-                  await launchUrl(uri);
-                }
-              },
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.link,
-                    size: 12,
-                    color: AppColors.primary,
-                  ),
-                  SizedBox(width: AppSpacing.xs),
-                  Text(
-                    'View Project',
-                    style: AppTypography.caption.copyWith(
-                      color: AppColors.primary,
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-          
-          if (_getDateRange() != null) ...[
-            SizedBox(height: AppSpacing.xs),
-            Text(
-              _getDateRange()!,
-              style: AppTypography.caption.copyWith(
-                color: AppColors.textSecondary,
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-class _ProjectBottomSheet extends StatefulWidget {
+class _ProjectBottomSheet extends ConsumerStatefulWidget {
   final ProjectModel? project;
-  final Function(Map<String, dynamic>) onSave;
 
-  const _ProjectBottomSheet({
-    this.project,
-    required this.onSave,
-  });
+  const _ProjectBottomSheet({this.project});
 
   @override
-  State<_ProjectBottomSheet> createState() => _ProjectBottomSheetState();
+  ConsumerState<_ProjectBottomSheet> createState() => _ProjectBottomSheetState();
 }
 
-class _ProjectBottomSheetState extends State<_ProjectBottomSheet> {
+class _ProjectBottomSheetState extends ConsumerState<_ProjectBottomSheet> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _linkController = TextEditingController();
-  
+
   DateTime? _startDate;
   DateTime? _endDate;
   bool _isOngoing = false;
@@ -277,52 +176,34 @@ class _ProjectBottomSheetState extends State<_ProjectBottomSheet> {
   void initState() {
     super.initState();
     if (widget.project != null) {
-      final project = widget.project!;
-      _titleController.text = project.title;
-      _descriptionController.text = project.description;
-      _linkController.text = project.link ?? '';
-      _startDate = project.startDate;
-      _endDate = project.endDate;
-      _isOngoing = project.endDate == null && project.startDate != null;
+      _loadExistingData();
     }
   }
 
-  void _save() async {
-    if (!_formKey.currentState!.validate()) return;
-    
-    setState(() => _isLoading = true);
-    
-    final data = {
-      'title': _titleController.text.trim(),
-      'description': _descriptionController.text.trim(),
-      'link': _linkController.text.trim(),
-      'start_date': _startDate?.toIso8601String().split('T')[0],
-      'end_date': _isOngoing ? null : _endDate?.toIso8601String().split('T')[0],
-    };
-    
-    await widget.onSave(data);
-    setState(() => _isLoading = false);
+  void _loadExistingData() {
+    final project = widget.project!;
+    _titleController.text = project.title;
+    _descriptionController.text = project.description;
+    _linkController.text = project.link;
+    _startDate = project.startDate;
+    _endDate = project.endDate;
+    _isOngoing = project.endDate == null && project.startDate != null;
   }
 
-  String? _validateUrl(String? value) {
-    if (value == null || value.isEmpty) return null;
-    
-    final urlPattern = RegExp(
-      r'^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$'
-    );
-    
-    if (!urlPattern.hasMatch(value)) {
-      return 'Please enter a valid URL';
-    }
-    return null;
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    _linkController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return StepBottomSheet(
-      title: widget.project != null ? 'Edit Project' : 'Add Project',
+      title: widget.project == null ? 'Add Project' : 'Edit Project',
       isLoading: _isLoading,
-      onSave: _save,
+      onSave: _saveProject,
       child: Form(
         key: _formKey,
         child: Column(
@@ -331,16 +212,10 @@ class _ProjectBottomSheetState extends State<_ProjectBottomSheet> {
               label: 'Project Title',
               hint: 'e.g. Student Portal App',
               controller: _titleController,
-              isRequired: true,
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Project title is required';
-                }
-                return null;
-              },
+              validator: (value) => value?.isEmpty == true ? 'Project title is required' : null,
             ),
             
-            SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.md),
             
             AppInput(
               label: 'Description',
@@ -348,40 +223,34 @@ class _ProjectBottomSheetState extends State<_ProjectBottomSheet> {
               controller: _descriptionController,
               maxLines: 5,
               maxLength: 600,
-              isRequired: true,
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Description is required';
-                }
-                return null;
-              },
+              validator: (value) => value?.isEmpty == true ? 'Description is required' : null,
             ),
             
-            SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.md),
             
             AppInput(
               label: 'Project Link (Optional)',
               hint: 'github.com/you/project or yourapp.com',
               controller: _linkController,
               keyboardType: TextInputType.url,
-              prefixIcon: Icon(Icons.link, color: AppColors.primary),
+              prefixIcon: const Icon(
+                LucideIcons.link,
+                color: AppColors.textSecondary,
+              ),
               validator: _validateUrl,
             ),
             
-            SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.md),
             
             MonthYearPicker(
               label: 'Start Date (Optional)',
-              value: _startDate,
-              onChanged: (date) {
-                setState(() {
-                  _startDate = date;
-                });
-              },
+              selectedDate: _startDate,
+              onChanged: (date) => setState(() => _startDate = date),
             ),
             
-            SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.md),
             
+            // Ongoing Project Toggle
             Row(
               children: [
                 Expanded(
@@ -406,16 +275,11 @@ class _ProjectBottomSheetState extends State<_ProjectBottomSheet> {
             ),
             
             if (!_isOngoing) ...[
-              SizedBox(height: AppSpacing.md),
-              
+              const SizedBox(height: AppSpacing.md),
               MonthYearPicker(
                 label: 'End Date (Optional)',
-                value: _endDate,
-                onChanged: (date) {
-                  setState(() {
-                    _endDate = date;
-                  });
-                },
+                selectedDate: _endDate,
+                onChanged: (date) => setState(() => _endDate = date),
               ),
             ],
           ],
@@ -424,11 +288,53 @@ class _ProjectBottomSheetState extends State<_ProjectBottomSheet> {
     );
   }
 
-  @override
-  void dispose() {
-    _titleController.dispose();
-    _descriptionController.dispose();
-    _linkController.dispose();
-    super.dispose();
+  String? _validateUrl(String? value) {
+    if (value == null || value.isEmpty) return null;
+    
+    String url = value;
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      url = 'https://$url';
+    }
+    
+    final urlPattern = r'^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$';
+    if (!RegExp(urlPattern).hasMatch(url)) {
+      return 'Please enter a valid URL';
+    }
+    return null;
+  }
+
+  Future<void> _saveProject() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _isLoading = true);
+
+    try {
+      String link = _linkController.text.trim();
+      if (link.isNotEmpty && !link.startsWith('http://') && !link.startsWith('https://')) {
+        link = 'https://$link';
+      }
+
+      final data = {
+        'title': _titleController.text.trim(),
+        'description': _descriptionController.text.trim(),
+        'link': link,
+        'start_date': _startDate?.toIso8601String().split('T')[0],
+        'end_date': _isOngoing ? null : _endDate?.toIso8601String().split('T')[0],
+      };
+
+      if (widget.project == null) {
+        await ref.read(projectsProvider.notifier).add(data);
+        SnackbarHelper.showSuccess(context, 'Project added successfully');
+      } else {
+        await ref.read(projectsProvider.notifier).updateItem(widget.project!.id, data);
+        SnackbarHelper.showSuccess(context, 'Project updated successfully');
+      }
+
+      Navigator.of(context).pop();
+    } catch (e) {
+      SnackbarHelper.showError(context, 'Failed to save project');
+    } finally {
+      setState(() => _isLoading = false);
+    }
   }
 }

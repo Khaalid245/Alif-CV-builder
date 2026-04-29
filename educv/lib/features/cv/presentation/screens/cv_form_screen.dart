@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_typography.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../providers/cv_provider.dart';
 import '../widgets/form_steps/personal_info_step.dart';
@@ -29,10 +30,22 @@ class CVFormScreen extends ConsumerStatefulWidget {
 class _CVFormScreenState extends ConsumerState<CVFormScreen> {
   late PageController _pageController;
 
+  final List<String> _stepTitles = [
+    'Personal Info',
+    'Education',
+    'Work Experience',
+    'Skills',
+    'Languages',
+    'Projects',
+    'Certifications',
+  ];
+
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: widget.initialStep);
+    
+    // Set initial step in provider
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(cvFormStepProvider.notifier).state = widget.initialStep;
     });
@@ -44,104 +57,11 @@ class _CVFormScreenState extends ConsumerState<CVFormScreen> {
     super.dispose();
   }
 
-  final List<String> _stepTitles = [
-    'Personal Info',
-    'Education',
-    'Work Experience',
-    'Skills',
-    'Languages',
-    'Projects',
-    'Certifications',
-  ];
-
-  final List<Widget> _steps = [
-    PersonalInfoStep(),
-    EducationStep(),
-    ExperienceStep(),
-    SkillsStep(),
-    LanguagesStep(),
-    ProjectsStep(),
-    CertificationsStep(),
-  ];
-
-  void _nextStep() async {
-    final currentStep = ref.read(cvFormStepProvider);
-    final isLoading = ref.read(cvFormLoadingProvider);
-    
-    if (isLoading) return;
-    
-    ref.read(cvFormLoadingProvider.notifier).state = true;
-    
-    try {
-      // Save current step data here if needed
-      await Future.delayed(Duration(milliseconds: 500)); // Simulate save
-      
-      if (currentStep < 6) {
-        final nextStep = currentStep + 1;
-        ref.read(cvFormStepProvider.notifier).state = nextStep;
-        _pageController.animateToPage(
-          nextStep,
-          duration: Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      } else {
-        // Last step - go to preview
-        context.go('/cv/preview');
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error saving data: $e')),
-      );
-    } finally {
-      ref.read(cvFormLoadingProvider.notifier).state = false;
-    }
-  }
-
-  void _previousStep() {
-    final currentStep = ref.read(cvFormStepProvider);
-    
-    if (currentStep > 0) {
-      final prevStep = currentStep - 1;
-      ref.read(cvFormStepProvider.notifier).state = prevStep;
-      _pageController.animateToPage(
-        prevStep,
-        duration: Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-    } else {
-      // First step - go back to dashboard with confirmation
-      _showExitConfirmation();
-    }
-  }
-
-  void _showExitConfirmation() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Exit Form?'),
-        content: Text('Any unsaved changes will be lost.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('Stay'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              context.go('/cv/dashboard');
-            },
-            child: Text('Exit'),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final currentStep = ref.watch(cvFormStepProvider);
     final isLoading = ref.watch(cvFormLoadingProvider);
-    final profileAsync = ref.watch(cvProfileProvider);
+    final cvProfile = ref.watch(cvProfileProvider);
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -149,59 +69,41 @@ class _CVFormScreenState extends ConsumerState<CVFormScreen> {
         child: Column(
           children: [
             // Step Indicator
-            _StepIndicator(
-              currentStep: currentStep,
-              totalSteps: 7,
-              stepTitle: _stepTitles[currentStep],
-              completionPercentage: profileAsync.value?.completionPercentage ?? 0,
-            ),
+            _buildStepIndicator(currentStep, cvProfile.value?.completionPercentage ?? 0),
             
             // Step Content
             Expanded(
-              child: PageView.builder(
+              child: PageView(
                 controller: _pageController,
                 onPageChanged: (index) {
                   ref.read(cvFormStepProvider.notifier).state = index;
                 },
-                itemCount: _steps.length,
-                itemBuilder: (context, index) => _steps[index],
+                children: const [
+                  PersonalInfoStep(),
+                  EducationStep(),
+                  ExperienceStep(),
+                  SkillsStep(),
+                  LanguagesStep(),
+                  ProjectsStep(),
+                  CertificationsStep(),
+                ],
               ),
             ),
             
             // Bottom Navigation
-            _BottomNavigation(
-              currentStep: currentStep,
-              isLoading: isLoading,
-              onBack: _previousStep,
-              onNext: _nextStep,
-            ),
+            _buildBottomNavigation(currentStep, isLoading),
           ],
         ),
       ),
     );
   }
-}
 
-class _StepIndicator extends StatelessWidget {
-  final int currentStep;
-  final int totalSteps;
-  final String stepTitle;
-  final int completionPercentage;
-
-  const _StepIndicator({
-    required this.currentStep,
-    required this.totalSteps,
-    required this.stepTitle,
-    required this.completionPercentage,
-  });
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildStepIndicator(int currentStep, int completionPercentage) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: AppColors.background,
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: const BoxDecoration(
+        color: Colors.white,
         border: Border(
           bottom: BorderSide(
             color: AppColors.divider,
@@ -214,71 +116,54 @@ class _StepIndicator extends StatelessWidget {
           Row(
             children: [
               Text(
-                'Step ${currentStep + 1} of $totalSteps',
+                'Step ${currentStep + 1} of 7',
                 style: AppTypography.caption.copyWith(
                   color: AppColors.textSecondary,
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               Text(
-                stepTitle,
+                _stepTitles[currentStep],
                 style: AppTypography.h3,
               ),
-              Spacer(),
+              const Spacer(),
               Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: AppSpacing.sm,
-                  vertical: AppSpacing.xs,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.xs,
+                  vertical: 4,
                 ),
                 decoration: BoxDecoration(
-                  color: Color(0xFFE8F0FE),
+                  color: const Color(0xFFE8F0FE),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
                   '$completionPercentage%',
                   style: AppTypography.caption.copyWith(
                     color: AppColors.primary,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
             ],
           ),
-          
-          SizedBox(height: AppSpacing.sm),
-          
+          const SizedBox(height: AppSpacing.xs),
           LinearProgressIndicator(
-            value: (currentStep + 1) / totalSteps,
+            value: (currentStep + 1) / 7,
             backgroundColor: AppColors.divider,
-            valueColor: AlwaysStoppedAnimation(AppColors.primary),
+            valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
             minHeight: 3,
           ),
         ],
       ),
     );
   }
-}
 
-class _BottomNavigation extends StatelessWidget {
-  final int currentStep;
-  final bool isLoading;
-  final VoidCallback onBack;
-  final VoidCallback onNext;
-
-  const _BottomNavigation({
-    required this.currentStep,
-    required this.isLoading,
-    required this.onBack,
-    required this.onNext,
-  });
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildBottomNavigation(int currentStep, bool isLoading) {
     return Container(
-      padding: EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: AppColors.background,
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: const BoxDecoration(
+        color: Colors.white,
         border: Border(
           top: BorderSide(
             color: AppColors.divider,
@@ -288,25 +173,100 @@ class _BottomNavigation extends StatelessWidget {
       ),
       child: Row(
         children: [
+          // Back Button
           if (currentStep > 0)
             SizedBox(
               width: 140,
-              child: AppButton.secondary(
-                'Back',
-                onPressed: onBack,
+              child: AppButton(
+                text: 'Back',
+                onPressed: _goToPreviousStep,
               ),
             )
           else
-            SizedBox(width: 140),
+            const SizedBox(width: 140),
           
-          Spacer(),
+          const Spacer(),
           
+          // Next Button
           SizedBox(
             width: 140,
-            child: AppButton.primary(
-              currentStep == 6 ? 'Preview CV' : 'Next',
-              onPressed: onNext,
+            child: AppButton(
+              text: currentStep == 6 ? 'Preview CV' : 'Next',
+              onPressed: isLoading ? null : _goToNextStep,
               isLoading: isLoading,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _goToPreviousStep() {
+    final currentStep = ref.read(cvFormStepProvider);
+    if (currentStep > 0) {
+      final newStep = currentStep - 1;
+      ref.read(cvFormStepProvider.notifier).state = newStep;
+      _pageController.animateToPage(
+        newStep,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } else {
+      // Go back to dashboard with confirmation if there are unsaved changes
+      _showExitConfirmation();
+    }
+  }
+
+  void _goToNextStep() async {
+    final currentStep = ref.read(cvFormStepProvider);
+    
+    if (currentStep < 6) {
+      // Move to next step
+      final newStep = currentStep + 1;
+      ref.read(cvFormStepProvider.notifier).state = newStep;
+      _pageController.animateToPage(
+        newStep,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } else {
+      // Go to preview screen
+      context.go('/cv/preview');
+    }
+  }
+
+  void _showExitConfirmation() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          'Exit CV Form',
+          style: AppTypography.h3,
+        ),
+        content: Text(
+          'Are you sure you want to go back to the dashboard? Any unsaved changes will be lost.',
+          style: AppTypography.body,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(
+              'Stay',
+              style: AppTypography.body.copyWith(
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              context.go('/cv/dashboard');
+            },
+            child: Text(
+              'Exit',
+              style: AppTypography.body.copyWith(
+                color: AppColors.error,
+              ),
             ),
           ),
         ],

@@ -4,7 +4,7 @@ import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
 import '../theme/app_typography.dart';
 
-enum AppButtonVariant { primary, secondary, outline, text }
+enum AppButtonVariant { primary, secondary, outline, text, danger }
 
 class AppButton extends StatelessWidget {
   final String text;
@@ -99,6 +99,15 @@ class AppButton extends StatelessWidget {
           ),
           child: _buildContent(),
         );
+      case AppButtonVariant.danger:
+        return ElevatedButton(
+          onPressed: isLoading ? null : onPressed,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.error,
+            foregroundColor: AppColors.background,
+          ),
+          child: _buildContent(),
+        );
     }
   }
 
@@ -109,7 +118,7 @@ class AppButton extends StatelessWidget {
         height: 20,
         child: CircularProgressIndicator(
           strokeWidth: 2,
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+          valueColor: AlwaysStoppedAnimation<Color>(AppColors.background),
         ),
       );
     }
@@ -144,6 +153,8 @@ class AppButton extends StatelessWidget {
         return AppTypography.button.copyWith(color: AppColors.primary);
       case AppButtonVariant.text:
         return AppTypography.button.copyWith(color: AppColors.primary);
+      case AppButtonVariant.danger:
+        return AppTypography.button.copyWith(color: AppColors.background);
     }
   }
 }

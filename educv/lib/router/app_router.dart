@@ -8,32 +8,10 @@ import '../features/auth/presentation/screens/register_screen.dart';
 import '../features/auth/presentation/screens/splash_screen.dart';
 import '../features/cv/presentation/screens/cv_dashboard_screen.dart';
 import '../features/cv/presentation/screens/cv_form_screen.dart';
-
-// Placeholder screens for routes not yet implemented
-
-class CVPreviewScreen extends StatelessWidget {
-  const CVPreviewScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('CV Preview')),
-      body: const Center(child: Text('CVPreviewScreen')),
-    );
-  }
-}
-
-class PDFResultScreen extends StatelessWidget {
-  const PDFResultScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('PDF Result')),
-      body: const Center(child: Text('PDFResultScreen')),
-    );
-  }
-}
+import '../features/cv/presentation/screens/cv_preview_screen.dart';
+import '../features/pdf/presentation/screens/pdf_result_screen.dart';
+import '../features/pdf/presentation/screens/pdf_preview_screen.dart';
+import '../features/admin/presentation/screens/admin_shell.dart';
 
 class AdminDashboardScreen extends StatelessWidget {
   const AdminDashboardScreen({super.key});
@@ -42,7 +20,7 @@ class AdminDashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Admin Dashboard')),
-      body: const Center(child: Text('AdminDashboardScreen')),
+      body: const Center(child: Text('Admin Dashboard - Phase 11 Complete')),
     );
   }
 }
@@ -54,7 +32,7 @@ class StudentsListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Students List')),
-      body: const Center(child: Text('StudentsListScreen')),
+      body: const Center(child: Text('Students List - Coming in Phase 11')),
     );
   }
 }
@@ -68,7 +46,7 @@ class StudentDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Student Detail: $studentId')),
-      body: Center(child: Text('StudentDetailScreen: $studentId')),
+      body: Center(child: Text('Student Detail - Coming in Phase 11')),
     );
   }
 }
@@ -82,6 +60,8 @@ class AppRoutes {
   static const String cvForm = '/cv/form';
   static const String cvPreview = '/cv/preview';
   static const String pdfResult = '/pdf/result';
+  static const String pdfPreview = '/pdf/preview/:id';
+  static const String admin = '/admin';
   static const String adminDashboard = '/admin/dashboard';
   static const String studentsList = '/admin/students';
   static const String studentDetail = '/admin/students/:id';
@@ -125,12 +105,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const PDFResultScreen(),
       ),
       GoRoute(
-        path: AppRoutes.adminDashboard,
-        builder: (context, state) => const AdminDashboardScreen(),
+        path: '/pdf/preview/:id',
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return PDFPreviewScreen(generatedCvId: id);
+        },
       ),
       GoRoute(
-        path: AppRoutes.studentsList,
-        builder: (context, state) => const StudentsListScreen(),
+        path: '/admin',
+        builder: (context, state) => const AdminShell(),
       ),
       GoRoute(
         path: '/admin/students/:id',
@@ -155,7 +138,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       
       // If not authenticated and trying to access protected routes
       if (!isAuthenticated) {
-        if (currentPath.startsWith('/cv/') || currentPath.startsWith('/admin/')) {
+        if (currentPath.startsWith('/cv/') ||
+            currentPath.startsWith('/pdf/') ||
+            currentPath.startsWith('/admin/')) {
           return AppRoutes.login;
         }
         return null; // Allow login and register
@@ -167,7 +152,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           // Get user role to determine redirect
           final userRole = await secureStorage.getUserRole();
           if (userRole == 'admin') {
-            return AppRoutes.adminDashboard;
+            return '/admin';
           } else {
             return AppRoutes.cvDashboard;
           }

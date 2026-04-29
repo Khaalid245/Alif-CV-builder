@@ -9,6 +9,7 @@ class DateFormatter {
   static final DateFormat _monthYearFormat = DateFormat('MMM yyyy');
   static final DateFormat _timeFormat = DateFormat('HH:mm');
   static final DateFormat _dateTimeFormat = DateFormat('MMM dd, yyyy HH:mm');
+  static final DateFormat _fileFormat = DateFormat('yyyy-MM-dd');
 
   // Format for display (e.g., "Jan 15, 2024")
   static String toDisplayFormat(DateTime date) {
@@ -101,6 +102,11 @@ class DateFormatter {
   static bool isYesterday(DateTime date) {
     final yesterday = DateTime.now().subtract(const Duration(days: 1));
     return date.year == yesterday.year && date.month == yesterday.month && date.day == yesterday.day;
+  }
+
+  // Format for file names (e.g., "2024-01-15")
+  static String fileDate(DateTime date) {
+    return _fileFormat.format(date);
   }
 
   // Get age from birth date

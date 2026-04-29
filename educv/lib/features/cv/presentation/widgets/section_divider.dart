@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_typography.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 
 class SectionDivider extends StatelessWidget {
   final String label;
@@ -15,14 +16,14 @@ class SectionDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(
+        const Expanded(
           child: Divider(
             color: AppColors.divider,
-            thickness: 1,
+            height: 1,
           ),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
           child: Text(
             label,
             style: AppTypography.caption.copyWith(
@@ -31,10 +32,10 @@ class SectionDivider extends StatelessWidget {
             ),
           ),
         ),
-        Expanded(
+        const Expanded(
           child: Divider(
             color: AppColors.divider,
-            thickness: 1,
+            height: 1,
           ),
         ),
       ],

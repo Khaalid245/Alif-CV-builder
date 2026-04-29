@@ -43,6 +43,6 @@ abstract class CVRepository {
   Future<CertificationModel> updateCertification(String id, Map<String, dynamic> data);
   Future<void> deleteCertification(String id);
 
-  // Completion percentage
+  // Completion
   Future<int> getCompletionPercentage();
 }

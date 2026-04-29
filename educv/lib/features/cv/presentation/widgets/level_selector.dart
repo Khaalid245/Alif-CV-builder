@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_typography.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 
 class LevelSelector extends StatelessWidget {
   final List<String> options;
-  final String? selected;
+  final String selected;
   final ValueChanged<String> onChanged;
 
   const LevelSelector({
     super.key,
     required this.options,
-    this.selected,
+    required this.selected,
     required this.onChanged,
   });
 
@@ -20,11 +21,11 @@ class LevelSelector extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.divider),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
       ),
       child: Row(
         children: options.map((option) {
-          final isSelected = selected == option;
+          final isSelected = option == selected;
           final isFirst = options.first == option;
           final isLast = options.last == option;
           
@@ -32,15 +33,15 @@ class LevelSelector extends StatelessWidget {
             child: GestureDetector(
               onTap: () => onChanged(option),
               child: Container(
-                padding: EdgeInsets.symmetric(
+                padding: const EdgeInsets.symmetric(
                   vertical: AppSpacing.sm,
                   horizontal: AppSpacing.xs,
                 ),
                 decoration: BoxDecoration(
                   color: isSelected ? AppColors.primary : AppColors.surface,
                   borderRadius: BorderRadius.horizontal(
-                    left: isFirst ? Radius.circular(7) : Radius.zero,
-                    right: isLast ? Radius.circular(7) : Radius.zero,
+                    left: isFirst ? const Radius.circular(AppSpacing.radiusMd) : Radius.zero,
+                    right: isLast ? const Radius.circular(AppSpacing.radiusMd) : Radius.zero,
                   ),
                 ),
                 child: Text(

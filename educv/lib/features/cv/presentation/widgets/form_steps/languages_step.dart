@@ -1,117 +1,195 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../../core/theme/app_colors.dart';
-import '../../../../../core/theme/app_typography.dart';
-import '../../../../../core/theme/app_spacing.dart';
-import '../../../../../core/widgets/app_input.dart';
-import '../../../../../core/widgets/empty_state.dart';
-import '../../providers/cv_provider.dart';
-import '../../../data/models/cv_models.dart';
-import '../cv_section_tile.dart';
-import '../add_item_button.dart';
-import '../step_bottom_sheet.dart';
-import '../level_selector.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
-class LanguagesStep extends ConsumerWidget {
+import '../../../../../core/theme/app_colors.dart';
+import '../../../../../core/theme/app_spacing.dart';
+import '../../../../../core/theme/app_typography.dart';
+import '../../../../../core/utils/snackbar_helper.dart';
+import '../../../../../core/widgets/app_input.dart';
+import '../../../data/models/cv_models.dart';
+import '../../providers/cv_provider.dart';
+import '../add_item_button.dart';
+import '../cv_section_tile.dart';
+import '../empty_state.dart';
+import '../level_selector.dart';
+import '../step_bottom_sheet.dart';
+
+class LanguagesStep extends ConsumerStatefulWidget {
   const LanguagesStep({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final languagesAsync = ref.watch(languagesProvider);
-    
-    return languagesAsync.when(
-      loading: () => Center(child: CircularProgressIndicator()),
-      error: (error, stack) => Center(
-        child: Text('Error: $error'),
-      ),
-      data: (languages) => SingleChildScrollView(
-        padding: EdgeInsets.all(AppSpacing.lg),
-        child: Column(
-          children: [
-            if (languages.isEmpty)
-              EmptyState(
-                icon: Icons.language,
-                title: 'No languages added',
-                subtitle: 'Add languages you speak and your proficiency',
-                actionLabel: 'Add Language',
-                onAction: () => _showLanguageSheet(context, ref),
-              )
-            else ...[
-              ...languages.map((language) => Padding(
-                padding: EdgeInsets.only(bottom: AppSpacing.md),
-                child: CVSectionTile(
-                  title: language.language,
-                  badge: _ProficiencyBadge(proficiency: language.proficiency),
-                  onEdit: () => _showLanguageSheet(context, ref, language: language),
-                  onDelete: () => _showDeleteConfirmation(context, ref, language),
-                ),
-              )),
-              
-              SizedBox(height: AppSpacing.md),
-            ],
-            
-            AddItemButton(
-              label: 'Add Language',
-              onTap: () => _showLanguageSheet(context, ref),
-            ),
-            
-            SizedBox(height: AppSpacing.xxl),
-          ],
+  ConsumerState<LanguagesStep> createState() => _LanguagesStepState();
+}
+
+class _LanguagesStepState extends ConsumerState<LanguagesStep> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(languagesProvider.notifier).fetch();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final languagesState = ref.watch(languagesProvider);
+
+    return languagesState.when(
+      data: (languagesList) => _buildContent(languagesList),
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, _) => Center(
+        child: Text(
+          'Error loading languages: $error',
+          style: AppTypography.body.copyWith(color: AppColors.error),
         ),
       ),
     );
   }
 
-  void _showLanguageSheet(BuildContext context, WidgetRef ref, {LanguageModel? language}) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => _LanguageBottomSheet(
-        language: language,
-        onSave: (data) async {
-          try {
-            if (language != null) {
-              await ref.read(languagesProvider.notifier).updateLanguage(language.id, data);
-            } else {
-              await ref.read(languagesProvider.notifier).add(data);
-            }
-            Navigator.pop(context);
-          } catch (e) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Error saving language: $e')),
-            );
-          }
-        },
+  Widget _buildContent(List<LanguageModel> languagesList) {
+    if (languagesList.isEmpty) {
+      return EmptyState(
+        icon: LucideIcons.globe,
+        title: 'No languages added',
+        subtitle: 'Add languages you speak and your proficiency',
+        actionText: 'Add Language',
+        onAction: () => _showLanguageSheet(),
+      );
+    }
+
+    return Column(
+      children: [
+        Expanded(
+          child: ListView.builder(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            itemCount: languagesList.length,
+            itemBuilder: (context, index) {
+              final language = languagesList[index];
+              return Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                child: _buildLanguageTile(language),
+              );
+            },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          child: AddItemButton(
+            text: 'Add Language',
+            onTap: () => _showLanguageSheet(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLanguageTile(LanguageModel language) {
+    return CVSectionTile(
+      title: language.language,
+      subtitle: '',
+      badge: _buildProficiencyBadge(language.proficiency),
+      onEdit: () => _showLanguageSheet(language: language),
+      onDelete: () => _showDeleteConfirmation(language),
+    );
+  }
+
+  Widget _buildProficiencyBadge(String proficiency) {
+    Color backgroundColor;
+    Color textColor;
+
+    switch (proficiency) {
+      case 'basic':
+        backgroundColor = AppColors.divider;
+        textColor = AppColors.textSecondary;
+        break;
+      case 'conversational':
+        backgroundColor = AppColors.divider;
+        textColor = AppColors.textSecondary;
+        break;
+      case 'professional':
+        backgroundColor = const Color(0xFFE8F0FE);
+        textColor = AppColors.primary;
+        break;
+      case 'native':
+        backgroundColor = const Color(0xFF1565C0);
+        textColor = Colors.white;
+        break;
+      default:
+        backgroundColor = AppColors.divider;
+        textColor = AppColors.textSecondary;
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.xs,
+        vertical: 4,
+      ),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Text(
+        _getProficiencyDisplayName(proficiency),
+        style: AppTypography.caption.copyWith(
+          color: textColor,
+          fontWeight: FontWeight.w500,
+          fontSize: 10,
+        ),
       ),
     );
   }
 
-  void _showDeleteConfirmation(BuildContext context, WidgetRef ref, LanguageModel language) {
+  String _getProficiencyDisplayName(String proficiency) {
+    switch (proficiency) {
+      case 'basic':
+        return 'Basic';
+      case 'conversational':
+        return 'Conversational';
+      case 'professional':
+        return 'Professional';
+      case 'native':
+        return 'Native';
+      default:
+        return 'Conversational';
+    }
+  }
+
+  void _showLanguageSheet({LanguageModel? language}) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => _LanguageBottomSheet(language: language),
+    );
+  }
+
+  void _showDeleteConfirmation(LanguageModel language) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Remove Language'),
-        content: Text('This will permanently remove this language.'),
+        title: Text('Remove Language', style: AppTypography.h3),
+        content: Text(
+          'This will permanently remove "${language.language}" from your languages.',
+          style: AppTypography.body,
+        ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('Keep'),
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(
+              'Keep',
+              style: AppTypography.body.copyWith(color: AppColors.textSecondary),
+            ),
           ),
           TextButton(
-            onPressed: () async {
-              Navigator.pop(context);
-              try {
-                await ref.read(languagesProvider.notifier).delete(language.id);
-              } catch (e) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Error deleting language: $e')),
-                );
-              }
+            onPressed: () {
+              Navigator.of(context).pop();
+              ref.read(languagesProvider.notifier).delete(language.id);
+              SnackbarHelper.showSuccess(context, 'Language removed');
             },
             child: Text(
               'Remove',
-              style: TextStyle(color: AppColors.error),
+              style: AppTypography.body.copyWith(color: AppColors.error),
             ),
           ),
         ],
@@ -120,117 +198,50 @@ class LanguagesStep extends ConsumerWidget {
   }
 }
 
-class _ProficiencyBadge extends StatelessWidget {
-  final String proficiency;
-
-  const _ProficiencyBadge({required this.proficiency});
-
-  Color _getBadgeColor() {
-    switch (proficiency.toLowerCase()) {
-      case 'native':
-        return AppColors.primary;
-      case 'professional':
-        return Color(0xFFE8F0FE);
-      case 'conversational':
-      case 'basic':
-      default:
-        return AppColors.surface;
-    }
-  }
-
-  Color _getTextColor() {
-    switch (proficiency.toLowerCase()) {
-      case 'native':
-        return Colors.white;
-      case 'professional':
-        return AppColors.primary;
-      case 'conversational':
-      case 'basic':
-      default:
-        return AppColors.textSecondary;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: AppSpacing.sm,
-        vertical: AppSpacing.xs,
-      ),
-      decoration: BoxDecoration(
-        color: _getBadgeColor(),
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: Text(
-        proficiency,
-        style: AppTypography.caption.copyWith(
-          color: _getTextColor(),
-          fontSize: 10,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-    );
-  }
-}
-
-class _LanguageBottomSheet extends StatefulWidget {
+class _LanguageBottomSheet extends ConsumerStatefulWidget {
   final LanguageModel? language;
-  final Function(Map<String, dynamic>) onSave;
 
-  const _LanguageBottomSheet({
-    this.language,
-    required this.onSave,
-  });
+  const _LanguageBottomSheet({this.language});
 
   @override
-  State<_LanguageBottomSheet> createState() => _LanguageBottomSheetState();
+  ConsumerState<_LanguageBottomSheet> createState() => _LanguageBottomSheetState();
 }
 
-class _LanguageBottomSheetState extends State<_LanguageBottomSheet> {
+class _LanguageBottomSheetState extends ConsumerState<_LanguageBottomSheet> {
   final _formKey = GlobalKey<FormState>();
   final _languageController = TextEditingController();
-  
-  String _selectedProficiency = 'basic';
+
+  String _selectedProficiency = 'conversational';
   bool _isLoading = false;
 
-  final Map<String, String> _proficiencyLevels = {
-    'basic': 'Basic',
-    'conversational': 'Conversational',
-    'professional': 'Professional',
-    'native': 'Native',
-  };
+  final List<String> _proficiencies = ['basic', 'conversational', 'professional', 'native'];
 
   @override
   void initState() {
     super.initState();
     if (widget.language != null) {
-      final language = widget.language!;
-      _languageController.text = language.language;
-      _selectedProficiency = language.proficiency;
+      _loadExistingData();
     }
   }
 
-  void _save() async {
-    if (!_formKey.currentState!.validate()) return;
-    
-    setState(() => _isLoading = true);
-    
-    final data = {
-      'language': _languageController.text.trim(),
-      'proficiency': _selectedProficiency,
-    };
-    
-    await widget.onSave(data);
-    setState(() => _isLoading = false);
+  void _loadExistingData() {
+    final language = widget.language!;
+    _languageController.text = language.language;
+    _selectedProficiency = language.proficiency;
+  }
+
+  @override
+  void dispose() {
+    _languageController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return StepBottomSheet(
-      title: widget.language != null ? 'Edit Language' : 'Add Language',
+      title: widget.language == null ? 'Add Language' : 'Edit Language',
       isLoading: _isLoading,
-      onSave: _save,
+      onSave: _saveLanguage,
       child: Form(
         key: _formKey,
         child: Column(
@@ -239,17 +250,12 @@ class _LanguageBottomSheetState extends State<_LanguageBottomSheet> {
               label: 'Language Name',
               hint: 'e.g. English, Arabic, French',
               controller: _languageController,
-              isRequired: true,
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Language name is required';
-                }
-                return null;
-              },
+              validator: (value) => value?.isEmpty == true ? 'Language name is required' : null,
             ),
             
-            SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.md),
             
+            // Proficiency Selector
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -257,17 +263,15 @@ class _LanguageBottomSheetState extends State<_LanguageBottomSheet> {
                   'Proficiency',
                   style: AppTypography.label,
                 ),
-                SizedBox(height: AppSpacing.sm),
-                
+                const SizedBox(height: AppSpacing.xs),
                 LevelSelector(
-                  options: _proficiencyLevels.values.toList(),
-                  selected: _proficiencyLevels[_selectedProficiency] ?? 'Basic',
-                  onChanged: (proficiency) {
-                    setState(() {
-                      _selectedProficiency = _proficiencyLevels.entries
-                          .firstWhere((entry) => entry.value == proficiency)
-                          .key;
-                    });
+                  options: _proficiencies.map((prof) => _getProficiencyDisplayName(prof)).toList(),
+                  selected: _getProficiencyDisplayName(_selectedProficiency),
+                  onChanged: (displayName) {
+                    final proficiency = _proficiencies.firstWhere(
+                      (p) => _getProficiencyDisplayName(p) == displayName,
+                    );
+                    setState(() => _selectedProficiency = proficiency);
                   },
                 ),
               ],
@@ -278,9 +282,45 @@ class _LanguageBottomSheetState extends State<_LanguageBottomSheet> {
     );
   }
 
-  @override
-  void dispose() {
-    _languageController.dispose();
-    super.dispose();
+  String _getProficiencyDisplayName(String proficiency) {
+    switch (proficiency) {
+      case 'basic':
+        return 'Basic';
+      case 'conversational':
+        return 'Conversational';
+      case 'professional':
+        return 'Professional';
+      case 'native':
+        return 'Native';
+      default:
+        return 'Conversational';
+    }
+  }
+
+  Future<void> _saveLanguage() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _isLoading = true);
+
+    try {
+      final data = {
+        'language': _languageController.text.trim(),
+        'proficiency': _selectedProficiency,
+      };
+
+      if (widget.language == null) {
+        await ref.read(languagesProvider.notifier).add(data);
+        SnackbarHelper.showSuccess(context, 'Language added successfully');
+      } else {
+        await ref.read(languagesProvider.notifier).updateItem(widget.language!.id, data);
+        SnackbarHelper.showSuccess(context, 'Language updated successfully');
+      }
+
+      Navigator.of(context).pop();
+    } catch (e) {
+      SnackbarHelper.showError(context, 'Failed to save language');
+    } finally {
+      setState(() => _isLoading = false);
+    }
   }
 }

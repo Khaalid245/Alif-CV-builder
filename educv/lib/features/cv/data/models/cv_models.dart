@@ -1,14 +1,14 @@
 class CVProfileModel {
   final String id;
-  final String? phone;
-  final String? address;
-  final String? city;
-  final String? country;
-  final String? linkedin;
-  final String? github;
-  final String? portfolio;
+  final String phone;
+  final String address;
+  final String city;
+  final String country;
+  final String linkedin;
+  final String github;
+  final String portfolio;
   final String? photoUrl;
-  final String? summary;
+  final String summary;
   final int completionPercentage;
   final String fullName;
   final String email;
@@ -19,18 +19,20 @@ class CVProfileModel {
   final List<LanguageModel> languages;
   final List<ProjectModel> projects;
   final List<CertificationModel> certifications;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   const CVProfileModel({
     required this.id,
-    this.phone,
-    this.address,
-    this.city,
-    this.country,
-    this.linkedin,
-    this.github,
-    this.portfolio,
+    required this.phone,
+    required this.address,
+    required this.city,
+    required this.country,
+    required this.linkedin,
+    required this.github,
+    required this.portfolio,
     this.photoUrl,
-    this.summary,
+    required this.summary,
     required this.completionPercentage,
     required this.fullName,
     required this.email,
@@ -41,25 +43,27 @@ class CVProfileModel {
     required this.languages,
     required this.projects,
     required this.certifications,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
   factory CVProfileModel.fromJson(Map<String, dynamic> json) {
     return CVProfileModel(
       id: json['id'] ?? '',
-      phone: json['phone'],
-      address: json['address'],
-      city: json['city'],
-      country: json['country'],
-      linkedin: json['linkedin'],
-      github: json['github'],
-      portfolio: json['portfolio'],
-      photoUrl: json['photo_url'] ?? json['photo'],
-      summary: json['summary'],
+      phone: json['phone'] ?? '',
+      address: json['address'] ?? '',
+      city: json['city'] ?? '',
+      country: json['country'] ?? '',
+      linkedin: json['linkedin'] ?? '',
+      github: json['github'] ?? '',
+      portfolio: json['portfolio'] ?? '',
+      photoUrl: json['photo'],
+      summary: json['summary'] ?? '',
       completionPercentage: json['completion_percentage'] ?? 0,
-      fullName: json['student']?['full_name'] ?? json['full_name'] ?? '',
-      email: json['student']?['email'] ?? json['email'] ?? '',
-      studentId: json['student']?['student_id'] ?? json['student_id'] ?? '',
-      education: ((json['educations'] ?? json['education']) as List<dynamic>?)
+      fullName: json['student']?['full_name'] ?? '',
+      email: json['student']?['email'] ?? '',
+      studentId: json['student']?['student_id'] ?? '',
+      education: (json['educations'] as List<dynamic>?)
               ?.map((e) => EducationModel.fromJson(e))
               .toList() ??
           [],
@@ -83,6 +87,8 @@ class CVProfileModel {
               ?.map((e) => CertificationModel.fromJson(e))
               .toList() ??
           [],
+      createdAt: DateTime.parse(json['created_at'] ?? DateTime.now().toIso8601String()),
+      updatedAt: DateTime.parse(json['updated_at'] ?? DateTime.now().toIso8601String()),
     );
   }
 
@@ -96,12 +102,9 @@ class CVProfileModel {
       'linkedin': linkedin,
       'github': github,
       'portfolio': portfolio,
-      'photo_url': photoUrl,
+      'photo': photoUrl,
       'summary': summary,
       'completion_percentage': completionPercentage,
-      'full_name': fullName,
-      'email': email,
-      'student_id': studentId,
     };
   }
 
@@ -126,6 +129,8 @@ class CVProfileModel {
     List<LanguageModel>? languages,
     List<ProjectModel>? projects,
     List<CertificationModel>? certifications,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) {
     return CVProfileModel(
       id: id ?? this.id,
@@ -148,6 +153,8 @@ class CVProfileModel {
       languages: languages ?? this.languages,
       projects: projects ?? this.projects,
       certifications: certifications ?? this.certifications,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 }
@@ -161,7 +168,7 @@ class EducationModel {
   final int? endYear;
   final bool isCurrent;
   final double? gpa;
-  final String? description;
+  final String description;
   final int order;
 
   const EducationModel({
@@ -173,7 +180,7 @@ class EducationModel {
     this.endYear,
     required this.isCurrent,
     this.gpa,
-    this.description,
+    required this.description,
     required this.order,
   });
 
@@ -186,8 +193,8 @@ class EducationModel {
       startYear: json['start_year'] ?? 0,
       endYear: json['end_year'],
       isCurrent: json['is_current'] ?? false,
-      gpa: _parseNullableDouble(json['gpa']),
-      description: json['description'],
+      gpa: json['gpa']?.toDouble(),
+      description: json['description'] ?? '',
       order: json['order'] ?? 0,
     );
   }
@@ -234,21 +241,11 @@ class EducationModel {
   }
 }
 
-double? _parseNullableDouble(dynamic value) {
-  if (value == null) {
-    return null;
-  }
-  if (value is num) {
-    return value.toDouble();
-  }
-  return double.tryParse(value.toString());
-}
-
 class ExperienceModel {
   final String id;
   final String jobTitle;
   final String company;
-  final String? location;
+  final String location;
   final DateTime startDate;
   final DateTime? endDate;
   final bool isCurrent;
@@ -259,7 +256,7 @@ class ExperienceModel {
     required this.id,
     required this.jobTitle,
     required this.company,
-    this.location,
+    required this.location,
     required this.startDate,
     this.endDate,
     required this.isCurrent,
@@ -272,8 +269,8 @@ class ExperienceModel {
       id: json['id'] ?? '',
       jobTitle: json['job_title'] ?? '',
       company: json['company'] ?? '',
-      location: json['location'],
-      startDate: DateTime.parse(json['start_date'] ?? '2000-01-01'),
+      location: json['location'] ?? '',
+      startDate: DateTime.parse(json['start_date'] ?? DateTime.now().toIso8601String()),
       endDate: json['end_date'] != null ? DateTime.parse(json['end_date']) : null,
       isCurrent: json['is_current'] ?? false,
       description: json['description'] ?? '',
@@ -339,8 +336,8 @@ class SkillModel {
     return SkillModel(
       id: json['id'] ?? '',
       name: json['name'] ?? '',
-      level: json['level'] ?? '',
-      category: json['category'] ?? '',
+      level: json['level'] ?? 'intermediate',
+      category: json['category'] ?? 'technical',
       order: json['order'] ?? 0,
     );
   }
@@ -387,7 +384,7 @@ class LanguageModel {
     return LanguageModel(
       id: json['id'] ?? '',
       language: json['language'] ?? '',
-      proficiency: json['proficiency'] ?? '',
+      proficiency: json['proficiency'] ?? 'conversational',
     );
   }
 
@@ -416,7 +413,7 @@ class ProjectModel {
   final String id;
   final String title;
   final String description;
-  final String? link;
+  final String link;
   final DateTime? startDate;
   final DateTime? endDate;
   final int order;
@@ -425,7 +422,7 @@ class ProjectModel {
     required this.id,
     required this.title,
     required this.description,
-    this.link,
+    required this.link,
     this.startDate,
     this.endDate,
     required this.order,
@@ -436,7 +433,7 @@ class ProjectModel {
       id: json['id'] ?? '',
       title: json['title'] ?? '',
       description: json['description'] ?? '',
-      link: json['link'],
+      link: json['link'] ?? '',
       startDate: json['start_date'] != null ? DateTime.parse(json['start_date']) : null,
       endDate: json['end_date'] != null ? DateTime.parse(json['end_date']) : null,
       order: json['order'] ?? 0,
@@ -482,7 +479,7 @@ class CertificationModel {
   final String issuer;
   final DateTime issueDate;
   final DateTime? expiryDate;
-  final String? credentialUrl;
+  final String credentialUrl;
 
   const CertificationModel({
     required this.id,
@@ -490,7 +487,7 @@ class CertificationModel {
     required this.issuer,
     required this.issueDate,
     this.expiryDate,
-    this.credentialUrl,
+    required this.credentialUrl,
   });
 
   factory CertificationModel.fromJson(Map<String, dynamic> json) {
@@ -498,9 +495,9 @@ class CertificationModel {
       id: json['id'] ?? '',
       name: json['name'] ?? '',
       issuer: json['issuer'] ?? '',
-      issueDate: DateTime.parse(json['issue_date'] ?? '2000-01-01'),
+      issueDate: DateTime.parse(json['issue_date'] ?? DateTime.now().toIso8601String()),
       expiryDate: json['expiry_date'] != null ? DateTime.parse(json['expiry_date']) : null,
-      credentialUrl: json['credential_url'],
+      credentialUrl: json['credential_url'] ?? '',
     );
   }
 
