@@ -113,7 +113,7 @@ class _LanguagesStepState extends ConsumerState<LanguagesStep> {
         break;
       case 'native':
         backgroundColor = const Color(0xFF1565C0);
-        textColor = Colors.white;
+        textColor = AppColors.white;
         break;
       default:
         backgroundColor = AppColors.divider;

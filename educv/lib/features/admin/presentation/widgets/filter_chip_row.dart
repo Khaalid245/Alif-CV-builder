@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 
 class FilterChipRow extends StatelessWidget {
   final List<String> options;
@@ -35,8 +36,7 @@ class FilterChipRow extends StatelessWidget {
                 color: isSelected ? AppColors.primary : AppColors.divider,
                 width: isSelected ? 1.5 : 1,
               ),
-              labelStyle: TextStyle(
-                fontSize: 12,
+              labelStyle: AppTypography.caption.copyWith(
                 fontWeight: FontWeight.w600,
                 color: isSelected ? AppColors.primary : AppColors.textSecondary,
               ),

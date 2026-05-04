@@ -5,6 +5,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/widgets/section_card.dart';
+import '../../../../core/widgets/app_error_state.dart';
 import '../../../../core/utils/date_formatter.dart';
 import '../providers/admin_provider.dart';
 import '../widgets/stat_card.dart';
@@ -55,7 +56,10 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
             statsState.when(
               data: (stats) => stats != null ? _buildKeyMetrics(stats) : const SizedBox.shrink(),
               loading: () => _buildKeyMetricsSkeleton(),
-              error: (_, __) => const SizedBox.shrink(),
+              error: (e, _) => AppErrorState(
+                message: e.toString(),
+                onRetry: () => ref.read(platformStatsProvider.notifier).refresh(),
+              ),
             ),
             
             const SizedBox(height: 24),

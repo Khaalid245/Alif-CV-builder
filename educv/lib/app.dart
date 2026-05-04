@@ -4,6 +4,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'core/theme/app_theme.dart';
 import 'router/app_router.dart';
 
+// Global navigator key — used by auth interceptor to show session expiry message
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 class App extends ConsumerWidget {
   const App({super.key});
 

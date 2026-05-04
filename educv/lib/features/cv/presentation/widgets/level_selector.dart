@@ -48,7 +48,7 @@ class LevelSelector extends StatelessWidget {
                   option,
                   textAlign: TextAlign.center,
                   style: AppTypography.caption.copyWith(
-                    color: isSelected ? Colors.white : AppColors.textSecondary,
+                    color: isSelected ? AppColors.white : AppColors.textSecondary,
                     fontWeight: FontWeight.w500,
                   ),
                 ),

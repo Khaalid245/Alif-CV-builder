@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../core/storage/secure_storage.dart';
+import '../features/auth/presentation/providers/auth_provider.dart';
 import '../features/auth/presentation/screens/login_screen.dart';
 import '../features/auth/presentation/screens/register_screen.dart';
 import '../features/auth/presentation/screens/splash_screen.dart';
@@ -12,46 +12,10 @@ import '../features/cv/presentation/screens/cv_preview_screen.dart';
 import '../features/pdf/presentation/screens/pdf_result_screen.dart';
 import '../features/pdf/presentation/screens/pdf_preview_screen.dart';
 import '../features/admin/presentation/screens/admin_shell.dart';
+import '../features/admin/presentation/screens/student_detail_screen.dart'
+    as admin_screens;
 
-class AdminDashboardScreen extends StatelessWidget {
-  const AdminDashboardScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Admin Dashboard')),
-      body: const Center(child: Text('Admin Dashboard - Phase 11 Complete')),
-    );
-  }
-}
-
-class StudentsListScreen extends StatelessWidget {
-  const StudentsListScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Students List')),
-      body: const Center(child: Text('Students List - Coming in Phase 11')),
-    );
-  }
-}
-
-class StudentDetailScreen extends StatelessWidget {
-  final String studentId;
-  
-  const StudentDetailScreen({super.key, required this.studentId});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Student Detail: $studentId')),
-      body: Center(child: Text('Student Detail - Coming in Phase 11')),
-    );
-  }
-}
-
-// Route constants
+// Route name constants
 class AppRoutes {
   static const String splash = '/splash';
   static const String login = '/login';
@@ -60,14 +24,10 @@ class AppRoutes {
   static const String cvForm = '/cv/form';
   static const String cvPreview = '/cv/preview';
   static const String pdfResult = '/pdf/result';
-  static const String pdfPreview = '/pdf/preview/:id';
   static const String admin = '/admin';
-  static const String adminDashboard = '/admin/dashboard';
-  static const String studentsList = '/admin/students';
-  static const String studentDetail = '/admin/students/:id';
+  static const String adminStudentDetail = '/admin/students/:id';
 }
 
-// Router provider
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: AppRoutes.splash,
@@ -111,55 +71,54 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           return PDFPreviewScreen(generatedCvId: id);
         },
       ),
+      // Admin shell — contains all 4 tabs via IndexedStack
       GoRoute(
-        path: '/admin',
+        path: AppRoutes.admin,
         builder: (context, state) => const AdminShell(),
       ),
+      // Student detail — pushed on top of admin shell
       GoRoute(
-        path: '/admin/students/:id',
+        path: AppRoutes.adminStudentDetail,
         builder: (context, state) {
           final id = state.pathParameters['id']!;
-          return StudentDetailScreen(studentId: id);
+          return admin_screens.StudentDetailScreen(studentId: id);
         },
       ),
     ],
     redirect: (context, state) async {
       final currentPath = state.uri.path;
-      
-      // Allow splash screen always
-      if (currentPath == AppRoutes.splash) {
-        return null;
-      }
-      
-      // Check if user is authenticated
+
+      if (currentPath == AppRoutes.splash) return null;
+
       final secureStorage = ref.read(secureStorageProvider);
       final accessToken = await secureStorage.getAccessToken();
       final isAuthenticated = accessToken != null;
-      
-      // If not authenticated and trying to access protected routes
+
+      // Unauthenticated — block protected routes
       if (!isAuthenticated) {
         if (currentPath.startsWith('/cv/') ||
             currentPath.startsWith('/pdf/') ||
-            currentPath.startsWith('/admin/')) {
+            currentPath.startsWith('/admin')) {
           return AppRoutes.login;
         }
-        return null; // Allow login and register
+        return null;
       }
-      
-      // If authenticated and trying to access auth routes
-      if (isAuthenticated) {
-        if (currentPath == AppRoutes.login || currentPath == AppRoutes.register) {
-          // Get user role to determine redirect
-          final userRole = await secureStorage.getUserRole();
-          if (userRole == 'admin') {
-            return '/admin';
-          } else {
-            return AppRoutes.cvDashboard;
-          }
+
+      // Authenticated — redirect away from auth screens
+      if (currentPath == AppRoutes.login || currentPath == AppRoutes.register) {
+        final userRole = await secureStorage.getUserRole();
+        return userRole == 'admin' ? AppRoutes.admin : AppRoutes.cvDashboard;
+      }
+
+      // Admin guard — only admins can access /admin routes
+      if (currentPath.startsWith('/admin')) {
+        final user = ref.read(currentUserProvider);
+        if (user != null && user.role != 'admin') {
+          return AppRoutes.cvDashboard;
         }
       }
-      
-      return null; // No redirect needed
+
+      return null;
     },
   );
 });

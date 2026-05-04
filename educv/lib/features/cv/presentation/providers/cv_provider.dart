@@ -19,6 +19,11 @@ final cvFormStepProvider = StateProvider<int>((ref) => 0);
 // Form loading provider
 final cvFormLoadingProvider = StateProvider<bool>((ref) => false);
 
+// Form save callback — step 0 (PersonalInfoStep) registers its save fn here.
+// Returns true if save succeeded, false if validation failed.
+final cvFormSaveProvider =
+    StateProvider<Future<bool> Function()?> ((ref) => null);
+
 // CV Profile provider
 final cvProfileProvider = AsyncNotifierProvider<CVProfileNotifier, CVProfileModel?>(() {
   return CVProfileNotifier();
@@ -70,6 +75,15 @@ class CVProfileNotifier extends AsyncNotifier<CVProfileModel?> {
     }
   }
 }
+
+// CV Completion provider — derived from cvProfileProvider
+final cvCompletionProvider = Provider<int>((ref) {
+  final profileAsync = ref.watch(cvProfileProvider);
+  return profileAsync.maybeWhen(
+    data: (profile) => profile?.completionPercentage ?? 0,
+    orElse: () => 0,
+  );
+});
 
 // Education provider
 final educationProvider = AsyncNotifierProvider<EducationNotifier, List<EducationModel>>(() {

@@ -8,6 +8,7 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/widgets/app_input.dart';
 import '../../../../core/widgets/section_card.dart';
 import '../../../../core/widgets/empty_state.dart';
+import '../../../../core/widgets/app_error_state.dart';
 import '../providers/admin_provider.dart';
 import '../providers/search_provider.dart';
 import '../widgets/filter_chip_row.dart';
@@ -135,11 +136,9 @@ class _StudentsListScreenState extends ConsumerState<StudentsListScreen> {
                 ? _buildStudentsList(response)
                 : const Center(child: CircularProgressIndicator()),
             loading: () => const Center(child: CircularProgressIndicator()),
-            error: (error, _) => Center(
-              child: Text(
-                'Error loading students: $error',
-                style: AppTypography.body.copyWith(color: AppColors.error),
-              ),
+            error: (e, _) => AppErrorState(
+              message: e.toString(),
+              onRetry: () => ref.invalidate(adminStudentsProvider),
             ),
           ),
         ),
@@ -230,10 +229,9 @@ class StudentListTile extends StatelessWidget {
                     student.fullName.isNotEmpty 
                         ? student.fullName[0].toUpperCase()
                         : 'U',
-                    style: const TextStyle(
-                      color: AppColors.background,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
+                    style: AppTypography.label.copyWith(
+                      color: AppColors.white,
+                      fontWeight: FontWeight.w700,
                     ),
                   )
                 : null,

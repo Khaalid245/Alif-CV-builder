@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
@@ -104,8 +105,9 @@ class InfoCard extends StatelessWidget {
               ),
               if (onTap != null)
                 const Icon(
-                  Icons.chevron_right,
+                  LucideIcons.chevronRight,
                   color: AppColors.textHint,
+                  size: 20,
                 ),
             ],
           ),

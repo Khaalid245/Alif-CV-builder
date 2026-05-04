@@ -64,7 +64,7 @@ class AppTypography {
         fontWeight: FontWeight.w600,
         letterSpacing: 0.01 * 16, // 0.01em converted to pixels
         height: 1.0,
-        color: Colors.white, // Default for primary buttons
+        color: AppColors.white,
       );
 
   // Labels - weight 500, no letter-spacing, line-height 1.5

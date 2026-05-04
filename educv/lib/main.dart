@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'app.dart';
@@ -8,12 +9,13 @@ import 'app.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Disable google_fonts network fetching — use bundled/system fonts only
+  GoogleFonts.config.allowRuntimeFetching = false;
+
   try {
-    // Load environment variables
     await dotenv.load(fileName: "assets/env/.env");
   } catch (e) {
     debugPrint('Error loading .env file: $e');
-    // Continue with default values if .env fails to load
   }
 
   // Set system UI overlay style

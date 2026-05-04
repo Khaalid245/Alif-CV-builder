@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
+import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
 import '../theme/app_typography.dart';
 
@@ -29,7 +31,7 @@ class AppSnackbar extends StatelessWidget {
         children: [
           Icon(
             icon,
-            color: Colors.white,
+            color: AppColors.white,
             size: 20,
           ),
           const SizedBox(width: 12),
@@ -37,15 +39,15 @@ class AppSnackbar extends StatelessWidget {
             child: Text(
               message,
               style: AppTypography.body.copyWith(
-                color: Colors.white,
+                color: AppColors.white,
               ),
             ),
           ),
           if (onDismiss != null)
             IconButton(
               icon: const Icon(
-                Icons.close,
-                color: Colors.white,
+                LucideIcons.x,
+                color: AppColors.white,
                 size: 18,
               ),
               onPressed: onDismiss,

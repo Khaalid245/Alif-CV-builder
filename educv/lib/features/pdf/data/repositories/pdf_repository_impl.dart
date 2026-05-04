@@ -13,28 +13,33 @@ class PDFRepositoryImpl implements PDFRepository {
   @override
   Future<GenerateResponse> generateCVs() async {
     final response = await _apiClient.post('/cv/generate/');
-    final apiResponse = ApiResponse.fromJson(response.data, null);
-    
+    final apiResponse = ApiResponse<GenerateResponse>.fromJson(
+      response.data,
+      (data) => GenerateResponse.fromJson(data as Map<String, dynamic>),
+    );
+
     if (!apiResponse.success) {
       throw Exception(apiResponse.error?.message ?? 'Failed to generate CVs');
     }
-    
-    return GenerateResponse.fromJson(apiResponse.data as Map<String, dynamic>);
+
+    return apiResponse.data!;
   }
 
   @override
   Future<List<GeneratedCVModel>> getHistory() async {
     final response = await _apiClient.get('/cv/history/');
-    final apiResponse = ApiResponse.fromJson(response.data, null);
-    
+    final apiResponse = ApiResponse<List<GeneratedCVModel>>.fromJson(
+      response.data,
+      (data) => (data as List)
+          .map((e) => GeneratedCVModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
     if (!apiResponse.success) {
       throw Exception(apiResponse.error?.message ?? 'Failed to get CV history');
     }
-    
-    final List<dynamic> cvsData = (apiResponse.data as Map<String, dynamic>)['cvs'] ?? [];
-    return cvsData
-        .map((cv) => GeneratedCVModel.fromJson(cv as Map<String, dynamic>))
-        .toList();
+
+    return apiResponse.data ?? [];
   }
 
   @override
@@ -43,11 +48,11 @@ class PDFRepositoryImpl implements PDFRepository {
       '/cv/download/$generatedCvId/',
       options: Options(responseType: ResponseType.bytes),
     );
-    
+
     if (response.statusCode != 200) {
       throw Exception('Failed to download PDF');
     }
-    
+
     return Uint8List.fromList(response.data);
   }
 }

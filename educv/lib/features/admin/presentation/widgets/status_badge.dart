@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_typography.dart';
 
 class StatusBadge extends StatelessWidget {
   final String status;
@@ -21,9 +22,7 @@ class StatusBadge extends StatelessWidget {
       ),
       child: Text(
         text,
-        style: TextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.w600,
+        style: AppTypography.uppercase.copyWith(
           color: textColor,
         ),
       ),
@@ -33,11 +32,11 @@ class StatusBadge extends StatelessWidget {
   (String, Color, Color) _getStatusColors() {
     switch (status.toLowerCase()) {
       case 'active':
-        return ('Active', const Color(0xFF2E7D32), const Color(0xFFF0FFF4));
+        return ('Active', AppColors.success, const Color(0xFFF0FFF4));
       case 'suspended':
-        return ('Suspended', const Color(0xFFE65100), const Color(0xFFFFF3E0));
+        return ('Suspended', AppColors.warning, const Color(0xFFFFF3E0));
       case 'deactivated':
-        return ('Deactivated', const Color(0xFF616161), const Color(0xFFF5F5F5));
+        return ('Deactivated', AppColors.textSecondary, AppColors.surface);
       default:
         return (status, AppColors.textSecondary, AppColors.surface);
     }

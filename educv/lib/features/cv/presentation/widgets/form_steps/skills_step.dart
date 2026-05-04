@@ -386,13 +386,13 @@ class _SkillBottomSheetState extends ConsumerState<_SkillBottomSheet> {
                     onPressed: _quickAddSkill,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
-                      foregroundColor: Colors.white,
+                      foregroundColor: AppColors.white,
                       padding: const EdgeInsets.symmetric(
                         horizontal: AppSpacing.md,
                         vertical: AppSpacing.sm,
                       ),
                     ),
-                    child: const Text('Add'),
+                    child: Text('Add', style: AppTypography.button),
                   ),
                 ],
               ),

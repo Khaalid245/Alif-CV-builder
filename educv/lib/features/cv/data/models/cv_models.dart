@@ -193,7 +193,9 @@ class EducationModel {
       startYear: json['start_year'] ?? 0,
       endYear: json['end_year'],
       isCurrent: json['is_current'] ?? false,
-      gpa: json['gpa']?.toDouble(),
+      gpa: json['gpa'] != null
+          ? double.tryParse(json['gpa'].toString())
+          : null,
       description: json['description'] ?? '',
       order: json['order'] ?? 0,
     );

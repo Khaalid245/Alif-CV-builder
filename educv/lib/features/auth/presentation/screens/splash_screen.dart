@@ -47,8 +47,8 @@ class SplashScreen extends ConsumerWidget {
                   child: Text(
                     'CV',
                     style: AppTypography.h2.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                      color: AppColors.white,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ),

@@ -127,7 +127,7 @@ class AppButton extends StatelessWidget {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 18),
+          Icon(icon, size: 16),
           const SizedBox(width: 8),
           Text(
             text,
@@ -154,7 +154,7 @@ class AppButton extends StatelessWidget {
       case AppButtonVariant.text:
         return AppTypography.button.copyWith(color: AppColors.primary);
       case AppButtonVariant.danger:
-        return AppTypography.button.copyWith(color: AppColors.background);
+        return AppTypography.button.copyWith(color: AppColors.white);
     }
   }
 }

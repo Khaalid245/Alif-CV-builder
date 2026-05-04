@@ -6,6 +6,7 @@ import '../../../../core/theme/app_typography.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/widgets/section_card.dart';
 import '../../../../core/widgets/empty_state.dart';
+import '../../../../core/widgets/app_error_state.dart';
 import '../providers/admin_provider.dart';
 import '../widgets/filter_chip_row.dart';
 import '../widgets/admin_cv_tile.dart';
@@ -158,11 +159,9 @@ class _AdminCVsScreenState extends ConsumerState<AdminCVsScreen> {
                 ? _buildCVsList(response)
                 : const Center(child: CircularProgressIndicator()),
             loading: () => const Center(child: CircularProgressIndicator()),
-            error: (error, _) => Center(
-              child: Text(
-                'Error loading CVs: $error',
-                style: AppTypography.body.copyWith(color: AppColors.error),
-              ),
+            error: (e, _) => AppErrorState(
+              message: e.toString(),
+              onRetry: () => ref.invalidate(adminCVsProvider),
             ),
           ),
         ),

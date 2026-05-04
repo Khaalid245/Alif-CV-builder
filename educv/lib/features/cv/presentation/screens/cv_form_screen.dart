@@ -103,7 +103,7 @@ class _CVFormScreenState extends ConsumerState<CVFormScreen> {
       width: double.infinity,
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         border: Border(
           bottom: BorderSide(
             color: AppColors.divider,
@@ -163,7 +163,7 @@ class _CVFormScreenState extends ConsumerState<CVFormScreen> {
       width: double.infinity,
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         border: Border(
           top: BorderSide(
             color: AppColors.divider,
@@ -219,9 +219,17 @@ class _CVFormScreenState extends ConsumerState<CVFormScreen> {
 
   void _goToNextStep() async {
     final currentStep = ref.read(cvFormStepProvider);
-    
+
+    // Step 0 (PersonalInfo) has a save function — call it before advancing
+    if (currentStep == 0) {
+      final saveFn = ref.read(cvFormSaveProvider);
+      if (saveFn != null) {
+        final success = await saveFn();
+        if (!success) return;
+      }
+    }
+
     if (currentStep < 6) {
-      // Move to next step
       final newStep = currentStep + 1;
       ref.read(cvFormStepProvider.notifier).state = newStep;
       _pageController.animateToPage(
@@ -230,7 +238,6 @@ class _CVFormScreenState extends ConsumerState<CVFormScreen> {
         curve: Curves.easeInOut,
       );
     } else {
-      // Go to preview screen
       context.go('/cv/preview');
     }
   }

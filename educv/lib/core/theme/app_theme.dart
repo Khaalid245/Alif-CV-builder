@@ -35,7 +35,7 @@ class AppTheme {
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
-          foregroundColor: Colors.white,
+          foregroundColor: AppColors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppSpacing.radiusBtn),
           ),
@@ -74,6 +74,22 @@ class AppTheme {
         ),
         contentPadding: const EdgeInsets.all(14),
         labelStyle: AppTypography.label,
+        hintStyle: AppTypography.body.copyWith(color: AppColors.textHint),
+        errorStyle: AppTypography.caption.copyWith(color: AppColors.error),
+      ),
+
+      textTheme: TextTheme(
+        displayLarge: AppTypography.display,
+        headlineLarge: AppTypography.h1,
+        headlineMedium: AppTypography.h2,
+        headlineSmall: AppTypography.h3,
+        titleMedium: AppTypography.label,
+        bodyLarge: AppTypography.body,
+        bodyMedium: AppTypography.body,
+        bodySmall: AppTypography.caption,
+        labelLarge: AppTypography.button,
+        labelMedium: AppTypography.label,
+        labelSmall: AppTypography.uppercase,
       ),
 
       // BottomNavigationBar Theme

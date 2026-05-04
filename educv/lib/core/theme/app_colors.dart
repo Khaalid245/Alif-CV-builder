@@ -21,4 +21,7 @@ class AppColors {
   static const Color success = Color(0xFF2E7D32);
   static const Color error = Color(0xFFC62828);
   static const Color warning = Color(0xFFE65100);
+
+  // Text on primary/action backgrounds
+  static const Color white = Color(0xFFFFFFFF);
 }

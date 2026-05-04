@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'dart:typed_data';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_typography.dart';
@@ -79,8 +80,14 @@ class _PDFPreviewScreenState extends ConsumerState<PDFPreviewScreen> {
         backgroundColor: AppColors.background,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.close, color: AppColors.textPrimary),
-          onPressed: () => context.pop(),
+          icon: const Icon(LucideIcons.x, color: AppColors.textPrimary),
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go('/pdf/result');
+            }
+          },
         ),
         title: Text(
           '$templateName CV',
@@ -114,18 +121,15 @@ class _PDFPreviewScreenState extends ConsumerState<PDFPreviewScreen> {
   }
 
   Widget _buildLoadingState() {
-    return const Center(
+    return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircularProgressIndicator(color: AppColors.primary),
-          SizedBox(height: AppSpacing.sm),
+          const CircularProgressIndicator(color: AppColors.primary),
+          const SizedBox(height: AppSpacing.sm),
           Text(
             'Loading preview...',
-            style: TextStyle(
-              color: AppColors.textSecondary,
-              fontSize: 14,
-            ),
+            style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
           ),
         ],
       ),

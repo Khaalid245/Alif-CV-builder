@@ -7,6 +7,7 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_input.dart';
 import '../../../../core/widgets/empty_state.dart';
+import '../../../../core/widgets/app_error_state.dart';
 import '../providers/admin_provider.dart';
 import '../widgets/filter_chip_row.dart';
 import '../widgets/action_icon.dart';
@@ -137,11 +138,9 @@ class _AuditLogsScreenState extends ConsumerState<AuditLogsScreen> {
                 ? _buildLogsList(response)
                 : const Center(child: CircularProgressIndicator()),
             loading: () => const Center(child: CircularProgressIndicator()),
-            error: (error, _) => Center(
-              child: Text(
-                'Error loading logs: $error',
-                style: AppTypography.body.copyWith(color: AppColors.error),
-              ),
+            error: (e, _) => AppErrorState(
+              message: e.toString(),
+              onRetry: () => ref.invalidate(auditLogsProvider),
             ),
           ),
         ),
@@ -390,8 +389,7 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
                     color: action.toLowerCase() == _selectedAction ? AppColors.primary : AppColors.divider,
                     width: action.toLowerCase() == _selectedAction ? 1.5 : 1,
                   ),
-                  labelStyle: TextStyle(
-                    fontSize: 12,
+                  labelStyle: AppTypography.caption.copyWith(
                     fontWeight: FontWeight.w600,
                     color: action.toLowerCase() == _selectedAction ? AppColors.primary : AppColors.textSecondary,
                   ),

@@ -8,6 +8,7 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/utils/auth_utils.dart';
 import '../../../../core/widgets/section_card.dart';
+import '../../../../core/widgets/app_error_state.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../providers/cv_provider.dart';
 
@@ -67,7 +68,10 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
             cvProfile.when(
               data: (profile) => _buildCompletionCard(profile?.completionPercentage ?? 0),
               loading: () => _buildCompletionCardSkeleton(),
-              error: (_, __) => _buildCompletionCard(0),
+              error: (e, _) => AppErrorState(
+              message: e.toString(),
+              onRetry: () => ref.read(cvProfileProvider.notifier).fetch(),
+            ),
             ),
             
             const SizedBox(height: AppSpacing.xl),

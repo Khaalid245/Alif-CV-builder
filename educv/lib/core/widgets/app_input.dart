@@ -18,6 +18,7 @@ class AppInput extends StatelessWidget {
   final TextInputAction textInputAction;
   final bool obscureText;
   final bool enabled;
+  final bool readOnly;
   final int maxLines;
   final int? maxLength;
   final Widget? suffixIcon;
@@ -39,6 +40,7 @@ class AppInput extends StatelessWidget {
     this.textInputAction = TextInputAction.next,
     this.obscureText = false,
     this.enabled = true,
+    this.readOnly = false,
     this.maxLines = 1,
     this.maxLength,
     this.suffixIcon,
@@ -82,6 +84,7 @@ class AppInput extends StatelessWidget {
           textInputAction: textInputAction,
           obscureText: obscureText,
           enabled: enabled,
+          readOnly: readOnly,
           maxLines: maxLines,
           maxLength: maxLength,
           focusNode: focusNode,
@@ -94,7 +97,7 @@ class AppInput extends StatelessWidget {
             suffixIcon: suffixIcon,
             prefixIcon: prefixIcon,
             filled: true,
-            fillColor: enabled ? AppColors.surface : AppColors.divider,
+            fillColor: (enabled && !readOnly) ? AppColors.surface : AppColors.divider,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
               borderSide: const BorderSide(color: AppColors.divider),

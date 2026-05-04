@@ -474,7 +474,7 @@ class _GenerationStepRow extends StatelessWidget {
         );
       case GenerationStepStatus.done:
         return const Icon(
-          Icons.check_circle,
+          LucideIcons.checkCircle,
           color: AppColors.success,
           size: 24,
         );
@@ -582,7 +582,7 @@ class _CVTemplateCard extends StatelessWidget {
             const SizedBox(height: 8),
             Row(
               children: [
-                const Icon(Icons.check_circle, color: AppColors.success, size: 14),
+                const Icon(LucideIcons.checkCircle, color: AppColors.success, size: 14),
                 const SizedBox(width: 4),
                 Text(
                   'Downloaded • ${DateFormatter.getRelativeTime(DateTime.now())}',
@@ -614,10 +614,8 @@ class _TemplateBadge extends StatelessWidget {
       ),
       child: Text(
         text,
-        style: const TextStyle(
-          fontSize: 10,
-          fontWeight: FontWeight.w600,
-          color: Colors.white,
+        style: AppTypography.uppercase.copyWith(
+          color: AppColors.white,
         ),
       ),
     );

@@ -8,6 +8,7 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_input.dart';
 import '../../../../core/widgets/section_card.dart';
+import '../../../../core/widgets/app_error_state.dart';
 import '../../../../core/utils/date_formatter.dart';
 import '../providers/admin_provider.dart';
 import '../widgets/status_badge.dart';
@@ -73,11 +74,9 @@ class _StudentDetailScreenState extends ConsumerState<StudentDetailScreen> {
             ? _buildStudentDetail(student)
             : const Center(child: Text('Student not found')),
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, _) => Center(
-          child: Text(
-            'Error loading student: $error',
-            style: AppTypography.body.copyWith(color: AppColors.error),
-          ),
+        error: (e, _) => AppErrorState(
+          message: e.toString(),
+          onRetry: () => ref.read(studentDetailProvider(widget.studentId).notifier).fetch(widget.studentId),
         ),
       ),
     );
@@ -110,7 +109,7 @@ class _StudentDetailScreenState extends ConsumerState<StudentDetailScreen> {
           enabled: student.deletionRequested,
           child: Text(
             'Process Deletion',
-            style: TextStyle(
+            style: AppTypography.body.copyWith(
               color: student.deletionRequested ? AppColors.error : AppColors.textSecondary,
             ),
           ),

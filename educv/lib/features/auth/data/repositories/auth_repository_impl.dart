@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import '../../../../core/constants/api_constants.dart';
 import '../../../../core/errors/app_exception.dart';
 import '../../../../core/errors/error_handler.dart';
@@ -59,14 +58,10 @@ class AuthRepositoryImpl implements AuthRepository {
         'student_id': studentId.trim(),
         'password': password,
         'confirm_password': confirmPassword,
-        'terms_consent': true,  // Hardcoded for testing
-        'marketing_consent': true,  // Hardcoded for testing
-        'data_processing_consent': true,  // Hardcoded for testing
+        'terms_consent': termsAccepted,
+        'marketing_consent': privacyPolicyAccepted,
+        'data_processing_consent': dataProcessingConsent,
       };
-      
-      if (kDebugMode) {
-        debugPrint('Registration request data: $requestData');
-      }
       
       final response = await _apiClient.post(
         ApiConstants.register,
@@ -83,10 +78,6 @@ class AuthRepositoryImpl implements AuthRepository {
           message: apiResponse.error?.message ?? 'Registration failed',
           details: apiResponse.error?.details,
         );
-      }
-
-      if (kDebugMode) {
-        debugPrint('Registration successful: ${apiResponse.data}');
       }
 
       return AuthResponse.fromJson(apiResponse.data);

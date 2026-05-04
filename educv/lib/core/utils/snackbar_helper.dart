@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 import '../theme/app_colors.dart';
 import '../theme/app_typography.dart';
@@ -9,7 +10,7 @@ class SnackbarHelper {
       context,
       message,
       AppColors.success,
-      Icons.check_circle_outline,
+      LucideIcons.checkCircle,
     );
   }
 
@@ -18,7 +19,7 @@ class SnackbarHelper {
       context,
       message,
       AppColors.error,
-      Icons.error_outline,
+      LucideIcons.xCircle,
     );
   }
 
@@ -27,7 +28,7 @@ class SnackbarHelper {
       context,
       message,
       AppColors.warning,
-      Icons.warning_amber_outlined,
+      LucideIcons.alertTriangle,
     );
   }
 
@@ -36,7 +37,7 @@ class SnackbarHelper {
       context,
       message,
       AppColors.primary,
-      Icons.info_outline,
+      LucideIcons.alertCircle,
     );
   }
 
@@ -54,7 +55,7 @@ class SnackbarHelper {
           children: [
             Icon(
               icon,
-              color: Colors.white,
+              color: AppColors.white,
               size: 20,
             ),
             const SizedBox(width: 12),
@@ -62,7 +63,7 @@ class SnackbarHelper {
               child: Text(
                 message,
                 style: AppTypography.body.copyWith(
-                  color: Colors.white,
+                  color: AppColors.white,
                 ),
               ),
             ),
@@ -77,7 +78,7 @@ class SnackbarHelper {
         duration: const Duration(seconds: 4),
         action: SnackBarAction(
           label: 'Dismiss',
-          textColor: Colors.white,
+          textColor: AppColors.white,
           onPressed: () {
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
           },
@@ -103,7 +104,7 @@ class SnackbarHelper {
           children: [
             Icon(
               icon,
-              color: Colors.white,
+              color: AppColors.white,
               size: 20,
             ),
             const SizedBox(width: 12),
@@ -111,7 +112,7 @@ class SnackbarHelper {
               child: Text(
                 message,
                 style: AppTypography.body.copyWith(
-                  color: Colors.white,
+                  color: AppColors.white,
                 ),
               ),
             ),
@@ -127,7 +128,7 @@ class SnackbarHelper {
         action: actionLabel != null
             ? SnackBarAction(
                 label: actionLabel,
-                textColor: Colors.white,
+                textColor: AppColors.white,
                 onPressed: onActionPressed ?? () {
                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 },

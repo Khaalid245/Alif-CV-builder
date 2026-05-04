@@ -54,7 +54,7 @@ class AppFullScreenLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.black54,
+      color: AppColors.textPrimary.withValues(alpha: 0.54),
       child: Center(
         child: Container(
           padding: const EdgeInsets.all(24),

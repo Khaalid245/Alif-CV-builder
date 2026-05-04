@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -35,11 +36,12 @@ class MonthYearPicker extends StatelessWidget {
       label: label,
       hint: hint ?? 'Select month and year',
       controller: controller,
-      enabled: false,
+      readOnly: true,
       validator: validator,
       suffixIcon: const Icon(
-        Icons.calendar_month,
-        color: AppColors.textSecondary,
+        LucideIcons.clock,
+        color: AppColors.textHint,
+        size: 20,
       ),
       onTap: () => _showMonthYearPicker(context),
     );
@@ -118,12 +120,12 @@ class MonthYearPicker extends StatelessWidget {
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
-                        foregroundColor: Colors.white,
+                        foregroundColor: AppColors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                         ),
                       ),
-                      child: const Text('Select'),
+                      child: Text('Select', style: AppTypography.button),
                     ),
                   ),
                 ],
