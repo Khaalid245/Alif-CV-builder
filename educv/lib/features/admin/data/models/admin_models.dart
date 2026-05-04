@@ -34,22 +34,28 @@ class PlatformStatsModel {
   });
 
   factory PlatformStatsModel.fromJson(Map<String, dynamic> json) {
+    // Backend returns nested: {students: {...}, cvs: {...}, platform: {...}}
+    final students = json['students'] as Map<String, dynamic>? ?? {};
+    final cvs = json['cvs'] as Map<String, dynamic>? ?? {};
+    final platform = json['platform'] as Map<String, dynamic>? ?? {};
+
     return PlatformStatsModel(
-      totalStudents: json['total_students'] ?? 0,
-      activeStudents: json['active_students'] ?? 0,
-      suspendedStudents: json['suspended_students'] ?? 0,
-      deactivatedStudents: json['deactivated_students'] ?? 0,
-      newToday: json['new_today'] ?? 0,
-      newThisWeek: json['new_this_week'] ?? 0,
-      newThisMonth: json['new_this_month'] ?? 0,
-      totalGenerated: json['total_generated'] ?? 0,
-      generatedToday: json['generated_today'] ?? 0,
-      generatedThisWeek: json['generated_this_week'] ?? 0,
-      totalDownloads: json['total_downloads'] ?? 0,
-      mostPopularTemplate: json['most_popular_template'] ?? '',
-      deletionRequestsPending: json['deletion_requests_pending'] ?? 0,
-      studentsWithCompleteCV: json['students_with_complete_cv'] ?? 0,
-      averageCompletionPercentage: (json['average_completion_percentage'] ?? 0.0).toDouble(),
+      totalStudents: students['total'] ?? 0,
+      activeStudents: students['active'] ?? 0,
+      suspendedStudents: students['suspended'] ?? 0,
+      deactivatedStudents: students['deactivated'] ?? 0,
+      newToday: students['new_today'] ?? 0,
+      newThisWeek: students['new_this_week'] ?? 0,
+      newThisMonth: students['new_this_month'] ?? 0,
+      totalGenerated: cvs['total_generated'] ?? 0,
+      generatedToday: cvs['generated_today'] ?? 0,
+      generatedThisWeek: cvs['generated_this_week'] ?? 0,
+      totalDownloads: cvs['total_downloads'] ?? 0,
+      mostPopularTemplate: cvs['most_popular_template']?.toString() ?? '',
+      deletionRequestsPending: platform['deletion_requests_pending'] ?? 0,
+      studentsWithCompleteCV: platform['students_with_complete_cv'] ?? 0,
+      averageCompletionPercentage:
+          (platform['average_completion_percentage'] ?? 0.0).toDouble(),
     );
   }
 

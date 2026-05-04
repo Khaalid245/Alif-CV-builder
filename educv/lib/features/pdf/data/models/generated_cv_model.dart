@@ -17,12 +17,14 @@ class GeneratedCVModel {
 
   factory GeneratedCVModel.fromJson(Map<String, dynamic> json) {
     return GeneratedCVModel(
-      id: json['id'] as String,
-      template: json['template'] as String,
-      templateDisplay: json['template_display'] as String,
-      downloadUrl: json['download_url'] as String,
-      generatedAt: DateTime.parse(json['generated_at'] as String),
-      downloadCount: json['download_count'] as int,
+      id: json['id']?.toString() ?? '',
+      template: json['template']?.toString() ?? '',
+      templateDisplay: json['template_display']?.toString() ?? '',
+      downloadUrl: json['download_url']?.toString() ?? '',
+      generatedAt: json['generated_at'] != null
+          ? DateTime.tryParse(json['generated_at'].toString()) ?? DateTime.now()
+          : DateTime.now(),
+      downloadCount: (json['download_count'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -75,10 +77,14 @@ class GenerateResponse {
 
   factory GenerateResponse.fromJson(Map<String, dynamic> json) {
     return GenerateResponse(
-      generatedAt: DateTime.parse(json['generated_at'] as String),
-      cvs: (json['cvs'] as List)
-          .map((cv) => GeneratedCVModel.fromJson(cv as Map<String, dynamic>))
-          .toList(),
+      generatedAt: json['generated_at'] != null
+          ? DateTime.tryParse(json['generated_at'].toString()) ?? DateTime.now()
+          : DateTime.now(),
+      cvs: json['cvs'] != null
+          ? (json['cvs'] as List)
+              .map((e) => GeneratedCVModel.fromJson(e as Map<String, dynamic>))
+              .toList()
+          : [],
     );
   }
 

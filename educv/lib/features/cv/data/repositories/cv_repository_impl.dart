@@ -64,9 +64,13 @@ class CVRepositoryImpl implements CVRepository {
 
   @override
   Future<void> uploadPhoto(File photo) async {
+    if (kIsWeb) return; // dart:io File not available on web
     try {
       final formData = FormData.fromMap({
-        'photo': await MultipartFile.fromFile(photo.path),
+        'photo': await MultipartFile.fromFile(
+          photo.path,
+          filename: 'profile_photo.jpg',
+        ),
       });
 
       final response = await _apiClient.put(

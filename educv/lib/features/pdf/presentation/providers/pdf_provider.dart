@@ -5,11 +5,6 @@ import '../../data/models/generated_cv_model.dart';
 import '../../data/repositories/pdf_repository_impl.dart';
 import '../../domain/pdf_repository.dart';
 
-// CV completion provider
-final cvCompletionProvider = Provider<Map<String, dynamic>>((ref) {
-  return {'percentage': 75, 'sections': {}}; // Mock data for now
-});
-
 // Repository provider
 final pdfRepositoryProvider = Provider<PDFRepository>((ref) {
   final apiClient = ref.read(apiClientProvider);

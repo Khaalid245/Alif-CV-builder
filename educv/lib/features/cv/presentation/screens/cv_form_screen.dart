@@ -43,11 +43,14 @@ class _CVFormScreenState extends ConsumerState<CVFormScreen> {
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(initialPage: widget.initialStep);
-    
-    // Set initial step in provider
+    // Read initialStep from GoRouter extra (set by dashboard section tiles)
+    // or fall back to widget.initialStep (set by router query param)
+    final extra = GoRouterState.of(context).extra as Map<String, dynamic>?;
+    final step = extra?['initialStep'] as int? ?? widget.initialStep;
+    _pageController = PageController(initialPage: step);
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(cvFormStepProvider.notifier).state = widget.initialStep;
+      ref.read(cvFormStepProvider.notifier).state = step;
     });
   }
 

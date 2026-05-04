@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -212,13 +213,20 @@ class _PersonalInfoStepState extends ConsumerState<PersonalInfoStep> {
               : null,
         ),
         const SizedBox(height: AppSpacing.sm),
-        TextButton(
-          onPressed: _pickPhoto,
-          child: Text(
-            'Change Photo',
-            style: AppTypography.body.copyWith(color: AppColors.primary),
+        if (!kIsWeb)
+          TextButton.icon(
+            icon: const Icon(Icons.camera_alt_outlined, size: 16, color: AppColors.primary),
+            label: Text(
+              'Change Photo',
+              style: AppTypography.body.copyWith(color: AppColors.primary),
+            ),
+            onPressed: _pickPhoto,
+          )
+        else
+          Text(
+            'Photo upload available on mobile',
+            style: AppTypography.caption.copyWith(color: AppColors.textHint),
           ),
-        ),
       ],
     );
   }
@@ -234,6 +242,7 @@ class _PersonalInfoStepState extends ConsumerState<PersonalInfoStep> {
   }
 
   Future<void> _pickPhoto() async {
+    if (kIsWeb) return; // guarded — web not supported
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(
       source: ImageSource.gallery,
