@@ -34,28 +34,39 @@ class AuditLogListView(ListAPIView):
     pagination_class = AuditLogPagination
     filter_backends = [DjangoFilterBackend]
     filterset_class = AuditLogFilter
-    
+
     def get_queryset(self):
         """Optimized queryset with student data"""
         return AuditLog.objects.select_related('student').order_by('-timestamp')
-    
+
     def list(self, request, *args, **kwargs):
         """Override to log admin access and format response"""
         app_logger.info(f"Admin {request.user.email} accessed audit logs")
-        
-        response = super().list(request, *args, **kwargs)
-        
-        # Format response with pagination metadata
+
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            paginator = self.paginator
+            return success_response(
+                message="Audit logs retrieved successfully.",
+                data={
+                    'count': paginator.page.paginator.count,
+                    'total_pages': paginator.page.paginator.num_pages,
+                    'current_page': paginator.page.number,
+                    'next': paginator.get_next_link(),
+                    'previous': paginator.get_previous_link(),
+                    'results': serializer.data,
+                }
+            )
+
+        serializer = self.get_serializer(queryset, many=True)
         return success_response(
             message="Audit logs retrieved successfully.",
-            data={
-                'count': response.data['count'],
-                'total_pages': (response.data['count'] + self.pagination_class.page_size - 1) // self.pagination_class.page_size,
-                'current_page': int(request.GET.get('page', 1)),
-                'next': response.data['next'],
-                'previous': response.data['previous'],
-                'results': response.data['results'],
-            }
+            data={'count': queryset.count(), 'total_pages': 1,
+                  'current_page': 1, 'next': None,
+                  'previous': None, 'results': serializer.data}
         )
 
 
@@ -69,7 +80,7 @@ class SecurityAuditLogListView(ListAPIView):
     pagination_class = AuditLogPagination
     filter_backends = [DjangoFilterBackend]
     filterset_class = SecurityAuditLogFilter
-    
+
     def get_queryset(self):
         """Security-specific audit logs"""
         security_actions = [
@@ -78,28 +89,39 @@ class SecurityAuditLogListView(ListAPIView):
             AuditLog.Action.DELETION_REQUESTED,
             AuditLog.Action.ACCOUNT_SUSPENDED,
             AuditLog.Action.ACCOUNT_REACTIVATED,
+            AuditLog.Action.ACCOUNT_DEACTIVATED,
             AuditLog.Action.ACCOUNT_DELETED,
         ]
-        
         return AuditLog.objects.select_related('student').filter(
             action__in=security_actions
         ).order_by('-timestamp')
-    
+
     def list(self, request, *args, **kwargs):
         """Override to log admin access and format response"""
         app_logger.info(f"Admin {request.user.email} accessed security audit logs")
-        
-        response = super().list(request, *args, **kwargs)
-        
-        # Format response with pagination metadata
+
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            paginator = self.paginator
+            return success_response(
+                message="Security audit logs retrieved successfully.",
+                data={
+                    'count': paginator.page.paginator.count,
+                    'total_pages': paginator.page.paginator.num_pages,
+                    'current_page': paginator.page.number,
+                    'next': paginator.get_next_link(),
+                    'previous': paginator.get_previous_link(),
+                    'results': serializer.data,
+                }
+            )
+
+        serializer = self.get_serializer(queryset, many=True)
         return success_response(
             message="Security audit logs retrieved successfully.",
-            data={
-                'count': response.data['count'],
-                'total_pages': (response.data['count'] + self.pagination_class.page_size - 1) // self.pagination_class.page_size,
-                'current_page': int(request.GET.get('page', 1)),
-                'next': response.data['next'],
-                'previous': response.data['previous'],
-                'results': response.data['results'],
-            }
+            data={'count': queryset.count(), 'total_pages': 1,
+                  'current_page': 1, 'next': None,
+                  'previous': None, 'results': serializer.data}
         )

@@ -24,4 +24,7 @@ class AppColors {
 
   // Text on primary/action backgrounds
   static const Color white = Color(0xFFFFFFFF);
+
+  // Transparent
+  static const Color transparent = Color(0x00000000);
 }

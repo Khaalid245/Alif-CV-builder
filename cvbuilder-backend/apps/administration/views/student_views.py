@@ -55,19 +55,30 @@ class StudentListView(ListAPIView):
         """Override to log admin access and format response"""
         app_logger.info(f"Admin {request.user.email} accessed student list")
         
-        response = super().list(request, *args, **kwargs)
-        
-        # Format response with pagination metadata
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            paginator = self.paginator
+            return success_response(
+                message="Students retrieved successfully.",
+                data={
+                    'count': paginator.page.paginator.count,
+                    'total_pages': paginator.page.paginator.num_pages,
+                    'current_page': paginator.page.number,
+                    'next': paginator.get_next_link(),
+                    'previous': paginator.get_previous_link(),
+                    'results': serializer.data,
+                }
+            )
+
+        serializer = self.get_serializer(queryset, many=True)
         return success_response(
             message="Students retrieved successfully.",
-            data={
-                'count': response.data['count'],
-                'total_pages': (response.data['count'] + self.pagination_class.page_size - 1) // self.pagination_class.page_size,
-                'current_page': int(request.GET.get('page', 1)),
-                'next': response.data['next'],
-                'previous': response.data['previous'],
-                'results': response.data['results'],
-            }
+            data={'count': queryset.count(), 'total_pages': 1,
+                  'current_page': 1, 'next': None,
+                  'previous': None, 'results': serializer.data}
         )
 
 
@@ -125,10 +136,19 @@ def student_cv_detail(request, pk):
             message="Student CV data retrieved successfully.",
             data=serializer.data
         )
-    except:
+    except CVProfile.DoesNotExist:
         return success_response(
             message="Student has no CV data yet.",
             data=None
+        )
+    except Exception as e:
+        app_logger.error(
+            f"Error retrieving CV for student {student.student_id}: {e}",
+            exc_info=True
+        )
+        return error_response(
+            "Failed to retrieve student CV data.",
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
 
 
@@ -167,6 +187,16 @@ def update_student_status(request, pk):
     new_status = serializer.validated_data['status']
     reason = serializer.validated_data.get('reason', '')
     
+    # Map status to correct audit action
+    _audit_action_map = {
+        User.Status.SUSPENDED:   AuditLog.Action.ACCOUNT_SUSPENDED,
+        User.Status.ACTIVE:      AuditLog.Action.ACCOUNT_REACTIVATED,
+        User.Status.DEACTIVATED: AuditLog.Action.ACCOUNT_DEACTIVATED,
+    }
+    audit_action = _audit_action_map.get(
+        new_status, AuditLog.Action.ACCOUNT_SUSPENDED
+    )
+
     # Update student status
     student.status = new_status
     student.save(update_fields=['status', 'updated_at'])
@@ -174,14 +204,14 @@ def update_student_status(request, pk):
     # Create audit log entry
     AuditLog.objects.create(
         student=student,
-        action=AuditLog.Action.ACCOUNT_SUSPENDED if new_status == User.Status.SUSPENDED else AuditLog.Action.ACCOUNT_REACTIVATED,
+        action=audit_action,
         ip_address=request.META.get('REMOTE_ADDR', 'Unknown'),
         user_agent=request.META.get('HTTP_USER_AGENT', 'Unknown'),
         extra_data={
-            'old_status': old_status,
-            'new_status': new_status,
-            'reason': reason,
-            'changed_by_admin': request.user.email,
+            'previous_status': str(old_status),
+            'new_status': str(new_status),
+            'reason': reason or '',
+            'changed_by': str(request.user.id),
         }
     )
     

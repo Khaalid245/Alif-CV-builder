@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/network/api_client.dart';
@@ -20,58 +19,65 @@ final cvFormStepProvider = StateProvider<int>((ref) => 0);
 final cvFormLoadingProvider = StateProvider<bool>((ref) => false);
 
 // Form save callback — step 0 (PersonalInfoStep) registers its save fn here.
-// Returns true if save succeeded, false if validation failed.
 final cvFormSaveProvider =
     StateProvider<Future<bool> Function()?> ((ref) => null);
 
-// CV Profile provider
-final cvProfileProvider = AsyncNotifierProvider<CVProfileNotifier, CVProfileModel?>(() {
+// ── CV Profile ────────────────────────────────────────────────────────────────
+
+final cvProfileProvider =
+    AsyncNotifierProvider<CVProfileNotifier, CVProfileModel?>(() {
   return CVProfileNotifier();
 });
 
 class CVProfileNotifier extends AsyncNotifier<CVProfileModel?> {
   @override
   Future<CVProfileModel?> build() async {
-    return await fetch();
+    return fetch();
   }
 
   Future<CVProfileModel?> fetch() async {
-    try {
-      final repository = ref.read(cvRepositoryProvider);
-      final profile = await repository.getProfile();
-      return profile;
-    } catch (e) {
-      if (kDebugMode) {
-        debugPrint('Error fetching CV profile: $e');
-      }
-      return null;
+    // No try/catch — let AsyncNotifier set AsyncError on failure
+    final repo = ref.read(cvRepositoryProvider);
+    final profile = await repo.getProfile();
+
+    // Populate all section providers from the single profile response.
+    // This eliminates 6 separate API calls when the CV form opens.
+    if (profile != null) {
+      ref.read(educationProvider.notifier).setFromProfile(profile.education);
+      ref.read(experienceProvider.notifier).setFromProfile(profile.experiences);
+      ref.read(skillsProvider.notifier).setFromProfile(profile.skills);
+      ref.read(languagesProvider.notifier).setFromProfile(profile.languages);
+      ref.read(projectsProvider.notifier).setFromProfile(profile.projects);
+      ref.read(certificationsProvider.notifier)
+          .setFromProfile(profile.certifications);
     }
+    return profile;
   }
 
   Future<void> updateProfile(Map<String, dynamic> data) async {
-    state = const AsyncLoading();
+    // FIX S3 — do NOT set AsyncLoading, keep old data visible during update
+    final previous = state.valueOrNull;
     try {
-      final repository = ref.read(cvRepositoryProvider);
-      await repository.updateProfile(data);
-      
-      // Refresh profile data
-      final updatedProfile = await repository.getProfile();
-      state = AsyncData(updatedProfile);
-    } catch (e) {
-      state = AsyncError(e, StackTrace.current);
+      final repo = ref.read(cvRepositoryProvider);
+      await repo.updateProfile(data);
+      final updated = await repo.getProfile();
+      state = AsyncData(updated);
+    } catch (e, st) {
+      state = AsyncData(previous);
+      Error.throwWithStackTrace(e, st);
     }
   }
 
   Future<void> uploadPhoto(File photo) async {
+    final previous = state.valueOrNull;
     try {
-      final repository = ref.read(cvRepositoryProvider);
-      await repository.uploadPhoto(photo);
-      
-      // Refresh profile data
-      final updatedProfile = await repository.getProfile();
-      state = AsyncData(updatedProfile);
-    } catch (e) {
-      state = AsyncError(e, StackTrace.current);
+      final repo = ref.read(cvRepositoryProvider);
+      await repo.uploadPhoto(photo);
+      final updated = await repo.getProfile();
+      state = AsyncData(updated);
+    } catch (e, st) {
+      state = AsyncData(previous);
+      Error.throwWithStackTrace(e, st);
     }
   }
 }
@@ -85,398 +91,291 @@ final cvCompletionProvider = Provider<int>((ref) {
   );
 });
 
-// Education provider
-final educationProvider = AsyncNotifierProvider<EducationNotifier, List<EducationModel>>(() {
+// ── Education ─────────────────────────────────────────────────────────────────
+
+final educationProvider =
+    AsyncNotifierProvider<EducationNotifier, List<EducationModel>>(() {
   return EducationNotifier();
 });
 
 class EducationNotifier extends AsyncNotifier<List<EducationModel>> {
   @override
   Future<List<EducationModel>> build() async {
-    return await fetch();
+    return fetch();
   }
 
   Future<List<EducationModel>> fetch() async {
-    try {
-      final repository = ref.read(cvRepositoryProvider);
-      return await repository.getEducation();
-    } catch (e) {
-      if (kDebugMode) {
-        debugPrint('Error fetching education: $e');
-      }
-      return [];
-    }
+    final repo = ref.read(cvRepositoryProvider);
+    return await repo.getEducation();
+  }
+
+  void setFromProfile(List<EducationModel> items) {
+    state = AsyncData(items);
   }
 
   Future<void> add(Map<String, dynamic> data) async {
-    try {
-      final repository = ref.read(cvRepositoryProvider);
-      final newEducation = await repository.addEducation(data);
-      
-      final currentList = state.value ?? [];
-      state = AsyncData([...currentList, newEducation]);
-    } catch (e) {
-      state = AsyncError(e, StackTrace.current);
-    }
+    final repo = ref.read(cvRepositoryProvider);
+    final newItem = await repo.addEducation(data);
+    state = AsyncData([...state.valueOrNull ?? [], newItem]);
+    ref.invalidate(cvProfileProvider);
   }
 
   Future<void> updateItem(String id, Map<String, dynamic> data) async {
-    try {
-      final repository = ref.read(cvRepositoryProvider);
-      final updatedEducation = await repository.updateEducation(id, data);
-      
-      final currentList = state.value ?? [];
-      final updatedList = currentList.map((education) {
-        return education.id == id ? updatedEducation : education;
-      }).toList();
-      
-      state = AsyncData(updatedList);
-    } catch (e) {
-      state = AsyncError(e, StackTrace.current);
-    }
+    final repo = ref.read(cvRepositoryProvider);
+    final updated = await repo.updateEducation(id, data);
+    state = AsyncData(
+      state.valueOrNull?.map((e) => e.id == id ? updated : e).toList() ?? [],
+    );
+    ref.invalidate(cvProfileProvider);
   }
 
   Future<void> delete(String id) async {
-    try {
-      final repository = ref.read(cvRepositoryProvider);
-      await repository.deleteEducation(id);
-      
-      final currentList = state.value ?? [];
-      final updatedList = currentList.where((education) => education.id != id).toList();
-      
-      state = AsyncData(updatedList);
-    } catch (e) {
-      state = AsyncError(e, StackTrace.current);
-    }
+    final repo = ref.read(cvRepositoryProvider);
+    await repo.deleteEducation(id);
+    state = AsyncData(
+      state.valueOrNull?.where((e) => e.id != id).toList() ?? [],
+    );
+    ref.invalidate(cvProfileProvider);
   }
 }
 
-// Experience provider
-final experienceProvider = AsyncNotifierProvider<ExperienceNotifier, List<ExperienceModel>>(() {
+// ── Experience ────────────────────────────────────────────────────────────────
+
+final experienceProvider =
+    AsyncNotifierProvider<ExperienceNotifier, List<ExperienceModel>>(() {
   return ExperienceNotifier();
 });
 
 class ExperienceNotifier extends AsyncNotifier<List<ExperienceModel>> {
   @override
   Future<List<ExperienceModel>> build() async {
-    return await fetch();
+    return fetch();
   }
 
   Future<List<ExperienceModel>> fetch() async {
-    try {
-      final repository = ref.read(cvRepositoryProvider);
-      return await repository.getExperience();
-    } catch (e) {
-      if (kDebugMode) {
-        debugPrint('Error fetching experience: $e');
-      }
-      return [];
-    }
+    final repo = ref.read(cvRepositoryProvider);
+    return await repo.getExperience();
+  }
+
+  void setFromProfile(List<ExperienceModel> items) {
+    state = AsyncData(items);
   }
 
   Future<void> add(Map<String, dynamic> data) async {
-    try {
-      final repository = ref.read(cvRepositoryProvider);
-      final newExperience = await repository.addExperience(data);
-      
-      final currentList = state.value ?? [];
-      state = AsyncData([...currentList, newExperience]);
-    } catch (e) {
-      state = AsyncError(e, StackTrace.current);
-    }
+    final repo = ref.read(cvRepositoryProvider);
+    final newItem = await repo.addExperience(data);
+    state = AsyncData([...state.valueOrNull ?? [], newItem]);
+    ref.invalidate(cvProfileProvider);
   }
 
   Future<void> updateItem(String id, Map<String, dynamic> data) async {
-    try {
-      final repository = ref.read(cvRepositoryProvider);
-      final updatedExperience = await repository.updateExperience(id, data);
-      
-      final currentList = state.value ?? [];
-      final updatedList = currentList.map((experience) {
-        return experience.id == id ? updatedExperience : experience;
-      }).toList();
-      
-      state = AsyncData(updatedList);
-    } catch (e) {
-      state = AsyncError(e, StackTrace.current);
-    }
+    final repo = ref.read(cvRepositoryProvider);
+    final updated = await repo.updateExperience(id, data);
+    state = AsyncData(
+      state.valueOrNull?.map((e) => e.id == id ? updated : e).toList() ?? [],
+    );
+    ref.invalidate(cvProfileProvider);
   }
 
   Future<void> delete(String id) async {
-    try {
-      final repository = ref.read(cvRepositoryProvider);
-      await repository.deleteExperience(id);
-      
-      final currentList = state.value ?? [];
-      final updatedList = currentList.where((experience) => experience.id != id).toList();
-      
-      state = AsyncData(updatedList);
-    } catch (e) {
-      state = AsyncError(e, StackTrace.current);
-    }
+    final repo = ref.read(cvRepositoryProvider);
+    await repo.deleteExperience(id);
+    state = AsyncData(
+      state.valueOrNull?.where((e) => e.id != id).toList() ?? [],
+    );
+    ref.invalidate(cvProfileProvider);
   }
 }
 
-// Skills provider
-final skillsProvider = AsyncNotifierProvider<SkillsNotifier, List<SkillModel>>(() {
+// ── Skills ────────────────────────────────────────────────────────────────────
+
+final skillsProvider =
+    AsyncNotifierProvider<SkillsNotifier, List<SkillModel>>(() {
   return SkillsNotifier();
 });
 
 class SkillsNotifier extends AsyncNotifier<List<SkillModel>> {
   @override
   Future<List<SkillModel>> build() async {
-    return await fetch();
+    return fetch();
   }
 
   Future<List<SkillModel>> fetch() async {
-    try {
-      final repository = ref.read(cvRepositoryProvider);
-      return await repository.getSkills();
-    } catch (e) {
-      if (kDebugMode) {
-        debugPrint('Error fetching skills: $e');
-      }
-      return [];
-    }
+    final repo = ref.read(cvRepositoryProvider);
+    return await repo.getSkills();
+  }
+
+  void setFromProfile(List<SkillModel> items) {
+    state = AsyncData(items);
   }
 
   Future<void> add(Map<String, dynamic> data) async {
-    try {
-      final repository = ref.read(cvRepositoryProvider);
-      final newSkill = await repository.addSkill(data);
-      
-      final currentList = state.value ?? [];
-      state = AsyncData([...currentList, newSkill]);
-    } catch (e) {
-      state = AsyncError(e, StackTrace.current);
-    }
+    final repo = ref.read(cvRepositoryProvider);
+    final newItem = await repo.addSkill(data);
+    state = AsyncData([...state.valueOrNull ?? [], newItem]);
+    ref.invalidate(cvProfileProvider);
   }
 
   Future<void> updateItem(String id, Map<String, dynamic> data) async {
-    try {
-      final repository = ref.read(cvRepositoryProvider);
-      final updatedSkill = await repository.updateSkill(id, data);
-      
-      final currentList = state.value ?? [];
-      final updatedList = currentList.map((skill) {
-        return skill.id == id ? updatedSkill : skill;
-      }).toList();
-      
-      state = AsyncData(updatedList);
-    } catch (e) {
-      state = AsyncError(e, StackTrace.current);
-    }
+    final repo = ref.read(cvRepositoryProvider);
+    final updated = await repo.updateSkill(id, data);
+    state = AsyncData(
+      state.valueOrNull?.map((e) => e.id == id ? updated : e).toList() ?? [],
+    );
+    ref.invalidate(cvProfileProvider);
   }
 
   Future<void> delete(String id) async {
-    try {
-      final repository = ref.read(cvRepositoryProvider);
-      await repository.deleteSkill(id);
-      
-      final currentList = state.value ?? [];
-      final updatedList = currentList.where((skill) => skill.id != id).toList();
-      
-      state = AsyncData(updatedList);
-    } catch (e) {
-      state = AsyncError(e, StackTrace.current);
-    }
+    final repo = ref.read(cvRepositoryProvider);
+    await repo.deleteSkill(id);
+    state = AsyncData(
+      state.valueOrNull?.where((e) => e.id != id).toList() ?? [],
+    );
+    ref.invalidate(cvProfileProvider);
   }
 }
 
-// Languages provider
-final languagesProvider = AsyncNotifierProvider<LanguagesNotifier, List<LanguageModel>>(() {
+// ── Languages ─────────────────────────────────────────────────────────────────
+
+final languagesProvider =
+    AsyncNotifierProvider<LanguagesNotifier, List<LanguageModel>>(() {
   return LanguagesNotifier();
 });
 
 class LanguagesNotifier extends AsyncNotifier<List<LanguageModel>> {
   @override
   Future<List<LanguageModel>> build() async {
-    return await fetch();
+    return fetch();
   }
 
   Future<List<LanguageModel>> fetch() async {
-    try {
-      final repository = ref.read(cvRepositoryProvider);
-      return await repository.getLanguages();
-    } catch (e) {
-      if (kDebugMode) {
-        debugPrint('Error fetching languages: $e');
-      }
-      return [];
-    }
+    final repo = ref.read(cvRepositoryProvider);
+    return await repo.getLanguages();
+  }
+
+  void setFromProfile(List<LanguageModel> items) {
+    state = AsyncData(items);
   }
 
   Future<void> add(Map<String, dynamic> data) async {
-    try {
-      final repository = ref.read(cvRepositoryProvider);
-      final newLanguage = await repository.addLanguage(data);
-      
-      final currentList = state.value ?? [];
-      state = AsyncData([...currentList, newLanguage]);
-    } catch (e) {
-      state = AsyncError(e, StackTrace.current);
-    }
+    final repo = ref.read(cvRepositoryProvider);
+    final newItem = await repo.addLanguage(data);
+    state = AsyncData([...state.valueOrNull ?? [], newItem]);
+    ref.invalidate(cvProfileProvider);
   }
 
   Future<void> updateItem(String id, Map<String, dynamic> data) async {
-    try {
-      final repository = ref.read(cvRepositoryProvider);
-      final updatedLanguage = await repository.updateLanguage(id, data);
-      
-      final currentList = state.value ?? [];
-      final updatedList = currentList.map((language) {
-        return language.id == id ? updatedLanguage : language;
-      }).toList();
-      
-      state = AsyncData(updatedList);
-    } catch (e) {
-      state = AsyncError(e, StackTrace.current);
-    }
+    final repo = ref.read(cvRepositoryProvider);
+    final updated = await repo.updateLanguage(id, data);
+    state = AsyncData(
+      state.valueOrNull?.map((e) => e.id == id ? updated : e).toList() ?? [],
+    );
+    ref.invalidate(cvProfileProvider);
   }
 
   Future<void> delete(String id) async {
-    try {
-      final repository = ref.read(cvRepositoryProvider);
-      await repository.deleteLanguage(id);
-      
-      final currentList = state.value ?? [];
-      final updatedList = currentList.where((language) => language.id != id).toList();
-      
-      state = AsyncData(updatedList);
-    } catch (e) {
-      state = AsyncError(e, StackTrace.current);
-    }
+    final repo = ref.read(cvRepositoryProvider);
+    await repo.deleteLanguage(id);
+    state = AsyncData(
+      state.valueOrNull?.where((e) => e.id != id).toList() ?? [],
+    );
+    ref.invalidate(cvProfileProvider);
   }
 }
 
-// Projects provider
-final projectsProvider = AsyncNotifierProvider<ProjectsNotifier, List<ProjectModel>>(() {
+// ── Projects ──────────────────────────────────────────────────────────────────
+
+final projectsProvider =
+    AsyncNotifierProvider<ProjectsNotifier, List<ProjectModel>>(() {
   return ProjectsNotifier();
 });
 
 class ProjectsNotifier extends AsyncNotifier<List<ProjectModel>> {
   @override
   Future<List<ProjectModel>> build() async {
-    return await fetch();
+    return fetch();
   }
 
   Future<List<ProjectModel>> fetch() async {
-    try {
-      final repository = ref.read(cvRepositoryProvider);
-      return await repository.getProjects();
-    } catch (e) {
-      if (kDebugMode) {
-        debugPrint('Error fetching projects: $e');
-      }
-      return [];
-    }
+    final repo = ref.read(cvRepositoryProvider);
+    return await repo.getProjects();
+  }
+
+  void setFromProfile(List<ProjectModel> items) {
+    state = AsyncData(items);
   }
 
   Future<void> add(Map<String, dynamic> data) async {
-    try {
-      final repository = ref.read(cvRepositoryProvider);
-      final newProject = await repository.addProject(data);
-      
-      final currentList = state.value ?? [];
-      state = AsyncData([...currentList, newProject]);
-    } catch (e) {
-      state = AsyncError(e, StackTrace.current);
-    }
+    final repo = ref.read(cvRepositoryProvider);
+    final newItem = await repo.addProject(data);
+    state = AsyncData([...state.valueOrNull ?? [], newItem]);
+    ref.invalidate(cvProfileProvider);
   }
 
   Future<void> updateItem(String id, Map<String, dynamic> data) async {
-    try {
-      final repository = ref.read(cvRepositoryProvider);
-      final updatedProject = await repository.updateProject(id, data);
-      
-      final currentList = state.value ?? [];
-      final updatedList = currentList.map((project) {
-        return project.id == id ? updatedProject : project;
-      }).toList();
-      
-      state = AsyncData(updatedList);
-    } catch (e) {
-      state = AsyncError(e, StackTrace.current);
-    }
+    final repo = ref.read(cvRepositoryProvider);
+    final updated = await repo.updateProject(id, data);
+    state = AsyncData(
+      state.valueOrNull?.map((e) => e.id == id ? updated : e).toList() ?? [],
+    );
+    ref.invalidate(cvProfileProvider);
   }
 
   Future<void> delete(String id) async {
-    try {
-      final repository = ref.read(cvRepositoryProvider);
-      await repository.deleteProject(id);
-      
-      final currentList = state.value ?? [];
-      final updatedList = currentList.where((project) => project.id != id).toList();
-      
-      state = AsyncData(updatedList);
-    } catch (e) {
-      state = AsyncError(e, StackTrace.current);
-    }
+    final repo = ref.read(cvRepositoryProvider);
+    await repo.deleteProject(id);
+    state = AsyncData(
+      state.valueOrNull?.where((e) => e.id != id).toList() ?? [],
+    );
+    ref.invalidate(cvProfileProvider);
   }
 }
 
-// Certifications provider
-final certificationsProvider = AsyncNotifierProvider<CertificationsNotifier, List<CertificationModel>>(() {
+// ── Certifications ────────────────────────────────────────────────────────────
+
+final certificationsProvider =
+    AsyncNotifierProvider<CertificationsNotifier, List<CertificationModel>>(
+        () {
   return CertificationsNotifier();
 });
 
 class CertificationsNotifier extends AsyncNotifier<List<CertificationModel>> {
   @override
   Future<List<CertificationModel>> build() async {
-    return await fetch();
+    return fetch();
   }
 
   Future<List<CertificationModel>> fetch() async {
-    try {
-      final repository = ref.read(cvRepositoryProvider);
-      return await repository.getCertifications();
-    } catch (e) {
-      if (kDebugMode) {
-        debugPrint('Error fetching certifications: $e');
-      }
-      return [];
-    }
+    final repo = ref.read(cvRepositoryProvider);
+    return await repo.getCertifications();
+  }
+
+  void setFromProfile(List<CertificationModel> items) {
+    state = AsyncData(items);
   }
 
   Future<void> add(Map<String, dynamic> data) async {
-    try {
-      final repository = ref.read(cvRepositoryProvider);
-      final newCertification = await repository.addCertification(data);
-      
-      final currentList = state.value ?? [];
-      state = AsyncData([...currentList, newCertification]);
-    } catch (e) {
-      state = AsyncError(e, StackTrace.current);
-    }
+    final repo = ref.read(cvRepositoryProvider);
+    final newItem = await repo.addCertification(data);
+    state = AsyncData([...state.valueOrNull ?? [], newItem]);
+    ref.invalidate(cvProfileProvider);
   }
 
   Future<void> updateItem(String id, Map<String, dynamic> data) async {
-    try {
-      final repository = ref.read(cvRepositoryProvider);
-      final updatedCertification = await repository.updateCertification(id, data);
-      
-      final currentList = state.value ?? [];
-      final updatedList = currentList.map((certification) {
-        return certification.id == id ? updatedCertification : certification;
-      }).toList();
-      
-      state = AsyncData(updatedList);
-    } catch (e) {
-      state = AsyncError(e, StackTrace.current);
-    }
+    final repo = ref.read(cvRepositoryProvider);
+    final updated = await repo.updateCertification(id, data);
+    state = AsyncData(
+      state.valueOrNull?.map((e) => e.id == id ? updated : e).toList() ?? [],
+    );
+    ref.invalidate(cvProfileProvider);
   }
 
   Future<void> delete(String id) async {
-    try {
-      final repository = ref.read(cvRepositoryProvider);
-      await repository.deleteCertification(id);
-      
-      final currentList = state.value ?? [];
-      final updatedList = currentList.where((certification) => certification.id != id).toList();
-      
-      state = AsyncData(updatedList);
-    } catch (e) {
-      state = AsyncError(e, StackTrace.current);
-    }
+    final repo = ref.read(cvRepositoryProvider);
+    await repo.deleteCertification(id);
+    state = AsyncData(
+      state.valueOrNull?.where((e) => e.id != id).toList() ?? [],
+    );
+    ref.invalidate(cvProfileProvider);
   }
 }

@@ -39,3 +39,17 @@ LOGGING['loggers']['']['level'] = 'WARNING'
 # ─── Database connection tuning ───────────────────────────────────────────────
 # Override CONN_MAX_AGE via env var to match MySQL server's wait_timeout
 DATABASES['default']['CONN_MAX_AGE'] = config('DB_CONN_MAX_AGE', default=60, cast=int)
+
+# ─── CORS — only allow the Flutter web domain ─────────────────────────────────
+CORS_ALLOWED_ORIGINS = config(
+    'CORS_ALLOWED_ORIGINS',
+    default='',
+    cast=lambda v: [s.strip() for s in v.split(',') if s.strip()]
+)
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'authorization',
+    'content-type',
+    'x-requested-with',
+]

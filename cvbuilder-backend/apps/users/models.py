@@ -126,6 +126,7 @@ class AuditLog(models.Model):
         ACCOUNT_DELETED     = 'account_deleted',     'Account Deleted'
         ACCOUNT_SUSPENDED   = 'account_suspended',   'Account Suspended'
         ACCOUNT_REACTIVATED = 'account_reactivated', 'Account Reactivated'
+        ACCOUNT_DEACTIVATED = 'account_deactivated', 'Account Deactivated'
         PASSWORD_CHANGED    = 'password_changed',    'Password Changed'
         DELETION_REQUESTED  = 'deletion_requested',  'Deletion Requested'
 

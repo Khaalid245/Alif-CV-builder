@@ -5,29 +5,62 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
+import '../../../../core/storage/secure_storage.dart';
 import '../providers/auth_provider.dart';
 
-class SplashScreen extends ConsumerWidget {
+class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // Listen to auth status changes and navigate accordingly
-    ref.listen(splashProvider, (previous, next) {
-      next.whenData((authStatus) {
-        if (authStatus == AuthStatus.authenticated) {
-          final currentUser = ref.read(currentUserProvider);
-          if (currentUser?.role == 'admin') {
-            context.go('/admin/dashboard');
-          } else {
-            context.go('/cv/dashboard');
-          }
-        } else if (authStatus == AuthStatus.unauthenticated) {
-          context.go('/login');
-        }
-      });
-    });
+  ConsumerState<SplashScreen> createState() => _SplashScreenState();
+}
 
+class _SplashScreenState extends ConsumerState<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _checkAuth();
+  }
+
+  Future<void> _checkAuth() async {
+    final stopwatch = Stopwatch()..start();
+
+    final secureStorage = ref.read(secureStorageProvider);
+    final accessToken = await secureStorage.getAccessToken();
+
+    String? role;
+    if (accessToken != null) {
+      try {
+        final authRepository = ref.read(authRepositoryProvider);
+        final student = await authRepository.getProfile();
+        ref.read(currentUserProvider.notifier).state = student;
+        role = student.role;
+      } catch (_) {
+        // Token invalid — clear ALL stored data (FIX S8)
+        await secureStorage.clearAll();
+      }
+    }
+
+    // Smart minimum display: only pad if auth check was faster than 600ms
+    const minimumDisplay = Duration(milliseconds: 600);
+    final elapsed = stopwatch.elapsed;
+    if (elapsed < minimumDisplay) {
+      await Future.delayed(minimumDisplay - elapsed);
+    }
+
+    if (!mounted) return;
+
+    if (role == 'admin') {
+      context.go('/admin');
+    } else if (role != null) {
+      context.go('/cv/dashboard');
+    } else {
+      context.go('/login');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -35,7 +68,6 @@ class SplashScreen extends ConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // App Icon
               Container(
                 width: 64,
                 height: 64,
@@ -53,42 +85,30 @@ class SplashScreen extends ConsumerWidget {
                   ),
                 ),
               ),
-              
+
               const SizedBox(height: 16),
-              
-              // App Name
-              Text(
-                'EduCV',
-                style: AppTypography.display,
-              ),
-              
+
+              Text('EduCV', style: AppTypography.display),
+
               const SizedBox(height: 8),
-              
-              // University Name
-              Text(
-                'by University Name',
-                style: AppTypography.caption,
-              ),
-              
+
+              Text('by University Name', style: AppTypography.caption),
+
               const SizedBox(height: 64),
-              
-              // Loading Indicator
+
               const SizedBox(
                 width: 20,
                 height: 20,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                  valueColor:
+                      AlwaysStoppedAnimation<Color>(AppColors.primary),
                 ),
               ),
-              
+
               const SizedBox(height: 8),
-              
-              // Loading Text
-              Text(
-                'Loading...',
-                style: AppTypography.caption,
-              ),
+
+              Text('Loading...', style: AppTypography.caption),
             ],
           ),
         ),

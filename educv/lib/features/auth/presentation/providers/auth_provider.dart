@@ -48,8 +48,8 @@ class SplashNotifier extends AsyncNotifier<AuthStatus> {
         
         return AuthStatus.authenticated;
       } catch (e) {
-        // Token is invalid, clear it
-        await secureStorage.clearTokens();
+        // Token is invalid, clear all stored data
+        await secureStorage.clearAll();
         return AuthStatus.unauthenticated;
       }
     }

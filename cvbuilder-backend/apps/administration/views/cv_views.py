@@ -47,19 +47,30 @@ class GeneratedCVListView(ListAPIView):
         """Override to log admin access and format response"""
         app_logger.info(f"Admin {request.user.email} accessed generated CVs list")
         
-        response = super().list(request, *args, **kwargs)
-        
-        # Format response with pagination metadata
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            paginator = self.paginator
+            return success_response(
+                message="Generated CVs retrieved successfully.",
+                data={
+                    'count': paginator.page.paginator.count,
+                    'total_pages': paginator.page.paginator.num_pages,
+                    'current_page': paginator.page.number,
+                    'next': paginator.get_next_link(),
+                    'previous': paginator.get_previous_link(),
+                    'results': serializer.data,
+                }
+            )
+
+        serializer = self.get_serializer(queryset, many=True)
         return success_response(
             message="Generated CVs retrieved successfully.",
-            data={
-                'count': response.data['count'],
-                'total_pages': (response.data['count'] + self.pagination_class.page_size - 1) // self.pagination_class.page_size,
-                'current_page': int(request.GET.get('page', 1)),
-                'next': response.data['next'],
-                'previous': response.data['previous'],
-                'results': response.data['results'],
-            }
+            data={'count': queryset.count(), 'total_pages': 1,
+                  'current_page': 1, 'next': None,
+                  'previous': None, 'results': serializer.data}
         )
 
 
