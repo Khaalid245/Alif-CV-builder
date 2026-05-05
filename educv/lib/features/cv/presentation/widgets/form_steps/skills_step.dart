@@ -25,9 +25,7 @@ class _SkillsStepState extends ConsumerState<SkillsStep> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(skillsProvider.notifier).fetch();
-    });
+    // Data is pre-populated from cvProfileProvider.fetch() — no separate API call needed
   }
 
   @override
@@ -446,8 +444,10 @@ class _SkillBottomSheetState extends ConsumerState<_SkillBottomSheet> {
 
       await ref.read(skillsProvider.notifier).add(data);
       _quickAddController.clear();
+      if (!mounted) return;
       SnackbarHelper.showSuccess(context, 'Skill added');
     } catch (e) {
+      if (!mounted) return;
       SnackbarHelper.showError(context, 'Failed to add skill');
     }
   }
@@ -466,14 +466,17 @@ class _SkillBottomSheetState extends ConsumerState<_SkillBottomSheet> {
 
       if (widget.skill == null) {
         await ref.read(skillsProvider.notifier).add(data);
+        if (!mounted) return;
         SnackbarHelper.showSuccess(context, 'Skill added successfully');
       } else {
         await ref.read(skillsProvider.notifier).updateItem(widget.skill!.id, data);
+        if (!mounted) return;
         SnackbarHelper.showSuccess(context, 'Skill updated successfully');
       }
-
+      if (!mounted) return;
       Navigator.of(context).pop();
     } catch (e) {
+      if (!mounted) return;
       SnackbarHelper.showError(context, 'Failed to save skill');
     } finally {
       setState(() => _isLoading = false);

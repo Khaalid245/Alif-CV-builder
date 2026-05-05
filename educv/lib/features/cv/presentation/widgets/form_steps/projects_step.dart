@@ -27,9 +27,7 @@ class _ProjectsStepState extends ConsumerState<ProjectsStep> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(projectsProvider.notifier).fetch();
-    });
+    // Data is pre-populated from cvProfileProvider.fetch() — no separate API call needed
   }
 
   @override
@@ -324,14 +322,17 @@ class _ProjectBottomSheetState extends ConsumerState<_ProjectBottomSheet> {
 
       if (widget.project == null) {
         await ref.read(projectsProvider.notifier).add(data);
+        if (!mounted) return;
         SnackbarHelper.showSuccess(context, 'Project added successfully');
       } else {
         await ref.read(projectsProvider.notifier).updateItem(widget.project!.id, data);
+        if (!mounted) return;
         SnackbarHelper.showSuccess(context, 'Project updated successfully');
       }
-
+      if (!mounted) return;
       Navigator.of(context).pop();
     } catch (e) {
+      if (!mounted) return;
       SnackbarHelper.showError(context, 'Failed to save project');
     } finally {
       setState(() => _isLoading = false);

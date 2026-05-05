@@ -33,7 +33,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _confirmPasswordFocusNode = FocusNode();
 
   bool _termsAccepted = false;
-  bool _privacyPolicyAccepted = false;
+  bool _marketingConsent = false;  // optional
   bool _dataProcessingConsent = false;
 
   @override
@@ -82,27 +82,21 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   }
 
   void _submitForm() {
-    // Dismiss keyboard
     FocusScope.of(context).unfocus();
 
-    // Debug: Print consent values
-    debugPrint('Consent values: terms=$_termsAccepted, privacy=$_privacyPolicyAccepted, data=$_dataProcessingConsent');
-
-    // Validate form fields
     if (!(_formKey.currentState?.validate() ?? false)) {
       return;
     }
 
-    // Validate consent checkboxes
-    if (!_termsAccepted || !_privacyPolicyAccepted || !_dataProcessingConsent) {
+    // Only terms and data processing are mandatory
+    if (!_termsAccepted || !_dataProcessingConsent) {
       SnackbarHelper.showError(
         context,
-        'Please accept all terms to continue',
+        'Please accept the Terms of Service and data processing consent to continue',
       );
       return;
     }
 
-    // Submit registration
     ref.read(registerProvider.notifier).register(
           email: _emailController.text,
           fullName: _fullNameController.text,
@@ -110,7 +104,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           password: _passwordController.text,
           confirmPassword: _confirmPasswordController.text,
           termsAccepted: _termsAccepted,
-          privacyPolicyAccepted: _privacyPolicyAccepted,
+          marketingConsent: _marketingConsent,
           dataProcessingConsent: _dataProcessingConsent,
         );
   }
@@ -252,38 +246,32 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         ),
                         const SizedBox(height: 12),
                         
-                        // Terms of Service
+                        // Terms of Service (required)
                         ConsentCheckbox(
                           value: _termsAccepted,
-                          text: 'I agree to the Terms of Service',
+                          text: 'I agree to the Terms of Service *',
                           onChanged: (value) {
-                            setState(() {
-                              _termsAccepted = value ?? false;
-                            });
+                            setState(() => _termsAccepted = value ?? false);
                           },
                         ),
                         const SizedBox(height: 8),
                         
-                        // Privacy Policy
+                        // Marketing consent (optional)
                         ConsentCheckbox(
-                          value: _privacyPolicyAccepted,
-                          text: 'I accept the Privacy Policy',
+                          value: _marketingConsent,
+                          text: 'I accept marketing communications (optional)',
                           onChanged: (value) {
-                            setState(() {
-                              _privacyPolicyAccepted = value ?? false;
-                            });
+                            setState(() => _marketingConsent = value ?? false);
                           },
                         ),
                         const SizedBox(height: 8),
                         
-                        // Data Processing
+                        // Data Processing (required)
                         ConsentCheckbox(
                           value: _dataProcessingConsent,
-                          text: 'I consent to data processing for CV generation',
+                          text: 'I consent to data processing for CV generation *',
                           onChanged: (value) {
-                            setState(() {
-                              _dataProcessingConsent = value ?? false;
-                            });
+                            setState(() => _dataProcessingConsent = value ?? false);
                           },
                         ),
                       ],

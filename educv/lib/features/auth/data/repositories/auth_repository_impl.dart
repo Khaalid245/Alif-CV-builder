@@ -48,7 +48,7 @@ class AuthRepositoryImpl implements AuthRepository {
     required String password,
     required String confirmPassword,
     required bool termsAccepted,
-    required bool privacyPolicyAccepted,
+    required bool marketingConsent,
     required bool dataProcessingConsent,
   }) async {
     try {
@@ -59,7 +59,7 @@ class AuthRepositoryImpl implements AuthRepository {
         'password': password,
         'confirm_password': confirmPassword,
         'terms_consent': termsAccepted,
-        'marketing_consent': privacyPolicyAccepted,
+        'marketing_consent': marketingConsent,
         'data_processing_consent': dataProcessingConsent,
       };
       

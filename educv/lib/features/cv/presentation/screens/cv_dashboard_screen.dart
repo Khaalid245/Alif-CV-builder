@@ -77,7 +77,10 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
 
             cvProfile.when(
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (_, __) => const SizedBox.shrink(),
+              error: (e, _) => AppErrorState(
+                message: 'Could not load your profile.',
+                onRetry: () => ref.invalidate(cvProfileProvider),
+              ),
               data: (profile) {
                 if (profile == null) return const SizedBox.shrink();
                 return Column(

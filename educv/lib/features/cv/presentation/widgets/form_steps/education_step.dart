@@ -25,9 +25,7 @@ class _EducationStepState extends ConsumerState<EducationStep> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(educationProvider.notifier).fetch();
-    });
+    // Data is pre-populated from cvProfileProvider.fetch() — no separate API call needed
   }
 
   @override
@@ -382,14 +380,17 @@ class _EducationBottomSheetState extends ConsumerState<_EducationBottomSheet> {
 
       if (widget.education == null) {
         await ref.read(educationProvider.notifier).add(data);
+        if (!mounted) return;
         SnackbarHelper.showSuccess(context, 'Education added successfully');
       } else {
         await ref.read(educationProvider.notifier).updateItem(widget.education!.id, data);
+        if (!mounted) return;
         SnackbarHelper.showSuccess(context, 'Education updated successfully');
       }
-
+      if (!mounted) return;
       Navigator.of(context).pop();
     } catch (e) {
+      if (!mounted) return;
       SnackbarHelper.showError(context, 'Failed to save education');
     } finally {
       setState(() => _isLoading = false);

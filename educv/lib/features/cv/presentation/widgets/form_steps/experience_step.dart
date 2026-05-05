@@ -27,9 +27,7 @@ class _ExperienceStepState extends ConsumerState<ExperienceStep> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(experienceProvider.notifier).fetch();
-    });
+    // Data is pre-populated from cvProfileProvider.fetch() — no separate API call needed
   }
 
   @override
@@ -332,14 +330,17 @@ class _ExperienceBottomSheetState extends ConsumerState<_ExperienceBottomSheet> 
 
       if (widget.experience == null) {
         await ref.read(experienceProvider.notifier).add(data);
+        if (!mounted) return;
         SnackbarHelper.showSuccess(context, 'Experience added successfully');
       } else {
         await ref.read(experienceProvider.notifier).updateItem(widget.experience!.id, data);
+        if (!mounted) return;
         SnackbarHelper.showSuccess(context, 'Experience updated successfully');
       }
-
+      if (!mounted) return;
       Navigator.of(context).pop();
     } catch (e) {
+      if (!mounted) return;
       SnackbarHelper.showError(context, 'Failed to save experience');
     } finally {
       setState(() => _isLoading = false);

@@ -54,7 +54,7 @@ def basic_health_check(request):
     
     data = {
         "status": overall_status,
-        "version": "1.0.0",
+        "version": getattr(settings, 'APP_VERSION', '1.0.0'),
         "database": db_status,
         "media_storage": storage_status,
         "timestamp": timezone.now().isoformat(),
@@ -124,7 +124,7 @@ def detailed_health_check(request):
         # Application information
         import django
         application_info = {
-            "version": "1.0.0",
+            "version": getattr(settings, 'APP_VERSION', '1.0.0'),
             "django_version": django.get_version(),
             "debug_mode": settings.DEBUG,
             "university": getattr(settings, 'UNIVERSITY_NAME', 'EduCV University'),
@@ -141,7 +141,6 @@ def detailed_health_check(request):
             },
             "storage": {
                 "status": storage_status,
-                "media_root": media_root,
                 "generated_cvs_count": cv_files_count,
             },
             "application": application_info,

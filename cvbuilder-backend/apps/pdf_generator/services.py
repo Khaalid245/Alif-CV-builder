@@ -57,11 +57,12 @@ class CVGenerationService:
 
                 html    = self._render_template(template_name, context)
                 size    = self._generate_pdf(html, filepath)
-                rel_url = self._get_relative_url(filepath)
+                rel_path = str(filepath.relative_to(Path(settings.MEDIA_ROOT)))
+                rel_url  = self._get_relative_url(filepath)
 
                 results.append({
                     'template':  template_name,
-                    'file_path': str(filepath),
+                    'file_path': rel_path,   # relative to MEDIA_ROOT
                     'pdf_url':   rel_url,
                     'file_size': size,
                 })

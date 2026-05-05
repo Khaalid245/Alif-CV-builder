@@ -189,5 +189,12 @@ class CVProfileUpdateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 f'Photo file size must not exceed {max_size // (1024 * 1024)}MB.'
             )
+        if value:
+            allowed_extensions = {'jpg', 'jpeg', 'png', 'webp'}
+            ext = value.name.rsplit('.', 1)[-1].lower() if '.' in value.name else ''
+            if ext not in allowed_extensions:
+                raise serializers.ValidationError(
+                    'Only JPG, PNG, and WebP images are allowed.'
+                )
         return value
 

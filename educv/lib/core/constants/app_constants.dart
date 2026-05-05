@@ -29,5 +29,5 @@ class AppConstants {
   // Validation
   static const int minPasswordLength = 8;
   static const int maxNameLength = 100;
-  static const int maxDescriptionLength = 500;
+  static const int maxDescriptionLength = 600;
 }

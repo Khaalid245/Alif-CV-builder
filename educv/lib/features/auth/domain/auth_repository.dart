@@ -10,7 +10,7 @@ abstract class AuthRepository {
     required String password,
     required String confirmPassword,
     required bool termsAccepted,
-    required bool privacyPolicyAccepted,
+    required bool marketingConsent,
     required bool dataProcessingConsent,
   });
   

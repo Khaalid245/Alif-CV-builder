@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -23,7 +24,6 @@ Future<void> logoutUser(WidgetRef ref, BuildContext context) async {
         );
       } catch (_) {
         // Backend logout failed — proceed with local logout anyway
-        debugPrint('Backend logout failed — clearing local session');
       }
     }
 
@@ -37,6 +37,6 @@ Future<void> logoutUser(WidgetRef ref, BuildContext context) async {
       context.go('/login');
     }
   } catch (e) {
-    debugPrint('Logout error: $e');
+    if (kDebugMode) debugPrint('Logout error: $e');
   }
 }

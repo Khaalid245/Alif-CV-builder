@@ -101,7 +101,9 @@ class DownloadCVView(APIView):
                 status_code=status.HTTP_404_NOT_FOUND,
             )
 
-        pdf_path = Path(record.file_path)
+        # Reconstruct absolute path from MEDIA_ROOT + stored relative path
+        from django.conf import settings
+        pdf_path = Path(settings.MEDIA_ROOT) / record.file_path
         if not pdf_path.exists():
             logger.error('PDF file missing on disk: %s | record id: %s', pdf_path, pk)
             return error_response(
@@ -121,9 +123,8 @@ class DownloadCVView(APIView):
         )
 
         filename = f'EduCV_{record.get_template_display()}_{request.user.student_id}.pdf'
-        # FileResponse with as_attachment=True automatically closes the file handle
         return FileResponse(
-            open(pdf_path, 'rb'),
+            pdf_path.open('rb'),
             content_type='application/pdf',
             as_attachment=True,
             filename=filename,
@@ -134,20 +135,34 @@ class CVHistoryView(APIView):
     """
     GET /api/v1/cv/history/
     Returns all previously generated CVs for the authenticated student.
-    Ordered by most recent first.
+    Ordered by most recent first. Supports ?page and ?page_size query params.
     """
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        # Paginate to most recent 20 — prevents large responses for frequent generators
+        from rest_framework.pagination import PageNumberPagination
+
         records = GeneratedCV.objects.filter(
             cv__student=request.user
-        ).order_by('-generated_at')[:20]
+        ).order_by('-generated_at')
+
+        paginator = PageNumberPagination()
+        paginator.page_size = 20
+        paginator.page_size_query_param = 'page_size'
+        paginator.max_page_size = 100
+        page = paginator.paginate_queryset(records, request)
 
         serializer = GeneratedCVSerializer(
-            records, many=True, context={'request': request}
+            page, many=True, context={'request': request}
         )
         return success_response(
             'CV generation history retrieved successfully.',
-            serializer.data,
+            {
+                'count': paginator.page.paginator.count,
+                'total_pages': paginator.page.paginator.num_pages,
+                'current_page': paginator.page.number,
+                'next': paginator.get_next_link(),
+                'previous': paginator.get_previous_link(),
+                'results': serializer.data,
+            },
         )

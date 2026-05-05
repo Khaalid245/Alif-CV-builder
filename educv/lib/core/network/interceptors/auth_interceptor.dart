@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -11,7 +12,8 @@ class AuthInterceptor extends Interceptor {
   final Ref _ref;
 
   bool _isRefreshing = false;
-  final List<_PendingRequest> _pendingRequests = [];
+  // Each pending request holds a Completer so it can be resolved or rejected.
+  final List<Completer<String>> _tokenCompleters = [];
 
   AuthInterceptor(this._ref);
 
@@ -40,17 +42,26 @@ class AuthInterceptor extends Interceptor {
       return;
     }
 
-    // Queue this request if a refresh is already in progress
+    // If a refresh is already running, queue this request and wait for the
+    // new token via a Completer instead of hanging forever.
     if (_isRefreshing) {
-      final completer = _PendingRequest(err.requestOptions);
-      _pendingRequests.add(completer);
+      final completer = Completer<String>();
+      _tokenCompleters.add(completer);
+      try {
+        final newToken = await completer.future;
+        err.requestOptions.headers['Authorization'] = 'Bearer $newToken';
+        final retryDio = Dio();
+        final retryResponse = await retryDio.fetch(err.requestOptions);
+        handler.resolve(retryResponse);
+      } catch (_) {
+        handler.next(err);
+      }
       return;
     }
 
     _isRefreshing = true;
 
     try {
-      // Use a fresh Dio instance to avoid interceptor loops
       final refreshDio = Dio();
       final refreshResponse = await refreshDio.post(
         '${ApiConstants.baseUrl}${ApiConstants.tokenRefresh}',
@@ -74,20 +85,12 @@ class AuthInterceptor extends Interceptor {
         refreshToken: newRefreshToken ?? refreshToken,
       );
 
-      _isRefreshing = false;
-
-      // Retry all queued requests with the new token
-      for (final pending in _pendingRequests) {
-        pending.options.headers['Authorization'] = 'Bearer $newAccessToken';
-        try {
-          final retryDio = Dio();
-          final retryResponse = await retryDio.fetch(pending.options);
-          pending.completer?.call(retryResponse);
-        } catch (_) {
-          // Individual retry failure — don't block others
-        }
+      // Resolve all queued requests with the new token
+      for (final completer in _tokenCompleters) {
+        completer.complete(newAccessToken);
       }
-      _pendingRequests.clear();
+      _tokenCompleters.clear();
+      _isRefreshing = false;
 
       // Retry the original failed request
       err.requestOptions.headers['Authorization'] = 'Bearer $newAccessToken';
@@ -95,8 +98,12 @@ class AuthInterceptor extends Interceptor {
       final retryResponse = await retryDio.fetch(err.requestOptions);
       handler.resolve(retryResponse);
     } catch (_) {
+      // Reject all queued requests
+      for (final completer in _tokenCompleters) {
+        completer.completeError('Token refresh failed');
+      }
+      _tokenCompleters.clear();
       _isRefreshing = false;
-      _pendingRequests.clear();
       await _handleSessionExpired(handler, err);
     }
   }
@@ -127,11 +134,4 @@ class AuthInterceptor extends Interceptor {
 
     handler.reject(err);
   }
-}
-
-class _PendingRequest {
-  final RequestOptions options;
-  final void Function(Response)? completer;
-
-  _PendingRequest(this.options, {this.completer});
 }

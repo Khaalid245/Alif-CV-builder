@@ -25,7 +25,12 @@ class _PDFResultScreenState extends ConsumerState<PDFResultScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(generateCVsProvider.notifier).generate();
+      // Only generate if no results exist in this session.
+      // Prevents regenerating every time the screen is opened.
+      final existing = ref.read(generateCVsProvider).valueOrNull;
+      if (existing == null) {
+        ref.read(generateCVsProvider.notifier).generate();
+      }
       ref.read(pdfHistoryProvider.notifier).fetch();
     });
   }
@@ -252,7 +257,14 @@ class _PDFResultScreenState extends ConsumerState<PDFResultScreen> {
               );
             },
             loading: () => const Center(child: CircularProgressIndicator()),
-            error: (_, __) => const SizedBox.shrink(),
+            error: (_, __) => TextButton.icon(
+              onPressed: () => ref.read(pdfHistoryProvider.notifier).fetch(),
+              icon: const Icon(LucideIcons.refreshCw, size: 14, color: AppColors.primary),
+              label: Text(
+                'Could not load history. Tap to retry.',
+                style: AppTypography.caption.copyWith(color: AppColors.primary),
+              ),
+            ),
           ),
         ],
       ),
@@ -348,63 +360,38 @@ class _PDFResultScreenState extends ConsumerState<PDFResultScreen> {
   }
 }
 
-class _GenerationSteps extends StatefulWidget {
+class _GenerationSteps extends ConsumerWidget {
   const _GenerationSteps();
 
   @override
-  State<_GenerationSteps> createState() => _GenerationStepsState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final generateState = ref.watch(generateCVsProvider);
+    final isLoading = generateState.isLoading;
+    final isDone = generateState.valueOrNull != null;
 
-class _GenerationStepsState extends State<_GenerationSteps> {
-  final List<String> templates = ['Classic Template', 'Modern Template', 'Academic Template'];
-  final List<GenerationStepStatus> statuses = [
-    GenerationStepStatus.pending,
-    GenerationStepStatus.pending,
-    GenerationStepStatus.pending,
-  ];
+    final templates = [
+      ('Classic Template', 'classic'),
+      ('Modern Template', 'modern'),
+      ('Academic Template', 'academic'),
+    ];
 
-  @override
-  void initState() {
-    super.initState();
-    _startAnimation();
-  }
-
-  void _startAnimation() async {
-    await Future.delayed(Duration.zero);
-    
-    // Classic starts loading
-    setState(() => statuses[0] = GenerationStepStatus.loading);
-    await Future.delayed(const Duration(milliseconds: 800));
-    
-    // Classic done, Modern starts loading
-    setState(() {
-      statuses[0] = GenerationStepStatus.done;
-      statuses[1] = GenerationStepStatus.loading;
-    });
-    await Future.delayed(const Duration(milliseconds: 800));
-    
-    // Modern done, Academic starts loading
-    setState(() {
-      statuses[1] = GenerationStepStatus.done;
-      statuses[2] = GenerationStepStatus.loading;
-    });
-    await Future.delayed(const Duration(milliseconds: 800));
-    
-    // Academic done
-    setState(() => statuses[2] = GenerationStepStatus.done);
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Column(
-      children: templates.asMap().entries.map((entry) {
-        final index = entry.key;
-        final template = entry.value;
-        final status = statuses[index];
-        
+      children: templates.map((entry) {
+        final label = entry.$1;
+
+        final GenerationStepStatus status;
+        if (isDone) {
+          status = GenerationStepStatus.done;
+        } else if (isLoading) {
+          // Show loading sequentially based on template order
+          status = GenerationStepStatus.loading;
+        } else {
+          status = GenerationStepStatus.pending;
+        }
+
         return _GenerationStepRow(
           icon: LucideIcons.fileText,
-          label: template,
+          label: label,
           status: status,
         );
       }).toList(),

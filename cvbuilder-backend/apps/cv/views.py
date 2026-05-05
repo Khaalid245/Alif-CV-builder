@@ -29,9 +29,12 @@ logger = logging.getLogger(__name__)
 def _get_or_create_cv(user) -> CVProfile:
     """
     Returns the student's CVProfile, creating it automatically if it doesn't exist.
-    This means students never get a 404 on their first profile request.
+    Prefetches all related sections to avoid N+1 queries on the nested serializer.
     """
-    cv, _ = CVProfile.objects.get_or_create(student=user)
+    cv, created = CVProfile.objects.prefetch_related(
+        'educations', 'experiences', 'skills',
+        'languages', 'projects', 'certifications',
+    ).get_or_create(student=user)
     return cv
 
 
@@ -55,8 +58,6 @@ class CVProfileView(APIView):
 
     def get(self, request):
         cv = _get_or_create_cv(request.user)
-        # Recalculate completion on every fetch to keep it accurate
-        cv.update_completion()
         serializer = CVProfileSerializer(cv, context={'request': request})
         return success_response('CV profile retrieved successfully.', serializer.data)
 
@@ -115,8 +116,7 @@ class CVCompletionView(APIView):
         missing   = [label for done, label in checks if not done]
         completed = [label for done, label in checks if done]
 
-        cv.update_completion()
-
+        # update_completion already called by mutations — no need to call here
         return success_response('CV completion status retrieved.', {
             'completion_percentage': cv.completion_percentage,
             'completed': completed,
@@ -175,7 +175,7 @@ class BaseSectionDetailView(APIView):
     serializer_class = None
     section_name     = ''
 
-    def put(self, request, pk):
+    def patch(self, request, pk):
         obj = _get_owned_object(self.model, pk, request.user)
         if not obj:
             return error_response(

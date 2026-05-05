@@ -21,6 +21,7 @@ from apps.administration.serializers.student_serializers import (
     DeletionRequestSerializer
 )
 from apps.users.models import User, AuditLog
+from apps.cv.models import CVProfile
 from apps.cv.serializers import CVProfileSerializer
 
 # Application logger

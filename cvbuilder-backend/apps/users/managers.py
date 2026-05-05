@@ -39,14 +39,12 @@ class StudentManager(BaseUserManager):
         extra_fields.setdefault('status', 'active')
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
-        # Superusers bypass consent requirement but timestamps are still recorded
         now = timezone.now()
-        extra_fields.setdefault('terms_accepted', True)
-        extra_fields.setdefault('terms_accepted_at', now)
-        extra_fields.setdefault('privacy_policy_accepted', True)
-        extra_fields.setdefault('privacy_policy_accepted_at', now)
+        extra_fields.setdefault('terms_consent', True)
+        extra_fields.setdefault('terms_consent_date', now)
+        extra_fields.setdefault('marketing_consent', False)
         extra_fields.setdefault('data_processing_consent', True)
-        extra_fields.setdefault('data_processing_consent_at', now)
+        extra_fields.setdefault('data_processing_consent_date', now)
         return self.create_user(email, password, **extra_fields)
 
     def active_students(self):

@@ -1,13 +1,10 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ApiConstants {
   static String get baseUrl {
-    final url = dotenv.env['API_BASE_URL'] ?? 'http://localhost:8000/api/v1';
-    if (kDebugMode) {
-      debugPrint('API Base URL: $url');
-    }
-    return url;
+    final url = dotenv.env['API_BASE_URL'];
+    assert(url != null && url.isNotEmpty, 'API_BASE_URL is not set in .env');
+    return url ?? 'http://localhost:8000/api/v1';
   }
 
   // Auth

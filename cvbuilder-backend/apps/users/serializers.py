@@ -40,9 +40,9 @@ class RegisterSerializer(serializers.Serializer):
     password           = serializers.CharField(write_only=True, min_length=8)
     confirm_password   = serializers.CharField(write_only=True)
 
-    # Consent — all three are required to be True
+    # Consent — terms and data processing are required; marketing is optional
     terms_consent           = serializers.BooleanField()
-    marketing_consent       = serializers.BooleanField()
+    marketing_consent       = serializers.BooleanField(required=False, default=False)
     data_processing_consent = serializers.BooleanField()
 
     def validate_email(self, value):
@@ -61,8 +61,7 @@ class RegisterSerializer(serializers.Serializer):
         return value
 
     def validate_marketing_consent(self, value):
-        if not value:
-            raise serializers.ValidationError('You must accept the marketing consent.')
+        # Marketing consent is optional — students may decline
         return value
 
     def validate_data_processing_consent(self, value):

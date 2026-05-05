@@ -147,7 +147,7 @@ class CVRepositoryImpl implements CVRepository {
   @override
   Future<EducationModel> updateEducation(String id, Map<String, dynamic> data) async {
     try {
-      final response = await _apiClient.put(
+      final response = await _apiClient.patch(
         '${ApiConstants.cvEducation}$id/',
         data: data,
       );
@@ -244,7 +244,7 @@ class CVRepositoryImpl implements CVRepository {
   @override
   Future<ExperienceModel> updateExperience(String id, Map<String, dynamic> data) async {
     try {
-      final response = await _apiClient.put(
+      final response = await _apiClient.patch(
         '${ApiConstants.cvExperience}$id/',
         data: data,
       );
@@ -341,7 +341,7 @@ class CVRepositoryImpl implements CVRepository {
   @override
   Future<SkillModel> updateSkill(String id, Map<String, dynamic> data) async {
     try {
-      final response = await _apiClient.put(
+      final response = await _apiClient.patch(
         '${ApiConstants.cvSkills}$id/',
         data: data,
       );
@@ -438,7 +438,7 @@ class CVRepositoryImpl implements CVRepository {
   @override
   Future<LanguageModel> updateLanguage(String id, Map<String, dynamic> data) async {
     try {
-      final response = await _apiClient.put(
+      final response = await _apiClient.patch(
         '${ApiConstants.cvLanguages}$id/',
         data: data,
       );
@@ -535,7 +535,7 @@ class CVRepositoryImpl implements CVRepository {
   @override
   Future<ProjectModel> updateProject(String id, Map<String, dynamic> data) async {
     try {
-      final response = await _apiClient.put(
+      final response = await _apiClient.patch(
         '${ApiConstants.cvProjects}$id/',
         data: data,
       );
@@ -632,7 +632,7 @@ class CVRepositoryImpl implements CVRepository {
   @override
   Future<CertificationModel> updateCertification(String id, Map<String, dynamic> data) async {
     try {
-      final response = await _apiClient.put(
+      final response = await _apiClient.patch(
         '${ApiConstants.cvCertifications}$id/',
         data: data,
       );

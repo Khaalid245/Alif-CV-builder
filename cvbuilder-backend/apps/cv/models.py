@@ -27,7 +27,7 @@ class CVProfile(models.Model):
     address   = models.CharField(max_length=255, blank=True, default='')
     city      = models.CharField(max_length=100, blank=True, default='')
     country   = models.CharField(max_length=100, blank=True, default='')
-    summary   = models.TextField(blank=True, default='')
+    summary   = models.TextField(blank=True, default='', max_length=1000)
 
     # ── Online Presence ───────────────────────────────────────────────────────
     linkedin  = models.URLField(blank=True, default='')
@@ -112,7 +112,7 @@ class Education(models.Model):
     )
     is_current  = models.BooleanField(default=False)
     gpa         = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
-    description = models.TextField(blank=True, default='')
+    description = models.TextField(blank=True, default='', max_length=1000)
     order       = models.IntegerField(default=0)
 
     class Meta:
@@ -133,7 +133,7 @@ class Experience(models.Model):
     start_date = models.DateField()
     end_date   = models.DateField(null=True, blank=True)
     is_current = models.BooleanField(default=False)
-    description = models.TextField(blank=True, default='')
+    description = models.TextField(blank=True, default='', max_length=600)
     order       = models.IntegerField(default=0)
 
     class Meta:
@@ -209,7 +209,7 @@ class Project(models.Model):
     id          = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     cv          = models.ForeignKey(CVProfile, on_delete=models.CASCADE, related_name='projects')
     title       = models.CharField(max_length=255)
-    description = models.TextField(blank=True, default='')
+    description = models.TextField(blank=True, default='', max_length=600)
     link        = models.URLField(blank=True, default='')
     start_date  = models.DateField(null=True, blank=True)
     end_date    = models.DateField(null=True, blank=True)
@@ -259,6 +259,7 @@ class GeneratedCV(models.Model):
         related_name='generated_cvs',
     )
     template       = models.CharField(max_length=10, choices=Template.choices)
+    # Relative path from MEDIA_ROOT — never store absolute paths
     file_path      = models.CharField(max_length=500, blank=True, default='')
     file_size      = models.IntegerField(default=0, help_text='File size in bytes')
     download_count = models.IntegerField(default=0)
@@ -273,4 +274,5 @@ class GeneratedCV(models.Model):
         ]
 
     def __str__(self):
-        return f'{self.template} CV — {self.cv.student.email}'
+        # Use cv_id to avoid an extra DB query for student email
+        return f'{self.template} CV — cv:{self.cv_id}'

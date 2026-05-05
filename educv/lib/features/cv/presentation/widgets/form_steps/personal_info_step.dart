@@ -31,7 +31,6 @@ class _PersonalInfoStepState extends ConsumerState<PersonalInfoStep> {
   final _summaryController = TextEditingController();
 
   File? _selectedPhoto;
-  bool _isLoading = false;
 
   @override
   void initState() {
@@ -273,7 +272,6 @@ class _PersonalInfoStepState extends ConsumerState<PersonalInfoStep> {
   // Called by cv_form_screen.dart when Next is tapped on step 0
   Future<bool> _saveData() async {
     if (!(_formKey.currentState?.validate() ?? false)) return false;
-    if (mounted) setState(() => _isLoading = true);
     ref.read(cvFormLoadingProvider.notifier).state = true;
     try {
       if (_selectedPhoto != null) {
@@ -294,7 +292,6 @@ class _PersonalInfoStepState extends ConsumerState<PersonalInfoStep> {
       return false;
     } finally {
       ref.read(cvFormLoadingProvider.notifier).state = false;
-      if (mounted) setState(() => _isLoading = false);
     }
   }
 }

@@ -29,6 +29,7 @@ class CVFormScreen extends ConsumerStatefulWidget {
 
 class _CVFormScreenState extends ConsumerState<CVFormScreen> {
   late PageController _pageController;
+  late int _initialStep;
 
   final List<String> _stepTitles = [
     'Personal Info',
@@ -43,15 +44,24 @@ class _CVFormScreenState extends ConsumerState<CVFormScreen> {
   @override
   void initState() {
     super.initState();
-    // Read initialStep from GoRouter extra (set by dashboard section tiles)
-    // or fall back to widget.initialStep (set by router query param)
+    _initialStep = widget.initialStep;
+    _pageController = PageController(initialPage: _initialStep);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(cvFormStepProvider.notifier).state = _initialStep;
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Read GoRouter extra here — safe because router state is available
     final extra = GoRouterState.of(context).extra as Map<String, dynamic>?;
     final step = extra?['initialStep'] as int? ?? widget.initialStep;
-    _pageController = PageController(initialPage: step);
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    if (step != _initialStep) {
+      _initialStep = step;
+      _pageController.jumpToPage(step);
       ref.read(cvFormStepProvider.notifier).state = step;
-    });
+    }
   }
 
   @override

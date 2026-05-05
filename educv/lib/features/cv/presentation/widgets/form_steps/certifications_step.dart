@@ -27,9 +27,7 @@ class _CertificationsStepState extends ConsumerState<CertificationsStep> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(certificationsProvider.notifier).fetch();
-    });
+    // Data is pre-populated from cvProfileProvider.fetch() — no separate API call needed
   }
 
   @override
@@ -348,14 +346,17 @@ class _CertificationBottomSheetState extends ConsumerState<_CertificationBottomS
 
       if (widget.certification == null) {
         await ref.read(certificationsProvider.notifier).add(data);
+        if (!mounted) return;
         SnackbarHelper.showSuccess(context, 'Certification added successfully');
       } else {
         await ref.read(certificationsProvider.notifier).updateItem(widget.certification!.id, data);
+        if (!mounted) return;
         SnackbarHelper.showSuccess(context, 'Certification updated successfully');
       }
-
+      if (!mounted) return;
       Navigator.of(context).pop();
     } catch (e) {
+      if (!mounted) return;
       SnackbarHelper.showError(context, 'Failed to save certification');
     } finally {
       setState(() => _isLoading = false);
