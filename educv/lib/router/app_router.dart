@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -14,10 +15,17 @@ import '../features/pdf/presentation/screens/pdf_preview_screen.dart';
 import '../features/admin/presentation/screens/admin_shell.dart';
 import '../features/admin/presentation/screens/student_detail_screen.dart'
     as admin_screens;
+import '../features/public/presentation/widgets/public_layout.dart';
 
 // Route name constants
 class AppRoutes {
   static const String splash = '/splash';
+  static const String home = '/';
+  static const String about = '/about';
+  static const String contact = '/contact';
+  static const String privacy = '/privacy';
+  static const String terms = '/terms';
+  static const String faq = '/faq';
   static const String login = '/login';
   static const String register = '/register';
   static const String cvDashboard = '/cv/dashboard';
@@ -32,6 +40,97 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: AppRoutes.splash,
     routes: [
+      // PUBLIC ROUTES (no auth required)
+      GoRoute(
+        path: AppRoutes.home,
+        name: 'home',
+        builder: (_, __) => const PublicLayout(
+          child: Center(
+            child: Padding(
+              padding: EdgeInsets.all(40),
+              child: Text(
+                'Home — Phase W2',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+              ),
+            ),
+          ),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.about,
+        name: 'about',
+        builder: (_, __) => const PublicLayout(
+          child: Center(
+            child: Padding(
+              padding: EdgeInsets.all(40),
+              child: Text(
+                'About — Phase W3',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+              ),
+            ),
+          ),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.contact,
+        name: 'contact',
+        builder: (_, __) => const PublicLayout(
+          child: Center(
+            child: Padding(
+              padding: EdgeInsets.all(40),
+              child: Text(
+                'Contact — Phase W3',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+              ),
+            ),
+          ),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.privacy,
+        name: 'privacy',
+        builder: (_, __) => const PublicLayout(
+          child: Center(
+            child: Padding(
+              padding: EdgeInsets.all(40),
+              child: Text(
+                'Privacy — Phase W4',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+              ),
+            ),
+          ),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.terms,
+        name: 'terms',
+        builder: (_, __) => const PublicLayout(
+          child: Center(
+            child: Padding(
+              padding: EdgeInsets.all(40),
+              child: Text(
+                'Terms — Phase W4',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+              ),
+            ),
+          ),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.faq,
+        name: 'faq',
+        builder: (_, __) => const PublicLayout(
+          child: Center(
+            child: Padding(
+              padding: EdgeInsets.all(40),
+              child: Text(
+                'FAQ — Phase W3',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+              ),
+            ),
+          ),
+        ),
+      ),
       GoRoute(
         path: AppRoutes.splash,
         builder: (context, state) => const SplashScreen(),
@@ -99,7 +198,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         if (currentPath.startsWith('/cv/') ||
             currentPath.startsWith('/pdf/') ||
             currentPath.startsWith('/admin')) {
-          return AppRoutes.login;
+          return AppRoutes.home;
         }
         return null;
       }

@@ -1,15 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_spacing.dart';
-import '../../../../core/theme/app_typography.dart';
-import 'responsive_layout.dart';
-
-const Color _bg = Color(0xFF0A0A0A);
-const Color _textMuted = Color(0xFF9E9E9E);
-const Color _textLight = Color(0xFFE0E0E0);
-const Color _dividerDark = Color(0xFF2A2A2A);
+import 'educv_logo.dart';
 
 class PublicFooter extends StatelessWidget {
   const PublicFooter({super.key});
@@ -17,293 +10,242 @@ class PublicFooter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: _bg,
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
-            child: ResponsiveLayout(
-              web: _WebFooterColumns(context),
-              mobile: _MobileFooterColumns(context),
-            ),
-          ),
-          Container(
-            height: 1,
-            color: _dividerDark,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-            child: ResponsiveLayout(
-              web: _FooterBottom(context),
-              mobile: _FooterBottomMobile(context),
-            ),
-          ),
-        ],
+      color: const Color(0xFF0A0A0A),
+      padding: const EdgeInsets.all(40),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final isWeb = constraints.maxWidth >= 800;
+          
+          if (isWeb) {
+            return _buildWebFooter(context);
+          } else {
+            return _buildMobileFooter(context);
+          }
+        },
       ),
     );
   }
-}
 
-class _WebFooterColumns extends StatelessWidget {
-  final BuildContext ctx;
-  const _WebFooterColumns(this.ctx);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildWebFooter(BuildContext context) {
+    return Column(
       children: [
-        Expanded(
-          flex: 3,
-          child: _BrandColumn(),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 3,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const EduCVLogo(isDark: true),
+                  const SizedBox(height: 12),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 220),
+                    child: Text(
+                      'The official CV builder for university students. Build a professional CV in minutes.',
+                      style: GoogleFonts.inter(
+                        fontSize: 12,
+                        color: const Color(0xFF6B7280),
+                        height: 1.65,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 2,
+              child: _buildFooterColumn(
+                'Platform',
+                ['Home', 'How it works', 'Templates', 'Sign In'],
+                ['/', '/#how-it-works', '/#templates', '/login'],
+              ),
+            ),
+            Expanded(
+              flex: 2,
+              child: _buildFooterColumn(
+                'University',
+                ['About', 'Career Center', 'Contact', 'FAQ'],
+                ['/about', '/about#career', '/contact', '/faq'],
+              ),
+            ),
+            Expanded(
+              flex: 2,
+              child: _buildFooterColumn(
+                'Legal',
+                ['Privacy Policy', 'Terms of Service', 'Data Deletion'],
+                ['/privacy', '/terms', '/privacy#deletion'],
+              ),
+            ),
+          ],
         ),
-        const SizedBox(width: 40),
-        Expanded(
-          flex: 2,
-          child: _FooterColumn(
-            title: 'Platform',
-            links: [
-              _FooterLink('Home', () => ctx.go('/')),
-              _FooterLink('How it works', () => ctx.go('/')),
-              _FooterLink('Templates', () => ctx.go('/')),
-              _FooterLink('Sign In', () => ctx.go('/login')),
-              _FooterLink('Create Account', () => ctx.go('/register')),
-            ],
-          ),
+        const SizedBox(height: 32),
+        Container(
+          height: 1,
+          color: const Color(0xFF1A1A1A),
         ),
-        const SizedBox(width: 40),
-        Expanded(
-          flex: 2,
-          child: _FooterColumn(
-            title: 'University',
-            links: [
-              _FooterLink('About EduCV', () => ctx.go('/about')),
-              _FooterLink('Contact Support', () => ctx.go('/contact')),
-              _FooterLink('FAQ', () => ctx.go('/faq')),
-            ],
-          ),
-        ),
-        const SizedBox(width: 40),
-        Expanded(
-          flex: 2,
-          child: _FooterColumn(
-            title: 'Legal',
-            links: [
-              _FooterLink('Privacy Policy', () => ctx.go('/privacy')),
-              _FooterLink('Terms of Service', () => ctx.go('/terms')),
-            ],
-          ),
+        const SizedBox(height: 20),
+        Row(
+          children: [
+            Text(
+              '© 2024 EduCV · [University Name]. All rights reserved.',
+              style: GoogleFonts.inter(
+                fontSize: 11,
+                color: const Color(0xFF4A4A4A),
+              ),
+            ),
+            const Spacer(),
+            Row(
+              children: [
+                GestureDetector(
+                  onTap: () => context.go('/privacy'),
+                  child: Text(
+                    'Privacy Policy',
+                    style: GoogleFonts.inter(
+                      fontSize: 11,
+                      color: const Color(0xFF4A4A4A),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                GestureDetector(
+                  onTap: () => context.go('/terms'),
+                  child: Text(
+                    'Terms of Service',
+                    style: GoogleFonts.inter(
+                      fontSize: 11,
+                      color: const Color(0xFF4A4A4A),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ],
     );
   }
-}
 
-class _MobileFooterColumns extends StatelessWidget {
-  final BuildContext ctx;
-  const _MobileFooterColumns(this.ctx);
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildMobileFooter(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _BrandColumn(),
+        const EduCVLogo(isDark: true),
+        const SizedBox(height: 12),
+        Text(
+          'The official CV builder for university students. Build a professional CV in minutes.',
+          style: GoogleFonts.inter(
+            fontSize: 12,
+            color: const Color(0xFF6B7280),
+            height: 1.65,
+          ),
+        ),
         const SizedBox(height: 32),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: _FooterColumn(
-                title: 'Platform',
-                links: [
-                  _FooterLink('Home', () => ctx.go('/')),
-                  _FooterLink('About', () => ctx.go('/about')),
-                  _FooterLink('Contact', () => ctx.go('/contact')),
-                  _FooterLink('FAQ', () => ctx.go('/faq')),
-                ],
+              child: _buildFooterColumn(
+                'Platform',
+                ['Home', 'How it works', 'Templates', 'Sign In'],
+                ['/', '/#how-it-works', '/#templates', '/login'],
               ),
             ),
+            const SizedBox(width: 24),
             Expanded(
-              child: _FooterColumn(
-                title: 'Legal',
-                links: [
-                  _FooterLink('Privacy Policy', () => ctx.go('/privacy')),
-                  _FooterLink('Terms of Service', () => ctx.go('/terms')),
-                  _FooterLink('Sign In', () => ctx.go('/login')),
-                  _FooterLink('Register', () => ctx.go('/register')),
-                ],
+              child: _buildFooterColumn(
+                'University',
+                ['About', 'Career Center', 'Contact', 'FAQ'],
+                ['/about', '/about#career', '/contact', '/faq'],
               ),
             ),
           ],
         ),
-      ],
-    );
-  }
-}
-
-class _BrandColumn extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
+        const SizedBox(height: 24),
+        _buildFooterColumn(
+          'Legal',
+          ['Privacy Policy', 'Terms of Service', 'Data Deletion'],
+          ['/privacy', '/terms', '/privacy#deletion'],
+        ),
+        const SizedBox(height: 32),
+        Container(
+          height: 1,
+          color: const Color(0xFF1A1A1A),
+        ),
+        const SizedBox(height: 20),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              width: 32,
-              height: 32,
-              decoration: BoxDecoration(
-                color: AppColors.primary,
-                borderRadius: BorderRadius.circular(6),
+            Text(
+              '© 2024 EduCV · [University Name]. All rights reserved.',
+              style: GoogleFonts.inter(
+                fontSize: 11,
+                color: const Color(0xFF4A4A4A),
               ),
-              child: Center(
-                child: Text(
-                  'CV',
-                  style: AppTypography.caption.copyWith(
-                    color: AppColors.white,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 11,
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                GestureDetector(
+                  onTap: () => context.go('/privacy'),
+                  child: Text(
+                    'Privacy Policy',
+                    style: GoogleFonts.inter(
+                      fontSize: 11,
+                      color: const Color(0xFF4A4A4A),
+                    ),
                   ),
                 ),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Text(
-              'EduCV',
-              style: AppTypography.h3.copyWith(
-                fontSize: 16,
-                fontWeight: FontWeight.w800,
-                color: AppColors.white,
-              ),
+                const SizedBox(width: 16),
+                GestureDetector(
+                  onTap: () => context.go('/terms'),
+                  child: Text(
+                    'Terms of Service',
+                    style: GoogleFonts.inter(
+                      fontSize: 11,
+                      color: const Color(0xFF4A4A4A),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
-        ),
-        const SizedBox(height: 12),
-        Text(
-          'The official CV builder platform\nfor university students.',
-          style: AppTypography.caption.copyWith(
-            color: _textMuted,
-            height: 1.6,
-          ),
         ),
       ],
     );
   }
-}
 
-class _FooterLink {
-  final String label;
-  final VoidCallback onTap;
-  const _FooterLink(this.label, this.onTap);
-}
-
-class _FooterColumn extends StatelessWidget {
-  final String title;
-  final List<_FooterLink> links;
-  const _FooterColumn({required this.title, required this.links});
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildFooterColumn(String title, List<String> links, List<String> routes) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          title,
-          style: AppTypography.label.copyWith(
-            color: AppColors.white,
+          title.toUpperCase(),
+          style: GoogleFonts.inter(
+            fontSize: 10,
             fontWeight: FontWeight.w700,
-            fontSize: 12,
+            letterSpacing: 0.07,
+            color: Colors.white,
           ),
         ),
         const SizedBox(height: 14),
-        ...links.map(
-          (link) => Padding(
-            padding: const EdgeInsets.only(bottom: 10),
+        ...List.generate(links.length, (index) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 8),
             child: GestureDetector(
-              onTap: link.onTap,
+              onTap: () {
+                // Handle navigation - will be implemented with proper routing
+              },
               child: Text(
-                link.label,
-                style: AppTypography.caption.copyWith(
-                  color: _textMuted,
-                  height: 1.4,
+                links[index],
+                style: GoogleFonts.inter(
+                  fontSize: 12,
+                  color: const Color(0xFF6B7280),
                 ),
               ),
             ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _FooterBottom extends StatelessWidget {
-  final BuildContext ctx;
-  const _FooterBottom(this.ctx);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(
-          '© ${DateTime.now().year} EduCV. All rights reserved.',
-          style: AppTypography.caption.copyWith(color: _textMuted),
-        ),
-        const Spacer(),
-        GestureDetector(
-          onTap: () => ctx.go('/privacy'),
-          child: Text(
-            'Privacy Policy',
-            style: AppTypography.caption.copyWith(color: _textMuted),
-          ),
-        ),
-        const SizedBox(width: 20),
-        GestureDetector(
-          onTap: () => ctx.go('/terms'),
-          child: Text(
-            'Terms of Service',
-            style: AppTypography.caption.copyWith(color: _textMuted),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _FooterBottomMobile extends StatelessWidget {
-  final BuildContext ctx;
-  const _FooterBottomMobile(this.ctx);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            GestureDetector(
-              onTap: () => ctx.go('/privacy'),
-              child: Text(
-                'Privacy Policy',
-                style: AppTypography.caption.copyWith(color: _textMuted),
-              ),
-            ),
-            const SizedBox(width: 20),
-            GestureDetector(
-              onTap: () => ctx.go('/terms'),
-              child: Text(
-                'Terms of Service',
-                style: AppTypography.caption.copyWith(color: _textMuted),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Text(
-          '© ${DateTime.now().year} EduCV. All rights reserved.',
-          style: AppTypography.caption.copyWith(color: _textMuted),
-        ),
+          );
+        }),
       ],
     );
   }

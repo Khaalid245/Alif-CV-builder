@@ -88,6 +88,7 @@ class _CVFormScreenState extends ConsumerState<CVFormScreen> {
             Expanded(
               child: PageView(
                 controller: _pageController,
+                physics: const NeverScrollableScrollPhysics(), // FIX L2 — prevent swipe bypass
                 onPageChanged: (index) {
                   ref.read(cvFormStepProvider.notifier).state = index;
                 },

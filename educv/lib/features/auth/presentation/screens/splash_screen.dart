@@ -55,7 +55,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     } else if (role != null) {
       context.go('/cv/dashboard');
     } else {
-      context.go('/login');
+      context.go('/');
     }
   }
 

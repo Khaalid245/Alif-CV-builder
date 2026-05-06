@@ -1,3 +1,4 @@
+import 'dart:ui' show FontFeature;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -83,5 +84,28 @@ class AppTypography {
         letterSpacing: 0.07 * 11, // 0.07em converted to pixels
         height: 1.5,
         color: AppColors.textHint,
+      );
+
+  // Section eyebrow label (used on all public pages)
+  static TextStyle get eyebrow => GoogleFonts.inter(
+        fontSize: 11,
+        fontWeight: FontWeight.w700,
+        letterSpacing: 0.08,
+        color: AppColors.primary,
+        decoration: TextDecoration.none,
+      ).copyWith(
+        fontFeatures: [
+          const FontFeature.enable('smcp'),
+        ],
+      );
+
+  // Large section heading
+  static TextStyle get sectionTitle => GoogleFonts.inter(
+        fontSize: 28,
+        fontWeight: FontWeight.w800,
+        letterSpacing: -0.02,
+        color: AppColors.textPrimary,
+        height: 1.2,
+        decoration: TextDecoration.none,
       );
 }
