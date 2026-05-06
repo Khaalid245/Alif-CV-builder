@@ -15,6 +15,10 @@ import '../features/pdf/presentation/screens/pdf_preview_screen.dart';
 import '../features/admin/presentation/screens/admin_shell.dart';
 import '../features/admin/presentation/screens/student_detail_screen.dart'
     as admin_screens;
+import '../features/public/presentation/screens/home_screen.dart';
+import '../features/public/presentation/screens/about_screen.dart';
+import '../features/public/presentation/screens/contact_screen.dart';
+import '../features/public/presentation/screens/faq_screen.dart';
 import '../features/public/presentation/widgets/public_layout.dart';
 
 // Route name constants
@@ -44,47 +48,17 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.home,
         name: 'home',
-        builder: (_, __) => const PublicLayout(
-          child: Center(
-            child: Padding(
-              padding: EdgeInsets.all(40),
-              child: Text(
-                'Home — Phase W2',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
-              ),
-            ),
-          ),
-        ),
+        builder: (_, __) => const HomeScreen(),
       ),
       GoRoute(
         path: AppRoutes.about,
         name: 'about',
-        builder: (_, __) => const PublicLayout(
-          child: Center(
-            child: Padding(
-              padding: EdgeInsets.all(40),
-              child: Text(
-                'About — Phase W3',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
-              ),
-            ),
-          ),
-        ),
+        builder: (_, __) => const AboutScreen(),
       ),
       GoRoute(
         path: AppRoutes.contact,
         name: 'contact',
-        builder: (_, __) => const PublicLayout(
-          child: Center(
-            child: Padding(
-              padding: EdgeInsets.all(40),
-              child: Text(
-                'Contact — Phase W3',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
-              ),
-            ),
-          ),
-        ),
+        builder: (_, __) => const ContactScreen(),
       ),
       GoRoute(
         path: AppRoutes.privacy,
@@ -119,17 +93,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.faq,
         name: 'faq',
-        builder: (_, __) => const PublicLayout(
-          child: Center(
-            child: Padding(
-              padding: EdgeInsets.all(40),
-              child: Text(
-                'FAQ — Phase W3',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
-              ),
-            ),
-          ),
-        ),
+        builder: (_, __) => const FAQScreen(),
       ),
       GoRoute(
         path: AppRoutes.splash,
