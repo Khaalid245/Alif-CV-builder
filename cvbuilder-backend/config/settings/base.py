@@ -32,6 +32,7 @@ THIRD_PARTY_APPS = [
     'corsheaders',
     'auditlog',
     'django_filters',
+    'django_prometheus',
 ]
 
 LOCAL_APPS = [
@@ -46,6 +47,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 # ─── Middleware ───────────────────────────────────────────────────────────────
 MIDDLEWARE = [
+    'django_prometheus.middleware.PrometheusBeforeMiddleware',  # Metrics — must be first
     'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',          # CORS — must be high up
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -55,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'auditlog.middleware.AuditlogMiddleware',          # Audit logging
+    'django_prometheus.middleware.PrometheusAfterMiddleware',   # Metrics — must be last
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -83,7 +86,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # ─── Database (MySQL with utf8mb4) ────────────────────────────────────────────
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django_prometheus.db.backends.mysql',  # Prometheus-enabled MySQL backend
         'NAME': config('DB_NAME'),
         'USER': config('DB_USER'),
         'PASSWORD': config('DB_PASSWORD'),

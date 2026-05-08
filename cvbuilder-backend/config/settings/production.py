@@ -5,6 +5,10 @@ All values must come from environment variables — no hardcoded secrets.
 """
 from .base import *
 from decouple import config
+from apps.core.sentry_config import init_sentry
+
+# ─── Initialize Sentry ────────────────────────────────────────────────────────
+init_sentry()
 
 # ─── Security ─────────────────────────────────────────────────────────────────
 DEBUG = False

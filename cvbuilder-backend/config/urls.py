@@ -11,6 +11,9 @@ urlpatterns = [
     # Django admin (internal use only)
     path('admin/', admin.site.urls),
 
+    # Prometheus metrics endpoint
+    path('metrics/', include('django_prometheus.urls')),
+
     # API v1 — all application endpoints
     path('api/v1/', include('config.api_router')),
 ]

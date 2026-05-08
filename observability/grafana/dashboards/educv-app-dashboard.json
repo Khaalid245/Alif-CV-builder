@@ -1,0 +1,104 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "EduCV Application Dashboard",
+    "tags": ["educv", "application"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Application Status",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "up{job=\"educv-backend\"}",
+            "legendFormat": "Backend Status"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "mappings": [
+              {"options": {"0": {"text": "DOWN", "color": "red"}}, "type": "value"},
+              {"options": {"1": {"text": "UP", "color": "green"}}, "type": "value"}
+            ]
+          }
+        },
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
+      },
+      {
+        "id": 2,
+        "title": "Request Rate",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(django_http_requests_total[5m])",
+            "legendFormat": "Requests/sec"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}
+      },
+      {
+        "id": 3,
+        "title": "Response Time (95th percentile)",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "django_http_request_duration_seconds{quantile=\"0.95\"}",
+            "legendFormat": "95th percentile"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}
+      },
+      {
+        "id": 4,
+        "title": "Error Rate",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(django_http_responses_total_by_status_view_method{status=~\"5..\"}[5m])",
+            "legendFormat": "5xx errors/sec"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}
+      },
+      {
+        "id": 5,
+        "title": "Active Users",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "educv_active_users_total",
+            "legendFormat": "Active Users"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 6, "x": 0, "y": 16}
+      },
+      {
+        "id": 6,
+        "title": "PDF Generations Today",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "increase(educv_pdf_generations_total[24h])",
+            "legendFormat": "PDFs Generated"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 6, "x": 6, "y": 16}
+      },
+      {
+        "id": 7,
+        "title": "Database Connections",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "django_db_connections_total",
+            "legendFormat": "Active Connections"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16}
+      }
+    ],
+    "time": {"from": "now-1h", "to": "now"},
+    "refresh": "30s"
+  }
+}

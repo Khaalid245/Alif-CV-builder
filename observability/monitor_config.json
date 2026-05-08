@@ -1,0 +1,49 @@
+{
+  "services": [
+    {
+      "name": "EduCV Backend API",
+      "url": "http://localhost:8000/api/v1/auth/profile/",
+      "method": "GET",
+      "headers": {},
+      "expected_status": 401,
+      "timeout": 10,
+      "critical": true
+    },
+    {
+      "name": "Prometheus Metrics",
+      "url": "http://localhost:8000/metrics",
+      "method": "GET",
+      "expected_status": 200,
+      "timeout": 5,
+      "critical": false
+    },
+    {
+      "name": "Database Health",
+      "url": "http://localhost:8000/admin/",
+      "method": "GET",
+      "expected_status": 302,
+      "timeout": 10,
+      "critical": true
+    }
+  ],
+  "alerts": {
+    "email": {
+      "enabled": true,
+      "smtp_server": "smtp.gmail.com",
+      "smtp_port": 587,
+      "username": "alerts@university.edu",
+      "password": "your_app_password",
+      "from_email": "alerts@university.edu",
+      "to_emails": ["devops@university.edu", "admin@university.edu"]
+    },
+    "webhook": {
+      "enabled": false,
+      "url": "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK"
+    }
+  },
+  "monitoring": {
+    "check_interval": 60,
+    "failure_threshold": 3,
+    "recovery_notification": true
+  }
+}
