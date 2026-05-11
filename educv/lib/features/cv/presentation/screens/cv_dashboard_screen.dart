@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
-import '../../../../core/utils/auth_utils.dart';
+import '../../../../core/storage/secure_storage.dart';
 import '../../../../core/widgets/section_card.dart';
-import '../../../../core/widgets/app_error_state.dart';
+import '../../../../core/utils/time_utils.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
-import '../providers/cv_provider.dart';
+import '../../../pdf/presentation/providers/pdf_provider.dart';
+import '../../../pdf/data/models/generated_cv_model.dart';
 
 class CVDashboardScreen extends ConsumerStatefulWidget {
   const CVDashboardScreen({super.key});
@@ -20,122 +21,262 @@ class CVDashboardScreen extends ConsumerStatefulWidget {
 }
 
 class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
+  bool _isAnnouncementDismissed = false;
+
   @override
   void initState() {
     super.initState();
+    // Fetch PDF history when screen loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(cvProfileProvider.notifier).fetch();
+      ref.read(pdfHistoryProvider.notifier).fetch();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = ref.watch(currentUserProvider);
-    final cvProfile = ref.watch(cvProfileProvider);
+    final user = ref.watch(currentUserProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: AppColors.background,
+        backgroundColor: Colors.white,
         elevation: 0,
-        title: Text('My CV', style: AppTypography.h2),
+        title: Text(
+          'Home',
+          style: AppTypography.h2.copyWith(color: const Color(0xFF0A0A0A)),
+        ),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Container(
+            height: 1,
+            color: AppColors.divider,
+          ),
+        ),
         actions: [
-          IconButton(
-            onPressed: () => logoutUser(ref, context),
-            icon: const Icon(LucideIcons.logOut, color: AppColors.textPrimary, size: 20),
+          GestureDetector(
+            onTap: () => _showProfileBottomSheet(context, user?.fullName ?? '', user?.email ?? ''),
+            child: Container(
+              margin: const EdgeInsets.only(right: 16),
+              child: CircleAvatar(
+                radius: 16,
+                backgroundColor: const Color(0xFF1565C0),
+                child: Text(
+                  _getInitials(user?.fullName ?? ''),
+                  style: const TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
           ),
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+        padding: const EdgeInsets.all(AppSpacing.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildGreetingSection(currentUser?.fullName ?? ''),
+            // Admin Announcement Banner
+            if (!_isAnnouncementDismissed) _buildAnnouncementBanner(),
+            
+            // Recent Downloads Section
+            _buildRecentDownloadsSection(),
+            
+            const SizedBox(height: AppSpacing.xxl), // Bottom padding
+          ],
+        ),
+      ),
+    );
+  }
 
-            const SizedBox(height: AppSpacing.xl),
-
-            // Completion Card
-            cvProfile.when(
-              data: (profile) => _buildCompletionCard(profile?.completionPercentage ?? 0),
-              loading: () => _buildCompletionCardSkeleton(),
-              error: (e, _) => AppErrorState(
-                message: e.toString(),
-                onRetry: () => ref.read(cvProfileProvider.notifier).fetch(),
+  Widget _buildAnnouncementBanner() {
+    // Mock announcement - in real app this would come from API
+    const announcement = "Welcome to EduCV! Generate professional CVs in 3 different templates. Complete your profile to get started.";
+    
+    return Container(
+      margin: const EdgeInsets.only(bottom: 14),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        color: const Color(0xFFEAF2FF),
+        border: Border.all(color: const Color(0xFFBBDEFB), width: 0.5),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(
+            LucideIcons.megaphone,
+            size: 16,
+            color: Color(0xFF1565C0),
+          ),
+          const SizedBox(width: 10),
+          const Expanded(
+            child: Text(
+              announcement,
+              style: TextStyle(
+                fontSize: 12,
+                color: Color(0xFF1565C0),
+                height: 1.5,
               ),
             ),
+          ),
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                _isAnnouncementDismissed = true;
+              });
+            },
+            child: const Icon(
+              LucideIcons.x,
+              size: 16,
+              color: Color(0xFF90CAF9),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-            const SizedBox(height: AppSpacing.xl),
+  String _getInitials(String fullName) {
+    if (fullName.isEmpty) return 'U';
+    
+    final names = fullName.trim().split(' ');
+    if (names.length == 1) {
+      return names[0][0].toUpperCase();
+    }
+    
+    final firstInitial = names.first.isNotEmpty ? names.first[0].toUpperCase() : '';
+    final lastInitial = names.last.isNotEmpty ? names.last[0].toUpperCase() : '';
+    
+    return '$firstInitial$lastInitial';
+  }
 
-            _buildQuickActions(),
+  Future<void> _logout() async {
+    final secureStorage = ref.read(secureStorageProvider);
+    await secureStorage.clearAll();
+    ref.read(currentUserProvider.notifier).state = null;
+    if (mounted) {
+      context.go('/');
+    }
+  }
 
-            const SizedBox(height: AppSpacing.xl),
-
-            // CV Sections — real data from profile
-            Text('Your CV Sections', style: AppTypography.h3),
-            const SizedBox(height: AppSpacing.sm),
-
-            cvProfile.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => AppErrorState(
-                message: 'Could not load your profile.',
-                onRetry: () => ref.invalidate(cvProfileProvider),
+  Widget _buildRecentDownloadsSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: AppSpacing.lg),
+        
+        // Section Header
+        Row(
+          children: [
+            Text(
+              'Recent downloads',
+              style: AppTypography.h3.copyWith(color: const Color(0xFF0A0A0A)),
+            ),
+            const Spacer(),
+            TextButton(
+              onPressed: () {
+                context.go('/cv/downloads');
+              },
+              child: Text(
+                'View all',
+                style: AppTypography.body.copyWith(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-              data: (profile) {
-                if (profile == null) return const SizedBox.shrink();
+            ),
+          ],
+        ),
+        
+        const SizedBox(height: 12),
+        
+        // Downloads Content
+        Consumer(
+          builder: (context, ref, child) {
+            final historyAsync = ref.watch(pdfHistoryProvider);
+            
+            return historyAsync.when(
+              loading: () => const SizedBox.shrink(),
+              error: (error, stack) => const SizedBox.shrink(),
+              data: (history) {
+                if (history.isEmpty) {
+                  return _buildEmptyDownloadsState();
+                }
+                
+                // Show last 3 downloads
+                final recentDownloads = history.take(3).toList();
                 return Column(
-                  children: [
-                    _SectionStatusTile(
-                      icon: LucideIcons.user,
-                      name: 'Personal Info',
-                      hasData: profile.phone.isNotEmpty || profile.summary.isNotEmpty,
-                      count: null,
-                      step: 0,
-                    ),
-                    _SectionStatusTile(
-                      icon: LucideIcons.graduationCap,
-                      name: 'Education',
-                      hasData: profile.education.isNotEmpty,
-                      count: profile.education.length,
-                      step: 1,
-                    ),
-                    _SectionStatusTile(
-                      icon: LucideIcons.briefcase,
-                      name: 'Work Experience',
-                      hasData: profile.experiences.isNotEmpty,
-                      count: profile.experiences.length,
-                      step: 2,
-                    ),
-                    _SectionStatusTile(
-                      icon: LucideIcons.zap,
-                      name: 'Skills',
-                      hasData: profile.skills.isNotEmpty,
-                      count: profile.skills.length,
-                      step: 3,
-                    ),
-                    _SectionStatusTile(
-                      icon: LucideIcons.globe,
-                      name: 'Languages',
-                      hasData: profile.languages.isNotEmpty,
-                      count: profile.languages.length,
-                      step: 4,
-                    ),
-                    _SectionStatusTile(
-                      icon: LucideIcons.code2,
-                      name: 'Projects',
-                      hasData: profile.projects.isNotEmpty,
-                      count: profile.projects.length,
-                      step: 5,
-                    ),
-                    _SectionStatusTile(
-                      icon: LucideIcons.award,
-                      name: 'Certifications',
-                      hasData: profile.certifications.isNotEmpty,
-                      count: profile.certifications.length,
-                      step: 6,
-                    ),
-                  ],
+                  children: recentDownloads
+                      .map((cv) => _buildRecentDownloadTile(cv))
+                      .toList(),
                 );
+              },
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  void _showProfileBottomSheet(BuildContext context, String name, String email) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // User info
+            Column(
+              children: [
+                Text(
+                  name.isNotEmpty ? name : 'User',
+                  style: AppTypography.h3,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  email,
+                  style: AppTypography.body.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+            
+            const SizedBox(height: 16),
+            
+            // Divider
+            Container(
+              height: 1,
+              color: AppColors.divider,
+            ),
+            
+            const SizedBox(height: 8),
+            
+            // Sign out
+            ListTile(
+              leading: const Icon(
+                LucideIcons.logOut,
+                color: AppColors.error,
+              ),
+              title: Text(
+                'Sign out',
+                style: AppTypography.body.copyWith(
+                  color: AppColors.error,
+                ),
+              ),
+              onTap: () async {
+                Navigator.pop(context);
+                await _logout();
               },
             ),
           ],
@@ -143,237 +284,172 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
       ),
     );
   }
-
-  Widget _buildGreetingSection(String fullName) {
-    final name = fullName.split(' ').first;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Hello, $name 👋', style: AppTypography.h1),
-        const SizedBox(height: 4),
-        Text(
-          'Let\'s build your professional CV',
-          style: AppTypography.body.copyWith(color: AppColors.textSecondary),
+  
+  Widget _buildEmptyDownloadsState() {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: AppColors.divider,
+          width: 0.5,
+          style: BorderStyle.solid,
         ),
-      ],
-    );
-  }
-
-  Widget _buildCompletionCard(int completionPercentage) {
-    return SectionCard(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      padding: const EdgeInsets.all(20),
       child: Column(
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('CV Completion', style: AppTypography.h3),
-                    const SizedBox(height: AppSpacing.xs),
-                    Text(
-                      '$completionPercentage%',
-                      style: AppTypography.display.copyWith(color: AppColors.primary, fontSize: 32),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'of your CV is filled',
-                      style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                width: 64,
-                height: 64,
-                child: CircularProgressIndicator.adaptive(
-                  value: completionPercentage / 100,
-                  backgroundColor: AppColors.primaryLight,
-                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
-                  strokeWidth: 6,
-                ),
-              ),
-            ],
+          const Icon(
+            LucideIcons.download,
+            size: 24,
+            color: Color(0xFF9E9E9E),
           ),
-          const SizedBox(height: AppSpacing.md),
-          LinearProgressIndicator(
-            value: completionPercentage / 100,
-            backgroundColor: AppColors.divider,
-            valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
-            minHeight: 3,
-          ),
-          const SizedBox(height: AppSpacing.md),
-          if (completionPercentage < 100)
-            Text(
-              'Complete your profile to generate better CVs',
-              style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
-            )
-          else
-            Row(
-              children: [
-                const Icon(LucideIcons.check, size: 16, color: AppColors.success),
-                const SizedBox(width: AppSpacing.xs),
-                Text(
-                  'Your CV is complete!',
-                  style: AppTypography.caption.copyWith(color: AppColors.success),
-                ),
-              ],
+          const SizedBox(height: 8),
+          const Text(
+            'No CVs generated yet',
+            style: TextStyle(
+              fontSize: 12,
+              color: Color(0xFF9E9E9E),
             ),
+          ),
+          const SizedBox(height: 4),
+          TextButton(
+            onPressed: () {
+              context.go('/pdf/result');
+            },
+            child: Text(
+              'Generate my CVs',
+              style: AppTypography.body.copyWith(
+                color: AppColors.primary,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
-
-  Widget _buildCompletionCardSkeleton() {
+  
+  Widget _buildRecentDownloadTile(GeneratedCVModel cv) {
     return SectionCard(
+      margin: const EdgeInsets.only(bottom: 6),
+      padding: const EdgeInsets.all(12),
       child: Row(
         children: [
+          // CV Thumbnail
+          _buildCVThumbnail(),
+          
+          const SizedBox(width: 12),
+          
+          // CV Info
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 120,
-                  height: 20,
-                  decoration: BoxDecoration(
-                    color: AppColors.divider,
-                    borderRadius: BorderRadius.circular(4),
+                Text(
+                  cv.templateDisplay,
+                  style: AppTypography.body.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: const Color(0xFF0A0A0A),
                   ),
                 ),
-                const SizedBox(height: AppSpacing.xs),
-                Container(
-                  width: 60,
-                  height: 32,
-                  decoration: BoxDecoration(
-                    color: AppColors.divider,
-                    borderRadius: BorderRadius.circular(4),
+                const SizedBox(height: 4),
+                Text(
+                  TimeUtils.timeAgo(cv.generatedAt),
+                  style: AppTypography.caption.copyWith(
+                    color: const Color(0xFF6B7280),
                   ),
                 ),
               ],
             ),
           ),
-          Container(
-            width: 64,
-            height: 64,
-            decoration: const BoxDecoration(color: AppColors.divider, shape: BoxShape.circle),
+          
+          // Download Button
+          GestureDetector(
+            onTap: () => _downloadCV(cv),
+            child: Container(
+              width: 28,
+              height: 28,
+              decoration: BoxDecoration(
+                color: const Color(0xFFEAF2FF),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: const Icon(
+                LucideIcons.download,
+                size: 14,
+                color: Color(0xFF1565C0),
+              ),
+            ),
           ),
         ],
       ),
     );
   }
-
-  Widget _buildQuickActions() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Quick Actions', style: AppTypography.h3),
-        const SizedBox(height: AppSpacing.sm),
-        Row(
-          children: [
-            Expanded(
-              child: _buildActionCard(
-                icon: LucideIcons.fileEdit,
-                title: 'Edit My CV',
-                subtitle: 'Update your information',
-                onTap: () => context.go('/cv/form'),
-              ),
-            ),
-            const SizedBox(width: AppSpacing.sm),
-            Expanded(
-              child: _buildActionCard(
-                icon: LucideIcons.fileDown,
-                title: 'Generate CVs',
-                subtitle: 'Download 3 formats',
-                onTap: () => context.go('/pdf/result'),
-              ),
-            ),
-          ],
+  
+  Widget _buildCVThumbnail() {
+    return Container(
+      width: 28,
+      height: 36,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: AppColors.divider,
+          width: 0.5,
         ),
-      ],
-    );
-  }
-
-  Widget _buildActionCard({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: SectionCard(
-        child: Column(
-          children: [
-            Icon(icon, size: 28, color: AppColors.primary),
-            const SizedBox(height: AppSpacing.sm),
-            Text(title, style: AppTypography.h3, textAlign: TextAlign.center),
-            const SizedBox(height: 4),
-            Text(
-              subtitle,
-              style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
-              textAlign: TextAlign.center,
+        borderRadius: BorderRadius.circular(3),
+        color: const Color(0xFFEAF2FF),
+      ),
+      padding: const EdgeInsets.all(4),
+      child: Column(
+        children: [
+          Container(
+            height: 3,
+            width: double.infinity * 0.6,
+            decoration: BoxDecoration(
+              color: const Color(0xFF1565C0),
+              borderRadius: BorderRadius.circular(1),
             ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 2),
+          Container(
+            height: 2,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: AppColors.divider,
+              borderRadius: BorderRadius.circular(1),
+            ),
+          ),
+          const SizedBox(height: 1),
+          Container(
+            height: 2,
+            width: double.infinity * 0.8,
+            color: AppColors.divider,
+          ),
+        ],
       ),
     );
   }
-}
-
-class _SectionStatusTile extends StatelessWidget {
-  final IconData icon;
-  final String name;
-  final bool hasData;
-  final int? count;
-  final int step;
-
-  const _SectionStatusTile({
-    required this.icon,
-    required this.name,
-    required this.hasData,
-    required this.count,
-    required this.step,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => context.go('/cv/form', extra: {'initialStep': step}),
-      child: Container(
-        margin: const EdgeInsets.only(bottom: AppSpacing.xs),
-        child: Row(
-          children: [
-            Icon(icon, size: 20, color: AppColors.primary),
-            const SizedBox(width: AppSpacing.sm),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(name, style: AppTypography.body),
-                  Text(
-                    hasData
-                        ? (count != null ? '$count ${count == 1 ? 'entry' : 'entries'}' : 'Filled')
-                        : 'Not added yet',
-                    style: AppTypography.caption.copyWith(
-                      color: hasData ? AppColors.success : AppColors.textSecondary,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            if (hasData)
-              const Icon(LucideIcons.check, size: 18, color: AppColors.success)
-            else
-              Text(
-                'Add',
-                style: AppTypography.caption.copyWith(
-                  color: AppColors.primary,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
+  
+  void _downloadCV(GeneratedCVModel cv) async {
+    try {
+      final repository = ref.read(pdfRepositoryProvider);
+      await repository.downloadPDF(cv.id);
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${cv.templateDisplay} CV downloaded successfully'),
+            backgroundColor: AppColors.success,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to download CV: ${e.toString()}'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    }
   }
 }

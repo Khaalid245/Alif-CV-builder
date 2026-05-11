@@ -11,7 +11,7 @@ from rest_framework.views import APIView
 
 from apps.core.responses import success_response, error_response
 from apps.users.models import AuditLog
-from .models import CVProfile, Education, Experience, Skill, Language, Project, Certification
+from .models import CVProfile, Education, Experience, Skill, Language, Project, Certification, Announcement
 from .serializers import (
     CVProfileSerializer,
     CVProfileUpdateSerializer,
@@ -281,6 +281,29 @@ class ProjectDetailView(BaseSectionDetailView):
     model            = Project
     serializer_class = ProjectSerializer
     section_name     = 'Project'
+
+
+# ── Announcements ─────────────────────────────────────────────────────────────
+
+class AnnouncementView(APIView):
+    """
+    GET /api/v1/cv/announcement/
+    Returns the latest active announcement for display on the dashboard.
+    Returns null if no active announcements exist.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        announcement = Announcement.objects.filter(is_active=True).first()
+        if announcement:
+            data = {
+                'id': str(announcement.id),
+                'message': announcement.message,
+                'created_at': announcement.created_at.isoformat(),
+            }
+            return success_response('Latest announcement retrieved.', data)
+        else:
+            return success_response('No active announcements.', None)
 
 
 # ── Certifications ─────────────────────────────────────────────────────────────

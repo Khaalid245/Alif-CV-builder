@@ -6,6 +6,7 @@ from django.urls import path
 from .views import (
     CVProfileView,
     CVCompletionView,
+    AnnouncementView,
     EducationListView, EducationDetailView,
     ExperienceListView, ExperienceDetailView,
     SkillListView, SkillDetailView,
@@ -16,8 +17,9 @@ from .views import (
 
 urlpatterns = [
     # CV Profile
-    path('profile/',    CVProfileView.as_view(),    name='cv-profile'),
-    path('completion/', CVCompletionView.as_view(),  name='cv-completion'),
+    path('profile/',     CVProfileView.as_view(),     name='cv-profile'),
+    path('completion/',  CVCompletionView.as_view(),  name='cv-completion'),
+    path('announcement/', AnnouncementView.as_view(),  name='cv-announcement'),
 
     # Education
     path('education/',        EducationListView.as_view(),   name='education-list'),

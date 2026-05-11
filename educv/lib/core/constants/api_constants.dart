@@ -28,6 +28,7 @@ class ApiConstants {
   static const String cvCompletion = '/cv/completion/';
   static const String cvGenerate = '/cv/generate/';
   static const String cvHistory = '/cv/history/';
+  static const String announcement = '/cv/announcement/';
 
   // Admin — all paths match Django /administration/ mount
   static const String adminStatsOverview = '/administration/stats/overview/';
