@@ -139,8 +139,8 @@ class HeroSection extends StatelessWidget {
       builder: (context) => Row(
         children: [
           Expanded(
-            child: AppButton(
-              text: 'Create My CV Free',
+            child: AppButton.primary(
+              label: 'Create My CV Free',
               onPressed: () => context.go('/register'),
               icon: LucideIcons.users,
             ),
@@ -148,7 +148,7 @@ class HeroSection extends StatelessWidget {
           const SizedBox(width: 12),
           Expanded(
             child: AppButton.secondary(
-              'See how it works',
+              label: 'See how it works',
               onPressed: () {
                 // TODO: Scroll to how-it-works section
               },

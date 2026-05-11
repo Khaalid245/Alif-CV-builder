@@ -59,7 +59,7 @@ class EmptyState extends StatelessWidget {
             if (effectiveActionText != null && onAction != null) ...[
               const SizedBox(height: AppSpacing.lg),
               AppButton.primary(
-                effectiveActionText!,
+                label: effectiveActionText!,
                 onPressed: onAction,
               ),
             ],

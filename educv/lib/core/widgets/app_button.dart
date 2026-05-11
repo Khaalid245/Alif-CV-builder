@@ -29,27 +29,27 @@ class AppButton extends StatelessWidget {
   });
 
   // Named constructors for convenience
-  const AppButton.primary(
-    this.text, {
+  const AppButton.primary({
     super.key,
+    required String label,
     this.onPressed,
     this.isLoading = false,
     this.isFullWidth = false,
     this.icon,
     this.width,
     this.height,
-  }) : variant = AppButtonVariant.primary;
+  }) : text = label, variant = AppButtonVariant.primary;
 
-  const AppButton.secondary(
-    this.text, {
+  const AppButton.secondary({
     super.key,
+    required String label,
     this.onPressed,
     this.isLoading = false,
     this.isFullWidth = false,
     this.icon,
     this.width,
     this.height,
-  }) : variant = AppButtonVariant.secondary;
+  }) : text = label, variant = AppButtonVariant.secondary;
 
   @override
   Widget build(BuildContext context) {

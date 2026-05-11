@@ -184,7 +184,7 @@ class PublicNavBar extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: AppButton.secondary(
-                    'Sign In',
+                    label: 'Sign In',
                     onPressed: () {
                       Navigator.pop(context);
                       context.go('/login');
@@ -195,7 +195,7 @@ class PublicNavBar extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: AppButton.primary(
-                    'Get Started',
+                    label: 'Get Started',
                     onPressed: () {
                       Navigator.pop(context);
                       context.go('/register');

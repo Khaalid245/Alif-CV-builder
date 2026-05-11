@@ -7,7 +7,12 @@ import '../features/auth/presentation/providers/auth_provider.dart';
 import '../features/auth/presentation/screens/login_screen.dart';
 import '../features/auth/presentation/screens/register_screen.dart';
 import '../features/auth/presentation/screens/splash_screen.dart';
+import '../features/cv/presentation/screens/student_shell.dart';
+import '../features/cv/presentation/screens/onboarding_screen.dart';
 import '../features/cv/presentation/screens/cv_dashboard_screen.dart';
+import '../features/cv/presentation/screens/cv_sections_screen.dart';
+import '../features/cv/presentation/screens/cv_downloads_screen.dart';
+import '../features/cv/presentation/screens/account_screen.dart';
 import '../features/cv/presentation/screens/cv_form_screen.dart';
 import '../features/cv/presentation/screens/cv_preview_screen.dart';
 import '../features/pdf/presentation/screens/pdf_result_screen.dart';
@@ -32,7 +37,11 @@ class AppRoutes {
   static const String faq = '/faq';
   static const String login = '/login';
   static const String register = '/register';
+  static const String onboarding = '/onboarding';
   static const String cvDashboard = '/cv/dashboard';
+  static const String cvSections = '/cv/sections';
+  static const String cvDownloads = '/cv/downloads';
+  static const String account = '/account';
   static const String cvForm = '/cv/form';
   static const String cvPreview = '/cv/preview';
   static const String pdfResult = '/pdf/result';
@@ -108,9 +117,57 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const RegisterScreen(),
       ),
       GoRoute(
-        path: AppRoutes.cvDashboard,
-        builder: (context, state) => const CVDashboardScreen(),
+        path: AppRoutes.onboarding,
+        name: 'onboarding',
+        builder: (_, __) => const OnboardingScreen(),
       ),
+      
+      // STUDENT SHELL with 4 tabs
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) {
+          return StudentShell(navigationShell: navigationShell);
+        },
+        branches: [
+          // Branch 1: Home (Dashboard)
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.cvDashboard,
+                builder: (context, state) => const CVDashboardScreen(),
+              ),
+            ],
+          ),
+          // Branch 2: My CV (Sections)
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.cvSections,
+                builder: (context, state) => const CVSectionsScreen(),
+              ),
+            ],
+          ),
+          // Branch 3: Downloads
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.cvDownloads,
+                builder: (context, state) => const CVDownloadsScreen(),
+              ),
+            ],
+          ),
+          // Branch 4: Account
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.account,
+                builder: (context, state) => const AccountScreen(),
+              ),
+            ],
+          ),
+        ],
+      ),
+      
+      // Other CV routes (outside shell)
       GoRoute(
         path: AppRoutes.cvForm,
         builder: (context, state) {
@@ -161,7 +218,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       if (!isAuthenticated) {
         if (currentPath.startsWith('/cv/') ||
             currentPath.startsWith('/pdf/') ||
-            currentPath.startsWith('/admin')) {
+            currentPath.startsWith('/admin') ||
+            currentPath == '/account' ||
+            currentPath == '/onboarding') {
           return AppRoutes.home;
         }
         return null;

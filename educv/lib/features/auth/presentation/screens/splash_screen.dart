@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -53,7 +54,15 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     if (role == 'admin') {
       context.go('/admin');
     } else if (role != null) {
-      context.go('/cv/dashboard');
+      // Check onboarding completion for students
+      final prefs = await SharedPreferences.getInstance();
+      final onboardingDone = prefs.getBool('onboarding_done') ?? false;
+      
+      if (onboardingDone) {
+        context.go('/cv/dashboard');
+      } else {
+        context.go('/onboarding');
+      }
     } else {
       context.go('/');
     }

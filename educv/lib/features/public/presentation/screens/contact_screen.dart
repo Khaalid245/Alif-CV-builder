@@ -242,8 +242,8 @@ class _ContactScreenState extends State<ContactScreen> {
           const SizedBox(height: 24),
           SizedBox(
             width: double.infinity,
-            child: AppButton(
-              text: 'Send Message',
+            child: AppButton.primary(
+              label: 'Send Message',
               onPressed: _isLoading ? null : _submitForm,
               isLoading: _isLoading,
             ),
@@ -328,7 +328,7 @@ class _ContactScreenState extends State<ContactScreen> {
         ),
         const SizedBox(height: 20),
         AppButton.secondary(
-          'Send another',
+          label: 'Send another',
           onPressed: _resetForm,
         ),
       ],
