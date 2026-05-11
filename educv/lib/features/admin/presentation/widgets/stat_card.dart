@@ -30,7 +30,8 @@ class StatCard extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+                style: AppTypography.caption
+                    .copyWith(color: AppColors.textSecondary),
               ),
               const Spacer(),
               Icon(
@@ -40,9 +41,7 @@ class StatCard extends StatelessWidget {
               ),
             ],
           ),
-          
           const SizedBox(height: AppSpacing.sm),
-          
           Text(
             value,
             style: AppTypography.display.copyWith(
@@ -50,13 +49,13 @@ class StatCard extends StatelessWidget {
               color: AppColors.textPrimary,
             ),
           ),
-          
           const SizedBox(height: 4),
-          
           Text(
             change,
             style: AppTypography.caption.copyWith(
-              color: change.startsWith('+') ? AppColors.success : AppColors.textSecondary,
+              color: change.startsWith('+')
+                  ? AppColors.success
+                  : AppColors.textSecondary,
             ),
           ),
         ],

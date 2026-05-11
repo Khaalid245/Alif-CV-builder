@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/utils/snackbar_helper.dart';
 import '../../../../core/utils/validators.dart';
@@ -32,36 +31,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     _emailFocusNode.dispose();
     _passwordFocusNode.dispose();
     super.dispose();
-  }
-
-  void _showForgotPasswordDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-        ),
-        title: Text(
-          'Reset Password',
-          style: AppTypography.h2,
-        ),
-        content: Text(
-          'Please contact your university administrator to reset your password.',
-          style: AppTypography.body,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(
-              'OK',
-              style: AppTypography.button.copyWith(
-                color: AppColors.primary,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 
   void _submitForm() {
@@ -113,7 +82,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 48),
-                  
+
                   // Header
                   Text(
                     'Welcome back',
@@ -124,9 +93,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     'Sign in to access your CV builder',
                     style: AppTypography.body,
                   ),
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // Email Field
                   AppInput(
                     label: 'University Email',
@@ -140,9 +109,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       _passwordFocusNode.requestFocus();
                     },
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // Password Field
                   AppPasswordInput(
                     label: 'Password',
@@ -150,17 +119,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     controller: _passwordController,
                     textInputAction: TextInputAction.done,
                     focusNode: _passwordFocusNode,
-                    validator: (value) => Validators.required(value, 'Password'),
+                    validator: (value) =>
+                        Validators.required(value, 'Password'),
                     onEditingComplete: _submitForm,
                   ),
-                  
+
                   const SizedBox(height: 12),
-                  
+
                   // Forgot Password
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
-                      onPressed: _showForgotPasswordDialog,
+                      onPressed: () => context.go('/forgot-password'),
                       child: Text(
                         'Forgot password?',
                         style: AppTypography.body.copyWith(
@@ -169,9 +139,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                     ),
                   ),
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // Sign In Button
                   AppButton(
                     text: 'Sign In',
@@ -179,9 +149,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     isLoading: loginState.isLoading,
                     isFullWidth: true,
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Register Link
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -202,7 +172,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                     ],
                   ),
-                  
+
                   const SizedBox(height: 32),
                 ],
               ),

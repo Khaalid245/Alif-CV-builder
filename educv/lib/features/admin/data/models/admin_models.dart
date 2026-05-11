@@ -168,17 +168,28 @@ class AdminStudentModel {
       role: json['role'] ?? 'student',
       status: json['status'] ?? 'active',
       createdAt: DateTime.parse(json['created_at']),
-      lastLoginAt: json['last_login_at'] != null ? DateTime.parse(json['last_login_at']) : null,
-      cvCompletionPercentage: (json['cv_completion_percentage'] ?? 0.0).toDouble(),
+      lastLoginAt: json['last_login_at'] != null
+          ? DateTime.parse(json['last_login_at'])
+          : null,
+      cvCompletionPercentage:
+          (json['cv_completion_percentage'] ?? 0.0).toDouble(),
       totalCvsGenerated: json['total_cvs_generated'] ?? 0,
       deletionRequested: json['deletion_requested'] ?? false,
-      deletionRequestedAt: json['deletion_requested_at'] != null ? DateTime.parse(json['deletion_requested_at']) : null,
+      deletionRequestedAt: json['deletion_requested_at'] != null
+          ? DateTime.parse(json['deletion_requested_at'])
+          : null,
       termsAccepted: json['terms_accepted'] ?? false,
-      termsAcceptedAt: json['terms_accepted_at'] != null ? DateTime.parse(json['terms_accepted_at']) : null,
+      termsAcceptedAt: json['terms_accepted_at'] != null
+          ? DateTime.parse(json['terms_accepted_at'])
+          : null,
       privacyPolicyAccepted: json['privacy_policy_accepted'] ?? false,
-      privacyPolicyAcceptedAt: json['privacy_policy_accepted_at'] != null ? DateTime.parse(json['privacy_policy_accepted_at']) : null,
+      privacyPolicyAcceptedAt: json['privacy_policy_accepted_at'] != null
+          ? DateTime.parse(json['privacy_policy_accepted_at'])
+          : null,
       dataProcessingConsent: json['data_processing_consent'] ?? false,
-      dataProcessingConsentAt: json['data_processing_consent_at'] != null ? DateTime.parse(json['data_processing_consent_at']) : null,
+      dataProcessingConsentAt: json['data_processing_consent_at'] != null
+          ? DateTime.parse(json['data_processing_consent_at'])
+          : null,
       photoUrl: json['photo_url'],
     );
   }
@@ -211,7 +222,7 @@ class AdminStudentModel {
     if (lastLoginAt == null) return 'Never';
     final now = DateTime.now();
     final difference = now.difference(lastLoginAt!);
-    
+
     if (difference.inDays > 0) {
       return '${difference.inDays} days ago';
     } else if (difference.inHours > 0) {
@@ -259,27 +270,39 @@ class AdminStudentDetailModel extends AdminStudentModel {
       role: json['role'] ?? 'student',
       status: json['status'] ?? 'active',
       createdAt: DateTime.parse(json['created_at']),
-      lastLoginAt: json['last_login_at'] != null ? DateTime.parse(json['last_login_at']) : null,
-      cvCompletionPercentage: (json['cv_completion_percentage'] ?? 0.0).toDouble(),
+      lastLoginAt: json['last_login_at'] != null
+          ? DateTime.parse(json['last_login_at'])
+          : null,
+      cvCompletionPercentage:
+          (json['cv_completion_percentage'] ?? 0.0).toDouble(),
       totalCvsGenerated: json['total_cvs_generated'] ?? 0,
       deletionRequested: json['deletion_requested'] ?? false,
-      deletionRequestedAt: json['deletion_requested_at'] != null ? DateTime.parse(json['deletion_requested_at']) : null,
+      deletionRequestedAt: json['deletion_requested_at'] != null
+          ? DateTime.parse(json['deletion_requested_at'])
+          : null,
       termsAccepted: json['terms_accepted'] ?? false,
-      termsAcceptedAt: json['terms_accepted_at'] != null ? DateTime.parse(json['terms_accepted_at']) : null,
+      termsAcceptedAt: json['terms_accepted_at'] != null
+          ? DateTime.parse(json['terms_accepted_at'])
+          : null,
       privacyPolicyAccepted: json['privacy_policy_accepted'] ?? false,
-      privacyPolicyAcceptedAt: json['privacy_policy_accepted_at'] != null ? DateTime.parse(json['privacy_policy_accepted_at']) : null,
+      privacyPolicyAcceptedAt: json['privacy_policy_accepted_at'] != null
+          ? DateTime.parse(json['privacy_policy_accepted_at'])
+          : null,
       dataProcessingConsent: json['data_processing_consent'] ?? false,
-      dataProcessingConsentAt: json['data_processing_consent_at'] != null ? DateTime.parse(json['data_processing_consent_at']) : null,
+      dataProcessingConsentAt: json['data_processing_consent_at'] != null
+          ? DateTime.parse(json['data_processing_consent_at'])
+          : null,
       photoUrl: json['photo_url'],
       cvProfile: json['cv_profile'],
-      generatedCvs: List<Map<String, dynamic>>.from(json['generated_cvs'] ?? []),
+      generatedCvs:
+          List<Map<String, dynamic>>.from(json['generated_cvs'] ?? []),
     );
   }
 
   int get sectionsFilled {
     if (cvProfile == null) return 0;
     int count = 0;
-    
+
     if (cvProfile!['education']?.isNotEmpty == true) count++;
     if (cvProfile!['experience']?.isNotEmpty == true) count++;
     if (cvProfile!['skills']?.isNotEmpty == true) count++;
@@ -287,7 +310,7 @@ class AdminStudentDetailModel extends AdminStudentModel {
     if (cvProfile!['projects']?.isNotEmpty == true) count++;
     if (cvProfile!['certifications']?.isNotEmpty == true) count++;
     if (cvProfile!['summary']?.isNotEmpty == true) count++;
-    
+
     return count;
   }
 }
@@ -390,7 +413,7 @@ class AuditLogModel {
   String get timeAgo {
     final now = DateTime.now();
     final difference = now.difference(timestamp);
-    
+
     if (difference.inDays > 7) {
       return '${timestamp.day}/${timestamp.month}/${timestamp.year}';
     } else if (difference.inDays > 0) {
@@ -406,15 +429,15 @@ class AuditLogModel {
 
   String get extraDataSummary {
     if (extraData.isEmpty) return '';
-    
+
     if (extraData.containsKey('reason')) {
       return 'Reason: ${extraData['reason']}';
     }
-    
+
     if (extraData.containsKey('template')) {
       return 'Template: ${extraData['template']}';
     }
-    
+
     return '';
   }
 }

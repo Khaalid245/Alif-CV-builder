@@ -34,7 +34,7 @@ class _AdminCVsScreenState extends ConsumerState<AdminCVsScreen> {
       ref.read(adminCVsProvider.notifier).fetch();
       ref.read(cvSectionFillRatesProvider.notifier).fetch();
     });
-    
+
     _scrollController.addListener(_onScroll);
   }
 
@@ -45,14 +45,15 @@ class _AdminCVsScreenState extends ConsumerState<AdminCVsScreen> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent * 0.8) {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent * 0.8) {
       _loadMore();
     }
   }
 
   Future<void> _loadMore() async {
     if (_isLoadingMore) return;
-    
+
     final cvsState = ref.read(adminCVsProvider);
     if (cvsState.value?.hasMore != true) return;
 
@@ -64,17 +65,17 @@ class _AdminCVsScreenState extends ConsumerState<AdminCVsScreen> {
   void _onTemplateChanged(String template) {
     setState(() => _selectedTemplate = template);
     ref.read(adminCVsProvider.notifier).fetch(
-      template: template == 'all' ? null : template,
-      ordering: _getSortOrdering(_selectedSort),
-    );
+          template: template == 'all' ? null : template,
+          ordering: _getSortOrdering(_selectedSort),
+        );
   }
 
   void _onSortChanged(String sort) {
     setState(() => _selectedSort = sort);
     ref.read(adminCVsProvider.notifier).fetch(
-      template: _selectedTemplate == 'all' ? null : _selectedTemplate,
-      ordering: _getSortOrdering(sort),
-    );
+          template: _selectedTemplate == 'all' ? null : _selectedTemplate,
+          ordering: _getSortOrdering(sort),
+        );
   }
 
   String _getSortOrdering(String sort) {
@@ -103,10 +104,11 @@ class _AdminCVsScreenState extends ConsumerState<AdminCVsScreen> {
           child: FilterChipRow(
             options: const ['All Templates', 'Classic', 'Modern', 'Academic'],
             selected: _selectedTemplate,
-            onChanged: (value) => _onTemplateChanged(value.toLowerCase().replaceAll(' templates', '')),
+            onChanged: (value) => _onTemplateChanged(
+                value.toLowerCase().replaceAll(' templates', '')),
           ),
         ),
-        
+
         // Sort row
         Container(
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
@@ -114,11 +116,13 @@ class _AdminCVsScreenState extends ConsumerState<AdminCVsScreen> {
             children: [
               Text(
                 'Sort by:',
-                style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+                style: AppTypography.caption
+                    .copyWith(color: AppColors.textSecondary),
               ),
               const SizedBox(width: 8),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: AppColors.surface,
                   border: Border.all(color: AppColors.divider),
@@ -128,34 +132,41 @@ class _AdminCVsScreenState extends ConsumerState<AdminCVsScreen> {
                   value: _selectedSort,
                   underline: const SizedBox.shrink(),
                   isDense: true,
-                  style: AppTypography.caption.copyWith(color: AppColors.textPrimary),
-                  onChanged: (value) => value != null ? _onSortChanged(value) : null,
+                  style: AppTypography.caption
+                      .copyWith(color: AppColors.textPrimary),
+                  onChanged: (value) =>
+                      value != null ? _onSortChanged(value) : null,
                   items: const [
-                    DropdownMenuItem(value: 'newest', child: Text('Newest First')),
-                    DropdownMenuItem(value: 'oldest', child: Text('Oldest First')),
-                    DropdownMenuItem(value: 'downloads', child: Text('Most Downloaded')),
+                    DropdownMenuItem(
+                        value: 'newest', child: Text('Newest First')),
+                    DropdownMenuItem(
+                        value: 'oldest', child: Text('Oldest First')),
+                    DropdownMenuItem(
+                        value: 'downloads', child: Text('Most Downloaded')),
                   ],
                 ),
               ),
             ],
           ),
         ),
-        
+
         const SizedBox(height: AppSpacing.sm),
-        
+
         // Stats summary
         cvsState.when(
-          data: (response) => response != null ? _buildStatsSummary(response) : const SizedBox.shrink(),
+          data: (response) => response != null
+              ? _buildStatsSummary(response)
+              : const SizedBox.shrink(),
           loading: () => const SizedBox.shrink(),
           error: (_, __) => const SizedBox.shrink(),
         ),
-        
+
         const SizedBox(height: AppSpacing.sm),
-        
+
         // CVs list
         Expanded(
           child: cvsState.when(
-            data: (response) => response != null 
+            data: (response) => response != null
                 ? _buildCVsList(response)
                 : const Center(child: CircularProgressIndicator()),
             loading: () => const Center(child: CircularProgressIndicator()),
@@ -165,10 +176,12 @@ class _AdminCVsScreenState extends ConsumerState<AdminCVsScreen> {
             ),
           ),
         ),
-        
+
         // Section fill rates
         fillRatesState.when(
-          data: (fillRates) => fillRates.isNotEmpty ? _buildSectionFillRates(fillRates) : const SizedBox.shrink(),
+          data: (fillRates) => fillRates.isNotEmpty
+              ? _buildSectionFillRates(fillRates)
+              : const SizedBox.shrink(),
           loading: () => const SizedBox.shrink(),
           error: (_, __) => const SizedBox.shrink(),
         ),
@@ -177,16 +190,18 @@ class _AdminCVsScreenState extends ConsumerState<AdminCVsScreen> {
   }
 
   Widget _buildStatsSummary(PaginatedResponse<AdminCVModel> response) {
-    final totalDownloads = response.results.fold<int>(0, (sum, cv) => sum + cv.downloadCount);
+    final totalDownloads =
+        response.results.fold<int>(0, (sum, cv) => sum + cv.downloadCount);
     final popularTemplate = _getMostPopularTemplate(response.results);
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
       child: Row(
         children: [
           Expanded(child: _buildStatBox('Total', response.count.toString())),
           const SizedBox(width: AppSpacing.sm),
-          Expanded(child: _buildStatBox('Downloads', totalDownloads.toString())),
+          Expanded(
+              child: _buildStatBox('Downloads', totalDownloads.toString())),
           const SizedBox(width: AppSpacing.sm),
           Expanded(child: _buildStatBox('Popular', popularTemplate)),
         ],
@@ -210,7 +225,8 @@ class _AdminCVsScreenState extends ConsumerState<AdminCVsScreen> {
           ),
           Text(
             label,
-            style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+            style:
+                AppTypography.caption.copyWith(color: AppColors.textSecondary),
           ),
         ],
       ),
@@ -219,19 +235,20 @@ class _AdminCVsScreenState extends ConsumerState<AdminCVsScreen> {
 
   String _getMostPopularTemplate(List<AdminCVModel> cvs) {
     if (cvs.isEmpty) return 'None';
-    
+
     final templateCounts = <String, int>{};
     for (final cv in cvs) {
-      templateCounts[cv.templateDisplay] = (templateCounts[cv.templateDisplay] ?? 0) + 1;
+      templateCounts[cv.templateDisplay] =
+          (templateCounts[cv.templateDisplay] ?? 0) + 1;
     }
-    
+
     var mostPopular = templateCounts.entries.first;
     for (final entry in templateCounts.entries) {
       if (entry.value > mostPopular.value) {
         mostPopular = entry;
       }
     }
-    
+
     return mostPopular.key;
   }
 
@@ -246,9 +263,9 @@ class _AdminCVsScreenState extends ConsumerState<AdminCVsScreen> {
 
     return RefreshIndicator(
       onRefresh: () => ref.read(adminCVsProvider.notifier).fetch(
-        template: _selectedTemplate == 'all' ? null : _selectedTemplate,
-        ordering: _getSortOrdering(_selectedSort),
-      ),
+            template: _selectedTemplate == 'all' ? null : _selectedTemplate,
+            ordering: _getSortOrdering(_selectedSort),
+          ),
       child: ListView.builder(
         controller: _scrollController,
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
@@ -257,7 +274,7 @@ class _AdminCVsScreenState extends ConsumerState<AdminCVsScreen> {
           if (index == response.results.length) {
             return const PaginationLoader();
           }
-          
+
           final cv = response.results[index];
           return Padding(
             padding: const EdgeInsets.only(bottom: AppSpacing.sm),
@@ -282,14 +299,29 @@ class _AdminCVsScreenState extends ConsumerState<AdminCVsScreen> {
           SectionCard(
             child: Column(
               children: [
-                FillRateBar(sectionName: 'Education', percentage: fillRates['education'] ?? 0),
-                FillRateBar(sectionName: 'Experience', percentage: fillRates['experience'] ?? 0),
-                FillRateBar(sectionName: 'Skills', percentage: fillRates['skills'] ?? 0),
-                FillRateBar(sectionName: 'Languages', percentage: fillRates['languages'] ?? 0),
-                FillRateBar(sectionName: 'Projects', percentage: fillRates['projects'] ?? 0),
-                FillRateBar(sectionName: 'Certifications', percentage: fillRates['certifications'] ?? 0),
-                FillRateBar(sectionName: 'Summary', percentage: fillRates['summary'] ?? 0),
-                FillRateBar(sectionName: 'Photo', percentage: fillRates['photo'] ?? 0),
+                FillRateBar(
+                    sectionName: 'Education',
+                    percentage: fillRates['education'] ?? 0),
+                FillRateBar(
+                    sectionName: 'Experience',
+                    percentage: fillRates['experience'] ?? 0),
+                FillRateBar(
+                    sectionName: 'Skills',
+                    percentage: fillRates['skills'] ?? 0),
+                FillRateBar(
+                    sectionName: 'Languages',
+                    percentage: fillRates['languages'] ?? 0),
+                FillRateBar(
+                    sectionName: 'Projects',
+                    percentage: fillRates['projects'] ?? 0),
+                FillRateBar(
+                    sectionName: 'Certifications',
+                    percentage: fillRates['certifications'] ?? 0),
+                FillRateBar(
+                    sectionName: 'Summary',
+                    percentage: fillRates['summary'] ?? 0),
+                FillRateBar(
+                    sectionName: 'Photo', percentage: fillRates['photo'] ?? 0),
               ],
             ),
           ),

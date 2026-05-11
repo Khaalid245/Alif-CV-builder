@@ -70,14 +70,14 @@ class _CVSectionsScreenState extends ConsumerState<CVSectionsScreen> {
               children: [
                 // Overall Progress
                 _buildProgressSection(completionPercentage, completedSections),
-                
+
                 const SizedBox(height: 20),
-                
+
                 // Section List
                 _buildSectionsList(cvProfile),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Generate Button
                 AppButton.primary(
                   label: 'Generate my 3 CVs',
@@ -92,7 +92,8 @@ class _CVSectionsScreenState extends ConsumerState<CVSectionsScreen> {
     );
   }
 
-  Widget _buildProgressSection(int completionPercentage, int completedSections) {
+  Widget _buildProgressSection(
+      int completionPercentage, int completedSections) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -117,9 +118,7 @@ class _CVSectionsScreenState extends ConsumerState<CVSectionsScreen> {
             ),
           ],
         ),
-        
         const SizedBox(height: 8),
-        
         ClipRRect(
           borderRadius: BorderRadius.circular(3),
           child: LinearProgressIndicator(
@@ -129,9 +128,7 @@ class _CVSectionsScreenState extends ConsumerState<CVSectionsScreen> {
             minHeight: 5,
           ),
         ),
-        
         const SizedBox(height: 8),
-        
         Text(
           '$completedSections of 7 sections complete',
           style: AppTypography.caption.copyWith(
@@ -144,7 +141,7 @@ class _CVSectionsScreenState extends ConsumerState<CVSectionsScreen> {
 
   Widget _buildSectionsList(dynamic cvProfile) {
     final sections = _getSections(cvProfile);
-    
+
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
@@ -157,8 +154,7 @@ class _CVSectionsScreenState extends ConsumerState<CVSectionsScreen> {
         children: [
           for (int i = 0; i < sections.length; i++) ...[
             _buildSectionTile(sections[i]),
-            if (i < sections.length - 1)
-              const Divider(height: 1, indent: 54),
+            if (i < sections.length - 1) const Divider(height: 1, indent: 54),
           ],
         ],
       ),
@@ -167,7 +163,8 @@ class _CVSectionsScreenState extends ConsumerState<CVSectionsScreen> {
 
   Widget _buildSectionTile(CVSectionData section) {
     return InkWell(
-      onTap: () => context.go('/cv/form', extra: {'initialStep': section.stepIndex}),
+      onTap: () =>
+          context.go('/cv/form', extra: {'initialStep': section.stepIndex}),
       borderRadius: BorderRadius.circular(10),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -178,22 +175,22 @@ class _CVSectionsScreenState extends ConsumerState<CVSectionsScreen> {
               width: 28,
               height: 28,
               decoration: BoxDecoration(
-                color: section.hasData 
-                    ? const Color(0xFFEAF2FF) 
+                color: section.hasData
+                    ? const Color(0xFFEAF2FF)
                     : AppColors.surface,
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Icon(
                 section.icon,
                 size: 16,
-                color: section.hasData 
-                    ? const Color(0xFF1565C0) 
+                color: section.hasData
+                    ? const Color(0xFF1565C0)
                     : const Color(0xFF9E9E9E),
               ),
             ),
-            
+
             const SizedBox(width: 12),
-            
+
             // Section Info
             Expanded(
               child: Column(
@@ -211,15 +208,15 @@ class _CVSectionsScreenState extends ConsumerState<CVSectionsScreen> {
                     section.hasData ? section.countLabel : 'Not added yet',
                     style: TextStyle(
                       fontSize: 11,
-                      color: section.hasData 
-                          ? const Color(0xFF6B7280) 
+                      color: section.hasData
+                          ? const Color(0xFF6B7280)
                           : const Color(0xFF9E9E9E),
                     ),
                   ),
                 ],
               ),
             ),
-            
+
             // Status Indicator
             if (section.hasData)
               const Icon(
@@ -253,8 +250,8 @@ class _CVSectionsScreenState extends ConsumerState<CVSectionsScreen> {
         name: 'Personal Info',
         icon: LucideIcons.user,
         stepIndex: 0,
-        hasData: (cvProfile.phone?.isNotEmpty == true) || 
-                 (cvProfile.summary?.isNotEmpty == true),
+        hasData: (cvProfile.phone?.isNotEmpty == true) ||
+            (cvProfile.summary?.isNotEmpty == true),
         countLabel: _getPersonalInfoLabel(cvProfile),
       ),
       CVSectionData(
@@ -305,7 +302,7 @@ class _CVSectionsScreenState extends ConsumerState<CVSectionsScreen> {
   String _getPersonalInfoLabel(dynamic cvProfile) {
     final hasPhone = cvProfile.phone?.isNotEmpty == true;
     final hasSummary = cvProfile.summary?.isNotEmpty == true;
-    
+
     if (hasPhone && hasSummary) {
       return 'Profile filled';
     } else if (hasPhone || hasSummary) {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/theme/app_colors.dart';
@@ -23,7 +22,7 @@ class PublicNavBar extends StatelessWidget {
       child: LayoutBuilder(
         builder: (context, constraints) {
           final isWeb = constraints.maxWidth >= 800;
-          
+
           if (isWeb) {
             return _buildWebNavBar(context);
           } else {
@@ -82,7 +81,8 @@ class PublicNavBar extends StatelessWidget {
           const Spacer(),
           IconButton(
             onPressed: () => _showMobileDrawer(context),
-            icon: const Icon(LucideIcons.menu, size: 22, color: AppColors.textPrimary),
+            icon: const Icon(LucideIcons.menu,
+                size: 22, color: AppColors.textPrimary),
           ),
         ],
       ),
@@ -103,10 +103,10 @@ class PublicNavBar extends StatelessWidget {
         },
         child: Text(
           text,
-          style: GoogleFonts.inter(
+          style: const TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w500,
-            color: const Color(0xFF4A4A4A),
+            color: Color(0xFF4A4A4A),
           ),
         ),
       ),
@@ -135,7 +135,7 @@ class PublicNavBar extends StatelessWidget {
         ),
         child: Text(
           text,
-          style: GoogleFonts.inter(
+          style: const TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w600,
           ),
@@ -164,7 +164,8 @@ class PublicNavBar extends StatelessWidget {
                 const Spacer(),
                 IconButton(
                   onPressed: () => Navigator.pop(context),
-                  icon: const Icon(LucideIcons.x, size: 22, color: AppColors.textPrimary),
+                  icon: const Icon(LucideIcons.x,
+                      size: 22, color: AppColors.textPrimary),
                 ),
               ],
             ),
@@ -227,7 +228,7 @@ class PublicNavBar extends StatelessWidget {
           alignment: Alignment.centerLeft,
           child: Text(
             text,
-            style: GoogleFonts.inter(
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
               color: AppColors.textPrimary,

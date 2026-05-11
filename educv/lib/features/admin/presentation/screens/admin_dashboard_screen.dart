@@ -16,7 +16,8 @@ class AdminDashboardScreen extends ConsumerStatefulWidget {
   const AdminDashboardScreen({super.key});
 
   @override
-  ConsumerState<AdminDashboardScreen> createState() => _AdminDashboardScreenState();
+  ConsumerState<AdminDashboardScreen> createState() =>
+      _AdminDashboardScreenState();
 }
 
 class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
@@ -49,57 +50,65 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
           children: [
             // Greeting Section
             _buildGreetingSection(),
-            
+
             const SizedBox(height: 24),
-            
+
             // Key Metrics
             statsState.when(
-              data: (stats) => stats != null ? _buildKeyMetrics(stats) : const SizedBox.shrink(),
+              data: (stats) => stats != null
+                  ? _buildKeyMetrics(stats)
+                  : const SizedBox.shrink(),
               loading: () => _buildKeyMetricsSkeleton(),
               error: (e, _) => AppErrorState(
                 message: e.toString(),
-                onRetry: () => ref.read(platformStatsProvider.notifier).refresh(),
+                onRetry: () =>
+                    ref.read(platformStatsProvider.notifier).refresh(),
               ),
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Student Status Breakdown
             statsState.when(
-              data: (stats) => stats != null ? _buildStudentStatusBreakdown(stats) : const SizedBox.shrink(),
+              data: (stats) => stats != null
+                  ? _buildStudentStatusBreakdown(stats)
+                  : const SizedBox.shrink(),
               loading: () => const SizedBox.shrink(),
               error: (_, __) => const SizedBox.shrink(),
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Template Popularity
             templateStatsState.when(
               data: (templates) => _buildTemplatePopularity(templates),
               loading: () => const SizedBox.shrink(),
               error: (_, __) => const SizedBox.shrink(),
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Pending Alerts
             statsState.when(
-              data: (stats) => stats != null && stats.deletionRequestsPending > 0 
-                  ? _buildPendingAlerts(stats) 
+              data: (stats) =>
+                  stats != null && stats.deletionRequestsPending > 0
+                      ? _buildPendingAlerts(stats)
+                      : const SizedBox.shrink(),
+              loading: () => const SizedBox.shrink(),
+              error: (_, __) => const SizedBox.shrink(),
+            ),
+
+            const SizedBox(height: 24),
+
+            // Recent Activity
+            auditLogsState.when(
+              data: (logs) => logs != null
+                  ? _buildRecentActivity(logs.results.take(5).toList())
                   : const SizedBox.shrink(),
               loading: () => const SizedBox.shrink(),
               error: (_, __) => const SizedBox.shrink(),
             ),
-            
-            const SizedBox(height: 24),
-            
-            // Recent Activity
-            auditLogsState.when(
-              data: (logs) => logs != null ? _buildRecentActivity(logs.results.take(5).toList()) : const SizedBox.shrink(),
-              loading: () => const SizedBox.shrink(),
-              error: (_, __) => const SizedBox.shrink(),
-            ),
-            
+
             const SizedBox(height: 32),
           ],
         ),
@@ -109,9 +118,13 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
 
   Widget _buildGreetingSection() {
     final now = DateTime.now();
-    final timeOfDay = now.hour < 12 ? 'morning' : now.hour < 17 ? 'afternoon' : 'evening';
+    final timeOfDay = now.hour < 12
+        ? 'morning'
+        : now.hour < 17
+            ? 'afternoon'
+            : 'evening';
     final dateString = DateFormatter.toFullFormat(now);
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -233,7 +246,8 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
 
     final activePercentage = (stats.activeStudents / total * 100).round();
     final suspendedPercentage = (stats.suspendedStudents / total * 100).round();
-    final deactivatedPercentage = (stats.deactivatedStudents / total * 100).round();
+    final deactivatedPercentage =
+        (stats.deactivatedStudents / total * 100).round();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -246,15 +260,18 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
         SectionCard(
           child: Column(
             children: [
-              _buildStatusRow('Active', stats.activeStudents, activePercentage, const Color(0xFF2E7D32)),
+              _buildStatusRow('Active', stats.activeStudents, activePercentage,
+                  const Color(0xFF2E7D32)),
               const SizedBox(height: AppSpacing.md),
               const Divider(),
               const SizedBox(height: AppSpacing.md),
-              _buildStatusRow('Suspended', stats.suspendedStudents, suspendedPercentage, const Color(0xFFE65100)),
+              _buildStatusRow('Suspended', stats.suspendedStudents,
+                  suspendedPercentage, const Color(0xFFE65100)),
               const SizedBox(height: AppSpacing.md),
               const Divider(),
               const SizedBox(height: AppSpacing.md),
-              _buildStatusRow('Deactivated', stats.deactivatedStudents, deactivatedPercentage, const Color(0xFF9E9E9E)),
+              _buildStatusRow('Deactivated', stats.deactivatedStudents,
+                  deactivatedPercentage, const Color(0xFF9E9E9E)),
               const SizedBox(height: AppSpacing.md),
               ClipRRect(
                 borderRadius: BorderRadius.circular(6),
@@ -335,7 +352,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
               final index = entry.key;
               final template = entry.value;
               final color = _getTemplateColor(template.template);
-              
+
               return Column(
                 children: [
                   if (index > 0) ...[
@@ -374,7 +391,8 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
             const Spacer(),
             Text(
               '${template.totalGenerated} generated',
-              style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+              style: AppTypography.caption
+                  .copyWith(color: AppColors.textSecondary),
             ),
           ],
         ),
@@ -406,7 +424,8 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
           alignment: Alignment.centerRight,
           child: Text(
             '${template.percentageOfTotal.round()}% of all CVs',
-            style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+            style:
+                AppTypography.caption.copyWith(color: AppColors.textSecondary),
           ),
         ),
       ],
@@ -457,14 +476,16 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                 const SizedBox(height: 4),
                 Text(
                   'Students have requested account deletion',
-                  style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+                  style: AppTypography.caption
+                      .copyWith(color: AppColors.textSecondary),
                 ),
               ],
             ),
           ),
           TextButton(
             onPressed: () {
-              ref.read(adminTabProvider.notifier).state = 1; // Switch to Students tab
+              ref.read(adminTabProvider.notifier).state =
+                  1; // Switch to Students tab
               // TODO: Add filter for deletion requests
             },
             child: Text(
@@ -509,7 +530,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
             children: logs.asMap().entries.map((entry) {
               final index = entry.key;
               final log = entry.value;
-              
+
               return Column(
                 children: [
                   if (index > 0) const Divider(),
@@ -544,7 +565,8 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                 const SizedBox(height: 4),
                 Text(
                   '${log.studentName} • ${log.timeAgo}',
-                  style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+                  style: AppTypography.caption
+                      .copyWith(color: AppColors.textSecondary),
                 ),
               ],
             ),

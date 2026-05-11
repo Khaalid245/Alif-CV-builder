@@ -54,7 +54,8 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
         ),
         actions: [
           GestureDetector(
-            onTap: () => _showProfileBottomSheet(context, user?.fullName ?? '', user?.email ?? ''),
+            onTap: () => _showProfileBottomSheet(
+                context, user?.fullName ?? '', user?.email ?? ''),
             child: Container(
               margin: const EdgeInsets.only(right: 16),
               child: CircleAvatar(
@@ -80,10 +81,10 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
           children: [
             // Admin Announcement Banner
             if (!_isAnnouncementDismissed) _buildAnnouncementBanner(),
-            
+
             // Recent Downloads Section
             _buildRecentDownloadsSection(),
-            
+
             const SizedBox(height: AppSpacing.xxl), // Bottom padding
           ],
         ),
@@ -93,8 +94,9 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
 
   Widget _buildAnnouncementBanner() {
     // Mock announcement - in real app this would come from API
-    const announcement = "Welcome to EduCV! Generate professional CVs in 3 different templates. Complete your profile to get started.";
-    
+    const announcement =
+        "Welcome to EduCV! Generate professional CVs in 3 different templates. Complete your profile to get started.";
+
     return Container(
       margin: const EdgeInsets.only(bottom: 14),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -141,15 +143,17 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
 
   String _getInitials(String fullName) {
     if (fullName.isEmpty) return 'U';
-    
+
     final names = fullName.trim().split(' ');
     if (names.length == 1) {
       return names[0][0].toUpperCase();
     }
-    
-    final firstInitial = names.first.isNotEmpty ? names.first[0].toUpperCase() : '';
-    final lastInitial = names.last.isNotEmpty ? names.last[0].toUpperCase() : '';
-    
+
+    final firstInitial =
+        names.first.isNotEmpty ? names.first[0].toUpperCase() : '';
+    final lastInitial =
+        names.last.isNotEmpty ? names.last[0].toUpperCase() : '';
+
     return '$firstInitial$lastInitial';
   }
 
@@ -167,7 +171,7 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: AppSpacing.lg),
-        
+
         // Section Header
         Row(
           children: [
@@ -190,14 +194,14 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
             ),
           ],
         ),
-        
+
         const SizedBox(height: 12),
-        
+
         // Downloads Content
         Consumer(
           builder: (context, ref, child) {
             final historyAsync = ref.watch(pdfHistoryProvider);
-            
+
             return historyAsync.when(
               loading: () => const SizedBox.shrink(),
               error: (error, stack) => const SizedBox.shrink(),
@@ -205,7 +209,7 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
                 if (history.isEmpty) {
                   return _buildEmptyDownloadsState();
                 }
-                
+
                 // Show last 3 downloads
                 final recentDownloads = history.take(3).toList();
                 return Column(
@@ -221,7 +225,8 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
     );
   }
 
-  void _showProfileBottomSheet(BuildContext context, String name, String email) {
+  void _showProfileBottomSheet(
+      BuildContext context, String name, String email) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,
@@ -251,17 +256,17 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Divider
             Container(
               height: 1,
               color: AppColors.divider,
             ),
-            
+
             const SizedBox(height: 8),
-            
+
             // Sign out
             ListTile(
               leading: const Icon(
@@ -284,7 +289,7 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
       ),
     );
   }
-  
+
   Widget _buildEmptyDownloadsState() {
     return Container(
       decoration: BoxDecoration(
@@ -328,7 +333,7 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
       ),
     );
   }
-  
+
   Widget _buildRecentDownloadTile(GeneratedCVModel cv) {
     return SectionCard(
       margin: const EdgeInsets.only(bottom: 6),
@@ -337,9 +342,9 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
         children: [
           // CV Thumbnail
           _buildCVThumbnail(),
-          
+
           const SizedBox(width: 12),
-          
+
           // CV Info
           Expanded(
             child: Column(
@@ -362,7 +367,7 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
               ],
             ),
           ),
-          
+
           // Download Button
           GestureDetector(
             onTap: () => _downloadCV(cv),
@@ -384,7 +389,7 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
       ),
     );
   }
-  
+
   Widget _buildCVThumbnail() {
     return Container(
       width: 28,
@@ -427,12 +432,12 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
       ),
     );
   }
-  
+
   void _downloadCV(GeneratedCVModel cv) async {
     try {
       final repository = ref.read(pdfRepositoryProvider);
       await repository.downloadPDF(cv.id);
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

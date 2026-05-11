@@ -13,15 +13,15 @@ abstract class AdminRepository {
     String? status,
     String? ordering,
   });
-  
+
   Future<AdminStudentDetailModel> getStudentDetail(String id);
-  
+
   Future<void> updateStudentStatus(
     String id,
     String status,
     String? reason,
   );
-  
+
   Future<void> processDeletion(String id);
 
   // CV management
@@ -30,7 +30,7 @@ abstract class AdminRepository {
     String? template,
     String? ordering,
   });
-  
+
   Future<Map<String, int>> getCVSectionFillRates();
 
   // Audit logs

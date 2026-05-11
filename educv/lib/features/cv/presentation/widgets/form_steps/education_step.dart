@@ -82,7 +82,7 @@ class _EducationStepState extends ConsumerState<EducationStep> {
   }
 
   Widget _buildEducationTile(EducationModel education) {
-    final yearText = education.isCurrent 
+    final yearText = education.isCurrent
         ? '${education.startYear} – Present'
         : '${education.startYear} – ${education.endYear ?? 'Present'}';
 
@@ -139,7 +139,8 @@ class _EducationStepState extends ConsumerState<EducationStep> {
             onPressed: () => Navigator.of(context).pop(),
             child: Text(
               'Keep',
-              style: AppTypography.body.copyWith(color: AppColors.textSecondary),
+              style:
+                  AppTypography.body.copyWith(color: AppColors.textSecondary),
             ),
           ),
           TextButton(
@@ -165,7 +166,8 @@ class _EducationBottomSheet extends ConsumerStatefulWidget {
   const _EducationBottomSheet({this.education});
 
   @override
-  ConsumerState<_EducationBottomSheet> createState() => _EducationBottomSheetState();
+  ConsumerState<_EducationBottomSheet> createState() =>
+      _EducationBottomSheetState();
 }
 
 class _EducationBottomSheetState extends ConsumerState<_EducationBottomSheet> {
@@ -227,29 +229,32 @@ class _EducationBottomSheetState extends ConsumerState<_EducationBottomSheet> {
               label: 'Degree Type',
               hint: 'e.g. Bachelor of Science',
               controller: _degreeController,
-              validator: (value) => value?.isEmpty == true ? 'Degree is required' : null,
+              validator: (value) =>
+                  value?.isEmpty == true ? 'Degree is required' : null,
             ),
-            
+
             const SizedBox(height: AppSpacing.md),
-            
+
             AppInput(
               label: 'Field of Study',
               hint: 'e.g. Computer Science',
               controller: _fieldController,
-              validator: (value) => value?.isEmpty == true ? 'Field of study is required' : null,
+              validator: (value) =>
+                  value?.isEmpty == true ? 'Field of study is required' : null,
             ),
-            
+
             const SizedBox(height: AppSpacing.md),
-            
+
             AppInput(
               label: 'University / Institution',
               hint: 'e.g. MIT',
               controller: _institutionController,
-              validator: (value) => value?.isEmpty == true ? 'Institution is required' : null,
+              validator: (value) =>
+                  value?.isEmpty == true ? 'Institution is required' : null,
             ),
-            
+
             const SizedBox(height: AppSpacing.md),
-            
+
             AppInput(
               label: 'Start Year',
               hint: 'e.g. 2020',
@@ -257,9 +262,9 @@ class _EducationBottomSheetState extends ConsumerState<_EducationBottomSheet> {
               keyboardType: TextInputType.number,
               validator: _validateYear,
             ),
-            
+
             const SizedBox(height: AppSpacing.md),
-            
+
             // Currently Studying Toggle
             Row(
               children: [
@@ -279,11 +284,11 @@ class _EducationBottomSheetState extends ConsumerState<_EducationBottomSheet> {
                       }
                     });
                   },
-                  activeColor: AppColors.primary,
+                  activeThumbColor: AppColors.primary,
                 ),
               ],
             ),
-            
+
             if (!_isCurrent) ...[
               const SizedBox(height: AppSpacing.md),
               AppInput(
@@ -294,19 +299,20 @@ class _EducationBottomSheetState extends ConsumerState<_EducationBottomSheet> {
                 validator: _validateEndYear,
               ),
             ],
-            
+
             const SizedBox(height: AppSpacing.md),
-            
+
             AppInput(
               label: 'GPA (Optional)',
               hint: 'e.g. 3.8',
               controller: _gpaController,
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
               validator: _validateGpa,
             ),
-            
+
             const SizedBox(height: AppSpacing.md),
-            
+
             AppInput(
               label: 'Additional Info (Optional)',
               hint: 'Relevant coursework, honors, activities...',
@@ -321,43 +327,43 @@ class _EducationBottomSheetState extends ConsumerState<_EducationBottomSheet> {
 
   String? _validateYear(String? value) {
     if (value?.isEmpty == true) return 'Start year is required';
-    
+
     final year = int.tryParse(value!);
     if (year == null) return 'Please enter a valid year';
-    
+
     final currentYear = DateTime.now().year;
     if (year < 1950 || year > currentYear + 10) {
       return 'Please enter a year between 1950 and ${currentYear + 10}';
     }
-    
+
     return null;
   }
 
   String? _validateEndYear(String? value) {
     if (_isCurrent) return null;
     if (value?.isEmpty == true) return 'End year is required';
-    
+
     final year = int.tryParse(value!);
     if (year == null) return 'Please enter a valid year';
-    
+
     final startYear = int.tryParse(_startYearController.text);
     if (startYear != null && year < startYear) {
       return 'End year must be after start year';
     }
-    
+
     return null;
   }
 
   String? _validateGpa(String? value) {
     if (value?.isEmpty == true) return null;
-    
+
     final gpa = double.tryParse(value!);
     if (gpa == null) return 'Please enter a valid GPA';
-    
+
     if (gpa < 0 || gpa > 4.0) {
       return 'GPA must be between 0.0 and 4.0';
     }
-    
+
     return null;
   }
 
@@ -374,7 +380,9 @@ class _EducationBottomSheetState extends ConsumerState<_EducationBottomSheet> {
         'start_year': int.parse(_startYearController.text),
         'end_year': _isCurrent ? null : int.tryParse(_endYearController.text),
         'is_current': _isCurrent,
-        'gpa': _gpaController.text.isNotEmpty ? double.tryParse(_gpaController.text) : null,
+        'gpa': _gpaController.text.isNotEmpty
+            ? double.tryParse(_gpaController.text)
+            : null,
         'description': _descriptionController.text.trim(),
       };
 
@@ -383,7 +391,9 @@ class _EducationBottomSheetState extends ConsumerState<_EducationBottomSheet> {
         if (!mounted) return;
         SnackbarHelper.showSuccess(context, 'Education added successfully');
       } else {
-        await ref.read(educationProvider.notifier).updateItem(widget.education!.id, data);
+        await ref
+            .read(educationProvider.notifier)
+            .updateItem(widget.education!.id, data);
         if (!mounted) return;
         SnackbarHelper.showSuccess(context, 'Education updated successfully');
       }

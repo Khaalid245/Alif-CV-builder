@@ -77,7 +77,7 @@ class CVSectionTile extends StatelessWidget {
                   onTap: onEdit,
                   child: Container(
                     padding: const EdgeInsets.all(AppSpacing.xs),
-                    child: Icon(
+                    child: const Icon(
                       LucideIcons.edit,
                       size: 20,
                       color: AppColors.primary,
@@ -90,7 +90,7 @@ class CVSectionTile extends StatelessWidget {
                   onTap: onDelete,
                   child: Container(
                     padding: const EdgeInsets.all(AppSpacing.xs),
-                    child: Icon(
+                    child: const Icon(
                       LucideIcons.trash2,
                       size: 20,
                       color: AppColors.error,

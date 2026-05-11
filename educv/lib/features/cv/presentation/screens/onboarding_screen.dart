@@ -4,7 +4,6 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/widgets/app_button.dart';
 
@@ -20,22 +19,25 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   int _currentPage = 0;
 
   final List<OnboardingPage> _pages = [
-    OnboardingPage(
+    const OnboardingPage(
       icon: LucideIcons.fileText,
       title: 'Welcome to EduCV',
-      description: 'Fill in your details once and get 3 professionally designed CVs — Classic, Modern, and Academic — ready to download as PDF.',
+      description:
+          'Fill in your details once and get 3 professionally designed CVs — Classic, Modern, and Academic — ready to download as PDF.',
       buttonLabel: 'Next',
     ),
-    OnboardingPage(
+    const OnboardingPage(
       icon: LucideIcons.clipboardList,
       title: 'Build step by step',
-      description: 'Our guided form walks you through 7 simple sections. Add education, experience, skills, and more at your own pace. Everything saves automatically.',
+      description:
+          'Our guided form walks you through 7 simple sections. Add education, experience, skills, and more at your own pace. Everything saves automatically.',
       buttonLabel: 'Next',
     ),
-    OnboardingPage(
+    const OnboardingPage(
       icon: LucideIcons.download,
       title: 'Download in seconds',
-      description: 'Once done, generate all 3 CV formats instantly and download as PDF — ready to send to employers and internship programs.',
+      description:
+          'Once done, generate all 3 CV formats instantly and download as PDF — ready to send to employers and internship programs.',
       buttonLabel: 'Get started',
     ),
   ];

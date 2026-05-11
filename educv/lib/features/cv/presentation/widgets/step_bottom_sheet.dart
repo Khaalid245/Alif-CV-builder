@@ -43,7 +43,7 @@ class StepBottomSheet extends StatelessWidget {
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          
+
           // Title
           Padding(
             padding: const EdgeInsets.all(AppSpacing.md),
@@ -52,7 +52,7 @@ class StepBottomSheet extends StatelessWidget {
               style: AppTypography.h2,
             ),
           ),
-          
+
           // Scrollable content
           Expanded(
             child: SingleChildScrollView(
@@ -60,7 +60,7 @@ class StepBottomSheet extends StatelessWidget {
               child: child,
             ),
           ),
-          
+
           // Bottom buttons
           Container(
             padding: const EdgeInsets.all(AppSpacing.md),

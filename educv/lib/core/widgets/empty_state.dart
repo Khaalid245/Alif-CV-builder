@@ -30,7 +30,7 @@ class EmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     final effectiveMessage = subtitle ?? message;
     final effectiveActionText = actionLabel ?? actionText;
-    
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.xl),
@@ -59,7 +59,7 @@ class EmptyState extends StatelessWidget {
             if (effectiveActionText != null && onAction != null) ...[
               const SizedBox(height: AppSpacing.lg),
               AppButton.primary(
-                label: effectiveActionText!,
+                label: effectiveActionText,
                 onPressed: onAction,
               ),
             ],

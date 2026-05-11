@@ -87,8 +87,10 @@ class CVProfileModel {
               ?.map((e) => CertificationModel.fromJson(e))
               .toList() ??
           [],
-      createdAt: DateTime.parse(json['created_at'] ?? DateTime.now().toIso8601String()),
-      updatedAt: DateTime.parse(json['updated_at'] ?? DateTime.now().toIso8601String()),
+      createdAt: DateTime.parse(
+          json['created_at'] ?? DateTime.now().toIso8601String()),
+      updatedAt: DateTime.parse(
+          json['updated_at'] ?? DateTime.now().toIso8601String()),
     );
   }
 
@@ -193,9 +195,7 @@ class EducationModel {
       startYear: json['start_year'] ?? 0,
       endYear: json['end_year'],
       isCurrent: json['is_current'] ?? false,
-      gpa: json['gpa'] != null
-          ? double.tryParse(json['gpa'].toString())
-          : null,
+      gpa: json['gpa'] != null ? double.tryParse(json['gpa'].toString()) : null,
       description: json['description'] ?? '',
       order: json['order'] ?? 0,
     );
@@ -272,8 +272,10 @@ class ExperienceModel {
       jobTitle: json['job_title'] ?? '',
       company: json['company'] ?? '',
       location: json['location'] ?? '',
-      startDate: DateTime.parse(json['start_date'] ?? DateTime.now().toIso8601String()),
-      endDate: json['end_date'] != null ? DateTime.parse(json['end_date']) : null,
+      startDate: DateTime.parse(
+          json['start_date'] ?? DateTime.now().toIso8601String()),
+      endDate:
+          json['end_date'] != null ? DateTime.parse(json['end_date']) : null,
       isCurrent: json['is_current'] ?? false,
       description: json['description'] ?? '',
       order: json['order'] ?? 0,
@@ -436,8 +438,11 @@ class ProjectModel {
       title: json['title'] ?? '',
       description: json['description'] ?? '',
       link: json['link'] ?? '',
-      startDate: json['start_date'] != null ? DateTime.parse(json['start_date']) : null,
-      endDate: json['end_date'] != null ? DateTime.parse(json['end_date']) : null,
+      startDate: json['start_date'] != null
+          ? DateTime.parse(json['start_date'])
+          : null,
+      endDate:
+          json['end_date'] != null ? DateTime.parse(json['end_date']) : null,
       order: json['order'] ?? 0,
     );
   }
@@ -497,8 +502,11 @@ class CertificationModel {
       id: json['id'] ?? '',
       name: json['name'] ?? '',
       issuer: json['issuer'] ?? '',
-      issueDate: DateTime.parse(json['issue_date'] ?? DateTime.now().toIso8601String()),
-      expiryDate: json['expiry_date'] != null ? DateTime.parse(json['expiry_date']) : null,
+      issueDate: DateTime.parse(
+          json['issue_date'] ?? DateTime.now().toIso8601String()),
+      expiryDate: json['expiry_date'] != null
+          ? DateTime.parse(json['expiry_date'])
+          : null,
       credentialUrl: json['credential_url'] ?? '',
     );
   }

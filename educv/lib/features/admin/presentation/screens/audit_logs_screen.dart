@@ -25,7 +25,7 @@ class AuditLogsScreen extends ConsumerStatefulWidget {
 class _AuditLogsScreenState extends ConsumerState<AuditLogsScreen> {
   final ScrollController _scrollController = ScrollController();
   String _selectedAction = 'all';
-  bool _securityOnly = false;
+  final bool _securityOnly = false;
   String? _fromDate;
   String? _toDate;
   bool _isLoadingMore = false;
@@ -36,7 +36,7 @@ class _AuditLogsScreenState extends ConsumerState<AuditLogsScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(auditLogsProvider.notifier).fetch();
     });
-    
+
     _scrollController.addListener(_onScroll);
   }
 
@@ -47,14 +47,15 @@ class _AuditLogsScreenState extends ConsumerState<AuditLogsScreen> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent * 0.8) {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent * 0.8) {
       _loadMore();
     }
   }
 
   Future<void> _loadMore() async {
     if (_isLoadingMore) return;
-    
+
     final logsState = ref.read(auditLogsProvider);
     if (logsState.value?.hasMore != true) return;
 
@@ -70,47 +71,11 @@ class _AuditLogsScreenState extends ConsumerState<AuditLogsScreen> {
 
   void _applyFilters() {
     ref.read(auditLogsProvider.notifier).fetch(
-      action: _selectedAction == 'all' ? null : _selectedAction,
-      fromDate: _fromDate,
-      toDate: _toDate,
-      securityOnly: _securityOnly,
-    );
-  }
-
-  void _showFilterSheet() {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: AppColors.background,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder: (context) => _FilterBottomSheet(
-        selectedAction: _selectedAction,
-        securityOnly: _securityOnly,
-        fromDate: _fromDate,
-        toDate: _toDate,
-        onApply: (action, security, from, to) {
-          setState(() {
-            _selectedAction = action;
-            _securityOnly = security;
-            _fromDate = from;
-            _toDate = to;
-          });
-          _applyFilters();
-        },
-        onReset: () {
-          setState(() {
-            _selectedAction = 'all';
-            _securityOnly = false;
-            _fromDate = null;
-            _toDate = null;
-          });
-          ref.read(auditLogsProvider.notifier).resetFilters();
-          ref.read(auditLogsProvider.notifier).fetch();
-        },
-      ),
-    );
+          action: _selectedAction == 'all' ? null : _selectedAction,
+          fromDate: _fromDate,
+          toDate: _toDate,
+          securityOnly: _securityOnly,
+        );
   }
 
   @override
@@ -123,18 +88,27 @@ class _AuditLogsScreenState extends ConsumerState<AuditLogsScreen> {
         Container(
           padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
           child: FilterChipRow(
-            options: const ['All', 'Login', 'Register', 'CV Generated', 'PDF Downloaded', 'Password Changed', 'Account Deleted', 'Suspended'],
+            options: const [
+              'All',
+              'Login',
+              'Register',
+              'CV Generated',
+              'PDF Downloaded',
+              'Password Changed',
+              'Account Deleted',
+              'Suspended'
+            ],
             selected: _selectedAction,
             onChanged: _onActionChanged,
           ),
         ),
-        
+
         const SizedBox(height: AppSpacing.sm),
-        
+
         // Logs list
         Expanded(
           child: logsState.when(
-            data: (response) => response != null 
+            data: (response) => response != null
                 ? _buildLogsList(response)
                 : const Center(child: CircularProgressIndicator()),
             loading: () => const Center(child: CircularProgressIndicator()),
@@ -159,15 +133,16 @@ class _AuditLogsScreenState extends ConsumerState<AuditLogsScreen> {
 
     return RefreshIndicator(
       onRefresh: () => ref.read(auditLogsProvider.notifier).fetch(
-        action: _selectedAction == 'all' ? null : _selectedAction,
-        fromDate: _fromDate,
-        toDate: _toDate,
-        securityOnly: _securityOnly,
-      ),
+            action: _selectedAction == 'all' ? null : _selectedAction,
+            fromDate: _fromDate,
+            toDate: _toDate,
+            securityOnly: _securityOnly,
+          ),
       child: ListView.builder(
         controller: _scrollController,
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-        itemCount: _calculateItemCount(response.results) + (_isLoadingMore ? 1 : 0),
+        itemCount:
+            _calculateItemCount(response.results) + (_isLoadingMore ? 1 : 0),
         itemBuilder: (context, index) {
           return _buildListItem(response.results, index);
         },
@@ -177,18 +152,19 @@ class _AuditLogsScreenState extends ConsumerState<AuditLogsScreen> {
 
   int _calculateItemCount(List<AuditLogModel> logs) {
     if (logs.isEmpty) return 0;
-    
+
     int count = logs.length;
     DateTime? lastDate;
-    
+
     for (final log in logs) {
-      final logDate = DateTime(log.timestamp.year, log.timestamp.month, log.timestamp.day);
+      final logDate =
+          DateTime(log.timestamp.year, log.timestamp.month, log.timestamp.day);
       if (lastDate == null || !_isSameDay(logDate, lastDate)) {
         count++; // Add date header
         lastDate = logDate;
       }
     }
-    
+
     return count;
   }
 
@@ -196,15 +172,15 @@ class _AuditLogsScreenState extends ConsumerState<AuditLogsScreen> {
     if (index >= _calculateItemCount(logs)) {
       return const PaginationLoader();
     }
-    
-    int logIndex = 0;
+
     int currentIndex = 0;
     DateTime? lastDate;
-    
+
     for (int i = 0; i < logs.length; i++) {
       final log = logs[i];
-      final logDate = DateTime(log.timestamp.year, log.timestamp.month, log.timestamp.day);
-      
+      final logDate =
+          DateTime(log.timestamp.year, log.timestamp.month, log.timestamp.day);
+
       // Check if we need a date header
       if (lastDate == null || !_isSameDay(logDate, lastDate)) {
         if (currentIndex == index) {
@@ -213,14 +189,14 @@ class _AuditLogsScreenState extends ConsumerState<AuditLogsScreen> {
         currentIndex++;
         lastDate = logDate;
       }
-      
+
       // Check if this is the log we want
       if (currentIndex == index) {
         return _buildAuditLogTile(log, i < logs.length - 1);
       }
       currentIndex++;
     }
-    
+
     return const SizedBox.shrink();
   }
 
@@ -249,14 +225,16 @@ class _AuditLogsScreenState extends ConsumerState<AuditLogsScreen> {
                         const Spacer(),
                         Text(
                           log.timeAgo,
-                          style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+                          style: AppTypography.caption
+                              .copyWith(color: AppColors.textSecondary),
                         ),
                       ],
                     ),
                     const SizedBox(height: 4),
                     Text(
                       '${log.studentName} (${log.studentId})',
-                      style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+                      style: AppTypography.caption
+                          .copyWith(color: AppColors.textSecondary),
                     ),
                     if (log.extraDataSummary.isNotEmpty) ...[
                       const SizedBox(height: 4),
@@ -280,9 +258,9 @@ class _AuditLogsScreenState extends ConsumerState<AuditLogsScreen> {
   }
 
   bool _isSameDay(DateTime date1, DateTime date2) {
-    return date1.year == date2.year && 
-           date1.month == date2.month && 
-           date1.day == date2.day;
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
   }
 }
 
@@ -312,7 +290,7 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
   late bool _securityOnly;
   late String? _fromDate;
   late String? _toDate;
-  
+
   final TextEditingController _fromController = TextEditingController();
   final TextEditingController _toController = TextEditingController();
 
@@ -323,7 +301,7 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
     _securityOnly = widget.securityOnly;
     _fromDate = widget.fromDate;
     _toDate = widget.toDate;
-    
+
     _fromController.text = _fromDate ?? '';
     _toController.text = _toDate ?? '';
   }
@@ -359,16 +337,16 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
               ),
             ),
           ),
-          
+
           const SizedBox(height: AppSpacing.lg),
-          
+
           Text(
             'Filter Logs',
             style: AppTypography.h2.copyWith(color: AppColors.textPrimary),
           ),
-          
+
           const SizedBox(height: AppSpacing.lg),
-          
+
           // Action Type
           Text(
             'Action Type',
@@ -378,46 +356,62 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
           Wrap(
             spacing: AppSpacing.sm,
             runSpacing: AppSpacing.sm,
-            children: ['All', 'Login', 'Register', 'CV Generated', 'PDF Downloaded', 'Password Changed', 'Account Deleted', 'Suspended']
+            children: [
+              'All',
+              'Login',
+              'Register',
+              'CV Generated',
+              'PDF Downloaded',
+              'Password Changed',
+              'Account Deleted',
+              'Suspended'
+            ]
                 .map((action) => FilterChip(
-                  label: Text(action),
-                  selected: action.toLowerCase() == _selectedAction,
-                  onSelected: (_) => setState(() => _selectedAction = action.toLowerCase()),
-                  backgroundColor: AppColors.surface,
-                  selectedColor: AppColors.primaryLight,
-                  side: BorderSide(
-                    color: action.toLowerCase() == _selectedAction ? AppColors.primary : AppColors.divider,
-                    width: action.toLowerCase() == _selectedAction ? 1.5 : 1,
-                  ),
-                  labelStyle: AppTypography.caption.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: action.toLowerCase() == _selectedAction ? AppColors.primary : AppColors.textSecondary,
-                  ),
-                  showCheckmark: false,
-                ))
+                      label: Text(action),
+                      selected: action.toLowerCase() == _selectedAction,
+                      onSelected: (_) => setState(
+                          () => _selectedAction = action.toLowerCase()),
+                      backgroundColor: AppColors.surface,
+                      selectedColor: AppColors.primaryLight,
+                      side: BorderSide(
+                        color: action.toLowerCase() == _selectedAction
+                            ? AppColors.primary
+                            : AppColors.divider,
+                        width:
+                            action.toLowerCase() == _selectedAction ? 1.5 : 1,
+                      ),
+                      labelStyle: AppTypography.caption.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: action.toLowerCase() == _selectedAction
+                            ? AppColors.primary
+                            : AppColors.textSecondary,
+                      ),
+                      showCheckmark: false,
+                    ))
                 .toList(),
           ),
-          
+
           const SizedBox(height: AppSpacing.lg),
-          
+
           // Security Only
           Row(
             children: [
               Text(
                 'Show security events only',
-                style: AppTypography.body.copyWith(color: AppColors.textPrimary),
+                style:
+                    AppTypography.body.copyWith(color: AppColors.textPrimary),
               ),
               const Spacer(),
               Switch(
                 value: _securityOnly,
                 onChanged: (value) => setState(() => _securityOnly = value),
-                activeColor: AppColors.primary,
+                activeThumbColor: AppColors.primary,
               ),
             ],
           ),
-          
+
           const SizedBox(height: AppSpacing.lg),
-          
+
           // Date Range
           Text(
             'Date Range',
@@ -431,7 +425,8 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
                   controller: _fromController,
                   label: 'From Date',
                   hint: 'YYYY-MM-DD',
-                  onChanged: (value) => _fromDate = value.isEmpty ? null : value,
+                  onChanged: (value) =>
+                      _fromDate = value.isEmpty ? null : value,
                 ),
               ),
               const SizedBox(width: AppSpacing.sm),
@@ -445,9 +440,9 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
               ),
             ],
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Action buttons
           Row(
             children: [
@@ -466,7 +461,8 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
                   text: 'Apply',
                   onPressed: () {
                     Navigator.of(context).pop();
-                    widget.onApply(_selectedAction, _securityOnly, _fromDate, _toDate);
+                    widget.onApply(
+                        _selectedAction, _securityOnly, _fromDate, _toDate);
                   },
                 ),
               ),

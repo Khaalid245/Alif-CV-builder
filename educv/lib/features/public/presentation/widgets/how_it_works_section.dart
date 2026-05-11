@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_typography.dart';
 import 'section_padding.dart';
 import 'section_header.dart';
@@ -16,7 +15,8 @@ class HowItWorksSection extends StatelessWidget {
           const SectionHeader(
             eyebrow: 'How it works',
             title: 'From zero to professional CV\nin three steps',
-            subtitle: 'No design skills needed. No templates to fight with. Just fill in what you know and we handle the rest.',
+            subtitle:
+                'No design skills needed. No templates to fight with. Just fill in what you know and we handle the rest.',
           ),
           const SizedBox(height: 40),
           LayoutBuilder(
@@ -34,11 +34,17 @@ class HowItWorksSection extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(child: _buildStepCard(1, 'Create your account', 'Register with your university email and student ID. Takes 30 seconds. Secured and private.')),
+        Expanded(
+            child: _buildStepCard(1, 'Create your account',
+                'Register with your university email and student ID. Takes 30 seconds. Secured and private.')),
         _buildConnector(),
-        Expanded(child: _buildStepCard(2, 'Fill in your information', 'Add education, experience, skills, projects, and languages through our guided step-by-step form.')),
+        Expanded(
+            child: _buildStepCard(2, 'Fill in your information',
+                'Add education, experience, skills, projects, and languages through our guided step-by-step form.')),
         _buildConnector(),
-        Expanded(child: _buildStepCard(3, 'Download your CVs', 'Instantly receive 3 professionally designed PDFs — Classic, Modern, and Academic formats ready to send.')),
+        Expanded(
+            child: _buildStepCard(3, 'Download your CVs',
+                'Instantly receive 3 professionally designed PDFs — Classic, Modern, and Academic formats ready to send.')),
       ],
     );
   }
@@ -46,11 +52,14 @@ class HowItWorksSection extends StatelessWidget {
   Widget _buildMobileLayout() {
     return Column(
       children: [
-        _buildStepCard(1, 'Create your account', 'Register with your university email and student ID. Takes 30 seconds. Secured and private.'),
+        _buildStepCard(1, 'Create your account',
+            'Register with your university email and student ID. Takes 30 seconds. Secured and private.'),
         const SizedBox(height: 24),
-        _buildStepCard(2, 'Fill in your information', 'Add education, experience, skills, projects, and languages through our guided step-by-step form.'),
+        _buildStepCard(2, 'Fill in your information',
+            'Add education, experience, skills, projects, and languages through our guided step-by-step form.'),
         const SizedBox(height: 24),
-        _buildStepCard(3, 'Download your CVs', 'Instantly receive 3 professionally designed PDFs — Classic, Modern, and Academic formats ready to send.'),
+        _buildStepCard(3, 'Download your CVs',
+            'Instantly receive 3 professionally designed PDFs — Classic, Modern, and Academic formats ready to send.'),
       ],
     );
   }
@@ -100,7 +109,7 @@ class HowItWorksSection extends StatelessWidget {
   }
 
   Widget _buildConnector() {
-    return Container(
+    return SizedBox(
       width: 24,
       height: 36,
       child: Stack(
@@ -117,7 +126,7 @@ class HowItWorksSection extends StatelessWidget {
           Positioned(
             top: 15,
             right: 0,
-            child: Container(
+            child: SizedBox(
               width: 6,
               height: 6,
               child: CustomPaint(

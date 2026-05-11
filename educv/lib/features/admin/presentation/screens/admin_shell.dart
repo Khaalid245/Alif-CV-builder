@@ -32,16 +32,19 @@ class AdminShell extends ConsumerWidget {
           if (currentTab == 1) // Students tab
             Consumer(
               builder: (context, ref, _) => IconButton(
-                icon: const Icon(LucideIcons.search, color: AppColors.textPrimary),
+                icon: const Icon(LucideIcons.search,
+                    color: AppColors.textPrimary),
                 onPressed: () {
                   final currentState = ref.read(studentsSearchToggleProvider);
-                  ref.read(studentsSearchToggleProvider.notifier).state = !currentState;
+                  ref.read(studentsSearchToggleProvider.notifier).state =
+                      !currentState;
                 },
               ),
             ),
           if (currentTab == 3) // Audit Logs tab
             IconButton(
-              icon: const Icon(LucideIcons.filter, color: AppColors.textPrimary),
+              icon:
+                  const Icon(LucideIcons.filter, color: AppColors.textPrimary),
               onPressed: () {
                 // Filter functionality would be handled by the AuditLogsScreen
                 // This is just the UI trigger

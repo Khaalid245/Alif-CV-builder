@@ -85,17 +85,19 @@ class _ExperienceStepState extends ConsumerState<ExperienceStep> {
 
   Widget _buildExperienceTile(ExperienceModel experience) {
     final startDate = DateFormat('MMM yyyy').format(experience.startDate);
-    final endDate = experience.isCurrent 
+    final endDate = experience.isCurrent
         ? 'Present'
-        : experience.endDate != null 
+        : experience.endDate != null
             ? DateFormat('MMM yyyy').format(experience.endDate!)
             : 'Present';
-    
+
     final dateText = '$startDate – $endDate';
 
     return CVSectionTile(
       title: '${experience.jobTitle} at ${experience.company}',
-      subtitle: experience.location.isNotEmpty ? experience.location : experience.company,
+      subtitle: experience.location.isNotEmpty
+          ? experience.location
+          : experience.company,
       trailing: dateText,
       badge: experience.isCurrent ? _buildCurrentBadge() : null,
       onEdit: () => _showExperienceSheet(experience: experience),
@@ -146,7 +148,8 @@ class _ExperienceStepState extends ConsumerState<ExperienceStep> {
             onPressed: () => Navigator.of(context).pop(),
             child: Text(
               'Keep',
-              style: AppTypography.body.copyWith(color: AppColors.textSecondary),
+              style:
+                  AppTypography.body.copyWith(color: AppColors.textSecondary),
             ),
           ),
           TextButton(
@@ -172,10 +175,12 @@ class _ExperienceBottomSheet extends ConsumerStatefulWidget {
   const _ExperienceBottomSheet({this.experience});
 
   @override
-  ConsumerState<_ExperienceBottomSheet> createState() => _ExperienceBottomSheetState();
+  ConsumerState<_ExperienceBottomSheet> createState() =>
+      _ExperienceBottomSheetState();
 }
 
-class _ExperienceBottomSheetState extends ConsumerState<_ExperienceBottomSheet> {
+class _ExperienceBottomSheetState
+    extends ConsumerState<_ExperienceBottomSheet> {
   final _formKey = GlobalKey<FormState>();
   final _jobTitleController = TextEditingController();
   final _companyController = TextEditingController();
@@ -229,37 +234,40 @@ class _ExperienceBottomSheetState extends ConsumerState<_ExperienceBottomSheet> 
               label: 'Job Title',
               hint: 'e.g. Software Engineer Intern',
               controller: _jobTitleController,
-              validator: (value) => value?.isEmpty == true ? 'Job title is required' : null,
+              validator: (value) =>
+                  value?.isEmpty == true ? 'Job title is required' : null,
             ),
-            
+
             const SizedBox(height: AppSpacing.md),
-            
+
             AppInput(
               label: 'Company',
               hint: 'e.g. Google',
               controller: _companyController,
-              validator: (value) => value?.isEmpty == true ? 'Company is required' : null,
+              validator: (value) =>
+                  value?.isEmpty == true ? 'Company is required' : null,
             ),
-            
+
             const SizedBox(height: AppSpacing.md),
-            
+
             AppInput(
               label: 'Location (Optional)',
               hint: 'e.g. San Francisco, CA or Remote',
               controller: _locationController,
             ),
-            
+
             const SizedBox(height: AppSpacing.md),
-            
+
             MonthYearPicker(
               label: 'Start Date',
               selectedDate: _startDate,
               onChanged: (date) => setState(() => _startDate = date),
-              validator: (value) => _startDate == null ? 'Start date is required' : null,
+              validator: (value) =>
+                  _startDate == null ? 'Start date is required' : null,
             ),
-            
+
             const SizedBox(height: AppSpacing.md),
-            
+
             // Currently Working Toggle
             Row(
               children: [
@@ -279,30 +287,34 @@ class _ExperienceBottomSheetState extends ConsumerState<_ExperienceBottomSheet> 
                       }
                     });
                   },
-                  activeColor: AppColors.primary,
+                  activeThumbColor: AppColors.primary,
                 ),
               ],
             ),
-            
+
             if (!_isCurrent) ...[
               const SizedBox(height: AppSpacing.md),
               MonthYearPicker(
                 label: 'End Date',
                 selectedDate: _endDate,
                 onChanged: (date) => setState(() => _endDate = date),
-                validator: (value) => !_isCurrent && _endDate == null ? 'End date is required' : null,
+                validator: (value) => !_isCurrent && _endDate == null
+                    ? 'End date is required'
+                    : null,
               ),
             ],
-            
+
             const SizedBox(height: AppSpacing.md),
-            
+
             AppInput(
               label: 'What did you do?',
-              hint: 'Describe your responsibilities, achievements and impact...',
+              hint:
+                  'Describe your responsibilities, achievements and impact...',
               controller: _descriptionController,
               maxLines: 5,
               maxLength: 600,
-              validator: (value) => value?.isEmpty == true ? 'Description is required' : null,
+              validator: (value) =>
+                  value?.isEmpty == true ? 'Description is required' : null,
             ),
           ],
         ),
@@ -323,7 +335,8 @@ class _ExperienceBottomSheetState extends ConsumerState<_ExperienceBottomSheet> 
         'company': _companyController.text.trim(),
         'location': _locationController.text.trim(),
         'start_date': _startDate!.toIso8601String().split('T')[0],
-        'end_date': _isCurrent ? null : _endDate?.toIso8601String().split('T')[0],
+        'end_date':
+            _isCurrent ? null : _endDate?.toIso8601String().split('T')[0],
         'is_current': _isCurrent,
         'description': _descriptionController.text.trim(),
       };
@@ -333,7 +346,9 @@ class _ExperienceBottomSheetState extends ConsumerState<_ExperienceBottomSheet> 
         if (!mounted) return;
         SnackbarHelper.showSuccess(context, 'Experience added successfully');
       } else {
-        await ref.read(experienceProvider.notifier).updateItem(widget.experience!.id, data);
+        await ref
+            .read(experienceProvider.notifier)
+            .updateItem(widget.experience!.id, data);
         if (!mounted) return;
         SnackbarHelper.showSuccess(context, 'Experience updated successfully');
       }

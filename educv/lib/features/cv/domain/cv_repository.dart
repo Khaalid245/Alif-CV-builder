@@ -16,7 +16,8 @@ abstract class CVRepository {
   // Experience operations
   Future<List<ExperienceModel>> getExperience();
   Future<ExperienceModel> addExperience(Map<String, dynamic> data);
-  Future<ExperienceModel> updateExperience(String id, Map<String, dynamic> data);
+  Future<ExperienceModel> updateExperience(
+      String id, Map<String, dynamic> data);
   Future<void> deleteExperience(String id);
 
   // Skills operations
@@ -40,7 +41,8 @@ abstract class CVRepository {
   // Certifications operations
   Future<List<CertificationModel>> getCertifications();
   Future<CertificationModel> addCertification(Map<String, dynamic> data);
-  Future<CertificationModel> updateCertification(String id, Map<String, dynamic> data);
+  Future<CertificationModel> updateCertification(
+      String id, Map<String, dynamic> data);
   Future<void> deleteCertification(String id);
 
   // Completion

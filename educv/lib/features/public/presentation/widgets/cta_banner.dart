@@ -18,7 +18,7 @@ class CTABanner extends StatelessWidget {
       child: LayoutBuilder(
         builder: (context, constraints) {
           final isWeb = constraints.maxWidth >= 800;
-          
+
           return Column(
             children: [
               Text(
@@ -56,7 +56,8 @@ class CTABanner extends StatelessWidget {
                 onTap: () => context.go('/register'),
                 borderRadius: BorderRadius.circular(6),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 13),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 28, vertical: 13),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(6),

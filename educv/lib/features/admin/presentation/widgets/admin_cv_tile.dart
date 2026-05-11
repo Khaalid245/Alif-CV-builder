@@ -45,9 +45,9 @@ class AdminCVTile extends StatelessWidget {
               ],
             ),
           ),
-          
+
           const SizedBox(width: AppSpacing.sm),
-          
+
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,34 +64,36 @@ class AdminCVTile extends StatelessWidget {
                     const Spacer(),
                     Text(
                       DateFormatter.toDisplayFormat(cv.generatedAt),
-                      style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+                      style: AppTypography.caption
+                          .copyWith(color: AppColors.textSecondary),
                     ),
                   ],
                 ),
-                
                 const SizedBox(height: 4),
-                
                 Text(
                   cv.studentName,
-                  style: AppTypography.caption.copyWith(color: AppColors.primary),
+                  style:
+                      AppTypography.caption.copyWith(color: AppColors.primary),
                 ),
-                
                 const SizedBox(height: 4),
-                
                 Row(
                   children: [
-                    const Icon(LucideIcons.download, size: 12, color: AppColors.textSecondary),
+                    const Icon(LucideIcons.download,
+                        size: 12, color: AppColors.textSecondary),
                     const SizedBox(width: 4),
                     Text(
                       '${cv.downloadCount} downloads',
-                      style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+                      style: AppTypography.caption
+                          .copyWith(color: AppColors.textSecondary),
                     ),
                     const SizedBox(width: 16),
-                    const Icon(LucideIcons.hardDrive, size: 12, color: AppColors.textSecondary),
+                    const Icon(LucideIcons.hardDrive,
+                        size: 12, color: AppColors.textSecondary),
                     const SizedBox(width: 4),
                     Text(
                       cv.fileSize,
-                      style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+                      style: AppTypography.caption
+                          .copyWith(color: AppColors.textSecondary),
                     ),
                   ],
                 ),

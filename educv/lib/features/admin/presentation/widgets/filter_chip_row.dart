@@ -23,7 +23,7 @@ class FilterChipRow extends StatelessWidget {
       child: Row(
         children: options.map((option) {
           final isSelected = option.toLowerCase() == selected.toLowerCase();
-          
+
           return Padding(
             padding: const EdgeInsets.only(right: AppSpacing.sm),
             child: FilterChip(

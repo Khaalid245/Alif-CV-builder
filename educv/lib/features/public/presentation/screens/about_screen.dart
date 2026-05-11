@@ -27,11 +27,12 @@ class AboutScreen extends StatelessWidget {
   }
 
   Widget _buildPageHero() {
-    return SectionPadding(
+    return const SectionPadding(
       child: SectionHeader(
         eyebrow: 'About EduCV',
         title: 'A platform built\nfor student success',
-        subtitle: 'Born from a real problem — thousands of students graduating without knowing how to present themselves professionally.',
+        subtitle:
+            'Born from a real problem — thousands of students graduating without knowing how to present themselves professionally.',
         alignment: CrossAxisAlignment.center,
       ),
     );
@@ -125,30 +126,32 @@ class AboutScreen extends StatelessWidget {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: points.map((point) => Padding(
-        padding: const EdgeInsets.only(bottom: 16),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Icon(
-              LucideIcons.checkCircle,
-              size: 20,
-              color: Color(0xFF2E7D32),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                point,
-                style: AppTypography.body.copyWith(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: const Color(0xFF0A0A0A),
+      children: points
+          .map((point) => Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Icon(
+                      LucideIcons.checkCircle,
+                      size: 20,
+                      color: Color(0xFF2E7D32),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        point,
+                        style: AppTypography.body.copyWith(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: const Color(0xFF0A0A0A),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ),
-          ],
-        ),
-      )).toList(),
+              ))
+          .toList(),
     );
   }
 
@@ -221,21 +224,24 @@ class AboutScreen extends StatelessWidget {
               'DigitalOcean',
               'WeasyPrint',
               'JWT',
-            ].map((tech) => Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF3F4F6),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: Text(
-                tech,
-                style: AppTypography.caption.copyWith(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF4A4A4A),
-                ),
-              ),
-            )).toList(),
+            ]
+                .map((tech) => Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF3F4F6),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        tech,
+                        style: AppTypography.caption.copyWith(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFF4A4A4A),
+                        ),
+                      ),
+                    ))
+                .toList(),
           ),
         ],
       ),

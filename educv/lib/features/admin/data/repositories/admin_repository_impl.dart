@@ -17,7 +17,8 @@ class AdminRepositoryImpl implements AdminRepository {
       (data) => PlatformStatsModel.fromJson(data as Map<String, dynamic>),
     );
     if (!apiResponse.success) {
-      throw Exception(apiResponse.error?.message ?? 'Failed to get platform stats');
+      throw Exception(
+          apiResponse.error?.message ?? 'Failed to get platform stats');
     }
     return apiResponse.data!;
   }
@@ -32,7 +33,8 @@ class AdminRepositoryImpl implements AdminRepository {
           .toList(),
     );
     if (!apiResponse.success) {
-      throw Exception(apiResponse.error?.message ?? 'Failed to get template stats');
+      throw Exception(
+          apiResponse.error?.message ?? 'Failed to get template stats');
     }
     return apiResponse.data ?? [];
   }
@@ -48,7 +50,8 @@ class AdminRepositoryImpl implements AdminRepository {
       (data) => List<Map<String, dynamic>>.from(data as List),
     );
     if (!apiResponse.success) {
-      throw Exception(apiResponse.error?.message ?? 'Failed to get growth data');
+      throw Exception(
+          apiResponse.error?.message ?? 'Failed to get growth data');
     }
     return apiResponse.data ?? [];
   }
@@ -69,11 +72,12 @@ class AdminRepositoryImpl implements AdminRepository {
       ApiConstants.adminStudents,
       queryParameters: queryParams,
     );
-    final apiResponse = ApiResponse<PaginatedResponse<AdminStudentModel>>.fromJson(
+    final apiResponse =
+        ApiResponse<PaginatedResponse<AdminStudentModel>>.fromJson(
       response.data,
       (data) => PaginatedResponse.fromJson(
         data as Map<String, dynamic>,
-        (item) => AdminStudentModel.fromJson(item as Map<String, dynamic>),
+        (item) => AdminStudentModel.fromJson(item),
       ),
     );
     if (!apiResponse.success) {
@@ -90,13 +94,15 @@ class AdminRepositoryImpl implements AdminRepository {
       (data) => AdminStudentDetailModel.fromJson(data as Map<String, dynamic>),
     );
     if (!apiResponse.success) {
-      throw Exception(apiResponse.error?.message ?? 'Failed to get student detail');
+      throw Exception(
+          apiResponse.error?.message ?? 'Failed to get student detail');
     }
     return apiResponse.data!;
   }
 
   @override
-  Future<void> updateStudentStatus(String id, String status, String? reason) async {
+  Future<void> updateStudentStatus(
+      String id, String status, String? reason) async {
     final body = <String, dynamic>{'status': status};
     if (reason != null && reason.isNotEmpty) body['reason'] = reason;
 
@@ -106,7 +112,8 @@ class AdminRepositoryImpl implements AdminRepository {
     );
     final apiResponse = ApiResponse<void>.fromJson(response.data, (_) {});
     if (!apiResponse.success) {
-      throw Exception(apiResponse.error?.message ?? 'Failed to update student status');
+      throw Exception(
+          apiResponse.error?.message ?? 'Failed to update student status');
     }
   }
 
@@ -117,7 +124,8 @@ class AdminRepositoryImpl implements AdminRepository {
     );
     final apiResponse = ApiResponse<void>.fromJson(response.data, (_) {});
     if (!apiResponse.success) {
-      throw Exception(apiResponse.error?.message ?? 'Failed to process deletion');
+      throw Exception(
+          apiResponse.error?.message ?? 'Failed to process deletion');
     }
   }
 
@@ -128,7 +136,9 @@ class AdminRepositoryImpl implements AdminRepository {
     String? ordering,
   }) async {
     final queryParams = <String, dynamic>{'page': page};
-    if (template != null && template != 'all') queryParams['template'] = template;
+    if (template != null && template != 'all') {
+      queryParams['template'] = template;
+    }
     if (ordering != null) queryParams['ordering'] = ordering;
 
     final response = await _apiClient.get(
@@ -139,11 +149,12 @@ class AdminRepositoryImpl implements AdminRepository {
       response.data,
       (data) => PaginatedResponse.fromJson(
         data as Map<String, dynamic>,
-        (item) => AdminCVModel.fromJson(item as Map<String, dynamic>),
+        (item) => AdminCVModel.fromJson(item),
       ),
     );
     if (!apiResponse.success) {
-      throw Exception(apiResponse.error?.message ?? 'Failed to get generated CVs');
+      throw Exception(
+          apiResponse.error?.message ?? 'Failed to get generated CVs');
     }
     return apiResponse.data!;
   }
@@ -156,7 +167,8 @@ class AdminRepositoryImpl implements AdminRepository {
       (data) => Map<String, int>.from(data as Map),
     );
     if (!apiResponse.success) {
-      throw Exception(apiResponse.error?.message ?? 'Failed to get section fill rates');
+      throw Exception(
+          apiResponse.error?.message ?? 'Failed to get section fill rates');
     }
     return apiResponse.data ?? {};
   }
@@ -178,12 +190,13 @@ class AdminRepositoryImpl implements AdminRepository {
         ? ApiConstants.adminAuditLogsSecurity
         : ApiConstants.adminAuditLogs;
 
-    final response = await _apiClient.get(endpoint, queryParameters: queryParams);
+    final response =
+        await _apiClient.get(endpoint, queryParameters: queryParams);
     final apiResponse = ApiResponse<PaginatedResponse<AuditLogModel>>.fromJson(
       response.data,
       (data) => PaginatedResponse.fromJson(
         data as Map<String, dynamic>,
-        (item) => AuditLogModel.fromJson(item as Map<String, dynamic>),
+        (item) => AuditLogModel.fromJson(item),
       ),
     );
     if (!apiResponse.success) {

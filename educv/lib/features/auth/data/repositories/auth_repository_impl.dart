@@ -62,7 +62,7 @@ class AuthRepositoryImpl implements AuthRepository {
         'marketing_consent': marketingConsent,
         'data_processing_consent': dataProcessingConsent,
       };
-      
+
       final response = await _apiClient.post(
         ApiConstants.register,
         data: requestData,
@@ -104,6 +104,88 @@ class AuthRepositoryImpl implements AuthRepository {
       if (!apiResponse.success) {
         throw AppException(
           message: apiResponse.error?.message ?? 'Logout failed',
+          details: apiResponse.error?.details,
+        );
+      }
+    } catch (e) {
+      throw ErrorHandler.handleError(e);
+    }
+  }
+
+  @override
+  Future<void> logoutAll() async {
+    try {
+      final response = await _apiClient.post(ApiConstants.logoutAll);
+      final apiResponse = ApiResponse.fromJson(response.data, (data) => data);
+
+      if (!apiResponse.success) {
+        throw AppException(
+          message: apiResponse.error?.message ?? 'Failed to sign out devices',
+          details: apiResponse.error?.details,
+        );
+      }
+    } catch (e) {
+      throw ErrorHandler.handleError(e);
+    }
+  }
+
+  @override
+  Future<void> requestDeletion() async {
+    try {
+      final response = await _apiClient.post(ApiConstants.requestDeletion);
+      final apiResponse = ApiResponse.fromJson(response.data, (data) => data);
+
+      if (!apiResponse.success) {
+        throw AppException(
+          message: apiResponse.error?.message ?? 'Failed to request deletion',
+          details: apiResponse.error?.details,
+        );
+      }
+    } catch (e) {
+      throw ErrorHandler.handleError(e);
+    }
+  }
+
+  @override
+  Future<void> requestPasswordReset(String email) async {
+    try {
+      final response = await _apiClient.post(
+        ApiConstants.passwordReset,
+        data: {'email': email.trim()},
+      );
+      final apiResponse = ApiResponse.fromJson(response.data, (data) => data);
+
+      if (!apiResponse.success) {
+        throw AppException(
+          message: apiResponse.error?.message ?? 'Failed to send reset link',
+          details: apiResponse.error?.details,
+        );
+      }
+    } catch (e) {
+      throw ErrorHandler.handleError(e);
+    }
+  }
+
+  @override
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+    required String confirmPassword,
+  }) async {
+    try {
+      final response = await _apiClient.post(
+        ApiConstants.changePassword,
+        data: {
+          'current_password': currentPassword,
+          'new_password': newPassword,
+          'confirm_password': confirmPassword,
+        },
+      );
+      final apiResponse = ApiResponse.fromJson(response.data, (data) => data);
+
+      if (!apiResponse.success) {
+        throw AppException(
+          message: apiResponse.error?.message ?? 'Password change failed',
           details: apiResponse.error?.details,
         );
       }

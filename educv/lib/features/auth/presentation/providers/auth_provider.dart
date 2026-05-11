@@ -58,7 +58,8 @@ class LoginNotifier extends AsyncNotifier<AuthResponse?> {
 }
 
 // Register provider
-final registerProvider = AsyncNotifierProvider<RegisterNotifier, AuthResponse?>(() {
+final registerProvider =
+    AsyncNotifierProvider<RegisterNotifier, AuthResponse?>(() {
   return RegisterNotifier();
 });
 

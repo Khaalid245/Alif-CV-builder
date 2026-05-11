@@ -48,7 +48,7 @@ class SnackbarHelper {
     IconData icon,
   ) {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
@@ -97,7 +97,7 @@ class SnackbarHelper {
     VoidCallback? onActionPressed,
   }) {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
@@ -129,9 +129,10 @@ class SnackbarHelper {
             ? SnackBarAction(
                 label: actionLabel,
                 textColor: AppColors.white,
-                onPressed: onActionPressed ?? () {
-                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                },
+                onPressed: onActionPressed ??
+                    () {
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                    },
               )
             : null,
       ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/theme/app_colors.dart';
 
@@ -34,17 +33,17 @@ class StatsBar extends StatelessWidget {
       child: LayoutBuilder(
         builder: (context, constraints) {
           final isWeb = constraints.maxWidth >= 800;
-          
+
           if (isWeb) {
             return Row(
               children: _stats.asMap().entries.map((entry) {
                 final index = entry.key;
                 final stat = entry.value;
-                
+
                 return Expanded(
                   child: Row(
                     children: [
-                      if (index > 0) 
+                      if (index > 0)
                         Container(
                           width: 1,
                           height: 40,
@@ -59,12 +58,12 @@ class StatsBar extends StatelessWidget {
             );
           } else {
             return Column(
-              children: _stats.map((stat) => 
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: _buildStatItem(stat),
-                )
-              ).toList(),
+              children: _stats
+                  .map((stat) => Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: _buildStatItem(stat),
+                      ))
+                  .toList(),
             );
           }
         },
@@ -78,7 +77,7 @@ class StatsBar extends StatelessWidget {
       children: [
         Text(
           stat.value,
-          style: GoogleFonts.inter(
+          style: const TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.w800,
             letterSpacing: -0.02,
@@ -88,10 +87,10 @@ class StatsBar extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           stat.label,
-          style: GoogleFonts.inter(
+          style: const TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w500,
-            color: const Color(0xFF6B7280),
+            color: Color(0xFF6B7280),
           ),
           textAlign: TextAlign.center,
         ),

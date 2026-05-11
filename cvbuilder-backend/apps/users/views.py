@@ -6,6 +6,14 @@ Failed auth attempts are logged to security.log with IP address.
 """
 import logging
 from django.contrib.auth import authenticate
+from django.contrib.auth.password_validation import validate_password
+from django.contrib.auth.tokens import default_token_generator
+from django.conf import settings
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.encoding import force_str
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.utils.encoding import force_bytes
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -24,6 +32,8 @@ from .serializers import (
     UserProfileSerializer,
     UpdateProfileSerializer,
     ChangePasswordSerializer,
+    PasswordResetRequestSerializer,
+    PasswordResetConfirmSerializer,
     RequestDeletionSerializer,
 )
 
@@ -170,6 +180,119 @@ class LogoutView(APIView):
         return success_response('Logged out successfully.')
 
 
+class LogoutAllView(APIView):
+    """
+    POST /api/v1/auth/logout-all/
+    Blacklists outstanding refresh tokens for the authenticated user.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        outstanding_tokens = OutstandingToken.objects.filter(user=request.user)
+        for token in outstanding_tokens:
+            BlacklistedToken.objects.get_or_create(token=token)
+
+        AuditLog.log(request.user, AuditLog.Action.LOGOUT, request)
+        logger.info('All sessions logged out for: %s', request.user.email)
+
+        return success_response('All other sessions have been signed out.')
+
+
+class PasswordResetView(APIView):
+    """
+    POST /api/v1/auth/password-reset/
+    Sends a password reset email when the account exists.
+    Always returns success to prevent account enumeration.
+    """
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = PasswordResetRequestSerializer(data=request.data)
+        if not serializer.is_valid():
+            return error_response(
+                'Password reset request failed.',
+                serializer.errors,
+                status.HTTP_400_BAD_REQUEST,
+            )
+
+        email = serializer.validated_data['email']
+        user = User.objects.filter(email=email, is_active=True, is_deleted=False).first()
+
+        if user:
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            token = default_token_generator.make_token(user)
+            reset_url = f"{settings.FRONTEND_URL}/reset-password?uid={uid}&token={token}"
+            body = render_to_string(
+                'registration/password_reset_email.html',
+                {
+                    'user': user,
+                    'reset_url': reset_url,
+                    'uid': uid,
+                    'token': token,
+                },
+            )
+            send_mail(
+                subject='Reset your EduCV password',
+                message=body,
+                from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', None),
+                recipient_list=[user.email],
+                fail_silently=False,
+            )
+
+        return success_response(
+            'If an account exists for that email, a reset link has been sent.',
+        )
+
+
+class PasswordResetConfirmView(APIView):
+    """
+    POST /api/v1/auth/password-reset/confirm/
+    Confirms a reset token and saves the new password.
+    """
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = PasswordResetConfirmSerializer(data=request.data)
+        if not serializer.is_valid():
+            return error_response(
+                'Password reset failed.',
+                serializer.errors,
+                status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            uid = force_str(urlsafe_base64_decode(serializer.validated_data['uid']))
+            user = User.objects.get(pk=uid, is_active=True, is_deleted=False)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            return error_response('Invalid or expired reset link.', status_code=status.HTTP_400_BAD_REQUEST)
+
+        token = serializer.validated_data['token']
+        if not default_token_generator.check_token(user, token):
+            return error_response('Invalid or expired reset link.', status_code=status.HTTP_400_BAD_REQUEST)
+
+        new_password = serializer.validated_data['new_password']
+        try:
+            validate_password(new_password, user)
+        except Exception as exc:
+            return error_response(
+                'Password reset failed.',
+                {'new_password': list(exc.messages)},
+                status.HTTP_400_BAD_REQUEST,
+            )
+
+        user.set_password(new_password)
+        user.save(update_fields=['password', 'updated_at'])
+
+        outstanding_tokens = OutstandingToken.objects.filter(user=user)
+        for outstanding in outstanding_tokens:
+            BlacklistedToken.objects.get_or_create(token=outstanding)
+
+        AuditLog.log(user, AuditLog.Action.PASSWORD_CHANGED, request)
+        security_logger.info('Password reset completed: %s', user.email)
+
+        return success_response('Password reset successfully.')
+
+
 class TokenRefreshWrappedView(BaseTokenRefreshView):
     """
     POST /api/v1/auth/token/refresh/
@@ -312,4 +435,3 @@ class RequestDeletionView(APIView):
             'Your data deletion request has been submitted. '
             'Our team will process it within 30 days as required by law.',
         )
-

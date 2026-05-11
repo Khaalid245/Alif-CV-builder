@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/theme/app_colors.dart';
 
 class EduCVLogo extends StatelessWidget {
   final bool isDark;
-  
+
   const EduCVLogo({super.key, this.isDark = false});
 
   @override
@@ -20,10 +19,10 @@ class EduCVLogo extends StatelessWidget {
             color: AppColors.primary,
             borderRadius: BorderRadius.circular(6),
           ),
-          child: Center(
+          child: const Center(
             child: Text(
               'CV',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w800,
                 color: Colors.white,
@@ -34,7 +33,7 @@ class EduCVLogo extends StatelessWidget {
         const SizedBox(width: 8),
         Text(
           'EduCV',
-          style: GoogleFonts.inter(
+          style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w800,
             letterSpacing: -0.02,

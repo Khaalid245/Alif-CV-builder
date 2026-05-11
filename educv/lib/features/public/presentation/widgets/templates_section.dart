@@ -98,7 +98,8 @@ class _TemplatesSectionState extends State<TemplatesSection>
             const SectionHeader(
               eyebrow: 'CV Templates',
               title: 'Three formats.\nEvery opportunity covered.',
-              subtitle: 'Tap any template to explore a live sample and see which format fits your goals best.',
+              subtitle:
+                  'Tap any template to explore a live sample and see which format fits your goals best.',
             ),
             const SizedBox(height: AppSpacing.xl),
             _buildTemplateTabs(),
@@ -140,7 +141,8 @@ class _TemplatesSectionState extends State<TemplatesSection>
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(child: _InfoPanel(
+        Expanded(
+            child: _InfoPanel(
           template: CVTemplateInfo.templates[_selectedIndex],
           animation: _infoFadeAnim,
         )),
@@ -208,7 +210,9 @@ class _TemplateTab extends StatelessWidget {
             Icon(
               template.icon,
               size: 16,
-              color: isSelected ? const Color(0xFF1565C0) : AppColors.textSecondary,
+              color: isSelected
+                  ? const Color(0xFF1565C0)
+                  : AppColors.textSecondary,
             ),
             const SizedBox(width: 8),
             Text(
@@ -216,7 +220,9 @@ class _TemplateTab extends StatelessWidget {
               style: AppTypography.body.copyWith(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: isSelected ? const Color(0xFF1565C0) : AppColors.textSecondary,
+                color: isSelected
+                    ? const Color(0xFF1565C0)
+                    : AppColors.textSecondary,
               ),
             ),
             if (template.isPopular) ...[
@@ -293,49 +299,54 @@ class _InfoPanel extends StatelessWidget {
                 Wrap(
                   spacing: 6,
                   runSpacing: 6,
-                  children: template.bestFor.map((tag) => Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFEAF2FF),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      tag,
-                      style: AppTypography.caption.copyWith(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: const Color(0xFF1565C0),
-                      ),
-                    ),
-                  )).toList(),
+                  children: template.bestFor
+                      .map((tag) => Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFEAF2FF),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              tag,
+                              style: AppTypography.caption.copyWith(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                                color: const Color(0xFF1565C0),
+                              ),
+                            ),
+                          ))
+                      .toList(),
                 ),
                 const SizedBox(height: 16),
                 const Divider(color: AppColors.divider, height: 1),
                 const SizedBox(height: 12),
                 Column(
-                  children: template.features.map((feature) => Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Icon(
-                          LucideIcons.check,
-                          size: 16,
-                          color: Color(0xFF1565C0),
-                        ),
-                        const SizedBox(width: 9),
-                        Expanded(
-                          child: Text(
-                            feature,
-                            style: AppTypography.body.copyWith(
-                              fontSize: 13,
-                              color: AppColors.textSecondary,
+                  children: template.features
+                      .map((feature) => Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Icon(
+                                  LucideIcons.check,
+                                  size: 16,
+                                  color: Color(0xFF1565C0),
+                                ),
+                                const SizedBox(width: 9),
+                                Expanded(
+                                  child: Text(
+                                    feature,
+                                    style: AppTypography.body.copyWith(
+                                      fontSize: 13,
+                                      color: AppColors.textSecondary,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )).toList(),
+                          ))
+                      .toList(),
                 ),
               ],
             ),

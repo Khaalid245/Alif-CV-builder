@@ -11,12 +11,12 @@ class HeroSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       child: LayoutBuilder(
         builder: (context, constraints) {
           final isWeb = constraints.maxWidth >= 800;
-          
+
           return Container(
             constraints: const BoxConstraints(maxWidth: 1000),
             margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -112,11 +112,11 @@ class HeroSection extends StatelessWidget {
           letterSpacing: -0.025,
           height: 1.15,
         ),
-        children: [
-          const TextSpan(text: 'Your career starts with a '),
+        children: const [
+          TextSpan(text: 'Your career starts with a '),
           TextSpan(
             text: '\ngreat CV',
-            style: TextStyle(color: const Color(0xFF1565C0)),
+            style: TextStyle(color: Color(0xFF1565C0)),
           ),
         ],
       ),
@@ -173,13 +173,13 @@ class HeroSection extends StatelessWidget {
                 color: const Color(0xFF6B7280),
                 height: 1.45,
               ),
-              children: [
-                const TextSpan(text: 'Trusted by '),
+              children: const [
+                TextSpan(text: 'Trusted by '),
                 TextSpan(
                   text: '2,400+ students',
                   style: TextStyle(fontWeight: FontWeight.w700),
                 ),
-                const TextSpan(text: ' at our university this year'),
+                TextSpan(text: ' at our university this year'),
               ],
             ),
           ),
@@ -190,10 +190,26 @@ class HeroSection extends StatelessWidget {
 
   Widget _buildAvatarStack() {
     final avatars = [
-      {'initials': 'AK', 'bg': Color(0xFFFFDDD2), 'text': Color(0xFFC0440A)},
-      {'initials': 'SR', 'bg': Color(0xFFD1FAE5), 'text': Color(0xFF065F46)},
-      {'initials': 'MN', 'bg': Color(0xFFEDE9FE), 'text': Color(0xFF5B21B6)},
-      {'initials': 'FO', 'bg': Color(0xFFDBEAFE), 'text': Color(0xFF1E40AF)},
+      {
+        'initials': 'AK',
+        'bg': const Color(0xFFFFDDD2),
+        'text': const Color(0xFFC0440A)
+      },
+      {
+        'initials': 'SR',
+        'bg': const Color(0xFFD1FAE5),
+        'text': const Color(0xFF065F46)
+      },
+      {
+        'initials': 'MN',
+        'bg': const Color(0xFFEDE9FE),
+        'text': const Color(0xFF5B21B6)
+      },
+      {
+        'initials': 'FO',
+        'bg': const Color(0xFFDBEAFE),
+        'text': const Color(0xFF1E40AF)
+      },
     ];
 
     return SizedBox(
@@ -203,7 +219,7 @@ class HeroSection extends StatelessWidget {
         children: avatars.asMap().entries.map((entry) {
           final index = entry.key;
           final avatar = entry.value;
-          
+
           return Positioned(
             left: index * 21.0,
             child: Container(
@@ -416,10 +432,14 @@ class HeroSection extends StatelessWidget {
           spacing: 5,
           runSpacing: 5,
           children: [
-            _buildSkillChip('Flutter', const Color(0xFFEAF2FF), const Color(0xFF1565C0)),
-            _buildSkillChip('Python', const Color(0xFFF3EFFF), const Color(0xFF7C3AED)),
-            _buildSkillChip('Django', const Color(0xFFE6FBF5), const Color(0xFF059669)),
-            _buildSkillChip('+5 more', const Color(0xFFF3F4F6), const Color(0xFF6B7280)),
+            _buildSkillChip(
+                'Flutter', const Color(0xFFEAF2FF), const Color(0xFF1565C0)),
+            _buildSkillChip(
+                'Python', const Color(0xFFF3EFFF), const Color(0xFF7C3AED)),
+            _buildSkillChip(
+                'Django', const Color(0xFFE6FBF5), const Color(0xFF059669)),
+            _buildSkillChip(
+                '+5 more', const Color(0xFFF3F4F6), const Color(0xFF6B7280)),
           ],
         ),
       ],

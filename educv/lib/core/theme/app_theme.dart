@@ -15,7 +15,7 @@ class AppTheme {
         surface: AppColors.surface,
         error: AppColors.error,
       ),
-      
+
       // AppBar Theme
       appBarTheme: AppBarTheme(
         backgroundColor: AppColors.background,

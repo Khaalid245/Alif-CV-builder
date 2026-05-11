@@ -12,7 +12,8 @@ final pdfRepositoryProvider = Provider<PDFRepository>((ref) {
 });
 
 // Generate CVs provider
-final generateCVsProvider = AsyncNotifierProvider<GenerateCVsNotifier, GenerateResponse?>(() {
+final generateCVsProvider =
+    AsyncNotifierProvider<GenerateCVsNotifier, GenerateResponse?>(() {
   return GenerateCVsNotifier();
 });
 
@@ -24,7 +25,7 @@ class GenerateCVsNotifier extends AsyncNotifier<GenerateResponse?> {
 
   Future<void> generate() async {
     state = const AsyncLoading();
-    
+
     try {
       final repository = ref.read(pdfRepositoryProvider);
       final response = await repository.generateCVs();
@@ -40,7 +41,8 @@ class GenerateCVsNotifier extends AsyncNotifier<GenerateResponse?> {
 }
 
 // PDF history provider
-final pdfHistoryProvider = AsyncNotifierProvider<PDFHistoryNotifier, List<GeneratedCVModel>>(() {
+final pdfHistoryProvider =
+    AsyncNotifierProvider<PDFHistoryNotifier, List<GeneratedCVModel>>(() {
   return PDFHistoryNotifier();
 });
 
@@ -52,7 +54,7 @@ class PDFHistoryNotifier extends AsyncNotifier<List<GeneratedCVModel>> {
 
   Future<void> fetch() async {
     state = const AsyncLoading();
-    
+
     try {
       final repository = ref.read(pdfRepositoryProvider);
       final history = await repository.getHistory();
@@ -67,7 +69,9 @@ class PDFHistoryNotifier extends AsyncNotifier<List<GeneratedCVModel>> {
 enum DownloadStatus { idle, loading, success, error }
 
 // Download state provider
-final downloadStateProvider = StateNotifierProvider<DownloadStateNotifier, Map<String, DownloadStatus>>((ref) {
+final downloadStateProvider =
+    StateNotifierProvider<DownloadStateNotifier, Map<String, DownloadStatus>>(
+        (ref) {
   return DownloadStateNotifier();
 });
 
@@ -92,7 +96,8 @@ class DownloadStateNotifier extends StateNotifier<Map<String, DownloadStatus>> {
 }
 
 // PDF preview provider
-final pdfPreviewProvider = StateNotifierProvider<PDFPreviewNotifier, Uint8List?>((ref) {
+final pdfPreviewProvider =
+    StateNotifierProvider<PDFPreviewNotifier, Uint8List?>((ref) {
   return PDFPreviewNotifier(ref);
 });
 

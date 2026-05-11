@@ -176,7 +176,8 @@ class _LanguagesStepState extends ConsumerState<LanguagesStep> {
             onPressed: () => Navigator.of(context).pop(),
             child: Text(
               'Keep',
-              style: AppTypography.body.copyWith(color: AppColors.textSecondary),
+              style:
+                  AppTypography.body.copyWith(color: AppColors.textSecondary),
             ),
           ),
           TextButton(
@@ -202,7 +203,8 @@ class _LanguageBottomSheet extends ConsumerStatefulWidget {
   const _LanguageBottomSheet({this.language});
 
   @override
-  ConsumerState<_LanguageBottomSheet> createState() => _LanguageBottomSheetState();
+  ConsumerState<_LanguageBottomSheet> createState() =>
+      _LanguageBottomSheetState();
 }
 
 class _LanguageBottomSheetState extends ConsumerState<_LanguageBottomSheet> {
@@ -212,7 +214,12 @@ class _LanguageBottomSheetState extends ConsumerState<_LanguageBottomSheet> {
   String _selectedProficiency = 'conversational';
   bool _isLoading = false;
 
-  final List<String> _proficiencies = ['basic', 'conversational', 'professional', 'native'];
+  final List<String> _proficiencies = [
+    'basic',
+    'conversational',
+    'professional',
+    'native'
+  ];
 
   @override
   void initState() {
@@ -248,11 +255,12 @@ class _LanguageBottomSheetState extends ConsumerState<_LanguageBottomSheet> {
               label: 'Language Name',
               hint: 'e.g. English, Arabic, French',
               controller: _languageController,
-              validator: (value) => value?.isEmpty == true ? 'Language name is required' : null,
+              validator: (value) =>
+                  value?.isEmpty == true ? 'Language name is required' : null,
             ),
-            
+
             const SizedBox(height: AppSpacing.md),
-            
+
             // Proficiency Selector
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -263,7 +271,9 @@ class _LanguageBottomSheetState extends ConsumerState<_LanguageBottomSheet> {
                 ),
                 const SizedBox(height: AppSpacing.xs),
                 LevelSelector(
-                  options: _proficiencies.map((prof) => _getProficiencyDisplayName(prof)).toList(),
+                  options: _proficiencies
+                      .map((prof) => _getProficiencyDisplayName(prof))
+                      .toList(),
                   selected: _getProficiencyDisplayName(_selectedProficiency),
                   onChanged: (displayName) {
                     final proficiency = _proficiencies.firstWhere(
@@ -311,7 +321,9 @@ class _LanguageBottomSheetState extends ConsumerState<_LanguageBottomSheet> {
         if (!mounted) return;
         SnackbarHelper.showSuccess(context, 'Language added successfully');
       } else {
-        await ref.read(languagesProvider.notifier).updateItem(widget.language!.id, data);
+        await ref
+            .read(languagesProvider.notifier)
+            .updateItem(widget.language!.id, data);
         if (!mounted) return;
         SnackbarHelper.showSuccess(context, 'Language updated successfully');
       }

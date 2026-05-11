@@ -10,11 +10,17 @@ class TimeUtils {
       final months = (difference.inDays / 30).floor();
       return months == 1 ? '1 month ago' : '$months months ago';
     } else if (difference.inDays > 0) {
-      return difference.inDays == 1 ? '1 day ago' : '${difference.inDays} days ago';
+      return difference.inDays == 1
+          ? '1 day ago'
+          : '${difference.inDays} days ago';
     } else if (difference.inHours > 0) {
-      return difference.inHours == 1 ? '1 hour ago' : '${difference.inHours} hours ago';
+      return difference.inHours == 1
+          ? '1 hour ago'
+          : '${difference.inHours} hours ago';
     } else if (difference.inMinutes > 0) {
-      return difference.inMinutes == 1 ? '1 minute ago' : '${difference.inMinutes} minutes ago';
+      return difference.inMinutes == 1
+          ? '1 minute ago'
+          : '${difference.inMinutes} minutes ago';
     } else {
       return 'Just now';
     }

@@ -10,7 +10,8 @@ class ErrorInterceptor extends Interceptor {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
-        errorMessage = 'Connection timeout. Please check your internet connection.';
+        errorMessage =
+            'Connection timeout. Please check your internet connection.';
         break;
       case DioExceptionType.badResponse:
         errorMessage = _handleStatusCode(err.response?.statusCode);
@@ -31,7 +32,8 @@ class ErrorInterceptor extends Interceptor {
 
     if (kDebugMode) {
       debugPrint('API Error: $errorMessage');
-      debugPrint('Request: ${err.requestOptions.method} ${err.requestOptions.path}');
+      debugPrint(
+          'Request: ${err.requestOptions.method} ${err.requestOptions.path}');
       debugPrint('Response: ${err.response?.data}');
     }
 

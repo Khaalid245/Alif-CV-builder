@@ -21,10 +21,11 @@ class CVTemplateInfo {
   });
 
   static final List<CVTemplateInfo> templates = [
-    CVTemplateInfo(
+    const CVTemplateInfo(
       id: 'classic',
       name: 'Classic',
-      description: 'A traditional two-column layout built for formal, corporate applications. Projects professionalism and structure at a glance.',
+      description:
+          'A traditional two-column layout built for formal, corporate applications. Projects professionalism and structure at a glance.',
       bestFor: ['Corporate jobs', 'Government', 'Finance', 'Law'],
       features: [
         'Two-column layout with sidebar',
@@ -35,10 +36,11 @@ class CVTemplateInfo {
       icon: LucideIcons.columns,
       isPopular: false,
     ),
-    CVTemplateInfo(
+    const CVTemplateInfo(
       id: 'modern',
       name: 'Modern',
-      description: 'Clean single-column with bold blue header. Built for tech, startups, and anyone who wants to stand out in a competitive field.',
+      description:
+          'Clean single-column with bold blue header. Built for tech, startups, and anyone who wants to stand out in a competitive field.',
       bestFor: ['Tech companies', 'Startups', 'Internships', 'Creative roles'],
       features: [
         'Bold full-width blue header',
@@ -49,10 +51,11 @@ class CVTemplateInfo {
       icon: LucideIcons.layout,
       isPopular: true,
     ),
-    CVTemplateInfo(
+    const CVTemplateInfo(
       id: 'academic',
       name: 'Academic',
-      description: 'Structured centred academic format. Prioritises research, publications, and academic achievements over work experience.',
+      description:
+          'Structured centred academic format. Prioritises research, publications, and academic achievements over work experience.',
       bestFor: ['Research roles', 'Postgraduate', 'Scholarships', 'Teaching'],
       features: [
         'Centred formal header',

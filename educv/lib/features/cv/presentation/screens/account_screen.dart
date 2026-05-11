@@ -73,9 +73,9 @@ class AccountScreen extends ConsumerWidget {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Account Options
             Expanded(
               child: Column(
@@ -112,9 +112,9 @@ class AccountScreen extends ConsumerWidget {
                       // TODO: Navigate to help
                     },
                   ),
-                  
+
                   const Spacer(),
-                  
+
                   // Sign Out Button
                   Container(
                     width: double.infinity,
@@ -196,15 +196,17 @@ class AccountScreen extends ConsumerWidget {
 
   String _getInitials(String fullName) {
     if (fullName.isEmpty) return 'U';
-    
+
     final names = fullName.trim().split(' ');
     if (names.length == 1) {
       return names[0][0].toUpperCase();
     }
-    
-    final firstInitial = names.first.isNotEmpty ? names.first[0].toUpperCase() : '';
-    final lastInitial = names.last.isNotEmpty ? names.last[0].toUpperCase() : '';
-    
+
+    final firstInitial =
+        names.first.isNotEmpty ? names.first[0].toUpperCase() : '';
+    final lastInitial =
+        names.last.isNotEmpty ? names.last[0].toUpperCase() : '';
+
     return '$firstInitial$lastInitial';
   }
 

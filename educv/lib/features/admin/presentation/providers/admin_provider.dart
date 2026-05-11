@@ -11,7 +11,8 @@ final adminRepositoryProvider = Provider<AdminRepository>((ref) {
 });
 
 // Platform stats provider
-final platformStatsProvider = AsyncNotifierProvider<StatsNotifier, PlatformStatsModel?>(() {
+final platformStatsProvider =
+    AsyncNotifierProvider<StatsNotifier, PlatformStatsModel?>(() {
   return StatsNotifier();
 });
 
@@ -23,7 +24,7 @@ class StatsNotifier extends AsyncNotifier<PlatformStatsModel?> {
 
   Future<void> fetch() async {
     state = const AsyncLoading();
-    
+
     try {
       final repository = ref.read(adminRepositoryProvider);
       final stats = await repository.getStats();
@@ -39,7 +40,8 @@ class StatsNotifier extends AsyncNotifier<PlatformStatsModel?> {
 }
 
 // Template stats provider
-final templateStatsProvider = AsyncNotifierProvider<TemplateStatsNotifier, List<TemplateStatsModel>>(() {
+final templateStatsProvider =
+    AsyncNotifierProvider<TemplateStatsNotifier, List<TemplateStatsModel>>(() {
   return TemplateStatsNotifier();
 });
 
@@ -51,7 +53,7 @@ class TemplateStatsNotifier extends AsyncNotifier<List<TemplateStatsModel>> {
 
   Future<void> fetch() async {
     state = const AsyncLoading();
-    
+
     try {
       final repository = ref.read(adminRepositoryProvider);
       final stats = await repository.getTemplateStats();
@@ -63,11 +65,13 @@ class TemplateStatsNotifier extends AsyncNotifier<List<TemplateStatsModel>> {
 }
 
 // Admin students provider
-final adminStudentsProvider = AsyncNotifierProvider<StudentsNotifier, PaginatedResponse<AdminStudentModel>?>(() {
+final adminStudentsProvider = AsyncNotifierProvider<StudentsNotifier,
+    PaginatedResponse<AdminStudentModel>?>(() {
   return StudentsNotifier();
 });
 
-class StudentsNotifier extends AsyncNotifier<PaginatedResponse<AdminStudentModel>?> {
+class StudentsNotifier
+    extends AsyncNotifier<PaginatedResponse<AdminStudentModel>?> {
   String? _currentSearch;
   String? _currentStatus;
   String? _currentOrdering;
@@ -85,9 +89,9 @@ class StudentsNotifier extends AsyncNotifier<PaginatedResponse<AdminStudentModel
     _currentSearch = search;
     _currentStatus = status;
     _currentOrdering = ordering;
-    
+
     state = const AsyncLoading();
-    
+
     try {
       final repository = ref.read(adminRepositoryProvider);
       final response = await repository.getStudents(
@@ -140,11 +144,13 @@ class StudentsNotifier extends AsyncNotifier<PaginatedResponse<AdminStudentModel
 }
 
 // Student detail provider
-final studentDetailProvider = AsyncNotifierProvider.family<StudentDetailNotifier, AdminStudentDetailModel?, String>(() {
+final studentDetailProvider = AsyncNotifierProvider.family<
+    StudentDetailNotifier, AdminStudentDetailModel?, String>(() {
   return StudentDetailNotifier();
 });
 
-class StudentDetailNotifier extends FamilyAsyncNotifier<AdminStudentDetailModel?, String> {
+class StudentDetailNotifier
+    extends FamilyAsyncNotifier<AdminStudentDetailModel?, String> {
   @override
   Future<AdminStudentDetailModel?> build(String arg) async {
     return null;
@@ -152,7 +158,7 @@ class StudentDetailNotifier extends FamilyAsyncNotifier<AdminStudentDetailModel?
 
   Future<void> fetch(String id) async {
     state = const AsyncLoading();
-    
+
     try {
       final repository = ref.read(adminRepositoryProvider);
       final student = await repository.getStudentDetail(id);
@@ -183,7 +189,9 @@ class StudentDetailNotifier extends FamilyAsyncNotifier<AdminStudentDetailModel?
 }
 
 // Admin CVs provider
-final adminCVsProvider = AsyncNotifierProvider<AdminCVsNotifier, PaginatedResponse<AdminCVModel>?>(() {
+final adminCVsProvider =
+    AsyncNotifierProvider<AdminCVsNotifier, PaginatedResponse<AdminCVModel>?>(
+        () {
   return AdminCVsNotifier();
 });
 
@@ -202,9 +210,9 @@ class AdminCVsNotifier extends AsyncNotifier<PaginatedResponse<AdminCVModel>?> {
   }) async {
     _currentTemplate = template;
     _currentOrdering = ordering;
-    
+
     state = const AsyncLoading();
-    
+
     try {
       final repository = ref.read(adminRepositoryProvider);
       final response = await repository.getGeneratedCVs(
@@ -247,7 +255,8 @@ class AdminCVsNotifier extends AsyncNotifier<PaginatedResponse<AdminCVModel>?> {
 }
 
 // CV section fill rates provider
-final cvSectionFillRatesProvider = AsyncNotifierProvider<CVSectionFillRatesNotifier, Map<String, int>>(() {
+final cvSectionFillRatesProvider =
+    AsyncNotifierProvider<CVSectionFillRatesNotifier, Map<String, int>>(() {
   return CVSectionFillRatesNotifier();
 });
 
@@ -259,7 +268,7 @@ class CVSectionFillRatesNotifier extends AsyncNotifier<Map<String, int>> {
 
   Future<void> fetch() async {
     state = const AsyncLoading();
-    
+
     try {
       final repository = ref.read(adminRepositoryProvider);
       final fillRates = await repository.getCVSectionFillRates();
@@ -271,11 +280,14 @@ class CVSectionFillRatesNotifier extends AsyncNotifier<Map<String, int>> {
 }
 
 // Audit logs provider
-final auditLogsProvider = AsyncNotifierProvider<AuditLogsNotifier, PaginatedResponse<AuditLogModel>?>(() {
+final auditLogsProvider =
+    AsyncNotifierProvider<AuditLogsNotifier, PaginatedResponse<AuditLogModel>?>(
+        () {
   return AuditLogsNotifier();
 });
 
-class AuditLogsNotifier extends AsyncNotifier<PaginatedResponse<AuditLogModel>?> {
+class AuditLogsNotifier
+    extends AsyncNotifier<PaginatedResponse<AuditLogModel>?> {
   String? _currentAction;
   String? _currentFromDate;
   String? _currentToDate;
@@ -296,9 +308,9 @@ class AuditLogsNotifier extends AsyncNotifier<PaginatedResponse<AuditLogModel>?>
     _currentFromDate = fromDate;
     _currentToDate = toDate;
     _securityOnly = securityOnly;
-    
+
     state = const AsyncLoading();
-    
+
     try {
       final repository = ref.read(adminRepositoryProvider);
       final response = await repository.getAuditLogs(

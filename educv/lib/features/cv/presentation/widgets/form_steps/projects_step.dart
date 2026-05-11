@@ -87,7 +87,7 @@ class _ProjectsStepState extends ConsumerState<ProjectsStep> {
     String? dateText;
     if (project.startDate != null) {
       final startDate = DateFormat('MMM yyyy').format(project.startDate!);
-      final endDate = project.endDate != null 
+      final endDate = project.endDate != null
           ? DateFormat('MMM yyyy').format(project.endDate!)
           : 'Ongoing';
       dateText = '$startDate – $endDate';
@@ -97,7 +97,7 @@ class _ProjectsStepState extends ConsumerState<ProjectsStep> {
       margin: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: CVSectionTile(
         title: project.title,
-        subtitle: project.description.length > 100 
+        subtitle: project.description.length > 100
             ? '${project.description.substring(0, 100)}...'
             : project.description,
         trailing: dateText,
@@ -130,7 +130,8 @@ class _ProjectsStepState extends ConsumerState<ProjectsStep> {
             onPressed: () => Navigator.of(context).pop(),
             child: Text(
               'Keep',
-              style: AppTypography.body.copyWith(color: AppColors.textSecondary),
+              style:
+                  AppTypography.body.copyWith(color: AppColors.textSecondary),
             ),
           ),
           TextButton(
@@ -156,7 +157,8 @@ class _ProjectBottomSheet extends ConsumerStatefulWidget {
   const _ProjectBottomSheet({this.project});
 
   @override
-  ConsumerState<_ProjectBottomSheet> createState() => _ProjectBottomSheetState();
+  ConsumerState<_ProjectBottomSheet> createState() =>
+      _ProjectBottomSheetState();
 }
 
 class _ProjectBottomSheetState extends ConsumerState<_ProjectBottomSheet> {
@@ -210,22 +212,25 @@ class _ProjectBottomSheetState extends ConsumerState<_ProjectBottomSheet> {
               label: 'Project Title',
               hint: 'e.g. Student Portal App',
               controller: _titleController,
-              validator: (value) => value?.isEmpty == true ? 'Project title is required' : null,
+              validator: (value) =>
+                  value?.isEmpty == true ? 'Project title is required' : null,
             ),
-            
+
             const SizedBox(height: AppSpacing.md),
-            
+
             AppInput(
               label: 'Description',
-              hint: 'What did you build? What problem did it solve? What did you learn?',
+              hint:
+                  'What did you build? What problem did it solve? What did you learn?',
               controller: _descriptionController,
               maxLines: 5,
               maxLength: 600,
-              validator: (value) => value?.isEmpty == true ? 'Description is required' : null,
+              validator: (value) =>
+                  value?.isEmpty == true ? 'Description is required' : null,
             ),
-            
+
             const SizedBox(height: AppSpacing.md),
-            
+
             AppInput(
               label: 'Project Link (Optional)',
               hint: 'github.com/you/project or yourapp.com',
@@ -237,17 +242,17 @@ class _ProjectBottomSheetState extends ConsumerState<_ProjectBottomSheet> {
               ),
               validator: _validateUrl,
             ),
-            
+
             const SizedBox(height: AppSpacing.md),
-            
+
             MonthYearPicker(
               label: 'Start Date (Optional)',
               selectedDate: _startDate,
               onChanged: (date) => setState(() => _startDate = date),
             ),
-            
+
             const SizedBox(height: AppSpacing.md),
-            
+
             // Ongoing Project Toggle
             Row(
               children: [
@@ -267,11 +272,11 @@ class _ProjectBottomSheetState extends ConsumerState<_ProjectBottomSheet> {
                       }
                     });
                   },
-                  activeColor: AppColors.primary,
+                  activeThumbColor: AppColors.primary,
                 ),
               ],
             ),
-            
+
             if (!_isOngoing) ...[
               const SizedBox(height: AppSpacing.md),
               MonthYearPicker(
@@ -288,13 +293,14 @@ class _ProjectBottomSheetState extends ConsumerState<_ProjectBottomSheet> {
 
   String? _validateUrl(String? value) {
     if (value == null || value.isEmpty) return null;
-    
+
     String url = value;
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
       url = 'https://$url';
     }
-    
-    final urlPattern = r'^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$';
+
+    const urlPattern =
+        r'^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$';
     if (!RegExp(urlPattern).hasMatch(url)) {
       return 'Please enter a valid URL';
     }
@@ -308,7 +314,9 @@ class _ProjectBottomSheetState extends ConsumerState<_ProjectBottomSheet> {
 
     try {
       String link = _linkController.text.trim();
-      if (link.isNotEmpty && !link.startsWith('http://') && !link.startsWith('https://')) {
+      if (link.isNotEmpty &&
+          !link.startsWith('http://') &&
+          !link.startsWith('https://')) {
         link = 'https://$link';
       }
 
@@ -317,7 +325,8 @@ class _ProjectBottomSheetState extends ConsumerState<_ProjectBottomSheet> {
         'description': _descriptionController.text.trim(),
         'link': link,
         'start_date': _startDate?.toIso8601String().split('T')[0],
-        'end_date': _isOngoing ? null : _endDate?.toIso8601String().split('T')[0],
+        'end_date':
+            _isOngoing ? null : _endDate?.toIso8601String().split('T')[0],
       };
 
       if (widget.project == null) {
@@ -325,7 +334,9 @@ class _ProjectBottomSheetState extends ConsumerState<_ProjectBottomSheet> {
         if (!mounted) return;
         SnackbarHelper.showSuccess(context, 'Project added successfully');
       } else {
-        await ref.read(projectsProvider.notifier).updateItem(widget.project!.id, data);
+        await ref
+            .read(projectsProvider.notifier)
+            .updateItem(widget.project!.id, data);
         if (!mounted) return;
         SnackbarHelper.showSuccess(context, 'Project updated successfully');
       }

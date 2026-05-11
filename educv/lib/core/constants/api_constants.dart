@@ -15,7 +15,10 @@ class ApiConstants {
   static const String profile = '/auth/profile/';
   static const String updateProfile = '/auth/profile/update/';
   static const String changePassword = '/auth/change-password/';
+  static const String passwordReset = '/auth/password-reset/';
+  static const String passwordResetConfirm = '/auth/password-reset/confirm/';
   static const String requestDeletion = '/auth/request-deletion/';
+  static const String logoutAll = '/auth/logout-all/';
 
   // CV
   static const String cvProfile = '/cv/profile/';

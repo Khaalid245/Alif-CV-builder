@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:open_filex/open_filex.dart';
@@ -32,7 +31,7 @@ class FileSaver {
   static void _downloadWeb(Uint8List bytes, String fileName) {
     final blob = web.Blob([bytes.toJS].toJS);
     final url = web.URL.createObjectURL(blob);
-    final anchor = web.HTMLAnchorElement()
+    web.HTMLAnchorElement()
       ..href = url
       ..download = fileName
       ..click();
@@ -43,7 +42,7 @@ class FileSaver {
     if (!kIsWeb) {
       final result = await OpenFilex.open(filePath);
       if (result.type != ResultType.done) {
-        throw AppException('Could not open file');
+        throw const AppException('Could not open file');
       }
     }
   }

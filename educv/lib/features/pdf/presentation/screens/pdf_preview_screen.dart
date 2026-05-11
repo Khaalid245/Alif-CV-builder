@@ -49,13 +49,13 @@ class _PDFPreviewScreenState extends ConsumerState<PDFPreviewScreen> {
   @override
   Widget build(BuildContext context) {
     final pdfBytes = ref.watch(pdfPreviewProvider);
-    
+
     // Get template name from history or generate state
     final historyState = ref.watch(pdfHistoryProvider);
     final generateState = ref.watch(generateCVsProvider);
-    
+
     String templateName = 'CV';
-    
+
     historyState.whenData((history) {
       final cv = history.firstWhere(
         (cv) => cv.id == widget.generatedCvId,
@@ -63,7 +63,7 @@ class _PDFPreviewScreenState extends ConsumerState<PDFPreviewScreen> {
       );
       templateName = cv.templateDisplay;
     });
-    
+
     generateState.whenData((response) {
       if (response != null) {
         final cv = response.cvs.firstWhere(
@@ -112,11 +112,11 @@ class _PDFPreviewScreenState extends ConsumerState<PDFPreviewScreen> {
     if (errorMessage != null) {
       return _buildErrorState(templateName);
     }
-    
+
     if (pdfBytes == null) {
       return _buildLoadingState();
     }
-    
+
     return _buildPDFView(pdfBytes);
   }
 
@@ -129,7 +129,8 @@ class _PDFPreviewScreenState extends ConsumerState<PDFPreviewScreen> {
           const SizedBox(height: AppSpacing.sm),
           Text(
             'Loading preview...',
-            style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+            style:
+                AppTypography.caption.copyWith(color: AppColors.textSecondary),
           ),
         ],
       ),
@@ -183,7 +184,7 @@ class _PDFPreviewScreenState extends ConsumerState<PDFPreviewScreen> {
             },
           ),
         ),
-        
+
         // Bottom bar
         Container(
           width: double.infinity,
@@ -198,7 +199,8 @@ class _PDFPreviewScreenState extends ConsumerState<PDFPreviewScreen> {
             children: [
               Text(
                 'Page ${currentPage + 1} of $totalPages',
-                style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+                style: AppTypography.caption
+                    .copyWith(color: AppColors.textSecondary),
               ),
               const Spacer(),
               AppButton(
@@ -221,12 +223,12 @@ class _PDFPreviewScreenState extends ConsumerState<PDFPreviewScreen> {
     try {
       final repository = ref.read(pdfRepositoryProvider);
       final pdfBytes = await repository.downloadPDF(widget.generatedCvId);
-      
+
       // Get template name for file naming
       String templateName = 'CV';
       final historyState = ref.read(pdfHistoryProvider);
       final generateState = ref.read(generateCVsProvider);
-      
+
       historyState.whenData((history) {
         final cv = history.firstWhere(
           (cv) => cv.id == widget.generatedCvId,
@@ -234,7 +236,7 @@ class _PDFPreviewScreenState extends ConsumerState<PDFPreviewScreen> {
         );
         templateName = cv.templateDisplay;
       });
-      
+
       generateState.whenData((response) {
         if (response != null) {
           final cv = response.cvs.firstWhere(
@@ -244,14 +246,14 @@ class _PDFPreviewScreenState extends ConsumerState<PDFPreviewScreen> {
           templateName = cv.templateDisplay;
         }
       });
-      
+
       final filePath = await FileSaver.savePDF(
         bytes: pdfBytes,
         templateName: templateName,
       );
-      
+
       await FileSaver.openFile(filePath);
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

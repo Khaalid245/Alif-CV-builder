@@ -69,9 +69,8 @@ class _SkillsStepState extends ConsumerState<SkillsStep> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ...groupedSkills.entries.map((entry) => 
-                  _buildSkillCategory(entry.key, entry.value)
-                ),
+                ...groupedSkills.entries.map(
+                    (entry) => _buildSkillCategory(entry.key, entry.value)),
               ],
             ),
           ),
@@ -89,7 +88,7 @@ class _SkillsStepState extends ConsumerState<SkillsStep> {
 
   Widget _buildSkillCategory(String category, List<SkillModel> skills) {
     final categoryName = _getCategoryDisplayName(category);
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -142,7 +141,7 @@ class _SkillsStepState extends ConsumerState<SkillsStep> {
           const SizedBox(width: AppSpacing.xs),
           GestureDetector(
             onTap: () => _showSkillSheet(skill: skill),
-            child: Icon(
+            child: const Icon(
               LucideIcons.edit,
               size: 12,
               color: AppColors.primary,
@@ -151,7 +150,7 @@ class _SkillsStepState extends ConsumerState<SkillsStep> {
           const SizedBox(width: 4),
           GestureDetector(
             onTap: () => _showDeleteConfirmation(skill),
-            child: Icon(
+            child: const Icon(
               LucideIcons.x,
               size: 12,
               color: AppColors.error,
@@ -215,7 +214,8 @@ class _SkillsStepState extends ConsumerState<SkillsStep> {
             onPressed: () => Navigator.of(context).pop(),
             child: Text(
               'Keep',
-              style: AppTypography.body.copyWith(color: AppColors.textSecondary),
+              style:
+                  AppTypography.body.copyWith(color: AppColors.textSecondary),
             ),
           ),
           TextButton(
@@ -254,7 +254,12 @@ class _SkillBottomSheetState extends ConsumerState<_SkillBottomSheet> {
   bool _isLoading = false;
 
   final List<String> _categories = ['technical', 'soft', 'language', 'other'];
-  final List<String> _levels = ['beginner', 'intermediate', 'advanced', 'expert'];
+  final List<String> _levels = [
+    'beginner',
+    'intermediate',
+    'advanced',
+    'expert'
+  ];
 
   @override
   void initState() {
@@ -292,11 +297,12 @@ class _SkillBottomSheetState extends ConsumerState<_SkillBottomSheet> {
               label: 'Skill Name',
               hint: 'e.g. Python, Leadership, Figma',
               controller: _nameController,
-              validator: (value) => value?.isEmpty == true ? 'Skill name is required' : null,
+              validator: (value) =>
+                  value?.isEmpty == true ? 'Skill name is required' : null,
             ),
-            
+
             const SizedBox(height: AppSpacing.md),
-            
+
             // Category Dropdown
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -307,7 +313,7 @@ class _SkillBottomSheetState extends ConsumerState<_SkillBottomSheet> {
                 ),
                 const SizedBox(height: AppSpacing.xs),
                 DropdownButtonFormField<String>(
-                  value: _selectedCategory,
+                  initialValue: _selectedCategory,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
@@ -334,9 +340,9 @@ class _SkillBottomSheetState extends ConsumerState<_SkillBottomSheet> {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: AppSpacing.md),
-            
+
             // Level Selector
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -347,7 +353,9 @@ class _SkillBottomSheetState extends ConsumerState<_SkillBottomSheet> {
                 ),
                 const SizedBox(height: AppSpacing.xs),
                 LevelSelector(
-                  options: _levels.map((level) => _getLevelDisplayName(level)).toList(),
+                  options: _levels
+                      .map((level) => _getLevelDisplayName(level))
+                      .toList(),
                   selected: _getLevelDisplayName(_selectedLevel),
                   onChanged: (displayName) {
                     final level = _levels.firstWhere(
@@ -358,10 +366,10 @@ class _SkillBottomSheetState extends ConsumerState<_SkillBottomSheet> {
                 ),
               ],
             ),
-            
+
             if (widget.skill == null) ...[
               const SizedBox(height: AppSpacing.lg),
-              
+
               // Quick Add Section
               Text(
                 'Add another skill quickly:',
@@ -469,7 +477,9 @@ class _SkillBottomSheetState extends ConsumerState<_SkillBottomSheet> {
         if (!mounted) return;
         SnackbarHelper.showSuccess(context, 'Skill added successfully');
       } else {
-        await ref.read(skillsProvider.notifier).updateItem(widget.skill!.id, data);
+        await ref
+            .read(skillsProvider.notifier)
+            .updateItem(widget.skill!.id, data);
         if (!mounted) return;
         SnackbarHelper.showSuccess(context, 'Skill updated successfully');
       }

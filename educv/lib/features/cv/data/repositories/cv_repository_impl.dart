@@ -145,7 +145,8 @@ class CVRepositoryImpl implements CVRepository {
   }
 
   @override
-  Future<EducationModel> updateEducation(String id, Map<String, dynamic> data) async {
+  Future<EducationModel> updateEducation(
+      String id, Map<String, dynamic> data) async {
     try {
       final response = await _apiClient.patch(
         '${ApiConstants.cvEducation}$id/',
@@ -173,7 +174,8 @@ class CVRepositoryImpl implements CVRepository {
   @override
   Future<void> deleteEducation(String id) async {
     try {
-      final response = await _apiClient.delete('${ApiConstants.cvEducation}$id/');
+      final response =
+          await _apiClient.delete('${ApiConstants.cvEducation}$id/');
 
       final apiResponse = ApiResponse.fromJson(
         response.data,
@@ -242,7 +244,8 @@ class CVRepositoryImpl implements CVRepository {
   }
 
   @override
-  Future<ExperienceModel> updateExperience(String id, Map<String, dynamic> data) async {
+  Future<ExperienceModel> updateExperience(
+      String id, Map<String, dynamic> data) async {
     try {
       final response = await _apiClient.patch(
         '${ApiConstants.cvExperience}$id/',
@@ -270,7 +273,8 @@ class CVRepositoryImpl implements CVRepository {
   @override
   Future<void> deleteExperience(String id) async {
     try {
-      final response = await _apiClient.delete('${ApiConstants.cvExperience}$id/');
+      final response =
+          await _apiClient.delete('${ApiConstants.cvExperience}$id/');
 
       final apiResponse = ApiResponse.fromJson(
         response.data,
@@ -436,7 +440,8 @@ class CVRepositoryImpl implements CVRepository {
   }
 
   @override
-  Future<LanguageModel> updateLanguage(String id, Map<String, dynamic> data) async {
+  Future<LanguageModel> updateLanguage(
+      String id, Map<String, dynamic> data) async {
     try {
       final response = await _apiClient.patch(
         '${ApiConstants.cvLanguages}$id/',
@@ -464,7 +469,8 @@ class CVRepositoryImpl implements CVRepository {
   @override
   Future<void> deleteLanguage(String id) async {
     try {
-      final response = await _apiClient.delete('${ApiConstants.cvLanguages}$id/');
+      final response =
+          await _apiClient.delete('${ApiConstants.cvLanguages}$id/');
 
       final apiResponse = ApiResponse.fromJson(
         response.data,
@@ -533,7 +539,8 @@ class CVRepositoryImpl implements CVRepository {
   }
 
   @override
-  Future<ProjectModel> updateProject(String id, Map<String, dynamic> data) async {
+  Future<ProjectModel> updateProject(
+      String id, Map<String, dynamic> data) async {
     try {
       final response = await _apiClient.patch(
         '${ApiConstants.cvProjects}$id/',
@@ -561,7 +568,8 @@ class CVRepositoryImpl implements CVRepository {
   @override
   Future<void> deleteProject(String id) async {
     try {
-      final response = await _apiClient.delete('${ApiConstants.cvProjects}$id/');
+      final response =
+          await _apiClient.delete('${ApiConstants.cvProjects}$id/');
 
       final apiResponse = ApiResponse.fromJson(
         response.data,
@@ -597,7 +605,9 @@ class CVRepositoryImpl implements CVRepository {
       }
 
       final List<dynamic> certificationsList = apiResponse.data ?? [];
-      return certificationsList.map((e) => CertificationModel.fromJson(e)).toList();
+      return certificationsList
+          .map((e) => CertificationModel.fromJson(e))
+          .toList();
     } catch (e) {
       throw ErrorHandler.handleError(e);
     }
@@ -630,7 +640,8 @@ class CVRepositoryImpl implements CVRepository {
   }
 
   @override
-  Future<CertificationModel> updateCertification(String id, Map<String, dynamic> data) async {
+  Future<CertificationModel> updateCertification(
+      String id, Map<String, dynamic> data) async {
     try {
       final response = await _apiClient.patch(
         '${ApiConstants.cvCertifications}$id/',
@@ -644,7 +655,8 @@ class CVRepositoryImpl implements CVRepository {
 
       if (!apiResponse.success) {
         throw AppException(
-          message: apiResponse.error?.message ?? 'Failed to update certification',
+          message:
+              apiResponse.error?.message ?? 'Failed to update certification',
           details: apiResponse.error?.details,
         );
       }
@@ -658,7 +670,8 @@ class CVRepositoryImpl implements CVRepository {
   @override
   Future<void> deleteCertification(String id) async {
     try {
-      final response = await _apiClient.delete('${ApiConstants.cvCertifications}$id/');
+      final response =
+          await _apiClient.delete('${ApiConstants.cvCertifications}$id/');
 
       final apiResponse = ApiResponse.fromJson(
         response.data,
@@ -667,7 +680,8 @@ class CVRepositoryImpl implements CVRepository {
 
       if (!apiResponse.success) {
         throw AppException(
-          message: apiResponse.error?.message ?? 'Failed to delete certification',
+          message:
+              apiResponse.error?.message ?? 'Failed to delete certification',
           details: apiResponse.error?.details,
         );
       }
@@ -688,7 +702,8 @@ class CVRepositoryImpl implements CVRepository {
 
       if (!apiResponse.success) {
         throw AppException(
-          message: apiResponse.error?.message ?? 'Failed to get completion percentage',
+          message: apiResponse.error?.message ??
+              'Failed to get completion percentage',
           details: apiResponse.error?.details,
         );
       }

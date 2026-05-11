@@ -68,8 +68,12 @@ class _PersonalInfoStepState extends ConsumerState<PersonalInfoStep> {
   }
 
   ImageProvider? _getImageProvider(String? photoUrl) {
-    if (_selectedPhoto != null) return FileImage(_selectedPhoto!) as ImageProvider;
-    if (photoUrl != null && photoUrl.isNotEmpty) return NetworkImage(photoUrl) as ImageProvider;
+    if (_selectedPhoto != null) {
+      return FileImage(_selectedPhoto!) as ImageProvider;
+    }
+    if (photoUrl != null && photoUrl.isNotEmpty) {
+      return NetworkImage(photoUrl) as ImageProvider;
+    }
     return null;
   }
 
@@ -95,9 +99,11 @@ class _PersonalInfoStepState extends ConsumerState<PersonalInfoStep> {
             AppInput(
               label: 'Full Name',
               hint: 'Your full name',
-              controller: TextEditingController(text: currentUser?.fullName ?? ''),
+              controller:
+                  TextEditingController(text: currentUser?.fullName ?? ''),
               enabled: false,
-              suffixIcon: const Icon(LucideIcons.lock, color: AppColors.textHint, size: 16),
+              suffixIcon: const Icon(LucideIcons.lock,
+                  color: AppColors.textHint, size: 16),
             ),
             const SizedBox(height: 4),
             Text(
@@ -141,7 +147,8 @@ class _PersonalInfoStepState extends ConsumerState<PersonalInfoStep> {
               hint: 'linkedin.com/in/yourname',
               controller: _linkedinController,
               keyboardType: TextInputType.url,
-              prefixIcon: const Icon(LucideIcons.linkedin, color: AppColors.textHint),
+              prefixIcon:
+                  const Icon(LucideIcons.linkedin, color: AppColors.textHint),
               validator: _validateUrl,
             ),
 
@@ -152,7 +159,8 @@ class _PersonalInfoStepState extends ConsumerState<PersonalInfoStep> {
               hint: 'github.com/yourname',
               controller: _githubController,
               keyboardType: TextInputType.url,
-              prefixIcon: const Icon(LucideIcons.github, color: AppColors.textHint),
+              prefixIcon:
+                  const Icon(LucideIcons.github, color: AppColors.textHint),
               validator: _validateUrl,
             ),
 
@@ -163,7 +171,8 @@ class _PersonalInfoStepState extends ConsumerState<PersonalInfoStep> {
               hint: 'yourwebsite.com',
               controller: _portfolioController,
               keyboardType: TextInputType.url,
-              prefixIcon: const Icon(LucideIcons.link, color: AppColors.textHint),
+              prefixIcon:
+                  const Icon(LucideIcons.link, color: AppColors.textHint),
               validator: _validateUrl,
             ),
 
@@ -174,7 +183,8 @@ class _PersonalInfoStepState extends ConsumerState<PersonalInfoStep> {
 
             AppInput(
               label: 'About You',
-              hint: 'Write 2-3 sentences about your background, skills and career goals...',
+              hint:
+                  'Write 2-3 sentences about your background, skills and career goals...',
               controller: _summaryController,
               maxLines: 5,
               maxLength: 500,
@@ -214,7 +224,8 @@ class _PersonalInfoStepState extends ConsumerState<PersonalInfoStep> {
         const SizedBox(height: AppSpacing.sm),
         if (!kIsWeb)
           TextButton.icon(
-            icon: const Icon(Icons.camera_alt_outlined, size: 16, color: AppColors.primary),
+            icon: const Icon(Icons.camera_alt_outlined,
+                size: 16, color: AppColors.primary),
             label: Text(
               'Change Photo',
               style: AppTypography.body.copyWith(color: AppColors.primary),
@@ -234,7 +245,9 @@ class _PersonalInfoStepState extends ConsumerState<PersonalInfoStep> {
     final fullName = ref.read(currentUserProvider)?.fullName ?? '';
     if (fullName.isNotEmpty) {
       final names = fullName.trim().split(' ');
-      if (names.length >= 2) return '${names[0][0]}${names[1][0]}'.toUpperCase();
+      if (names.length >= 2) {
+        return '${names[0][0]}${names[1][0]}'.toUpperCase();
+      }
       return names[0][0].toUpperCase();
     }
     return 'U';
@@ -264,7 +277,8 @@ class _PersonalInfoStepState extends ConsumerState<PersonalInfoStep> {
   String? _validateUrl(String? value) {
     if (value == null || value.isEmpty) return null;
     final url = value.startsWith('http') ? value : 'https://$value';
-    final pattern = r'^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$';
+    const pattern =
+        r'^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$';
     if (!RegExp(pattern).hasMatch(url)) return 'Please enter a valid URL';
     return null;
   }

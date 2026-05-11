@@ -82,13 +82,15 @@ class _CVFormScreenState extends ConsumerState<CVFormScreen> {
         child: Column(
           children: [
             // Step Indicator
-            _buildStepIndicator(currentStep, cvProfile.value?.completionPercentage ?? 0),
-            
+            _buildStepIndicator(
+                currentStep, cvProfile.value?.completionPercentage ?? 0),
+
             // Step Content
             Expanded(
               child: PageView(
                 controller: _pageController,
-                physics: const NeverScrollableScrollPhysics(), // FIX L2 — prevent swipe bypass
+                physics:
+                    const NeverScrollableScrollPhysics(), // FIX L2 — prevent swipe bypass
                 onPageChanged: (index) {
                   ref.read(cvFormStepProvider.notifier).state = index;
                 },
@@ -103,7 +105,7 @@ class _CVFormScreenState extends ConsumerState<CVFormScreen> {
                 ],
               ),
             ),
-            
+
             // Bottom Navigation
             _buildBottomNavigation(currentStep, isLoading),
           ],
@@ -164,7 +166,7 @@ class _CVFormScreenState extends ConsumerState<CVFormScreen> {
           LinearProgressIndicator(
             value: (currentStep + 1) / 7,
             backgroundColor: AppColors.divider,
-            valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+            valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
             minHeight: 3,
           ),
         ],
@@ -198,9 +200,9 @@ class _CVFormScreenState extends ConsumerState<CVFormScreen> {
             )
           else
             const SizedBox(width: 140),
-          
+
           const Spacer(),
-          
+
           // Next Button
           SizedBox(
             width: 140,
@@ -242,6 +244,8 @@ class _CVFormScreenState extends ConsumerState<CVFormScreen> {
         if (!success) return;
       }
     }
+
+    if (!mounted) return;
 
     if (currentStep < 6) {
       final newStep = currentStep + 1;

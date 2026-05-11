@@ -34,7 +34,7 @@ class AddItemButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            const Icon(
               LucideIcons.plus,
               size: 20,
               color: AppColors.primary,

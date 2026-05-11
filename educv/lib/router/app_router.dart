@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../core/storage/secure_storage.dart';
 import '../features/auth/presentation/providers/auth_provider.dart';
 import '../features/auth/presentation/screens/login_screen.dart';
+import '../features/auth/presentation/screens/forgot_password_screen.dart';
 import '../features/auth/presentation/screens/register_screen.dart';
 import '../features/auth/presentation/screens/splash_screen.dart';
 import '../features/cv/presentation/screens/student_shell.dart';
@@ -12,7 +13,8 @@ import '../features/cv/presentation/screens/onboarding_screen.dart';
 import '../features/cv/presentation/screens/cv_dashboard_screen.dart';
 import '../features/cv/presentation/screens/cv_sections_screen.dart';
 import '../features/cv/presentation/screens/cv_downloads_screen.dart';
-import '../features/cv/presentation/screens/account_screen.dart';
+import '../features/account/presentation/screens/account_screen.dart';
+import '../features/account/presentation/screens/change_password_screen.dart';
 import '../features/cv/presentation/screens/cv_form_screen.dart';
 import '../features/cv/presentation/screens/cv_preview_screen.dart';
 import '../features/pdf/presentation/screens/pdf_result_screen.dart';
@@ -36,12 +38,14 @@ class AppRoutes {
   static const String terms = '/terms';
   static const String faq = '/faq';
   static const String login = '/login';
+  static const String forgotPassword = '/forgot-password';
   static const String register = '/register';
   static const String onboarding = '/onboarding';
   static const String cvDashboard = '/cv/dashboard';
   static const String cvSections = '/cv/sections';
   static const String cvDownloads = '/cv/downloads';
   static const String account = '/account';
+  static const String changePassword = '/account/change-password';
   static const String cvForm = '/cv/form';
   static const String cvPreview = '/cv/preview';
   static const String pdfResult = '/pdf/result';
@@ -113,6 +117,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const LoginScreen(),
       ),
       GoRoute(
+        path: AppRoutes.forgotPassword,
+        builder: (context, state) => const ForgotPasswordScreen(),
+      ),
+      GoRoute(
         path: AppRoutes.register,
         builder: (context, state) => const RegisterScreen(),
       ),
@@ -121,7 +129,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         name: 'onboarding',
         builder: (_, __) => const OnboardingScreen(),
       ),
-      
+
       // STUDENT SHELL with 4 tabs
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
@@ -166,19 +174,24 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           ),
         ],
       ),
-      
+
       // Other CV routes (outside shell)
       GoRoute(
         path: AppRoutes.cvForm,
         builder: (context, state) {
           final stepParam = state.uri.queryParameters['step'];
-          final initialStep = stepParam != null ? int.tryParse(stepParam) ?? 0 : 0;
+          final initialStep =
+              stepParam != null ? int.tryParse(stepParam) ?? 0 : 0;
           return CVFormScreen(initialStep: initialStep);
         },
       ),
       GoRoute(
         path: AppRoutes.cvPreview,
         builder: (context, state) => const CVPreviewScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.changePassword,
+        builder: (context, state) => const ChangePasswordScreen(),
       ),
       GoRoute(
         path: AppRoutes.pdfResult,
@@ -219,7 +232,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         if (currentPath.startsWith('/cv/') ||
             currentPath.startsWith('/pdf/') ||
             currentPath.startsWith('/admin') ||
-            currentPath == '/account' ||
+            currentPath.startsWith('/account') ||
             currentPath == '/onboarding') {
           return AppRoutes.home;
         }
@@ -227,7 +240,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       }
 
       // Authenticated — redirect away from auth screens
-      if (currentPath == AppRoutes.login || currentPath == AppRoutes.register) {
+      if (currentPath == AppRoutes.login ||
+          currentPath == AppRoutes.register ||
+          currentPath == AppRoutes.forgotPassword) {
         final userRole = await secureStorage.getUserRole();
         return userRole == 'admin' ? AppRoutes.admin : AppRoutes.cvDashboard;
       }

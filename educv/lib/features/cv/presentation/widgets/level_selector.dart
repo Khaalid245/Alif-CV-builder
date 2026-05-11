@@ -28,7 +28,7 @@ class LevelSelector extends StatelessWidget {
           final isSelected = option == selected;
           final isFirst = options.first == option;
           final isLast = options.last == option;
-          
+
           return Expanded(
             child: GestureDetector(
               onTap: () => onChanged(option),
@@ -40,15 +40,20 @@ class LevelSelector extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: isSelected ? AppColors.primary : AppColors.surface,
                   borderRadius: BorderRadius.horizontal(
-                    left: isFirst ? const Radius.circular(AppSpacing.radiusMd) : Radius.zero,
-                    right: isLast ? const Radius.circular(AppSpacing.radiusMd) : Radius.zero,
+                    left: isFirst
+                        ? const Radius.circular(AppSpacing.radiusMd)
+                        : Radius.zero,
+                    right: isLast
+                        ? const Radius.circular(AppSpacing.radiusMd)
+                        : Radius.zero,
                   ),
                 ),
                 child: Text(
                   option,
                   textAlign: TextAlign.center,
                   style: AppTypography.caption.copyWith(
-                    color: isSelected ? AppColors.white : AppColors.textSecondary,
+                    color:
+                        isSelected ? AppColors.white : AppColors.textSecondary,
                     fontWeight: FontWeight.w500,
                   ),
                 ),

@@ -33,7 +33,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _confirmPasswordFocusNode = FocusNode();
 
   bool _termsAccepted = false;
-  bool _marketingConsent = false;  // optional
+  bool _marketingConsent = false; // optional
   bool _dataProcessingConsent = false;
 
   @override
@@ -141,7 +141,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 48),
-                  
+
                   // Header
                   Text(
                     'Create account',
@@ -152,9 +152,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     'Join thousands of students building professional CVs',
                     style: AppTypography.body,
                   ),
-                  
+
                   const SizedBox(height: 28),
-                  
+
                   // Full Name Field
                   AppInput(
                     label: 'Full Name',
@@ -167,9 +167,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       _studentIdFocusNode.requestFocus();
                     },
                   ),
-                  
+
                   const SizedBox(height: 16),
-                  
+
                   // Student ID Field
                   AppInput(
                     label: 'Student ID',
@@ -182,9 +182,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       _emailFocusNode.requestFocus();
                     },
                   ),
-                  
+
                   const SizedBox(height: 16),
-                  
+
                   // Email Field
                   AppInput(
                     label: 'University Email',
@@ -198,9 +198,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       _passwordFocusNode.requestFocus();
                     },
                   ),
-                  
+
                   const SizedBox(height: 16),
-                  
+
                   // Password Field
                   AppPasswordInput(
                     label: 'Password',
@@ -213,9 +213,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       _confirmPasswordFocusNode.requestFocus();
                     },
                   ),
-                  
+
                   const SizedBox(height: 16),
-                  
+
                   // Confirm Password Field
                   AppPasswordInput(
                     label: 'Confirm Password',
@@ -226,9 +226,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     validator: _validateConfirmPassword,
                     onEditingComplete: _submitForm,
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Consent Section
                   Container(
                     padding: const EdgeInsets.all(16),
@@ -245,7 +245,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           style: AppTypography.h3,
                         ),
                         const SizedBox(height: 12),
-                        
+
                         // Terms of Service (required)
                         ConsentCheckbox(
                           value: _termsAccepted,
@@ -255,7 +255,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           },
                         ),
                         const SizedBox(height: 8),
-                        
+
                         // Marketing consent (optional)
                         ConsentCheckbox(
                           value: _marketingConsent,
@@ -265,21 +265,23 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           },
                         ),
                         const SizedBox(height: 8),
-                        
+
                         // Data Processing (required)
                         ConsentCheckbox(
                           value: _dataProcessingConsent,
-                          text: 'I consent to data processing for CV generation *',
+                          text:
+                              'I consent to data processing for CV generation *',
                           onChanged: (value) {
-                            setState(() => _dataProcessingConsent = value ?? false);
+                            setState(
+                                () => _dataProcessingConsent = value ?? false);
                           },
                         ),
                       ],
                     ),
                   ),
-                  
+
                   const SizedBox(height: 28),
-                  
+
                   // Create Account Button
                   AppButton(
                     text: 'Create Account',
@@ -287,9 +289,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     isLoading: registerState.isLoading,
                     isFullWidth: true,
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Sign In Link
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -310,7 +312,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       ),
                     ],
                   ),
-                  
+
                   const SizedBox(height: 32),
                 ],
               ),

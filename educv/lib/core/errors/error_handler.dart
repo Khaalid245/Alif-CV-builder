@@ -73,21 +73,27 @@ class ErrorHandler {
     switch (statusCode) {
       case 400:
         return ValidationException(
-          message: message.isNotEmpty ? message : 'Bad request. Please check your input.',
+          message: message.isNotEmpty
+              ? message
+              : 'Bad request. Please check your input.',
           code: 'BAD_REQUEST',
           details: responseData,
         );
 
       case 401:
         return AuthException(
-          message: message.isNotEmpty ? message : 'Authentication failed. Please login again.',
+          message: message.isNotEmpty
+              ? message
+              : 'Authentication failed. Please login again.',
           code: 'UNAUTHORIZED',
           details: responseData,
         );
 
       case 403:
         return AuthException(
-          message: message.isNotEmpty ? message : 'Access denied. You don\'t have permission.',
+          message: message.isNotEmpty
+              ? message
+              : 'Access denied. You don\'t have permission.',
           code: 'FORBIDDEN',
           details: responseData,
         );
@@ -101,21 +107,27 @@ class ErrorHandler {
 
       case 422:
         return ValidationException(
-          message: message.isNotEmpty ? message : 'Validation failed. Please check your input.',
+          message: message.isNotEmpty
+              ? message
+              : 'Validation failed. Please check your input.',
           code: 'VALIDATION_ERROR',
           details: responseData,
         );
 
       case 429:
         return AppException(
-          message: message.isNotEmpty ? message : 'Too many requests. Please try again later.',
+          message: message.isNotEmpty
+              ? message
+              : 'Too many requests. Please try again later.',
           code: 'RATE_LIMITED',
           details: responseData,
         );
 
       case 500:
         return ServerException(
-          message: message.isNotEmpty ? message : 'Server error. Please try again later.',
+          message: message.isNotEmpty
+              ? message
+              : 'Server error. Please try again later.',
           code: 'INTERNAL_SERVER_ERROR',
           details: responseData,
         );
@@ -124,14 +136,18 @@ class ErrorHandler {
       case 503:
       case 504:
         return ServerException(
-          message: message.isNotEmpty ? message : 'Service temporarily unavailable. Please try again later.',
+          message: message.isNotEmpty
+              ? message
+              : 'Service temporarily unavailable. Please try again later.',
           code: 'SERVICE_UNAVAILABLE',
           details: responseData,
         );
 
       default:
         return ServerException(
-          message: message.isNotEmpty ? message : 'An unexpected server error occurred',
+          message: message.isNotEmpty
+              ? message
+              : 'An unexpected server error occurred',
           code: 'SERVER_ERROR_$statusCode',
           details: responseData,
         );

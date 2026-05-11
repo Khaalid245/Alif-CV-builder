@@ -36,7 +36,7 @@ class _StudentsListScreenState extends ConsumerState<StudentsListScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(adminStudentsProvider.notifier).fetch();
     });
-    
+
     _scrollController.addListener(_onScroll);
   }
 
@@ -48,14 +48,15 @@ class _StudentsListScreenState extends ConsumerState<StudentsListScreen> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent * 0.8) {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent * 0.8) {
       _loadMore();
     }
   }
 
   Future<void> _loadMore() async {
     if (_isLoadingMore) return;
-    
+
     final studentsState = ref.read(adminStudentsProvider);
     if (studentsState.value?.hasMore != true) return;
 
@@ -69,9 +70,9 @@ class _StudentsListScreenState extends ConsumerState<StudentsListScreen> {
     Future.delayed(const Duration(milliseconds: 300), () {
       if (_searchController.text == query) {
         ref.read(adminStudentsProvider.notifier).fetch(
-          search: query.isEmpty ? null : query,
-          status: _selectedStatus == 'all' ? null : _selectedStatus,
-        );
+              search: query.isEmpty ? null : query,
+              status: _selectedStatus == 'all' ? null : _selectedStatus,
+            );
       }
     });
   }
@@ -79,21 +80,10 @@ class _StudentsListScreenState extends ConsumerState<StudentsListScreen> {
   void _onStatusChanged(String status) {
     setState(() => _selectedStatus = status);
     ref.read(adminStudentsProvider.notifier).fetch(
-      search: _searchController.text.isEmpty ? null : _searchController.text,
-      status: status == 'all' ? null : status,
-    );
-  }
-
-  void _toggleSearch() {
-    setState(() {
-      _isSearchActive = !_isSearchActive;
-      if (!_isSearchActive) {
-        _searchController.clear();
-        ref.read(adminStudentsProvider.notifier).fetch(
-          status: _selectedStatus == 'all' ? null : _selectedStatus,
+          search:
+              _searchController.text.isEmpty ? null : _searchController.text,
+          status: status == 'all' ? null : status,
         );
-      }
-    });
   }
 
   @override
@@ -116,23 +106,29 @@ class _StudentsListScreenState extends ConsumerState<StudentsListScreen> {
           height: _isSearchActive ? 60 : 0,
           child: _isSearchActive ? _buildSearchBar() : null,
         ),
-        
+
         // Filter row
         Container(
           padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
           child: FilterChipRow(
-            options: const ['All', 'Active', 'Suspended', 'Deactivated', 'Pending Deletion'],
+            options: const [
+              'All',
+              'Active',
+              'Suspended',
+              'Deactivated',
+              'Pending Deletion'
+            ],
             selected: _selectedStatus,
             onChanged: _onStatusChanged,
           ),
         ),
-        
+
         const SizedBox(height: AppSpacing.sm),
-        
+
         // Students list
         Expanded(
           child: studentsState.when(
-            data: (response) => response != null 
+            data: (response) => response != null
                 ? _buildStudentsList(response)
                 : const Center(child: CircularProgressIndicator()),
             loading: () => const Center(child: CircularProgressIndicator()),
@@ -174,7 +170,7 @@ class _StudentsListScreenState extends ConsumerState<StudentsListScreen> {
           if (index == response.results.length) {
             return const PaginationLoader();
           }
-          
+
           final student = response.results[index];
           return Padding(
             padding: const EdgeInsets.only(bottom: AppSpacing.sm),
@@ -190,11 +186,11 @@ class _StudentsListScreenState extends ConsumerState<StudentsListScreen> {
 
   Widget _buildEmptyState() {
     final hasSearch = _searchController.text.isNotEmpty;
-    
+
     return EmptyState(
       icon: hasSearch ? LucideIcons.searchX : LucideIcons.users,
       title: hasSearch ? 'No students found' : 'No students yet',
-      subtitle: hasSearch 
+      subtitle: hasSearch
           ? 'Try a different search term'
           : 'Students will appear here after registering',
     );
@@ -221,12 +217,12 @@ class StudentListTile extends StatelessWidget {
           CircleAvatar(
             radius: 20,
             backgroundColor: AppColors.primary,
-            backgroundImage: student.photoUrl != null 
-                ? NetworkImage(student.photoUrl!) 
+            backgroundImage: student.photoUrl != null
+                ? NetworkImage(student.photoUrl!)
                 : null,
             child: student.photoUrl == null
                 ? Text(
-                    student.fullName.isNotEmpty 
+                    student.fullName.isNotEmpty
                         ? student.fullName[0].toUpperCase()
                         : 'U',
                     style: AppTypography.label.copyWith(
@@ -236,9 +232,9 @@ class StudentListTile extends StatelessWidget {
                   )
                 : null,
           ),
-          
+
           const SizedBox(width: AppSpacing.sm),
-          
+
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -256,31 +252,32 @@ class StudentListTile extends StatelessWidget {
                     StatusBadge(status: student.status),
                   ],
                 ),
-                
                 const SizedBox(height: 4),
-                
                 Text(
                   '${student.studentId} • ${student.email}',
-                  style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+                  style: AppTypography.caption
+                      .copyWith(color: AppColors.textSecondary),
                   overflow: TextOverflow.ellipsis,
                 ),
-                
                 const SizedBox(height: 4),
-                
                 Row(
                   children: [
-                    const Icon(LucideIcons.fileText, size: 12, color: AppColors.textSecondary),
+                    const Icon(LucideIcons.fileText,
+                        size: 12, color: AppColors.textSecondary),
                     const SizedBox(width: 4),
                     Text(
                       '${student.totalCvsGenerated} CVs',
-                      style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+                      style: AppTypography.caption
+                          .copyWith(color: AppColors.textSecondary),
                     ),
                     const SizedBox(width: 16),
-                    const Icon(LucideIcons.clock, size: 12, color: AppColors.textSecondary),
+                    const Icon(LucideIcons.clock,
+                        size: 12, color: AppColors.textSecondary),
                     const SizedBox(width: 4),
                     Text(
                       student.lastActiveText,
-                      style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+                      style: AppTypography.caption
+                          .copyWith(color: AppColors.textSecondary),
                     ),
                   ],
                 ),

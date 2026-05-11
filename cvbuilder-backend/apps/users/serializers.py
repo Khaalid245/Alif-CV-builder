@@ -142,16 +142,23 @@ class ChangePasswordSerializer(serializers.Serializer):
         return attrs
 
 
+class PasswordResetRequestSerializer(serializers.Serializer):
+    """Validates a public password reset request."""
+    email = serializers.EmailField()
+
+    def validate_email(self, value):
+        return value.lower()
+
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    """Validates password reset token confirmation."""
+    uid = serializers.CharField()
+    token = serializers.CharField()
+    new_password = serializers.CharField(write_only=True, min_length=8)
+
+
 class RequestDeletionSerializer(serializers.Serializer):
     """
     Student requests deletion of their own data.
-    Requires password confirmation as a safety gate.
     """
-    password = serializers.CharField(write_only=True)
     reason   = serializers.CharField(max_length=500, required=False, allow_blank=True)
-
-    def validate_password(self, value):
-        user = self.context['request'].user
-        if not user.check_password(value):
-            raise serializers.ValidationError('Password is incorrect.')
-        return value

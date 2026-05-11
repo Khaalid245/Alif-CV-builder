@@ -48,8 +48,8 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 # ─── Middleware ───────────────────────────────────────────────────────────────
 MIDDLEWARE = [
     'django_prometheus.middleware.PrometheusBeforeMiddleware',  # Metrics — must be first
-    'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',          # CORS — must be high up
+    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -124,6 +124,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = config('MEDIA_URL', default='/media/')
 MEDIA_ROOT = BASE_DIR / config('MEDIA_ROOT', default='media')
+FRONTEND_URL = config('FRONTEND_URL', default='http://localhost:3000')
 
 # ─── File Upload Limits ──────────────────────────────────────────────────────
 # Max profile photo size: 5MB — prevents memory exhaustion during base64 encoding

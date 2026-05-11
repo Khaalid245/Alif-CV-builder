@@ -256,7 +256,7 @@ class Announcement(models.Model):
         db_table = 'cv_announcements'
         ordering = ['-created_at']
         indexes = [
-            models.Index(fields=['is_active', '-created_at'], name='idx_announcement_active_created'),
+            models.Index(fields=['is_active', '-created_at'], name='idx_ann_active_created'),
         ]
 
     def __str__(self):

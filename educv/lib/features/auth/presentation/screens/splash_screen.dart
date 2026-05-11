@@ -57,7 +57,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       // Check onboarding completion for students
       final prefs = await SharedPreferences.getInstance();
       final onboardingDone = prefs.getBool('onboarding_done') ?? false;
-      
+
+      if (!mounted) return;
+
       if (onboardingDone) {
         context.go('/cv/dashboard');
       } else {
@@ -94,29 +96,20 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                   ),
                 ),
               ),
-
               const SizedBox(height: 16),
-
               Text('EduCV', style: AppTypography.display),
-
               const SizedBox(height: 8),
-
               Text('by University Name', style: AppTypography.caption),
-
               const SizedBox(height: 64),
-
               const SizedBox(
                 width: 20,
                 height: 20,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  valueColor:
-                      AlwaysStoppedAnimation<Color>(AppColors.primary),
+                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
                 ),
               ),
-
               const SizedBox(height: 8),
-
               Text('Loading...', style: AppTypography.caption),
             ],
           ),

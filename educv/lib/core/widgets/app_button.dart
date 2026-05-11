@@ -38,7 +38,8 @@ class AppButton extends StatelessWidget {
     this.icon,
     this.width,
     this.height,
-  }) : text = label, variant = AppButtonVariant.primary;
+  })  : text = label,
+        variant = AppButtonVariant.primary;
 
   const AppButton.secondary({
     super.key,
@@ -49,7 +50,8 @@ class AppButton extends StatelessWidget {
     this.icon,
     this.width,
     this.height,
-  }) : text = label, variant = AppButtonVariant.secondary;
+  })  : text = label,
+        variant = AppButtonVariant.secondary;
 
   @override
   Widget build(BuildContext context) {

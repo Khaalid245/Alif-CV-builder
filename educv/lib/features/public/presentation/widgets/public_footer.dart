@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'educv_logo.dart';
 
@@ -15,7 +14,7 @@ class PublicFooter extends StatelessWidget {
       child: LayoutBuilder(
         builder: (context, constraints) {
           final isWeb = constraints.maxWidth >= 800;
-          
+
           if (isWeb) {
             return _buildWebFooter(context);
           } else {
@@ -41,11 +40,11 @@ class PublicFooter extends StatelessWidget {
                   const SizedBox(height: 12),
                   ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 220),
-                    child: Text(
+                    child: const Text(
                       'The official CV builder for university students. Build a professional CV in minutes.',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: 12,
-                        color: const Color(0xFF6B7280),
+                        color: Color(0xFF6B7280),
                         height: 1.65,
                       ),
                     ),
@@ -87,11 +86,11 @@ class PublicFooter extends StatelessWidget {
         const SizedBox(height: 20),
         Row(
           children: [
-            Text(
+            const Text(
               '© 2024 EduCV · [University Name]. All rights reserved.',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: 11,
-                color: const Color(0xFF4A4A4A),
+                color: Color(0xFF4A4A4A),
               ),
             ),
             const Spacer(),
@@ -99,22 +98,22 @@ class PublicFooter extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () => context.go('/privacy'),
-                  child: Text(
+                  child: const Text(
                     'Privacy Policy',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: 11,
-                      color: const Color(0xFF4A4A4A),
+                      color: Color(0xFF4A4A4A),
                     ),
                   ),
                 ),
                 const SizedBox(width: 16),
                 GestureDetector(
                   onTap: () => context.go('/terms'),
-                  child: Text(
+                  child: const Text(
                     'Terms of Service',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: 11,
-                      color: const Color(0xFF4A4A4A),
+                      color: Color(0xFF4A4A4A),
                     ),
                   ),
                 ),
@@ -132,11 +131,11 @@ class PublicFooter extends StatelessWidget {
       children: [
         const EduCVLogo(isDark: true),
         const SizedBox(height: 12),
-        Text(
+        const Text(
           'The official CV builder for university students. Build a professional CV in minutes.',
-          style: GoogleFonts.inter(
+          style: TextStyle(
             fontSize: 12,
-            color: const Color(0xFF6B7280),
+            color: Color(0xFF6B7280),
             height: 1.65,
           ),
         ),
@@ -176,11 +175,11 @@ class PublicFooter extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               '© 2024 EduCV · [University Name]. All rights reserved.',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: 11,
-                color: const Color(0xFF4A4A4A),
+                color: Color(0xFF4A4A4A),
               ),
             ),
             const SizedBox(height: 8),
@@ -188,22 +187,22 @@ class PublicFooter extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () => context.go('/privacy'),
-                  child: Text(
+                  child: const Text(
                     'Privacy Policy',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: 11,
-                      color: const Color(0xFF4A4A4A),
+                      color: Color(0xFF4A4A4A),
                     ),
                   ),
                 ),
                 const SizedBox(width: 16),
                 GestureDetector(
                   onTap: () => context.go('/terms'),
-                  child: Text(
+                  child: const Text(
                     'Terms of Service',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: 11,
-                      color: const Color(0xFF4A4A4A),
+                      color: Color(0xFF4A4A4A),
                     ),
                   ),
                 ),
@@ -215,13 +214,14 @@ class PublicFooter extends StatelessWidget {
     );
   }
 
-  Widget _buildFooterColumn(String title, List<String> links, List<String> routes) {
+  Widget _buildFooterColumn(
+      String title, List<String> links, List<String> routes) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title.toUpperCase(),
-          style: GoogleFonts.inter(
+          style: const TextStyle(
             fontSize: 10,
             fontWeight: FontWeight.w700,
             letterSpacing: 0.07,
@@ -238,9 +238,9 @@ class PublicFooter extends StatelessWidget {
               },
               child: Text(
                 links[index],
-                style: GoogleFonts.inter(
+                style: const TextStyle(
                   fontSize: 12,
-                  color: const Color(0xFF6B7280),
+                  color: Color(0xFF6B7280),
                 ),
               ),
             ),

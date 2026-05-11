@@ -20,7 +20,7 @@ final cvFormLoadingProvider = StateProvider<bool>((ref) => false);
 
 // Form save callback — step 0 (PersonalInfoStep) registers its save fn here.
 final cvFormSaveProvider =
-    StateProvider<Future<bool> Function()?> ((ref) => null);
+    StateProvider<Future<bool> Function()?>((ref) => null);
 
 // ── CV Profile ────────────────────────────────────────────────────────────────
 
@@ -42,15 +42,14 @@ class CVProfileNotifier extends AsyncNotifier<CVProfileModel?> {
 
     // Populate all section providers from the single profile response.
     // This eliminates 6 separate API calls when the CV form opens.
-    if (profile != null) {
-      ref.read(educationProvider.notifier).setFromProfile(profile.education);
-      ref.read(experienceProvider.notifier).setFromProfile(profile.experiences);
-      ref.read(skillsProvider.notifier).setFromProfile(profile.skills);
-      ref.read(languagesProvider.notifier).setFromProfile(profile.languages);
-      ref.read(projectsProvider.notifier).setFromProfile(profile.projects);
-      ref.read(certificationsProvider.notifier)
-          .setFromProfile(profile.certifications);
-    }
+    ref.read(educationProvider.notifier).setFromProfile(profile.education);
+    ref.read(experienceProvider.notifier).setFromProfile(profile.experiences);
+    ref.read(skillsProvider.notifier).setFromProfile(profile.skills);
+    ref.read(languagesProvider.notifier).setFromProfile(profile.languages);
+    ref.read(projectsProvider.notifier).setFromProfile(profile.projects);
+    ref
+        .read(certificationsProvider.notifier)
+        .setFromProfile(profile.certifications);
     return profile;
   }
 
@@ -334,8 +333,7 @@ class ProjectsNotifier extends AsyncNotifier<List<ProjectModel>> {
 // ── Certifications ────────────────────────────────────────────────────────────
 
 final certificationsProvider =
-    AsyncNotifierProvider<CertificationsNotifier, List<CertificationModel>>(
-        () {
+    AsyncNotifierProvider<CertificationsNotifier, List<CertificationModel>>(() {
   return CertificationsNotifier();
 });
 

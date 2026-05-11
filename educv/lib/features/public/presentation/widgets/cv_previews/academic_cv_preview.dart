@@ -149,9 +149,9 @@ class AcademicCVPreview extends StatelessWidget {
               borderRadius: BorderRadius.circular(1),
             ),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Research Experience
           Container(
             width: 80,
@@ -162,44 +162,46 @@ class AcademicCVPreview extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 6),
-          
-          ...List.generate(2, (index) => Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: [110, 105][index].toDouble(),
-                  height: 3,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF0A0A0A),
-                    borderRadius: BorderRadius.circular(1),
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Container(
-                  width: [130, 125][index].toDouble(),
-                  height: 2,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFE0E3E8),
-                    borderRadius: BorderRadius.circular(1),
-                  ),
-                ),
-                const SizedBox(height: 1),
-                Container(
-                  width: [95, 90][index].toDouble(),
-                  height: 2,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFE0E3E8),
-                    borderRadius: BorderRadius.circular(1),
-                  ),
-                ),
-              ],
-            ),
-          )),
-          
+
+          ...List.generate(
+              2,
+              (index) => Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: [110, 105][index].toDouble(),
+                          height: 3,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF0A0A0A),
+                            borderRadius: BorderRadius.circular(1),
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Container(
+                          width: [130, 125][index].toDouble(),
+                          height: 2,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFE0E3E8),
+                            borderRadius: BorderRadius.circular(1),
+                          ),
+                        ),
+                        const SizedBox(height: 1),
+                        Container(
+                          width: [95, 90][index].toDouble(),
+                          height: 2,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFE0E3E8),
+                            borderRadius: BorderRadius.circular(1),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )),
+
           const SizedBox(height: 12),
-          
+
           // Publications
           Container(
             width: 60,
@@ -210,36 +212,38 @@ class AcademicCVPreview extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 6),
-          
+
           // Publication entries (italic style)
-          ...List.generate(2, (index) => Padding(
-            padding: const EdgeInsets.only(bottom: 6),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: [150, 145][index].toDouble(),
-                  height: 2,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF4A4A4A),
-                    borderRadius: BorderRadius.circular(1),
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Container(
-                  width: [120, 115][index].toDouble(),
-                  height: 2,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF4A4A4A),
-                    borderRadius: BorderRadius.circular(1),
-                  ),
-                ),
-              ],
-            ),
-          )),
-          
+          ...List.generate(
+              2,
+              (index) => Padding(
+                    padding: const EdgeInsets.only(bottom: 6),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: [150, 145][index].toDouble(),
+                          height: 2,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF4A4A4A),
+                            borderRadius: BorderRadius.circular(1),
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Container(
+                          width: [120, 115][index].toDouble(),
+                          height: 2,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF4A4A4A),
+                            borderRadius: BorderRadius.circular(1),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )),
+
           const SizedBox(height: 12),
-          
+
           // Awards
           Container(
             width: 40,

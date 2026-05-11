@@ -53,7 +53,9 @@ class ConfirmationDialog extends StatelessWidget {
         const SizedBox(width: AppSpacing.sm),
         AppButton(
           text: confirmText,
-          variant: isDestructive ? AppButtonVariant.danger : AppButtonVariant.primary,
+          variant: isDestructive
+              ? AppButtonVariant.danger
+              : AppButtonVariant.primary,
           onPressed: () {
             onConfirm();
           },
@@ -99,7 +101,8 @@ class DeleteConfirmationDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return ConfirmationDialog(
       title: 'Delete $itemName',
-      message: 'Are you sure you want to delete this $itemName? This action cannot be undone.',
+      message:
+          'Are you sure you want to delete this $itemName? This action cannot be undone.',
       confirmText: 'Delete',
       cancelText: 'Cancel',
       isDestructive: true,

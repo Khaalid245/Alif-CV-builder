@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class SectionPadding extends StatelessWidget {
   final Widget child;
-  
+
   const SectionPadding({super.key, required this.child});
 
   @override

@@ -165,9 +165,9 @@ class ModernCVPreview extends StatelessWidget {
               ),
             ],
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Experience section with timeline
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -194,76 +194,82 @@ class ModernCVPreview extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    
+
                     // Experience entries with timeline dots
-                    ...List.generate(2, (index) => Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Column(
-                            children: [
-                              Container(
-                                width: 6,
-                                height: 6,
-                                decoration: const BoxDecoration(
-                                  color: Color(0xFF1565C0),
-                                  shape: BoxShape.circle,
-                                ),
+                    ...List.generate(
+                        2,
+                        (index) => Padding(
+                              padding: const EdgeInsets.only(bottom: 12),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Column(
+                                    children: [
+                                      Container(
+                                        width: 6,
+                                        height: 6,
+                                        decoration: const BoxDecoration(
+                                          color: Color(0xFF1565C0),
+                                          shape: BoxShape.circle,
+                                        ),
+                                      ),
+                                      if (index == 0)
+                                        Container(
+                                          width: 1,
+                                          height: 20,
+                                          color: const Color(0xFFE0E3E8),
+                                        ),
+                                    ],
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          width: [80, 75][index].toDouble(),
+                                          height: 3,
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFF0A0A0A),
+                                            borderRadius:
+                                                BorderRadius.circular(1),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Container(
+                                          width: [100, 95][index].toDouble(),
+                                          height: 2,
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFFE0E3E8),
+                                            borderRadius:
+                                                BorderRadius.circular(1),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 1),
+                                        Container(
+                                          width: [85, 80][index].toDouble(),
+                                          height: 2,
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFFE0E3E8),
+                                            borderRadius:
+                                                BorderRadius.circular(1),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
-                              if (index == 0)
-                                Container(
-                                  width: 1,
-                                  height: 20,
-                                  color: const Color(0xFFE0E3E8),
-                                ),
-                            ],
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  width: [80, 75][index].toDouble(),
-                                  height: 3,
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFF0A0A0A),
-                                    borderRadius: BorderRadius.circular(1),
-                                  ),
-                                ),
-                                const SizedBox(height: 2),
-                                Container(
-                                  width: [100, 95][index].toDouble(),
-                                  height: 2,
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFE0E3E8),
-                                    borderRadius: BorderRadius.circular(1),
-                                  ),
-                                ),
-                                const SizedBox(height: 1),
-                                Container(
-                                  width: [85, 80][index].toDouble(),
-                                  height: 2,
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFE0E3E8),
-                                    borderRadius: BorderRadius.circular(1),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    )),
+                            )),
                   ],
                 ),
               ),
             ],
           ),
-          
+
           const SizedBox(height: 12),
-          
+
           // Skills section with chips
           Container(
             width: 35,

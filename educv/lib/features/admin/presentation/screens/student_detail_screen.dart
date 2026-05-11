@@ -23,7 +23,8 @@ class StudentDetailScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<StudentDetailScreen> createState() => _StudentDetailScreenState();
+  ConsumerState<StudentDetailScreen> createState() =>
+      _StudentDetailScreenState();
 }
 
 class _StudentDetailScreenState extends ConsumerState<StudentDetailScreen> {
@@ -33,7 +34,9 @@ class _StudentDetailScreenState extends ConsumerState<StudentDetailScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(studentDetailProvider(widget.studentId).notifier).fetch(widget.studentId);
+      ref
+          .read(studentDetailProvider(widget.studentId).notifier)
+          .fetch(widget.studentId);
     });
   }
 
@@ -56,7 +59,9 @@ class _StudentDetailScreenState extends ConsumerState<StudentDetailScreen> {
         ),
         actions: [
           studentState.when(
-            data: (student) => student != null ? _buildPopupMenu(student) : const SizedBox.shrink(),
+            data: (student) => student != null
+                ? _buildPopupMenu(student)
+                : const SizedBox.shrink(),
             loading: () => const SizedBox.shrink(),
             error: (_, __) => const SizedBox.shrink(),
           ),
@@ -70,13 +75,15 @@ class _StudentDetailScreenState extends ConsumerState<StudentDetailScreen> {
         ),
       ),
       body: studentState.when(
-        data: (student) => student != null 
+        data: (student) => student != null
             ? _buildStudentDetail(student)
             : const Center(child: Text('Student not found')),
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => AppErrorState(
           message: e.toString(),
-          onRetry: () => ref.read(studentDetailProvider(widget.studentId).notifier).fetch(widget.studentId),
+          onRetry: () => ref
+              .read(studentDetailProvider(widget.studentId).notifier)
+              .fetch(widget.studentId),
         ),
       ),
     );
@@ -97,7 +104,8 @@ class _StudentDetailScreenState extends ConsumerState<StudentDetailScreen> {
             child: Text('Deactivate Account'),
           ),
         ],
-        if (student.status == 'suspended' || student.status == 'deactivated') ...[
+        if (student.status == 'suspended' ||
+            student.status == 'deactivated') ...[
           const PopupMenuItem(
             value: 'activate',
             child: Text('Activate Account'),
@@ -110,7 +118,9 @@ class _StudentDetailScreenState extends ConsumerState<StudentDetailScreen> {
           child: Text(
             'Process Deletion',
             style: AppTypography.body.copyWith(
-              color: student.deletionRequested ? AppColors.error : AppColors.textSecondary,
+              color: student.deletionRequested
+                  ? AppColors.error
+                  : AppColors.textSecondary,
             ),
           ),
         ),
@@ -126,29 +136,29 @@ class _StudentDetailScreenState extends ConsumerState<StudentDetailScreen> {
         children: [
           // Student Identity
           _buildStudentIdentity(student),
-          
+
           const SizedBox(height: AppSpacing.lg),
-          
+
           // Account Info
           _buildAccountInfo(student),
-          
+
           const SizedBox(height: AppSpacing.lg),
-          
+
           // Consent & Compliance
           _buildConsentCompliance(student),
-          
+
           const SizedBox(height: AppSpacing.lg),
-          
+
           // CV Profile Summary
           _buildCVProfileSummary(student),
-          
+
           const SizedBox(height: AppSpacing.lg),
-          
+
           // Generated CVs History
           _buildGeneratedCVsHistory(student),
-          
+
           const SizedBox(height: AppSpacing.lg),
-          
+
           // Status Management
           if (student.status == 'suspended' || student.deletionRequested)
             _buildStatusManagement(student),
@@ -164,21 +174,20 @@ class _StudentDetailScreenState extends ConsumerState<StudentDetailScreen> {
           CircleAvatar(
             radius: 28,
             backgroundColor: AppColors.primary,
-            backgroundImage: student.photoUrl != null 
-                ? NetworkImage(student.photoUrl!) 
+            backgroundImage: student.photoUrl != null
+                ? NetworkImage(student.photoUrl!)
                 : null,
             child: student.photoUrl == null
                 ? Text(
-                    student.fullName.isNotEmpty 
+                    student.fullName.isNotEmpty
                         ? student.fullName[0].toUpperCase()
                         : 'U',
-                    style: AppTypography.h2.copyWith(color: AppColors.background),
+                    style:
+                        AppTypography.h2.copyWith(color: AppColors.background),
                   )
                 : null,
           ),
-          
           const SizedBox(width: AppSpacing.md),
-          
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -187,32 +196,30 @@ class _StudentDetailScreenState extends ConsumerState<StudentDetailScreen> {
                   children: [
                     Text(
                       student.fullName,
-                      style: AppTypography.h2.copyWith(color: AppColors.textPrimary),
+                      style: AppTypography.h2
+                          .copyWith(color: AppColors.textPrimary),
                     ),
                     const Spacer(),
                     StatusBadge(status: student.status),
                   ],
                 ),
-                
                 const SizedBox(height: 8),
-                
                 Text(
                   student.email,
-                  style: AppTypography.body.copyWith(color: AppColors.textSecondary),
+                  style: AppTypography.body
+                      .copyWith(color: AppColors.textSecondary),
                 ),
-                
                 const SizedBox(height: 4),
-                
                 Text(
                   'ID: ${student.studentId}',
-                  style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+                  style: AppTypography.caption
+                      .copyWith(color: AppColors.textSecondary),
                 ),
-                
                 const SizedBox(height: 4),
-                
                 Text(
                   'Joined ${DateFormatter.toDisplayFormat(student.createdAt)}',
-                  style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+                  style: AppTypography.caption
+                      .copyWith(color: AppColors.textSecondary),
                 ),
               ],
             ),
@@ -227,17 +234,24 @@ class _StudentDetailScreenState extends ConsumerState<StudentDetailScreen> {
       children: [
         Row(
           children: [
-            Expanded(child: _buildInfoTile('Last Login', student.lastActiveText)),
+            Expanded(
+                child: _buildInfoTile('Last Login', student.lastActiveText)),
             const SizedBox(width: AppSpacing.sm),
-            Expanded(child: _buildInfoTile('CVs Generated', student.totalCvsGenerated.toString())),
+            Expanded(
+                child: _buildInfoTile(
+                    'CVs Generated', student.totalCvsGenerated.toString())),
           ],
         ),
         const SizedBox(height: AppSpacing.sm),
         Row(
           children: [
-            Expanded(child: _buildInfoTile('CV Completion', '${student.cvCompletionPercentage.round()}%')),
+            Expanded(
+                child: _buildInfoTile('CV Completion',
+                    '${student.cvCompletionPercentage.round()}%')),
             const SizedBox(width: AppSpacing.sm),
-            Expanded(child: _buildInfoTile('Member Since', DateFormatter.toDisplayFormat(student.createdAt))),
+            Expanded(
+                child: _buildInfoTile('Member Since',
+                    DateFormatter.toDisplayFormat(student.createdAt))),
           ],
         ),
       ],
@@ -251,7 +265,8 @@ class _StudentDetailScreenState extends ConsumerState<StudentDetailScreen> {
         children: [
           Text(
             label,
-            style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+            style:
+                AppTypography.caption.copyWith(color: AppColors.textSecondary),
           ),
           const SizedBox(height: 8),
           Text(
@@ -292,7 +307,6 @@ class _StudentDetailScreenState extends ConsumerState<StudentDetailScreen> {
                 student.dataProcessingConsent,
                 student.dataProcessingConsentAt,
               ),
-              
               if (student.deletionRequested) ...[
                 const SizedBox(height: AppSpacing.md),
                 Container(
@@ -304,7 +318,8 @@ class _StudentDetailScreenState extends ConsumerState<StudentDetailScreen> {
                   ),
                   child: Row(
                     children: [
-                      const Icon(LucideIcons.alertTriangle, color: Color(0xFFE65100), size: 18),
+                      const Icon(LucideIcons.alertTriangle,
+                          color: Color(0xFFE65100), size: 18),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Column(
@@ -320,7 +335,8 @@ class _StudentDetailScreenState extends ConsumerState<StudentDetailScreen> {
                             const SizedBox(height: 4),
                             Text(
                               'Requested on ${student.deletionRequestedAt != null ? DateFormatter.toDisplayFormat(student.deletionRequestedAt!) : 'Unknown'}',
-                              style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+                              style: AppTypography.caption
+                                  .copyWith(color: AppColors.textSecondary),
                             ),
                           ],
                         ),
@@ -354,7 +370,8 @@ class _StudentDetailScreenState extends ConsumerState<StudentDetailScreen> {
         if (accepted && acceptedAt != null)
           Text(
             DateFormatter.toDisplayFormat(acceptedAt),
-            style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+            style:
+                AppTypography.caption.copyWith(color: AppColors.textSecondary),
           ),
       ],
     );
@@ -379,12 +396,14 @@ class _StudentDetailScreenState extends ConsumerState<StudentDetailScreen> {
                     children: [
                       Text(
                         'Completion',
-                        style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+                        style: AppTypography.caption
+                            .copyWith(color: AppColors.textSecondary),
                       ),
                       const SizedBox(height: 8),
                       Text(
                         '${student.cvCompletionPercentage.round()}%',
-                        style: AppTypography.h1.copyWith(color: AppColors.primary),
+                        style:
+                            AppTypography.h1.copyWith(color: AppColors.primary),
                       ),
                     ],
                   ),
@@ -394,28 +413,26 @@ class _StudentDetailScreenState extends ConsumerState<StudentDetailScreen> {
                     children: [
                       Text(
                         'Sections filled',
-                        style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+                        style: AppTypography.caption
+                            .copyWith(color: AppColors.textSecondary),
                       ),
                       const SizedBox(height: 8),
                       Text(
                         '${student.sectionsFilled}/7',
-                        style: AppTypography.h3.copyWith(color: AppColors.textPrimary),
+                        style: AppTypography.h3
+                            .copyWith(color: AppColors.textPrimary),
                       ),
                     ],
                   ),
                 ],
               ),
-              
               const SizedBox(height: AppSpacing.md),
-              
               LinearProgressIndicator(
                 value: student.cvCompletionPercentage / 100,
                 color: AppColors.primary,
                 backgroundColor: AppColors.primaryLight,
               ),
-              
               const SizedBox(height: AppSpacing.md),
-              
               ..._buildSectionStatusRows(student),
             ],
           ),
@@ -426,13 +443,41 @@ class _StudentDetailScreenState extends ConsumerState<StudentDetailScreen> {
 
   List<Widget> _buildSectionStatusRows(AdminStudentDetailModel student) {
     final sections = [
-      ('Education', LucideIcons.graduationCap, student.cvProfile?['education']?.isNotEmpty == true),
-      ('Experience', LucideIcons.briefcase, student.cvProfile?['experience']?.isNotEmpty == true),
-      ('Skills', LucideIcons.zap, student.cvProfile?['skills']?.isNotEmpty == true),
-      ('Languages', LucideIcons.globe, student.cvProfile?['languages']?.isNotEmpty == true),
-      ('Projects', LucideIcons.folder, student.cvProfile?['projects']?.isNotEmpty == true),
-      ('Certifications', LucideIcons.award, student.cvProfile?['certifications']?.isNotEmpty == true),
-      ('Summary', LucideIcons.fileText, student.cvProfile?['summary']?.isNotEmpty == true),
+      (
+        'Education',
+        LucideIcons.graduationCap,
+        student.cvProfile?['education']?.isNotEmpty == true
+      ),
+      (
+        'Experience',
+        LucideIcons.briefcase,
+        student.cvProfile?['experience']?.isNotEmpty == true
+      ),
+      (
+        'Skills',
+        LucideIcons.zap,
+        student.cvProfile?['skills']?.isNotEmpty == true
+      ),
+      (
+        'Languages',
+        LucideIcons.globe,
+        student.cvProfile?['languages']?.isNotEmpty == true
+      ),
+      (
+        'Projects',
+        LucideIcons.folder,
+        student.cvProfile?['projects']?.isNotEmpty == true
+      ),
+      (
+        'Certifications',
+        LucideIcons.award,
+        student.cvProfile?['certifications']?.isNotEmpty == true
+      ),
+      (
+        'Summary',
+        LucideIcons.fileText,
+        student.cvProfile?['summary']?.isNotEmpty == true
+      ),
     ];
 
     return sections.map((section) {
@@ -460,7 +505,8 @@ class _StudentDetailScreenState extends ConsumerState<StudentDetailScreen> {
             else
               Text(
                 'Not filled',
-                style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+                style: AppTypography.caption
+                    .copyWith(color: AppColors.textSecondary),
               ),
           ],
         ),
@@ -477,73 +523,80 @@ class _StudentDetailScreenState extends ConsumerState<StudentDetailScreen> {
           style: AppTypography.h3.copyWith(color: AppColors.textPrimary),
         ),
         const SizedBox(height: AppSpacing.sm),
-        
         if (student.generatedCvs.isEmpty)
           Text(
             'No CVs generated yet',
-            style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+            style:
+                AppTypography.caption.copyWith(color: AppColors.textSecondary),
           )
         else
           ...student.generatedCvs.map((cv) => Padding(
-            padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-            child: SectionCard(
-              child: Row(
-                children: [
-                  // Template thumbnail
-                  Container(
-                    width: 36,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryLight,
-                      border: Border.all(color: AppColors.divider),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(height: 3, width: 24, color: AppColors.primary),
-                        const SizedBox(height: 3),
-                        Container(height: 2, width: 28, color: AppColors.divider),
-                        const SizedBox(height: 2),
-                        Container(height: 2, width: 26, color: AppColors.divider),
-                      ],
-                    ),
+                padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                child: SectionCard(
+                  child: Row(
+                    children: [
+                      // Template thumbnail
+                      Container(
+                        width: 36,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryLight,
+                          border: Border.all(color: AppColors.divider),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                                height: 3, width: 24, color: AppColors.primary),
+                            const SizedBox(height: 3),
+                            Container(
+                                height: 2, width: 28, color: AppColors.divider),
+                            const SizedBox(height: 2),
+                            Container(
+                                height: 2, width: 26, color: AppColors.divider),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(width: AppSpacing.sm),
+
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              cv['template_display'] ?? '',
+                              style: AppTypography.body.copyWith(
+                                color: AppColors.textPrimary,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              cv['generated_at'] != null
+                                  ? DateFormatter.toDisplayFormat(
+                                      DateTime.parse(cv['generated_at']))
+                                  : '',
+                              style: AppTypography.caption
+                                  .copyWith(color: AppColors.textSecondary),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              '${cv['download_count'] ?? 0} downloads',
+                              style: AppTypography.caption
+                                  .copyWith(color: AppColors.primary),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const Icon(LucideIcons.download,
+                          color: AppColors.primary, size: 18),
+                    ],
                   ),
-                  
-                  const SizedBox(width: AppSpacing.sm),
-                  
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          cv['template_display'] ?? '',
-                          style: AppTypography.body.copyWith(
-                            color: AppColors.textPrimary,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          cv['generated_at'] != null 
-                              ? DateFormatter.toDisplayFormat(DateTime.parse(cv['generated_at']))
-                              : '',
-                          style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '${cv['download_count'] ?? 0} downloads',
-                          style: AppTypography.caption.copyWith(color: AppColors.primary),
-                        ),
-                      ],
-                    ),
-                  ),
-                  
-                  const Icon(LucideIcons.download, color: AppColors.primary, size: 18),
-                ],
-              ),
-            ),
-          )).toList(),
+                ),
+              )),
       ],
     );
   }
@@ -555,7 +608,8 @@ class _StudentDetailScreenState extends ConsumerState<StudentDetailScreen> {
           if (student.status == 'suspended') ...[
             Row(
               children: [
-                const Icon(LucideIcons.alertCircle, color: Color(0xFFE65100), size: 20),
+                const Icon(LucideIcons.alertCircle,
+                    color: Color(0xFFE65100), size: 20),
                 const SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: Column(
@@ -571,7 +625,8 @@ class _StudentDetailScreenState extends ConsumerState<StudentDetailScreen> {
                       const SizedBox(height: 4),
                       Text(
                         'This student cannot log in or access the app',
-                        style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+                        style: AppTypography.caption
+                            .copyWith(color: AppColors.textSecondary),
                       ),
                     ],
                   ),
@@ -581,16 +636,19 @@ class _StudentDetailScreenState extends ConsumerState<StudentDetailScreen> {
             const SizedBox(height: AppSpacing.md),
             AppButton(
               text: 'Reactivate Account',
-              onPressed: _isLoading ? null : () => _showStatusChangeDialog('active', student),
+              onPressed: _isLoading
+                  ? null
+                  : () => _showStatusChangeDialog('active', student),
               isLoading: _isLoading,
             ),
           ],
-          
           if (student.deletionRequested) ...[
-            if (student.status == 'suspended') const SizedBox(height: AppSpacing.lg),
+            if (student.status == 'suspended')
+              const SizedBox(height: AppSpacing.lg),
             Row(
               children: [
-                const Icon(LucideIcons.trash2, color: AppColors.error, size: 20),
+                const Icon(LucideIcons.trash2,
+                    color: AppColors.error, size: 20),
                 const SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: Column(
@@ -606,7 +664,8 @@ class _StudentDetailScreenState extends ConsumerState<StudentDetailScreen> {
                       const SizedBox(height: 4),
                       Text(
                         'Student has requested permanent data deletion',
-                        style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+                        style: AppTypography.caption
+                            .copyWith(color: AppColors.textSecondary),
                       ),
                     ],
                   ),
@@ -622,7 +681,8 @@ class _StudentDetailScreenState extends ConsumerState<StudentDetailScreen> {
             const SizedBox(height: 8),
             Text(
               'This action is irreversible. Student data will be permanently anonymized.',
-              style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+              style: AppTypography.caption
+                  .copyWith(color: AppColors.textSecondary),
               textAlign: TextAlign.center,
             ),
           ],
@@ -650,9 +710,10 @@ class _StudentDetailScreenState extends ConsumerState<StudentDetailScreen> {
     }
   }
 
-  void _showStatusChangeDialog(String newStatus, AdminStudentDetailModel student) {
+  void _showStatusChangeDialog(
+      String newStatus, AdminStudentDetailModel student) {
     final reasonController = TextEditingController();
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -680,7 +741,8 @@ class _StudentDetailScreenState extends ConsumerState<StudentDetailScreen> {
             onPressed: () => Navigator.of(context).pop(),
             child: Text(
               'Cancel',
-              style: AppTypography.body.copyWith(color: AppColors.textSecondary),
+              style:
+                  AppTypography.body.copyWith(color: AppColors.textSecondary),
             ),
           ),
           TextButton(
@@ -691,7 +753,9 @@ class _StudentDetailScreenState extends ConsumerState<StudentDetailScreen> {
             child: Text(
               _getStatusActionTitle(newStatus),
               style: AppTypography.body.copyWith(
-                color: newStatus == 'suspended' ? AppColors.error : AppColors.primary,
+                color: newStatus == 'suspended'
+                    ? AppColors.error
+                    : AppColors.primary,
               ),
             ),
           ),
@@ -717,7 +781,8 @@ class _StudentDetailScreenState extends ConsumerState<StudentDetailScreen> {
             onPressed: () => Navigator.of(context).pop(),
             child: Text(
               'Cancel',
-              style: AppTypography.body.copyWith(color: AppColors.textSecondary),
+              style:
+                  AppTypography.body.copyWith(color: AppColors.textSecondary),
             ),
           ),
           TextButton(
@@ -763,11 +828,12 @@ class _StudentDetailScreenState extends ConsumerState<StudentDetailScreen> {
 
   Future<void> _updateStudentStatus(String status, String? reason) async {
     setState(() => _isLoading = true);
-    
+
     try {
-      await ref.read(studentDetailProvider(widget.studentId).notifier)
+      await ref
+          .read(studentDetailProvider(widget.studentId).notifier)
           .updateStatus(widget.studentId, status, reason);
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -792,11 +858,12 @@ class _StudentDetailScreenState extends ConsumerState<StudentDetailScreen> {
 
   Future<void> _processDeletion() async {
     setState(() => _isLoading = true);
-    
+
     try {
-      await ref.read(studentDetailProvider(widget.studentId).notifier)
+      await ref
+          .read(studentDetailProvider(widget.studentId).notifier)
           .processDeletion(widget.studentId);
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(

@@ -118,10 +118,10 @@ class ClassicCVPreview extends StatelessWidget {
           // Contact section
           Row(
             children: [
-              Icon(
+              const Icon(
                 LucideIcons.mail,
                 size: 8,
-                color: const Color(0xFF1A2E4A),
+                color: Color(0xFF1A2E4A),
               ),
               const SizedBox(width: 3),
               Expanded(
@@ -138,10 +138,10 @@ class ClassicCVPreview extends StatelessWidget {
           const SizedBox(height: 4),
           Row(
             children: [
-              Icon(
+              const Icon(
                 LucideIcons.phone,
                 size: 8,
-                color: const Color(0xFF1A2E4A),
+                color: Color(0xFF1A2E4A),
               ),
               const SizedBox(width: 3),
               Expanded(
@@ -156,7 +156,7 @@ class ClassicCVPreview extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
-          
+
           // Skills section
           Container(
             width: 30,
@@ -167,35 +167,37 @@ class ClassicCVPreview extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 4),
-          
+
           // Skill bars
-          ...List.generate(4, (index) => Padding(
-            padding: const EdgeInsets.only(bottom: 3),
-            child: Row(
-              children: [
-                Container(
-                  width: 20,
-                  height: 2,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFE0E3E8),
-                    borderRadius: BorderRadius.circular(1),
-                  ),
-                ),
-                const SizedBox(width: 2),
-                Container(
-                  width: [35, 28, 32, 25][index].toDouble(),
-                  height: 2,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1565C0),
-                    borderRadius: BorderRadius.circular(1),
-                  ),
-                ),
-              ],
-            ),
-          )),
-          
+          ...List.generate(
+              4,
+              (index) => Padding(
+                    padding: const EdgeInsets.only(bottom: 3),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 20,
+                          height: 2,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFE0E3E8),
+                            borderRadius: BorderRadius.circular(1),
+                          ),
+                        ),
+                        const SizedBox(width: 2),
+                        Container(
+                          width: [35, 28, 32, 25][index].toDouble(),
+                          height: 2,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF1565C0),
+                            borderRadius: BorderRadius.circular(1),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )),
+
           const SizedBox(height: 8),
-          
+
           // Languages
           Container(
             width: 35,
@@ -261,9 +263,9 @@ class ClassicCVPreview extends StatelessWidget {
               borderRadius: BorderRadius.circular(1),
             ),
           ),
-          
+
           const SizedBox(height: 12),
-          
+
           // Experience
           Container(
             width: 60,
@@ -274,52 +276,54 @@ class ClassicCVPreview extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 6),
-          
+
           // Experience entries
-          ...List.generate(2, (index) => Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 3,
-                      height: 3,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFF1565C0),
-                        shape: BoxShape.circle,
-                      ),
+          ...List.generate(
+              2,
+              (index) => Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              width: 3,
+                              height: 3,
+                              decoration: const BoxDecoration(
+                                color: Color(0xFF1565C0),
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            Container(
+                              width: [70, 65][index].toDouble(),
+                              height: 3,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF0A0A0A),
+                                borderRadius: BorderRadius.circular(1),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 2),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 7),
+                          child: Container(
+                            width: [90, 85][index].toDouble(),
+                            height: 2,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFE0E3E8),
+                              borderRadius: BorderRadius.circular(1),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 4),
-                    Container(
-                      width: [70, 65][index].toDouble(),
-                      height: 3,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF0A0A0A),
-                        borderRadius: BorderRadius.circular(1),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 2),
-                Padding(
-                  padding: const EdgeInsets.only(left: 7),
-                  child: Container(
-                    width: [90, 85][index].toDouble(),
-                    height: 2,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFE0E3E8),
-                      borderRadius: BorderRadius.circular(1),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )),
-          
+                  )),
+
           const SizedBox(height: 8),
-          
+
           // Education
           Container(
             width: 45,

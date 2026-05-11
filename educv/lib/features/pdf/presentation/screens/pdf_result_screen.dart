@@ -56,7 +56,8 @@ class _PDFResultScreenState extends ConsumerState<PDFResultScreen> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(LucideIcons.clock, color: AppColors.textPrimary, size: 20),
+            icon: const Icon(LucideIcons.clock,
+                color: AppColors.textPrimary, size: 20),
             onPressed: () {
               // Scroll to history section or show history sheet
             },
@@ -105,7 +106,7 @@ class _PDFResultScreenState extends ConsumerState<PDFResultScreen> {
                   size: 36,
                 ),
               ),
-              Positioned(
+              const Positioned(
                 top: 8,
                 right: 8,
                 child: SizedBox(
@@ -119,25 +120,25 @@ class _PDFResultScreenState extends ConsumerState<PDFResultScreen> {
               ),
             ],
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           Text(
             'Generating your CVs',
             style: AppTypography.h2.copyWith(color: AppColors.textPrimary),
             textAlign: TextAlign.center,
           ),
-          
+
           const SizedBox(height: 8),
-          
+
           Text(
             'Creating 3 professional templates,\nthis takes a few seconds...',
             style: AppTypography.body.copyWith(color: AppColors.textSecondary),
             textAlign: TextAlign.center,
           ),
-          
+
           const SizedBox(height: 32),
-          
+
           // Generation steps
           const _GenerationSteps(),
         ],
@@ -167,59 +168,64 @@ class _PDFResultScreenState extends ConsumerState<PDFResultScreen> {
             ),
             child: Row(
               children: [
-                const Icon(LucideIcons.checkCircle, color: AppColors.success, size: 20),
+                const Icon(LucideIcons.checkCircle,
+                    color: AppColors.success, size: 20),
                 const SizedBox(width: AppSpacing.sm),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'Your CVs are ready!',
-                      style: AppTypography.h3.copyWith(color: AppColors.success),
+                      style:
+                          AppTypography.h3.copyWith(color: AppColors.success),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       '3 professional formats generated',
-                      style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+                      style: AppTypography.caption
+                          .copyWith(color: AppColors.textSecondary),
                     ),
                   ],
                 ),
               ],
             ),
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           Text(
             'Choose Your Template',
             style: AppTypography.h2.copyWith(color: AppColors.textPrimary),
           ),
-          
+
           const SizedBox(height: 8),
-          
+
           Text(
             'Tap a template to preview, then download as PDF',
             style: AppTypography.body.copyWith(color: AppColors.textSecondary),
           ),
-          
+
           const SizedBox(height: AppSpacing.lg),
-          
+
           // Template cards
           ...response.cvs.map((cv) => Padding(
-            padding: const EdgeInsets.only(bottom: AppSpacing.md),
-            child: _CVTemplateCard(
-              cv: cv,
-              downloadStatus: downloadStates[cv.template] ?? DownloadStatus.idle,
-              onPreview: () => context.go('/pdf/preview/${cv.id}'),
-              onDownload: () => _downloadPDF(cv),
-            ),
-          )).toList(),
-          
+                padding: const EdgeInsets.only(bottom: AppSpacing.md),
+                child: _CVTemplateCard(
+                  cv: cv,
+                  downloadStatus:
+                      downloadStates[cv.template] ?? DownloadStatus.idle,
+                  onPreview: () => context.go('/pdf/preview/${cv.id}'),
+                  onDownload: () => _downloadPDF(cv),
+                ),
+              )),
+
           const SizedBox(height: AppSpacing.xl),
-          
+
           // Generation info
           Text(
             'Generated on',
-            style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+            style:
+                AppTypography.caption.copyWith(color: AppColors.textSecondary),
           ),
           Text(
             DateFormatter.toDateTimeFormat(response.generatedAt),
@@ -228,38 +234,43 @@ class _PDFResultScreenState extends ConsumerState<PDFResultScreen> {
               fontWeight: FontWeight.w500,
             ),
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Previous CVs section
           Text(
             'Previously Generated',
             style: AppTypography.h3.copyWith(color: AppColors.textPrimary),
           ),
-          
+
           const SizedBox(height: AppSpacing.sm),
-          
+
           historyState.when(
             data: (history) {
               if (history.isEmpty) {
                 return Text(
                   'No previous CVs',
-                  style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+                  style: AppTypography.caption
+                      .copyWith(color: AppColors.textSecondary),
                   textAlign: TextAlign.center,
                 );
               }
-              
+
               return Column(
-                children: history.map((cv) => Padding(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                  child: _HistoryTile(cv: cv, onDownload: () => _downloadPDF(cv)),
-                )).toList(),
+                children: history
+                    .map((cv) => Padding(
+                          padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                          child: _HistoryTile(
+                              cv: cv, onDownload: () => _downloadPDF(cv)),
+                        ))
+                    .toList(),
               );
             },
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (_, __) => TextButton.icon(
               onPressed: () => ref.read(pdfHistoryProvider.notifier).fetch(),
-              icon: const Icon(LucideIcons.refreshCw, size: 14, color: AppColors.primary),
+              icon: const Icon(LucideIcons.refreshCw,
+                  size: 14, color: AppColors.primary),
               label: Text(
                 'Could not load history. Tap to retry.',
                 style: AppTypography.caption.copyWith(color: AppColors.primary),
@@ -281,26 +292,24 @@ class _PDFResultScreenState extends ConsumerState<PDFResultScreen> {
             EmptyState(
               icon: LucideIcons.alertCircle,
               title: 'Generation Failed',
-              subtitle: error.contains('validation') || error.contains('education')
+              subtitle: error.contains('validation') ||
+                      error.contains('education')
                   ? 'Could not generate your CVs. Please check your CV has at least one education entry and try again.'
                   : error,
             ),
-            
             const SizedBox(height: 24),
-            
             AppButton(
               text: 'Try Again',
-              onPressed: () => ref.read(generateCVsProvider.notifier).generate(),
+              onPressed: () =>
+                  ref.read(generateCVsProvider.notifier).generate(),
             ),
-            
             const SizedBox(height: 24),
-            
             Text(
               'Need help?',
-              style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+              style: AppTypography.caption
+                  .copyWith(color: AppColors.textSecondary),
               textAlign: TextAlign.center,
             ),
-            
             TextButton(
               onPressed: () {
                 // Contact support action
@@ -321,22 +330,22 @@ class _PDFResultScreenState extends ConsumerState<PDFResultScreen> {
 
   Future<void> _downloadPDF(GeneratedCVModel cv) async {
     final downloadNotifier = ref.read(downloadStateProvider.notifier);
-    
+
     try {
       downloadNotifier.startDownload(cv.template);
-      
+
       final repository = ref.read(pdfRepositoryProvider);
       final pdfBytes = await repository.downloadPDF(cv.id);
-      
+
       final filePath = await FileSaver.savePDF(
         bytes: pdfBytes,
         templateName: cv.templateDisplay,
       );
-      
+
       await FileSaver.openFile(filePath);
-      
+
       downloadNotifier.downloadSuccess(cv.template);
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -347,7 +356,7 @@ class _PDFResultScreenState extends ConsumerState<PDFResultScreen> {
       }
     } catch (error) {
       downloadNotifier.downloadError(cv.template);
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -423,16 +432,12 @@ class _GenerationStepRow extends StatelessWidget {
             height: 24,
             child: _buildStatusIndicator(),
           ),
-          
           const SizedBox(width: AppSpacing.sm),
-          
           Text(
             label,
             style: AppTypography.body.copyWith(color: AppColors.textPrimary),
           ),
-          
           const Spacer(),
-          
           if (status == GenerationStepStatus.done)
             Text(
               'Ready',
@@ -512,9 +517,9 @@ class _CVTemplateCard extends StatelessWidget {
                   ],
                 ),
               ),
-              
+
               const SizedBox(width: AppSpacing.sm),
-              
+
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -523,22 +528,20 @@ class _CVTemplateCard extends StatelessWidget {
                       children: [
                         Text(
                           cv.templateDisplay,
-                          style: AppTypography.h3.copyWith(color: AppColors.textPrimary),
+                          style: AppTypography.h3
+                              .copyWith(color: AppColors.textPrimary),
                         ),
                         const Spacer(),
                         _TemplateBadge(template: cv.template),
                       ],
                     ),
-                    
                     const SizedBox(height: 4),
-                    
                     Text(
                       cv.templateDescription,
-                      style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+                      style: AppTypography.caption
+                          .copyWith(color: AppColors.textSecondary),
                     ),
-                    
                     const SizedBox(height: AppSpacing.sm),
-                    
                     Row(
                       children: [
                         Expanded(
@@ -551,7 +554,9 @@ class _CVTemplateCard extends StatelessWidget {
                         const SizedBox(width: 8),
                         Expanded(
                           child: AppButton(
-                            text: downloadStatus == DownloadStatus.loading ? 'Saving...' : 'Download',
+                            text: downloadStatus == DownloadStatus.loading
+                                ? 'Saving...'
+                                : 'Download',
                             onPressed: onDownload,
                             isLoading: downloadStatus == DownloadStatus.loading,
                             icon: LucideIcons.download,
@@ -564,16 +569,17 @@ class _CVTemplateCard extends StatelessWidget {
               ),
             ],
           ),
-          
           if (downloadStatus == DownloadStatus.success) ...[
             const SizedBox(height: 8),
             Row(
               children: [
-                const Icon(LucideIcons.checkCircle, color: AppColors.success, size: 14),
+                const Icon(LucideIcons.checkCircle,
+                    color: AppColors.success, size: 14),
                 const SizedBox(width: 4),
                 Text(
                   'Downloaded • ${DateFormatter.getRelativeTime(DateTime.now())}',
-                  style: AppTypography.caption.copyWith(color: AppColors.success),
+                  style:
+                      AppTypography.caption.copyWith(color: AppColors.success),
                 ),
               ],
             ),
@@ -592,7 +598,7 @@ class _TemplateBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (text, color) = _getBadgeData();
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
@@ -656,33 +662,37 @@ class _HistoryTile extends StatelessWidget {
               ],
             ),
           ),
-          
+
           const SizedBox(width: AppSpacing.sm),
-          
+
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   cv.templateDisplay,
-                  style: AppTypography.h3.copyWith(color: AppColors.textPrimary),
+                  style:
+                      AppTypography.h3.copyWith(color: AppColors.textPrimary),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   DateFormatter.toDisplayFormat(cv.generatedAt),
-                  style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+                  style: AppTypography.caption
+                      .copyWith(color: AppColors.textSecondary),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   '${cv.downloadCount} downloads',
-                  style: AppTypography.caption.copyWith(color: AppColors.primary),
+                  style:
+                      AppTypography.caption.copyWith(color: AppColors.primary),
                 ),
               ],
             ),
           ),
-          
+
           IconButton(
-            icon: const Icon(LucideIcons.download, color: AppColors.primary, size: 20),
+            icon: const Icon(LucideIcons.download,
+                color: AppColors.primary, size: 20),
             onPressed: onDownload,
           ),
         ],

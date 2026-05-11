@@ -25,9 +25,7 @@ class FillRateBar extends StatelessWidget {
               style: AppTypography.body.copyWith(color: AppColors.textPrimary),
             ),
           ),
-          
           const SizedBox(width: 8),
-          
           Expanded(
             child: Stack(
               children: [
@@ -52,14 +50,13 @@ class FillRateBar extends StatelessWidget {
               ],
             ),
           ),
-          
           const SizedBox(width: 8),
-          
           SizedBox(
             width: 40,
             child: Text(
               '$percentage%',
-              style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+              style: AppTypography.caption
+                  .copyWith(color: AppColors.textSecondary),
               textAlign: TextAlign.right,
             ),
           ),

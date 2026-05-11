@@ -27,7 +27,7 @@ class MonthYearPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = TextEditingController(
-      text: selectedDate != null 
+      text: selectedDate != null
           ? DateFormat('MMM yyyy').format(selectedDate!)
           : '',
     );
@@ -74,17 +74,17 @@ class MonthYearPicker extends StatelessWidget {
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              
+
               const SizedBox(height: AppSpacing.md),
-              
+
               // Title
               Text(
                 'Select Month & Year',
                 style: AppTypography.h3,
               ),
-              
+
               const SizedBox(height: AppSpacing.md),
-              
+
               // Date picker
               Expanded(
                 child: CupertinoDatePicker(
@@ -97,7 +97,7 @@ class MonthYearPicker extends StatelessWidget {
                   },
                 ),
               ),
-              
+
               // Buttons
               Row(
                 children: [
@@ -122,7 +122,8 @@ class MonthYearPicker extends StatelessWidget {
                         backgroundColor: AppColors.primary,
                         foregroundColor: AppColors.white,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                          borderRadius:
+                              BorderRadius.circular(AppSpacing.radiusMd),
                         ),
                       ),
                       child: Text('Select', style: AppTypography.button),

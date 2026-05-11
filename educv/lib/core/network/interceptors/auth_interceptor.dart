@@ -18,7 +18,8 @@ class AuthInterceptor extends Interceptor {
   AuthInterceptor(this._ref);
 
   @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+  void onRequest(
+      RequestOptions options, RequestInterceptorHandler handler) async {
     final secureStorage = _ref.read(secureStorageProvider);
     final accessToken = await secureStorage.getAccessToken();
     if (accessToken != null) {
@@ -71,10 +72,10 @@ class AuthInterceptor extends Interceptor {
       final responseData = refreshResponse.data as Map<String, dynamic>;
       final data = responseData['data'] as Map<String, dynamic>?;
 
-      final newAccessToken = data?['access'] as String? ??
-          responseData['access'] as String?;
-      final newRefreshToken = data?['refresh'] as String? ??
-          responseData['refresh'] as String?;
+      final newAccessToken =
+          data?['access'] as String? ?? responseData['access'] as String?;
+      final newRefreshToken =
+          data?['refresh'] as String? ?? responseData['refresh'] as String?;
 
       if (newAccessToken == null) {
         throw Exception('No access token in refresh response');

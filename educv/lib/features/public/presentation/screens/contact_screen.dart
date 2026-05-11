@@ -25,7 +25,7 @@ class _ContactScreenState extends State<ContactScreen> {
   final _studentIdController = TextEditingController();
   final _emailController = TextEditingController();
   final _messageController = TextEditingController();
-  
+
   String _selectedSubject = 'Account issue';
   bool _isLoading = false;
   bool _isSuccess = false;
@@ -61,11 +61,12 @@ class _ContactScreenState extends State<ContactScreen> {
   }
 
   Widget _buildHeader() {
-    return SectionPadding(
+    return const SectionPadding(
       child: SectionHeader(
         eyebrow: 'Get in touch',
         title: 'We are here to help',
-        subtitle: 'Questions about your account, CV generation, or the platform? Reach out and we will respond within one business day.',
+        subtitle:
+            'Questions about your account, CV generation, or the platform? Reach out and we will respond within one business day.',
       ),
     );
   }
@@ -203,7 +204,8 @@ class _ContactScreenState extends State<ContactScreen> {
             label: 'Your Name',
             hint: 'Enter your full name',
             controller: _nameController,
-            validator: (value) => value?.isEmpty == true ? 'Name is required' : null,
+            validator: (value) =>
+                value?.isEmpty == true ? 'Name is required' : null,
             prefixIcon: const Icon(LucideIcons.user),
           ),
           const SizedBox(height: 16),
@@ -211,7 +213,8 @@ class _ContactScreenState extends State<ContactScreen> {
             label: 'Student ID',
             hint: 'Enter your student ID',
             controller: _studentIdController,
-            validator: (value) => value?.isEmpty == true ? 'Student ID is required' : null,
+            validator: (value) =>
+                value?.isEmpty == true ? 'Student ID is required' : null,
             prefixIcon: const Icon(LucideIcons.hash),
           ),
           const SizedBox(height: 16),
@@ -222,7 +225,8 @@ class _ContactScreenState extends State<ContactScreen> {
             keyboardType: TextInputType.emailAddress,
             validator: (value) {
               if (value?.isEmpty == true) return 'Email is required';
-              if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value!)) {
+              if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                  .hasMatch(value!)) {
                 return 'Enter a valid email';
               }
               return null;
@@ -237,7 +241,8 @@ class _ContactScreenState extends State<ContactScreen> {
             maxLines: 5,
             maxLength: 500,
             hint: 'Describe your issue or question...',
-            validator: (value) => value?.isEmpty == true ? 'Message is required' : null,
+            validator: (value) =>
+                value?.isEmpty == true ? 'Message is required' : null,
           ),
           const SizedBox(height: 24),
           SizedBox(
@@ -267,7 +272,7 @@ class _ContactScreenState extends State<ContactScreen> {
         ),
         const SizedBox(height: 6),
         DropdownButtonFormField<String>(
-          value: _selectedSubject,
+          initialValue: _selectedSubject,
           decoration: InputDecoration(
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
@@ -281,15 +286,18 @@ class _ContactScreenState extends State<ContactScreen> {
               borderRadius: BorderRadius.circular(8),
               borderSide: const BorderSide(color: AppColors.primary),
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
           ),
-          items: _subjects.map((subject) => DropdownMenuItem(
-            value: subject,
-            child: Text(
-              subject,
-              style: AppTypography.body.copyWith(fontSize: 14),
-            ),
-          )).toList(),
+          items: _subjects
+              .map((subject) => DropdownMenuItem(
+                    value: subject,
+                    child: Text(
+                      subject,
+                      style: AppTypography.body.copyWith(fontSize: 14),
+                    ),
+                  ))
+              .toList(),
           onChanged: (value) {
             if (value != null) {
               setState(() {
@@ -346,12 +354,10 @@ class _ContactScreenState extends State<ContactScreen> {
     await Future.delayed(const Duration(seconds: 1));
 
     // For MVP: launch mailto
-    final uri = Uri.parse(
-      'mailto:support@university.edu'
-      '?subject=${Uri.encodeComponent(_selectedSubject)}'
-      '&body=${Uri.encodeComponent(_messageController.text)}'
-    );
-    
+    final uri = Uri.parse('mailto:support@university.edu'
+        '?subject=${Uri.encodeComponent(_selectedSubject)}'
+        '&body=${Uri.encodeComponent(_messageController.text)}');
+
     try {
       await launchUrl(uri);
     } catch (e) {
@@ -376,47 +382,55 @@ class _ContactScreenState extends State<ContactScreen> {
   }
 
   Widget _buildFAQSection() {
-    return SectionPadding(
+    return const SectionPadding(
       child: Column(
         children: [
-          const SectionHeader(
+          SectionHeader(
             eyebrow: 'Common questions',
             title: 'Quick answers',
           ),
-          const SizedBox(height: 32),
+          SizedBox(height: 32),
           Column(
             children: [
               FAQTile(
                 question: 'Is EduCV free to use?',
-                answer: 'Yes. EduCV is completely free for all enrolled students at our university.',
+                answer:
+                    'Yes. EduCV is completely free for all enrolled students at our university.',
               ),
               FAQTile(
                 question: 'Who can see my CV information?',
-                answer: 'Only you can view and download your CVs. Administrators can verify accounts but cannot access your CV content.',
+                answer:
+                    'Only you can view and download your CVs. Administrators can verify accounts but cannot access your CV content.',
               ),
               FAQTile(
                 question: 'Can I delete my account and data?',
-                answer: 'Yes. Go to Account Settings → Request Data Deletion. Your data is removed within 30 days.',
+                answer:
+                    'Yes. Go to Account Settings → Request Data Deletion. Your data is removed within 30 days.',
               ),
               FAQTile(
                 question: 'Which template should I choose?',
-                answer: 'Modern for tech and startup roles, Classic for corporate and government, Academic for research.',
+                answer:
+                    'Modern for tech and startup roles, Classic for corporate and government, Academic for research.',
               ),
               FAQTile(
                 question: 'Can I update my CV after generating?',
-                answer: 'Yes. Edit your information anytime and regenerate fresh PDFs. History is preserved.',
+                answer:
+                    'Yes. Edit your information anytime and regenerate fresh PDFs. History is preserved.',
               ),
               FAQTile(
                 question: 'Is my password secure?',
-                answer: 'Passwords are encrypted. We never store or display plain-text passwords.',
+                answer:
+                    'Passwords are encrypted. We never store or display plain-text passwords.',
               ),
               FAQTile(
                 question: 'Does it work on mobile?',
-                answer: 'Yes. Use the mobile app or web browser — both sync your data automatically.',
+                answer:
+                    'Yes. Use the mobile app or web browser — both sync your data automatically.',
               ),
               FAQTile(
                 question: 'My PDF looks wrong. What should I do?',
-                answer: 'Try regenerating after completing all sections. Contact support if the issue persists.',
+                answer:
+                    'Try regenerating after completing all sections. Contact support if the issue persists.',
               ),
             ],
           ),
