@@ -13,9 +13,20 @@ class PDFRepositoryImpl implements PDFRepository {
   @override
   Future<GenerateResponse> generateCVs() async {
     final response = await _apiClient.post('/cv/generate/');
+    
+    // Debug print to see actual response shape
+    print('Generate response: ${response.data}');
+    
     final apiResponse = ApiResponse<GenerateResponse>.fromJson(
       response.data,
-      (data) => GenerateResponse.fromJson(data as Map<String, dynamic>),
+      (data) {
+        // Handle different response formats
+        if (data is Map<String, dynamic>) {
+          return GenerateResponse.fromJson(data);
+        } else {
+          throw Exception('Invalid response format for CV generation');
+        }
+      },
     );
 
     if (!apiResponse.success) {
@@ -28,11 +39,43 @@ class PDFRepositoryImpl implements PDFRepository {
   @override
   Future<List<GeneratedCVModel>> getHistory() async {
     final response = await _apiClient.get('/cv/history/');
+    
+    // Debug print to see actual response shape
+    print('History response: ${response.data}');
+    
     final apiResponse = ApiResponse<List<GeneratedCVModel>>.fromJson(
       response.data,
-      (data) => (data as List)
-          .map((e) => GeneratedCVModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      (data) {
+        // Handle paginated response format
+        if (data is Map<String, dynamic>) {
+          // If data contains 'results' key (paginated)
+          if (data.containsKey('results')) {
+            return ((data['results'] as List?) ?? [])
+                .map((e) => GeneratedCVModel.fromJson(e as Map<String, dynamic>))
+                .toList();
+          }
+          // If data contains 'cvs' key
+          else if (data.containsKey('cvs')) {
+            return ((data['cvs'] as List?) ?? [])
+                .map((e) => GeneratedCVModel.fromJson(e as Map<String, dynamic>))
+                .toList();
+          }
+          // If data is a map but no known list key, return empty
+          else {
+            return <GeneratedCVModel>[];
+          }
+        }
+        // If data is directly a list
+        else if (data is List) {
+          return data
+              .map((e) => GeneratedCVModel.fromJson(e as Map<String, dynamic>))
+              .toList();
+        }
+        // Fallback to empty list
+        else {
+          return <GeneratedCVModel>[];
+        }
+      },
     );
 
     if (!apiResponse.success) {

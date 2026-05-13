@@ -2,16 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/storage/secure_storage.dart';
 import '../../../../core/widgets/section_card.dart';
+import '../../../../core/widgets/app_loader.dart';
 import '../../../../core/utils/time_utils.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../../pdf/presentation/providers/pdf_provider.dart';
 import '../../../pdf/data/models/generated_cv_model.dart';
+import '../../data/models/cv_models.dart';
+import '../providers/cv_provider.dart';
 
 class CVDashboardScreen extends ConsumerStatefulWidget {
   const CVDashboardScreen({super.key});
@@ -26,8 +30,13 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
   @override
   void initState() {
     super.initState();
-    // Fetch PDF history when screen loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Force fetch CV profile if not already loaded
+      final state = ref.read(cvProfileProvider);
+      if (state is AsyncData && state.value == null) {
+        ref.invalidate(cvProfileProvider);
+      }
+      // Always fetch PDF history
       ref.read(pdfHistoryProvider.notifier).fetch();
     });
   }
@@ -35,6 +44,7 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(currentUserProvider);
+    final cvProfileAsync = ref.watch(cvProfileProvider);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -74,18 +84,338 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppSpacing.md),
+      body: cvProfileAsync.when(
+        loading: () => const Center(
+          child: AppLoader(message: 'Loading dashboard...'),
+        ),
+        error: (error, stack) => Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(
+                LucideIcons.alertCircle,
+                size: 48,
+                color: AppColors.error,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Failed to load dashboard',
+                style: AppTypography.h3,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                error.toString(),
+                style: AppTypography.body.copyWith(
+                  color: AppColors.textSecondary,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () => ref.invalidate(cvProfileProvider),
+                child: const Text('Retry'),
+              ),
+            ],
+          ),
+        ),
+        data: (profile) {
+          if (profile == null) {
+            return const Center(
+              child: AppLoader(message: 'Loading profile...'),
+            );
+          }
+          return _buildDashboard(profile);
+        },
+      ),
+    );
+  }
+
+  Widget _buildDashboard(CVProfileModel profile) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Admin Announcement Banner
+          if (!_isAnnouncementDismissed) _buildAnnouncementBanner(),
+
+          // Greeting
+          _buildGreeting(profile),
+
+          const SizedBox(height: AppSpacing.lg),
+
+          // Completion Card
+          _buildCompletionCard(profile),
+
+          const SizedBox(height: AppSpacing.lg),
+
+          // Quick Actions
+          _buildQuickActions(),
+
+          const SizedBox(height: AppSpacing.lg),
+
+          // Recent Downloads Section
+          _buildRecentDownloadsSection(),
+
+          const SizedBox(height: AppSpacing.xxl), // Bottom padding
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGreeting(CVProfileModel profile) {
+    final hour = DateTime.now().hour;
+    final greeting = hour < 12
+        ? 'Good morning'
+        : hour < 17
+            ? 'Good afternoon'
+            : 'Good evening';
+    final firstName = profile.fullName.split(' ').first;
+    final dateStr = DateFormat('EEEE, d MMMM yyyy')
+        .format(DateTime.now());
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '$greeting, $firstName',
+          style: AppTypography.h1,
+        ),
+        const SizedBox(height: 4),
+        Text(
+          dateStr,
+          style: AppTypography.body.copyWith(
+            color: AppColors.textSecondary,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCompletionCard(CVProfileModel profile) {
+    final pct = profile.completionPercentage;
+    // determine tip based on missing sections
+    String tip = '';
+    String tipRoute = '/cv/form';
+    int tipStep = 0;
+
+    if (profile.summary.isEmpty) {
+      tip = 'Add a professional summary — CVs with '
+            'summaries get noticed faster.';
+      tipStep = 0;
+    } else if (profile.skills.isEmpty) {
+      tip = 'Add your skills — they appear on all 3 '
+            'CV templates.';
+      tipStep = 3;
+    } else if (profile.languages.isEmpty) {
+      tip = 'Adding languages shows international '
+            'awareness to employers.';
+      tipStep = 4;
+    } else if (pct < 100) {
+      tip = 'You are $pct% done. Complete your profile '
+            'for the best CV results.';
+      tipStep = 0;
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: AppColors.background,
+        border: Border.all(
+          color: AppColors.divider,
+          width: 0.5,
+        ),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              SizedBox(
+                width: 52,
+                height: 52,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CircularProgressIndicator(
+                      value: pct / 100,
+                      backgroundColor: const Color(0xFFEAF2FF),
+                      color: AppColors.primary,
+                      strokeWidth: 4,
+                    ),
+                    Text(
+                      '$pct%',
+                      style: AppTypography.caption.copyWith(
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'CV completion',
+                      style: AppTypography.h3,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '${_filledSectionCount(profile)}'
+                      ' of 7 sections filled',
+                      style: AppTypography.caption,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          if (pct < 100 && tip.isNotEmpty) ...[
+            const SizedBox(height: AppSpacing.md),
+            GestureDetector(
+              onTap: () => context.go('/cv/form',
+                  extra: {'initialStep': tipStep}),
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFF8E1),
+                  border: Border.all(
+                    color: const Color(0xFFFFCC02),
+                    width: 0.5,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(
+                      LucideIcons.lightbulb,
+                      size: 14,
+                      color: Color(0xFFE65100),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        tip,
+                        style: AppTypography.caption.copyWith(
+                          color: const Color(0xFFE65100),
+                          height: 1.5,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      'Add now',
+                      style: AppTypography.caption.copyWith(
+                        color: const Color(0xFFE65100),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  int _filledSectionCount(CVProfileModel profile) {
+    int count = 0;
+    if (profile.phone.isNotEmpty) count++;
+    if (profile.education.isNotEmpty) count++;
+    if (profile.experiences.isNotEmpty) count++;
+    if (profile.skills.isNotEmpty) count++;
+    if (profile.languages.isNotEmpty) count++;
+    if (profile.projects.isNotEmpty) count++;
+    if (profile.certifications.isNotEmpty) count++;
+    return count;
+  }
+
+  Widget _buildQuickActions() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Quick actions',
+          style: AppTypography.h3.copyWith(color: const Color(0xFF0A0A0A)),
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: _buildQuickActionCard(
+                icon: LucideIcons.edit3,
+                title: 'Edit CV',
+                subtitle: 'Update your information',
+                onTap: () => context.go('/cv/form'),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildQuickActionCard(
+                icon: LucideIcons.fileDown,
+                title: 'Generate CVs',
+                subtitle: 'Create 3 PDF templates',
+                onTap: () => context.go('/pdf/result'),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildQuickActionCard({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.background,
+          border: Border.all(
+            color: AppColors.divider,
+            width: 0.5,
+          ),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Admin Announcement Banner
-            if (!_isAnnouncementDismissed) _buildAnnouncementBanner(),
-
-            // Recent Downloads Section
-            _buildRecentDownloadsSection(),
-
-            const SizedBox(height: AppSpacing.xxl), // Bottom padding
+            Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                color: const Color(0xFFEAF2FF),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(
+                icon,
+                size: 16,
+                color: AppColors.primary,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              title,
+              style: AppTypography.body.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              subtitle,
+              style: AppTypography.caption.copyWith(
+                color: AppColors.textSecondary,
+              ),
+            ),
           ],
         ),
       ),
@@ -170,8 +500,6 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: AppSpacing.lg),
-
         // Section Header
         Row(
           children: [

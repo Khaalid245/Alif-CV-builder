@@ -6,13 +6,14 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from apps.core.health_checks import health_check
 
 urlpatterns = [
+    # Health check (no auth required)
+    path('health/', health_check, name='health-check'),
+    
     # Django admin (internal use only)
     path('admin/', admin.site.urls),
-
-    # Prometheus metrics endpoint
-    path('metrics/', include('django_prometheus.urls')),
 
     # API v1 — all application endpoints
     path('api/v1/', include('config.api_router')),

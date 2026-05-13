@@ -3,8 +3,32 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class ApiConstants {
   static String get baseUrl {
     final url = dotenv.env['API_BASE_URL'];
-    assert(url != null && url.isNotEmpty, 'API_BASE_URL is not set in .env');
-    return url ?? 'http://localhost:8000/api/v1';
+    
+    // CRITICAL: Fail fast if API URL is not configured
+    if (url == null || url.isEmpty) {
+      throw Exception(
+        'FATAL: API_BASE_URL environment variable not set. '
+        'Please configure assets/env/.env with a valid backend URL. '
+        'Development: http://localhost:8000/api/v1 '
+        'Production: https://api.yourdomain.com/api/v1'
+      );
+    }
+    
+    // Validate that URL is not localhost in production
+    if (_isProductionEnvironment && url.contains('localhost')) {
+      throw Exception(
+        'FATAL: localhost URL detected in production environment. '
+        'Please update API_BASE_URL to your production server URL.'
+      );
+    }
+    
+    return url;
+  }
+
+  // Helper to check if running in production
+  static bool get _isProductionEnvironment {
+    final env = dotenv.env['ENVIRONMENT'] ?? 'development';
+    return env.toLowerCase() == 'production';
   }
 
   // Auth

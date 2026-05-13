@@ -257,10 +257,16 @@ class LanguagesNotifier extends AsyncNotifier<List<LanguageModel>> {
   }
 
   Future<void> add(Map<String, dynamic> data) async {
-    final repo = ref.read(cvRepositoryProvider);
-    final newItem = await repo.addLanguage(data);
-    state = AsyncData([...state.valueOrNull ?? [], newItem]);
-    ref.invalidate(cvProfileProvider);
+    try {
+      final repo = ref.read(cvRepositoryProvider);
+      final newItem = await repo.addLanguage(data);
+      final currentList = state.valueOrNull ?? [];
+      state = AsyncData([...currentList, newItem]);
+      ref.invalidate(cvProfileProvider);
+    } catch (e) {
+      // Re-throw to let the UI handle the error
+      rethrow;
+    }
   }
 
   Future<void> updateItem(String id, Map<String, dynamic> data) async {

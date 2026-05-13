@@ -4,7 +4,7 @@ All routes are mounted under /api/v1/auth/ via config/api_router.py.
 Token refresh is handled by simplejwt's built-in view.
 """
 from django.urls import path
-from .views import (
+from .views.views import (
     RegisterView,
     LoginView,
     LogoutView,
@@ -19,7 +19,7 @@ from .views import (
 )
 
 urlpatterns = [
-    path('register/',         RegisterView.as_view(),          name='auth-register'),
+    path('register/',         RegisterView.as_view(),           name='auth-register'),
     path('login/',            LoginView.as_view(),              name='auth-login'),
     path('token/refresh/',    TokenRefreshWrappedView.as_view(), name='auth-token-refresh'),
     path('logout/',           LogoutView.as_view(),             name='auth-logout'),

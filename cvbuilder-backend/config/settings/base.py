@@ -32,7 +32,6 @@ THIRD_PARTY_APPS = [
     'corsheaders',
     'auditlog',
     'django_filters',
-    'django_prometheus',
 ]
 
 LOCAL_APPS = [
@@ -47,7 +46,6 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 # ─── Middleware ───────────────────────────────────────────────────────────────
 MIDDLEWARE = [
-    'django_prometheus.middleware.PrometheusBeforeMiddleware',  # Metrics — must be first
     'corsheaders.middleware.CorsMiddleware',          # CORS — must be high up
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -57,7 +55,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'auditlog.middleware.AuditlogMiddleware',          # Audit logging
-    'django_prometheus.middleware.PrometheusAfterMiddleware',   # Metrics — must be last
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -86,7 +83,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # ─── Database (MySQL with utf8mb4) ────────────────────────────────────────────
 DATABASES = {
     'default': {
-        'ENGINE': 'django_prometheus.db.backends.mysql',  # Prometheus-enabled MySQL backend
+        'ENGINE': 'django.db.backends.mysql',  # Standard MySQL backend
         'NAME': config('DB_NAME'),
         'USER': config('DB_USER'),
         'PASSWORD': config('DB_PASSWORD'),
@@ -145,14 +142,14 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ),
     # Custom exception handler — never exposes raw Django errors
-    'EXCEPTION_HANDLER': 'apps.core.exceptions.custom_exception_handler',
+    # 'EXCEPTION_HANDLER': 'apps.core.exceptions.custom_exception_handler',
     # Filtering support
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
         'rest_framework.filters.SearchFilter',
         'rest_framework.filters.OrderingFilter',
     ),
-    # Rate limiting
+    # Rate limiting - disabled for development
     'DEFAULT_THROTTLE_CLASSES': [
         'rest_framework.throttling.AnonRateThrottle',
         'rest_framework.throttling.UserRateThrottle',

@@ -258,8 +258,8 @@ class _CVSectionsScreenState extends ConsumerState<CVSectionsScreen> {
         name: 'Education',
         icon: LucideIcons.graduationCap,
         stepIndex: 1,
-        hasData: cvProfile.educations?.isNotEmpty == true,
-        countLabel: '${cvProfile.educations?.length ?? 0} entries',
+        hasData: cvProfile.education?.isNotEmpty == true,
+        countLabel: '${cvProfile.education?.length ?? 0} entries',
       ),
       CVSectionData(
         name: 'Experience',

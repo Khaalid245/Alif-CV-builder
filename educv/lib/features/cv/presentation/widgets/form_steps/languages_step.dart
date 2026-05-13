@@ -319,21 +319,23 @@ class _LanguageBottomSheetState extends ConsumerState<_LanguageBottomSheet> {
       if (widget.language == null) {
         await ref.read(languagesProvider.notifier).add(data);
         if (!mounted) return;
+        Navigator.of(context).pop();
         SnackbarHelper.showSuccess(context, 'Language added successfully');
       } else {
         await ref
             .read(languagesProvider.notifier)
             .updateItem(widget.language!.id, data);
         if (!mounted) return;
+        Navigator.of(context).pop();
         SnackbarHelper.showSuccess(context, 'Language updated successfully');
       }
-      if (!mounted) return;
-      Navigator.of(context).pop();
     } catch (e) {
       if (!mounted) return;
       SnackbarHelper.showError(context, 'Failed to save language');
     } finally {
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 }

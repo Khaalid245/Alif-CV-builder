@@ -44,6 +44,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active   = models.BooleanField(default=True)
     is_staff    = models.BooleanField(default=False)
 
+    # ── Email Verification (security requirement) ────────────────────────────
+    email_verified       = models.BooleanField(default=False)
+    email_verified_at    = models.DateTimeField(null=True, blank=True)
+
     # ── Consent Tracking (legally required) ───────────────────────────────────
     terms_consent            = models.BooleanField(default=False)
     terms_consent_date       = models.DateTimeField(null=True, blank=True)
