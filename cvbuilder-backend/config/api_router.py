@@ -18,6 +18,7 @@ urlpatterns = [
     # Phase 3 — CV Data + Phase 4 — PDF Generation (both under /cv/)
     path('cv/', include('apps.cv.urls')),
     path('cv/', include('apps.pdf_generator.urls')),
+    path('cv/', include('apps.cv_intelligence.urls')),
 
     # Phase 5 — Admin Dashboard
     path('administration/', include('apps.administration.urls')),

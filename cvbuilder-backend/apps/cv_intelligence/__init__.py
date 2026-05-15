@@ -1,0 +1,1 @@
+default_app_config = 'apps.cv_intelligence.apps.CvIntelligenceConfig'
