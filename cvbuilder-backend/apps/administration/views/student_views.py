@@ -3,12 +3,16 @@ Student management views for admin dashboard.
 Provides full student management capabilities including status changes and deletion processing.
 """
 import logging
+import os
 import uuid
+from pathlib import Path
+from django.conf import settings
 from django.db import transaction
 from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
@@ -43,8 +47,11 @@ class StudentListView(ListAPIView):
     serializer_class = StudentListSerializer
     permission_classes = [IsAdminUser]
     pagination_class = StudentPagination
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = StudentFilter
+    search_fields = ['email', 'full_name', 'student_id']
+    ordering_fields = ['created_at', 'full_name', 'email', 'status']
+    ordering = ['-created_at']
     
     def get_queryset(self):
         """Optimized queryset with prefetch for CV data"""
@@ -333,9 +340,12 @@ def process_deletion_request(request, pk):
                 for generated_cv in cv_profile.generated_cvs.all():
                     if generated_cv.file_path:
                         try:
-                            import os
-                            if os.path.exists(generated_cv.file_path):
-                                os.remove(generated_cv.file_path)
+                            media_root = Path(settings.MEDIA_ROOT).resolve()
+                            full_path = (media_root / generated_cv.file_path).resolve()
+                            if os.path.commonpath([str(media_root), str(full_path)]) != str(media_root):
+                                raise ValueError('Generated CV path escapes MEDIA_ROOT')
+                            if full_path.exists():
+                                full_path.unlink()
                         except Exception as e:
                             app_logger.error(f"Failed to delete CV file {generated_cv.file_path}: {e}")
                     

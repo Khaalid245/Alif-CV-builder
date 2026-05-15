@@ -32,8 +32,8 @@ def platform_overview(request):
     week_ago = today - timedelta(days=7)
     month_ago = today - timedelta(days=30)
     
-    # Student statistics with single query using annotations
-    student_stats = User.objects.aggregate(
+    # Student statistics - only count students, not admins
+    student_stats = User.objects.filter(role='student').aggregate(
         total=Count('id'),
         active=Count('id', filter=Q(status=User.Status.ACTIVE)),
         suspended=Count('id', filter=Q(status=User.Status.SUSPENDED)),
@@ -165,17 +165,18 @@ def growth_statistics(request):
             periods.append(month_date)
             labels.append(month_date.strftime('%b'))
     
-    # Get registration data
+    # Get registration data - only count students
     registrations = []
     cvs_generated = []
     
     for i, period_date in enumerate(periods):
         if period == 'daily':
-            reg_count = User.objects.filter(created_at__date=period_date).count()
+            reg_count = User.objects.filter(role='student', created_at__date=period_date).count()
             cv_count = GeneratedCV.objects.filter(generated_at__date=period_date).count()
         elif period == 'weekly':
             week_end = period_date + timedelta(days=6)
             reg_count = User.objects.filter(
+                role='student',
                 created_at__date__gte=period_date,
                 created_at__date__lte=week_end
             ).count()
@@ -190,6 +191,7 @@ def growth_statistics(request):
                 next_month = timezone.now().date().replace(day=1)
             
             reg_count = User.objects.filter(
+                role='student',
                 created_at__date__gte=period_date,
                 created_at__date__lt=next_month
             ).count()

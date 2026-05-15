@@ -18,7 +18,10 @@ abstract class AuthRepository {
 
   Future<void> logoutAll();
 
-  Future<void> requestDeletion();
+  Future<void> requestDeletion({
+    required String password,
+    String reason,
+  });
 
   Future<void> requestPasswordReset(String email);
 

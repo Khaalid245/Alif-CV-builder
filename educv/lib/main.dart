@@ -9,11 +9,12 @@ import 'app.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Load correct .env based on build mode
+  // Load local development config. Release builds should pass public config
+  // with --dart-define instead of bundling environment files.
   try {
-    await dotenv.load(
-      fileName: kReleaseMode ? 'assets/env/.env.production' : 'assets/env/.env',
-    );
+    if (!kReleaseMode) {
+      await dotenv.load(fileName: 'assets/env/.env');
+    }
   } catch (e) {
     debugPrint('Error loading .env file: $e');
   }

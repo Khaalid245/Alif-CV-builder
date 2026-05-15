@@ -2,32 +2,43 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ApiConstants {
   static String get baseUrl {
-    final url = dotenv.env['API_BASE_URL'];
-    
-    // CRITICAL: Fail fast if API URL is not configured
-    if (url == null || url.isEmpty) {
-      throw Exception(
-        'FATAL: API_BASE_URL environment variable not set. '
-        'Please configure assets/env/.env with a valid backend URL. '
-        'Development: http://localhost:8000/api/v1 '
-        'Production: https://api.yourdomain.com/api/v1'
-      );
+    try {
+      const buildTimeUrl = String.fromEnvironment('API_BASE_URL');
+      final url =
+          buildTimeUrl.isNotEmpty ? buildTimeUrl : dotenv.env['API_BASE_URL'];
+      
+      // CRITICAL: Fail fast if API URL is not configured
+      if (url == null || url.isEmpty) {
+        throw Exception(
+          'FATAL: API_BASE_URL environment variable not set. '
+          'Please configure assets/env/.env with a valid backend URL. '
+          'Development: http://localhost:8000/api/v1 '
+          'Production: https://api.yourdomain.com/api/v1',
+        );
+      }
+      
+      // Validate that URL is not localhost in production
+      if (_isProductionEnvironment && url.contains('localhost')) {
+        throw Exception(
+          'FATAL: localhost URL detected in production environment. '
+          'Please update API_BASE_URL to your production server URL.'
+        );
+      }
+      
+      return url;
+    } catch (e) {
+      // Fallback for development
+      print('ApiConstants.baseUrl error: $e');
+      return 'http://localhost:8000/api/v1';
     }
-    
-    // Validate that URL is not localhost in production
-    if (_isProductionEnvironment && url.contains('localhost')) {
-      throw Exception(
-        'FATAL: localhost URL detected in production environment. '
-        'Please update API_BASE_URL to your production server URL.'
-      );
-    }
-    
-    return url;
   }
 
   // Helper to check if running in production
   static bool get _isProductionEnvironment {
-    final env = dotenv.env['ENVIRONMENT'] ?? 'development';
+    const buildTimeEnv = String.fromEnvironment('ENVIRONMENT');
+    final env = buildTimeEnv.isNotEmpty
+        ? buildTimeEnv
+        : dotenv.env['ENVIRONMENT'] ?? 'development';
     return env.toLowerCase() == 'production';
   }
 
@@ -55,6 +66,8 @@ class ApiConstants {
   static const String cvCompletion = '/cv/completion/';
   static const String cvGenerate = '/cv/generate/';
   static const String cvHistory = '/cv/history/';
+  static String cvDownload(String generatedCvId) =>
+      '/cv/download/$generatedCvId/';
   static const String announcement = '/cv/announcement/';
 
   // Admin — all paths match Django /administration/ mount

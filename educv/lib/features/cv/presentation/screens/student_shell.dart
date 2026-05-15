@@ -30,7 +30,7 @@ class StudentShell extends StatelessWidget {
           currentIndex: navigationShell.currentIndex,
           onTap: (index) => navigationShell.goBranch(index),
           selectedItemColor: AppColors.primary,
-          unselectedItemColor: AppColors.textPrimary.withValues(alpha: 0.4),
+          unselectedItemColor: AppColors.textPrimary.withOpacity(0.4),
           selectedLabelStyle: const TextStyle(
             fontSize: 9,
             fontWeight: FontWeight.w500,

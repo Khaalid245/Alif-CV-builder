@@ -86,13 +86,13 @@ class RegisterSerializer(serializers.Serializer):
             password=validated_data['password'],
             full_name=validated_data['full_name'],
             student_id=validated_data['student_id'],
-            # Consent with timestamps
-            terms_consent=True,
-            terms_consent_date=now,
-            marketing_consent=True,
-            marketing_consent_date=now,
-            data_processing_consent=True,
-            data_processing_consent_date=now,
+            # Use actual user consent choices
+            terms_consent=validated_data['terms_consent'],
+            terms_consent_date=now if validated_data['terms_consent'] else None,
+            marketing_consent=validated_data.get('marketing_consent', False),
+            marketing_consent_date=now if validated_data.get('marketing_consent', False) else None,
+            data_processing_consent=validated_data['data_processing_consent'],
+            data_processing_consent_date=now if validated_data['data_processing_consent'] else None,
         )
         return user
 
@@ -160,5 +160,13 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
 class RequestDeletionSerializer(serializers.Serializer):
     """
     Student requests deletion of their own data.
+    Password confirmation is required for security.
     """
-    reason   = serializers.CharField(max_length=500, required=False, allow_blank=True)
+    reason = serializers.CharField(max_length=500, required=False, allow_blank=True)
+    password = serializers.CharField(write_only=True)
+
+    def validate_password(self, value):
+        user = self.context['request'].user
+        if not user.check_password(value):
+            raise serializers.ValidationError('Password is incorrect.')
+        return value

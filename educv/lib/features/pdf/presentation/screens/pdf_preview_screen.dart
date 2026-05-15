@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/utils/file_saver.dart';
 import '../providers/pdf_provider.dart';
+
 
 class PDFPreviewScreen extends ConsumerStatefulWidget {
   final String generatedCvId;
@@ -157,62 +158,83 @@ class _PDFPreviewScreenState extends ConsumerState<PDFPreviewScreen> {
   }
 
   Widget _buildPDFView(Uint8List pdfBytes) {
-    return Column(
-      children: [
-        Expanded(
-          child: PDFView(
-            pdfData: pdfBytes,
-            enableSwipe: true,
-            swipeHorizontal: false,
-            autoSpacing: false,
-            pageFling: false,
-            onRender: (pages) {
-              setState(() {
-                totalPages = pages ?? 0;
-                isReady = true;
-              });
-            },
-            onPageChanged: (page, total) {
-              setState(() {
-                currentPage = page ?? 0;
-              });
-            },
-            onError: (error) {
-              setState(() {
-                errorMessage = error.toString();
-              });
-            },
-          ),
-        ),
-
-        // Bottom bar
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(AppSpacing.md),
-          decoration: const BoxDecoration(
-            color: AppColors.background,
-            border: Border(
-              top: BorderSide(color: AppColors.divider),
+    if (kIsWeb) {
+      // Web-specific PDF viewer using blob URL
+      return Column(
+        children: [
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                border: Border.all(color: AppColors.divider),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: _WebPDFViewer(pdfBytes: pdfBytes),
+              ),
             ),
           ),
-          child: Row(
-            children: [
-              Text(
-                'Page ${currentPage + 1} of $totalPages',
-                style: AppTypography.caption
-                    .copyWith(color: AppColors.textSecondary),
+          // Bottom bar
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(AppSpacing.md),
+            decoration: const BoxDecoration(
+              color: AppColors.background,
+              border: Border(
+                top: BorderSide(color: AppColors.divider),
               ),
-              const Spacer(),
-              AppButton(
-                text: 'Download PDF',
-                onPressed: _downloadPDF,
-                isLoading: isDownloading,
-              ),
-            ],
+            ),
+            child: Row(
+              children: [
+                Text(
+                  'PDF Preview',
+                  style: AppTypography.caption
+                      .copyWith(color: AppColors.textSecondary),
+                ),
+                const Spacer(),
+                AppButton(
+                  text: 'Download PDF',
+                  onPressed: _downloadPDF,
+                  isLoading: isDownloading,
+                ),
+              ],
+            ),
           ),
+        ],
+      );
+    } else {
+      // Mobile fallback - show download option
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              LucideIcons.fileText,
+              size: 64,
+              color: AppColors.textSecondary,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Text(
+              'PDF Preview',
+              style: AppTypography.h3.copyWith(color: AppColors.textPrimary),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              'Preview is not available on this platform.\nDownload to view your CV.',
+              textAlign: TextAlign.center,
+              style: AppTypography.body.copyWith(color: AppColors.textSecondary),
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            AppButton(
+              text: 'Download PDF',
+              onPressed: _downloadPDF,
+              isLoading: isDownloading,
+            ),
+          ],
         ),
-      ],
-    );
+      );
+    }
   }
 
   Future<void> _downloadPDF() async {
@@ -276,5 +298,51 @@ class _PDFPreviewScreenState extends ConsumerState<PDFPreviewScreen> {
         isDownloading = false;
       });
     }
+  }
+}
+
+class _WebPDFViewer extends StatelessWidget {
+  final Uint8List pdfBytes;
+
+  const _WebPDFViewer({required this.pdfBytes});
+
+  @override
+  Widget build(BuildContext context) {
+    if (kIsWeb) {
+      // For web, show a message and download button instead of trying to embed PDF
+      return Container(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              LucideIcons.fileText,
+              size: 64,
+              color: AppColors.primary,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Text(
+              'PDF Ready for Download',
+              style: AppTypography.h3.copyWith(color: AppColors.textPrimary),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              'Your CV has been generated successfully.\nClick download to save it to your device.',
+              textAlign: TextAlign.center,
+              style: AppTypography.body.copyWith(color: AppColors.textSecondary),
+            ),
+          ],
+        ),
+      );
+    }
+    
+    return Container(
+      child: Center(
+        child: Text(
+          'PDF preview not available',
+          style: AppTypography.body.copyWith(color: AppColors.textSecondary),
+        ),
+      ),
+    );
   }
 }

@@ -1,13 +1,8 @@
-import 'dart:io';
-import 'package:flutter/foundation.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:open_filex/open_filex.dart';
-import '../exceptions/app_exception.dart';
-import '../utils/date_formatter.dart';
+import 'dart:typed_data';
 
-// Conditional import for web
-import 'dart:js_interop' as js;
-import 'package:web/web.dart' as web;
+import '../utils/date_formatter.dart';
+import 'file_saver_platform_io.dart'
+    if (dart.library.html) 'file_saver_platform_web.dart';
 
 class FileSaver {
   static Future<String> savePDF({
@@ -17,33 +12,10 @@ class FileSaver {
     final timestamp = DateFormatter.fileDate(DateTime.now());
     final fileName = 'EduCV_${templateName}_$timestamp.pdf';
 
-    if (kIsWeb) {
-      _downloadWeb(bytes, fileName);
-      return fileName;
-    } else {
-      final dir = await getApplicationDocumentsDirectory();
-      final file = File('${dir.path}/$fileName');
-      await file.writeAsBytes(bytes);
-      return file.path;
-    }
-  }
-
-  static void _downloadWeb(Uint8List bytes, String fileName) {
-    final blob = web.Blob([bytes.toJS].toJS);
-    final url = web.URL.createObjectURL(blob);
-    web.HTMLAnchorElement()
-      ..href = url
-      ..download = fileName
-      ..click();
-    web.URL.revokeObjectURL(url);
+    return savePdfForPlatform(bytes: bytes, fileName: fileName);
   }
 
   static Future<void> openFile(String filePath) async {
-    if (!kIsWeb) {
-      final result = await OpenFilex.open(filePath);
-      if (result.type != ResultType.done) {
-        throw const AppException('Could not open file');
-      }
-    }
+    await openFileForPlatform(filePath);
   }
 }

@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_typography.dart';
-import '../../../../core/utils/auth_utils.dart';
-import '../../../../core/utils/date_formatter.dart';
-import '../../../../core/utils/snackbar_helper.dart';
-import '../../../../core/widgets/confirmation_dialog.dart';
+import '../../../../core/storage/secure_storage.dart';
 import '../../../../core/widgets/section_card.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
-import '../../../cv/presentation/providers/cv_provider.dart';
+import '../widgets/account_settings_tile.dart';
 
 class AccountScreen extends ConsumerWidget {
   const AccountScreen({super.key});
@@ -19,39 +16,78 @@ class AccountScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(currentUserProvider);
-    final profile = ref.watch(cvProfileProvider).valueOrNull;
-    final fullName = profile?.fullName.isNotEmpty == true
-        ? profile!.fullName
-        : user?.fullName ?? 'Student';
-    final email =
-        profile?.email.isNotEmpty == true ? profile!.email : user?.email ?? '';
-    final studentId = profile?.studentId.isNotEmpty == true
-        ? profile!.studentId
-        : user?.studentId ?? '';
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: AppColors.background,
+        backgroundColor: Colors.white,
         elevation: 0,
         title: Text(
           'Account',
-          style: AppTypography.h2.copyWith(color: AppColors.textPrimary),
+          style: AppTypography.h2.copyWith(color: const Color(0xFF0A0A0A)),
+        ),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Container(
+            height: 1,
+            color: AppColors.divider,
+          ),
         ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _ProfileHeader(
-              fullName: fullName,
-              email: email,
-              studentId: studentId,
-              photoUrl: profile?.photoUrl,
+            // Profile Header
+            Center(
+              child: Column(
+                children: [
+                  CircleAvatar(
+                    radius: 32,
+                    backgroundColor: const Color(0xFF1565C0),
+                    child: Text(
+                      _getInitials(user?.fullName ?? ''),
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    user?.fullName ?? 'User',
+                    style: AppTypography.h2.copyWith(color: const Color(0xFF0A0A0A)),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${user?.email ?? ''} · ${user?.studentId ?? ''}',
+                    style: AppTypography.caption.copyWith(
+                      color: const Color(0xFF6B7280),
+                      fontSize: 12,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
             ),
+            
             const SizedBox(height: 24),
-            const _GroupLabel('Security'),
+            
+            // Security Section
+            Text(
+              'SECURITY',
+              style: AppTypography.caption.copyWith(
+                fontSize: 10,
+                color: const Color(0xFF9E9E9E),
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.07,
+              ),
+            ),
+            const SizedBox(height: 8),
+            
             SectionCard(
               padding: EdgeInsets.zero,
               child: Column(
@@ -59,29 +95,54 @@ class AccountScreen extends ConsumerWidget {
                   AccountSettingsTile(
                     icon: LucideIcons.lock,
                     title: 'Change password',
-                    showArrow: true,
                     onTap: () => context.go('/account/change-password'),
                   ),
-                  const _TileDivider(),
-                  const AccountSettingsTile(
+                  const Divider(height: 1, indent: 52),
+                  AccountSettingsTile(
                     icon: LucideIcons.mailCheck,
-                    iconColor: AppColors.success,
+                    iconColor: const Color(0xFF2E7D32),
                     title: 'Email verified',
-                    trailing: _StatusBadge(text: 'Verified'),
+                    trailing: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF0FFF4),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        'Verified',
+                        style: AppTypography.caption.copyWith(
+                          color: const Color(0xFF2E7D32),
+                          fontSize: 10,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
                   ),
-                  const _TileDivider(),
+                  const Divider(height: 1, indent: 52),
                   AccountSettingsTile(
                     icon: LucideIcons.smartphone,
                     title: 'Active sessions',
                     subtitle: '2 devices',
-                    showArrow: true,
-                    onTap: () => _showSessionsSheet(context, ref),
+                    onTap: () => _showSessionsBottomSheet(context, ref),
                   ),
                 ],
               ),
             ),
+            
             const SizedBox(height: 16),
-            const _GroupLabel('Privacy & Legal'),
+            
+            // Privacy & Legal Section
+            Text(
+              'PRIVACY & LEGAL',
+              style: AppTypography.caption.copyWith(
+                fontSize: 10,
+                color: const Color(0xFF9E9E9E),
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.07,
+              ),
+            ),
+            const SizedBox(height: 8),
+            
             SectionCard(
               padding: EdgeInsets.zero,
               child: Column(
@@ -89,424 +150,264 @@ class AccountScreen extends ConsumerWidget {
                   AccountSettingsTile(
                     icon: LucideIcons.shield,
                     title: 'Privacy Policy',
-                    showArrow: true,
                     onTap: () => context.go('/privacy'),
                   ),
-                  const _TileDivider(),
+                  const Divider(height: 1, indent: 52),
                   AccountSettingsTile(
                     icon: LucideIcons.fileText,
                     title: 'Terms of Service',
-                    showArrow: true,
                     onTap: () => context.go('/terms'),
                   ),
-                  const _TileDivider(),
+                  const Divider(height: 1, indent: 52),
                   AccountSettingsTile(
                     icon: LucideIcons.clipboardCheck,
                     title: 'Consent history',
-                    subtitle:
-                        'Terms accepted ${_formatDate(user?.termsConsentDate)}',
-                    showArrow: true,
-                    onTap: () => _showConsentSheet(context, user),
+                    subtitle: 'Terms accepted ${_formatDate(user?.createdAt)}',
+                    onTap: () => _showConsentBottomSheet(context, user),
                   ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-            const _GroupLabel('Account'),
-            SectionCard(
-              padding: EdgeInsets.zero,
-              child: Column(
-                children: [
-                  AccountSettingsTile(
-                    icon: LucideIcons.logOut,
-                    title: 'Sign out',
-                    onTap: () => _confirmSignOut(context, ref),
-                  ),
-                  const _TileDivider(),
+                  const Divider(height: 1, indent: 52),
                   AccountSettingsTile(
                     icon: LucideIcons.trash2,
                     iconColor: AppColors.error,
-                    title: 'Delete my account',
-                    titleColor: AppColors.error,
-                    onTap: () => _confirmDelete(context, ref),
+                    title: 'Request data deletion',
+                    subtitle: 'Requires password confirmation',
+                    onTap: () => _showDeletionDialog(context, ref),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  static String _formatDate(DateTime? date) {
-    if (date == null) return 'not recorded';
-    return DateFormatter.toDisplayFormat(date);
-  }
-
-  static Future<void> _showSessionsSheet(
-      BuildContext context, WidgetRef ref) async {
-    await showModalBottomSheet<void>(
-      context: context,
-      showDragHandle: true,
-      backgroundColor: AppColors.background,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
-      ),
-      builder: (sheetContext) => Padding(
-        padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const _SheetRow(
-              title: 'Current device',
-              subtitle: 'Active now',
-              icon: LucideIcons.smartphone,
-            ),
-            const _SheetRow(
-              title: 'Other device',
-              subtitle: 'Last seen 2 days ago',
-              icon: LucideIcons.monitor,
-            ),
-            const SizedBox(height: 8),
-            TextButton(
-              onPressed: () async {
-                try {
-                  await ref.read(authRepositoryProvider).logoutAll();
-                  if (sheetContext.mounted) Navigator.of(sheetContext).pop();
-                  if (context.mounted) {
-                    SnackbarHelper.showSuccess(
-                      context,
-                      'Signed out all other devices.',
-                    );
-                  }
-                } catch (error) {
-                  if (context.mounted) {
-                    SnackbarHelper.showError(context, error.toString());
-                  }
-                }
-              },
-              child: Text(
-                'Sign out all other devices',
-                style: AppTypography.body.copyWith(color: AppColors.primary),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  static Future<void> _showConsentSheet(BuildContext context, user) async {
-    await showModalBottomSheet<void>(
-      context: context,
-      showDragHandle: true,
-      backgroundColor: AppColors.background,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
-      ),
-      builder: (_) => Padding(
-        padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _ConsentRow(
-              title: 'Terms of Service',
-              timestamp: 'Accepted ${_formatDate(user?.termsConsentDate)}',
-            ),
-            _ConsentRow(
-              title: 'Privacy Policy',
-              timestamp: 'Accepted ${_formatDate(user?.termsConsentDate)}',
-            ),
-            _ConsentRow(
-              title: 'Data Processing',
-              timestamp:
-                  'Accepted ${_formatDate(user?.dataProcessingConsentDate)}',
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  static Future<void> _confirmSignOut(
-      BuildContext context, WidgetRef ref) async {
-    final confirmed = await ConfirmationDialog.show(
-      context,
-      title: 'Sign out?',
-      message: 'You will need to sign in again to access your CVs.',
-      confirmText: 'Sign out',
-      cancelText: 'Cancel',
-    );
-
-    if (confirmed == true && context.mounted) {
-      await logoutUser(ref, context);
-    }
-  }
-
-  static Future<void> _confirmDelete(
-      BuildContext context, WidgetRef ref) async {
-    final confirmed = await ConfirmationDialog.show(
-      context,
-      title: 'Delete account?',
-      message:
-          'All your CV data will be permanently removed within 30 days. This cannot be undone.',
-      confirmText: 'Yes, delete my account',
-      cancelText: 'Keep my account',
-      isDestructive: true,
-    );
-
-    if (confirmed != true) return;
-
-    try {
-      await ref.read(authRepositoryProvider).requestDeletion();
-      if (context.mounted) {
-        SnackbarHelper.showSuccess(
-          context,
-          'Deletion request submitted. Your data will be removed within 30 days.',
-        );
-        await logoutUser(ref, context);
-      }
-    } catch (error) {
-      if (context.mounted) SnackbarHelper.showError(context, error.toString());
-    }
-  }
-}
-
-class _ProfileHeader extends StatelessWidget {
-  final String fullName;
-  final String email;
-  final String studentId;
-  final String? photoUrl;
-
-  const _ProfileHeader({
-    required this.fullName,
-    required this.email,
-    required this.studentId,
-    this.photoUrl,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final hasPhoto = photoUrl != null && photoUrl!.isNotEmpty;
-
-    return Column(
-      children: [
-        CircleAvatar(
-          radius: 32,
-          backgroundColor: AppColors.primary,
-          backgroundImage: hasPhoto ? NetworkImage(photoUrl!) : null,
-          child: hasPhoto
-              ? null
-              : Text(
-                  _initials(fullName),
-                  style: const TextStyle(
-                    color: AppColors.white,
-                    fontSize: 22,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-        ),
-        const SizedBox(height: 12),
-        Text(
-          fullName,
-          textAlign: TextAlign.center,
-          style: AppTypography.h2.copyWith(color: AppColors.textPrimary),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          studentId.isEmpty ? email : '$email · $studentId',
-          textAlign: TextAlign.center,
-          style: AppTypography.caption.copyWith(
-            color: const Color(0xFF6B7280),
-          ),
-        ),
-      ],
-    );
-  }
-
-  String _initials(String value) {
-    final parts = value.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty);
-    if (parts.isEmpty) return 'S';
-    if (parts.length == 1) return parts.first[0].toUpperCase();
-    return '${parts.first[0]}${parts.last[0]}'.toUpperCase();
-  }
-}
-
-class _GroupLabel extends StatelessWidget {
-  final String text;
-
-  const _GroupLabel(this.text);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Text(
-        text.toUpperCase(),
-        style: AppTypography.uppercase.copyWith(
-          color: AppColors.textHint,
-          fontSize: 10,
-          letterSpacing: 0.7,
-        ),
-      ),
-    );
-  }
-}
-
-class AccountSettingsTile extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String? subtitle;
-  final Color iconColor;
-  final Color titleColor;
-  final Widget? trailing;
-  final bool showArrow;
-  final VoidCallback? onTap;
-
-  const AccountSettingsTile({
-    super.key,
-    required this.icon,
-    required this.title,
-    this.subtitle,
-    this.iconColor = const Color(0xFF4A4A4A),
-    this.titleColor = AppColors.textPrimary,
-    this.trailing,
-    this.showArrow = false,
-    this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        child: Row(
-          children: [
+            
+            const SizedBox(height: 32),
+            
+            // Sign Out Button
             Container(
-              width: 32,
-              height: 32,
-              decoration: BoxDecoration(
-                color: AppColors.surface,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Icon(icon, size: 16, color: iconColor),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: AppTypography.body.copyWith(
-                      color: titleColor,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500,
-                      height: 1.3,
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: TextButton(
+                onPressed: () => _logout(ref, context),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      LucideIcons.logOut,
+                      size: 18,
+                      color: AppColors.error,
                     ),
-                  ),
-                  if (subtitle != null) ...[
-                    const SizedBox(height: 1),
+                    const SizedBox(width: 8),
                     Text(
-                      subtitle!,
-                      style: AppTypography.caption.copyWith(
-                        color: const Color(0xFF6B7280),
-                        fontSize: 11,
+                      'Sign out',
+                      style: AppTypography.body.copyWith(
+                        color: AppColors.error,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ],
-                ],
+                ),
               ),
             ),
-            if (trailing != null)
-              trailing!
-            else if (showArrow)
-              const Icon(
-                LucideIcons.chevronRight,
-                size: 16,
-                color: AppColors.textHint,
-              ),
           ],
         ),
       ),
     );
   }
-}
 
-class _StatusBadge extends StatelessWidget {
-  final String text;
+  String _getInitials(String fullName) {
+    if (fullName.isEmpty) return 'U';
+    
+    final names = fullName.trim().split(' ');
+    if (names.length == 1) {
+      return names[0][0].toUpperCase();
+    }
+    
+    final firstInitial = names.first.isNotEmpty ? names.first[0].toUpperCase() : '';
+    final lastInitial = names.last.isNotEmpty ? names.last[0].toUpperCase() : '';
+    
+    return '$firstInitial$lastInitial';
+  }
 
-  const _StatusBadge({required this.text});
+  String _formatDate(DateTime? date) {
+    if (date == null) return 'Unknown';
+    return '${date.day}/${date.month}/${date.year}';
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF0FFF4),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Text(
-        text,
-        style: AppTypography.caption.copyWith(
-          color: AppColors.success,
-          fontSize: 10,
-          fontWeight: FontWeight.w600,
+  void _showSessionsBottomSheet(BuildContext context, WidgetRef ref) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Active Sessions',
+              style: AppTypography.h3,
+            ),
+            const SizedBox(height: 16),
+            ListTile(
+              leading: const Icon(LucideIcons.smartphone, color: Color(0xFF2E7D32)),
+              title: const Text('Current device'),
+              subtitle: const Text('Active now'),
+              contentPadding: EdgeInsets.zero,
+            ),
+            ListTile(
+              leading: const Icon(LucideIcons.monitor, color: Color(0xFF6B7280)),
+              title: const Text('Other device'),
+              subtitle: const Text('Last seen 2 days ago'),
+              contentPadding: EdgeInsets.zero,
+            ),
+            const SizedBox(height: 16),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                // TODO: Implement logout all other devices
+              },
+              child: const Text('Sign out all other devices'),
+            ),
+          ],
         ),
       ),
     );
   }
-}
 
-class _TileDivider extends StatelessWidget {
-  const _TileDivider();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Divider(height: 1, indent: 60, color: AppColors.divider);
-  }
-}
-
-class _SheetRow extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final IconData icon;
-
-  const _SheetRow({
-    required this.title,
-    required this.subtitle,
-    required this.icon,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      leading: Icon(icon, color: AppColors.textSecondary),
-      title: Text(title, style: AppTypography.label),
-      subtitle: Text(subtitle, style: AppTypography.caption),
+  void _showConsentBottomSheet(BuildContext context, user) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Consent History',
+              style: AppTypography.h3,
+            ),
+            const SizedBox(height: 16),
+            _buildConsentItem('Terms of Service', user?.createdAt),
+            _buildConsentItem('Privacy Policy', user?.createdAt),
+            _buildConsentItem('Data Processing', user?.createdAt),
+          ],
+        ),
+      ),
     );
   }
-}
 
-class _ConsentRow extends StatelessWidget {
-  final String title;
-  final String timestamp;
-
-  const _ConsentRow({
-    required this.title,
-    required this.timestamp,
-  });
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildConsentItem(String title, DateTime? date) {
     return ListTile(
+      leading: const Icon(LucideIcons.checkCircle, color: Color(0xFF2E7D32)),
+      title: Text(title),
+      subtitle: Text('Accepted ${_formatDate(date)}'),
       contentPadding: EdgeInsets.zero,
-      leading: const Icon(LucideIcons.checkCircle, color: AppColors.success),
-      title: Text(title, style: AppTypography.label),
-      subtitle: Text(timestamp, style: AppTypography.caption),
     );
+  }
+
+  Future<void> _showDeletionDialog(BuildContext context, WidgetRef ref) async {
+    final passwordController = TextEditingController();
+    final reasonController = TextEditingController();
+    var isSubmitting = false;
+
+    await showDialog<void>(
+      context: context,
+      barrierDismissible: !isSubmitting,
+      builder: (dialogContext) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            Future<void> submit() async {
+              final password = passwordController.text;
+              if (password.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Password is required.')),
+                );
+                return;
+              }
+
+              setState(() => isSubmitting = true);
+              try {
+                await ref.read(authRepositoryProvider).requestDeletion(
+                      password: password,
+                      reason: reasonController.text,
+                    );
+                if (!context.mounted) return;
+                Navigator.of(dialogContext).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Deletion request submitted.'),
+                  ),
+                );
+              } catch (error) {
+                if (!context.mounted) return;
+                setState(() => isSubmitting = false);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(error.toString())),
+                );
+              }
+            }
+
+            return AlertDialog(
+              title: const Text('Request Data Deletion'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'Enter your password to confirm this deletion request.',
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: passwordController,
+                    obscureText: true,
+                    enabled: !isSubmitting,
+                    decoration: const InputDecoration(
+                      labelText: 'Password',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: reasonController,
+                    enabled: !isSubmitting,
+                    maxLines: 2,
+                    decoration: const InputDecoration(
+                      labelText: 'Reason (optional)',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: isSubmitting
+                      ? null
+                      : () => Navigator.of(dialogContext).pop(),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: isSubmitting ? null : submit,
+                  child: isSubmitting
+                      ? const SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Text('Submit'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+
+    passwordController.dispose();
+    reasonController.dispose();
+  }
+
+  void _logout(WidgetRef ref, BuildContext context) async {
+    final secureStorage = ref.read(secureStorageProvider);
+    await secureStorage.clearAll();
+    ref.read(currentUserProvider.notifier).state = null;
+    if (context.mounted) {
+      context.go('/');
+    }
   }
 }

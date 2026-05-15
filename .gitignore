@@ -1,0 +1,9 @@
+# Local environment files
+.env
+.env.*
+!.env.example
+educv/assets/env/.env
+educv/assets/env/.env.*
+!educv/assets/env/.env.example
+observability/.env.observability
+!observability/.env.observability.example

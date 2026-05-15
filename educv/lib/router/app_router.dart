@@ -219,43 +219,48 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
     ],
     redirect: (context, state) async {
-      final currentPath = state.uri.path;
+      try {
+        final currentPath = state.uri.path;
 
-      if (currentPath == AppRoutes.splash) return null;
+        if (currentPath == AppRoutes.splash) return null;
 
-      final secureStorage = ref.read(secureStorageProvider);
-      final accessToken = await secureStorage.getAccessToken();
-      final isAuthenticated = accessToken != null;
+        final secureStorage = ref.read(secureStorageProvider);
+        final accessToken = await secureStorage.getAccessToken();
+        final isAuthenticated = accessToken != null;
 
-      // Unauthenticated — block protected routes
-      if (!isAuthenticated) {
-        if (currentPath.startsWith('/cv/') ||
-            currentPath.startsWith('/pdf/') ||
-            currentPath.startsWith('/admin') ||
-            currentPath.startsWith('/account') ||
-            currentPath == '/onboarding') {
-          return AppRoutes.home;
+        // Unauthenticated — block protected routes
+        if (!isAuthenticated) {
+          if (currentPath.startsWith('/cv/') ||
+              currentPath.startsWith('/pdf/') ||
+              currentPath.startsWith('/admin') ||
+              currentPath.startsWith('/account') ||
+              currentPath == '/onboarding') {
+            return AppRoutes.home;
+          }
+          return null;
         }
+
+        // Authenticated — redirect away from auth screens
+        if (currentPath == AppRoutes.login ||
+            currentPath == AppRoutes.register ||
+            currentPath == AppRoutes.forgotPassword) {
+          final userRole = await secureStorage.getUserRole();
+          return userRole == 'admin' ? AppRoutes.admin : AppRoutes.cvDashboard;
+        }
+
+        // Admin guard — only admins can access /admin routes
+        if (currentPath.startsWith('/admin')) {
+          final user = ref.read(currentUserProvider);
+          if (user != null && user.role != 'admin') {
+            return AppRoutes.cvDashboard;
+          }
+        }
+
         return null;
+      } catch (e) {
+        print('Router redirect error: $e');
+        return AppRoutes.home;
       }
-
-      // Authenticated — redirect away from auth screens
-      if (currentPath == AppRoutes.login ||
-          currentPath == AppRoutes.register ||
-          currentPath == AppRoutes.forgotPassword) {
-        final userRole = await secureStorage.getUserRole();
-        return userRole == 'admin' ? AppRoutes.admin : AppRoutes.cvDashboard;
-      }
-
-      // Admin guard — only admins can access /admin routes
-      if (currentPath.startsWith('/admin')) {
-        final user = ref.read(currentUserProvider);
-        if (user != null && user.role != 'admin') {
-          return AppRoutes.cvDashboard;
-        }
-      }
-
-      return null;
     },
   );
 });

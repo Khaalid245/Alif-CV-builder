@@ -130,9 +130,18 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<void> requestDeletion() async {
+  Future<void> requestDeletion({
+    required String password,
+    String reason = '',
+  }) async {
     try {
-      final response = await _apiClient.post(ApiConstants.requestDeletion);
+      final response = await _apiClient.post(
+        ApiConstants.requestDeletion,
+        data: {
+          'password': password,
+          if (reason.trim().isNotEmpty) 'reason': reason.trim(),
+        },
+      );
       final apiResponse = ApiResponse.fromJson(response.data, (data) => data);
 
       if (!apiResponse.success) {

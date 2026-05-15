@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../constants/app_constants.dart';
 
@@ -19,41 +19,31 @@ class SecureStorageService {
     ),
   );
 
-  static const _knownKeys = [
-    AppConstants.accessTokenKey,
-    AppConstants.refreshTokenKey,
-    AppConstants.userIdKey,
-    AppConstants.userEmailKey,
-    AppConstants.userRoleKey,
-  ];
-
   Future<void> _write({required String key, required String value}) async {
     if (kIsWeb) {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(key, value);
-      return;
+    } else {
+      await _storage.write(key: key, value: value);
     }
-
-    await _storage.write(key: key, value: value);
   }
 
   Future<String?> _read({required String key}) async {
     if (kIsWeb) {
       final prefs = await SharedPreferences.getInstance();
       return prefs.getString(key);
+    } else {
+      return await _storage.read(key: key);
     }
-
-    return await _storage.read(key: key);
   }
 
   Future<void> _delete({required String key}) async {
     if (kIsWeb) {
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove(key);
-      return;
+    } else {
+      await _storage.delete(key: key);
     }
-
-    await _storage.delete(key: key);
   }
 
   // Token management
@@ -119,10 +109,9 @@ class SecureStorageService {
   Future<void> clearAll() async {
     if (kIsWeb) {
       final prefs = await SharedPreferences.getInstance();
-      await Future.wait(_knownKeys.map(prefs.remove));
-      return;
+      await prefs.clear();
+    } else {
+      await _storage.deleteAll();
     }
-
-    await _storage.deleteAll();
   }
 }
