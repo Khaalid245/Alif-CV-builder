@@ -3,9 +3,7 @@ CV Validator Service - Analyzes CV content quality without external dependencies
 Uses rule-based algorithms to identify issues and suggest improvements.
 """
 import re
-from typing import Dict, List, Tuple
-from django.utils import timezone
-from .config import CVIntelligenceConfig, IndustryConfig
+from typing import Dict, List
 
 
 class CVValidator:
@@ -23,32 +21,15 @@ class CVValidator:
     
     # Strong action verbs by category
     ACTION_VERBS = {
-        'leadership': [
-            'Led', 'Managed', 'Supervised', 'Coordinated', 'Directed',
-            'Oversaw', 'Guided', 'Mentored', 'Facilitated', 'Orchestrated'
-        ],
         'technical': [
             'Developed', 'Implemented', 'Designed', 'Built', 'Created',
             'Architected', 'Programmed', 'Engineered', 'Configured', 'Deployed'
-        ],
-        'analysis': [
-            'Analyzed', 'Researched', 'Evaluated', 'Assessed', 'Investigated',
-            'Examined', 'Studied', 'Reviewed', 'Audited', 'Measured'
-        ],
-        'improvement': [
-            'Optimized', 'Enhanced', 'Improved', 'Streamlined', 'Increased',
-            'Reduced', 'Accelerated', 'Maximized', 'Minimized', 'Upgraded'
-        ],
-        'achievement': [
-            'Achieved', 'Accomplished', 'Delivered', 'Exceeded', 'Surpassed',
-            'Completed', 'Attained', 'Secured', 'Won', 'Earned'
         ]
     }
     
     def __init__(self):
         self.issues = []
         self.suggestions = []
-        self.score_breakdown = {}
     
     def validate_cv_profile(self, cv_profile) -> Dict:
         """
@@ -57,39 +38,226 @@ class CVValidator:
         """
         self.issues = []
         self.suggestions = []
-        self.score_breakdown = {}
         
-        # Validate each section
-        summary_score = self._validate_summary(cv_profile.summary)
+        # Validate each section with detailed scoring
+        profile_score = self._validate_profile_section(cv_profile)
         experience_score = self._validate_experiences(cv_profile.experiences.all())
         education_score = self._validate_education(cv_profile.educations.all())
         skills_score = self._validate_skills(cv_profile.skills.all())
-        completeness_score = self._validate_completeness(cv_profile)
+        projects_score = self._validate_projects(cv_profile.projects.all())
         
-        # Calculate overall score using configurable weights
-        config = CVIntelligenceConfig
+        # Calculate overall score using weights
         total_score = (
-            summary_score * config.get_scoring_weight('summary') +
-            experience_score * config.get_scoring_weight('experience') +
-            education_score * config.get_scoring_weight('education') +
-            skills_score * config.get_scoring_weight('skills') +
-            completeness_score * config.get_scoring_weight('completeness')
+            profile_score * 0.25 +
+            experience_score * 0.25 +
+            education_score * 0.20 +
+            skills_score * 0.15 +
+            projects_score * 0.15
         )
+        
+        grade = self._get_grade_for_score(total_score)
+        
+        # Determine submission readiness
+        is_submission_ready = (
+            total_score >= 70 and
+            profile_score >= 60 and
+            experience_score >= 60 and
+            education_score >= 60 and
+            skills_score >= 60 and
+            projects_score >= 50
+        )
+        
+        # Categorize recommendations
+        recommendations = self._categorize_recommendations()
         
         return {
             'overall_score': round(total_score),
-            'grade': config.get_grade_for_score(total_score),
+            'grade': grade,
+            'is_submission_ready': is_submission_ready,
             'score_breakdown': {
-                'summary': summary_score,
+                'profile': profile_score,
                 'experience': experience_score,
                 'education': education_score,
                 'skills': skills_score,
-                'completeness': completeness_score
+                'projects': projects_score
             },
             'issues': self.issues,
             'suggestions': self.suggestions,
+            'recommendations': recommendations,
             'priority_improvements': self._get_priority_improvements()
         }
+    
+    def _validate_profile_section(self, cv_profile) -> int:
+        """Validate complete profile section including contact info and summary."""
+        score = 0
+        
+        # Contact information (40 points)
+        if cv_profile.phone: score += 10
+        else:
+            self.issues.append({
+                'type': 'missing_content',
+                'severity': 'high',
+                'section': 'profile',
+                'message': 'Phone number missing',
+                'suggestion': 'Add your phone number for employer contact'
+            })
+        
+        if cv_profile.city: score += 10
+        else:
+            self.issues.append({
+                'type': 'missing_content',
+                'severity': 'medium',
+                'section': 'profile',
+                'message': 'City location missing',
+                'suggestion': 'Add your city for location-based opportunities'
+            })
+        
+        if cv_profile.country: score += 10
+        else:
+            self.issues.append({
+                'type': 'missing_content',
+                'severity': 'medium',
+                'section': 'profile',
+                'message': 'Country missing',
+                'suggestion': 'Add your country for international opportunities'
+            })
+        
+        if cv_profile.address: score += 10
+        else:
+            self.suggestions.append({
+                'type': 'optional_content',
+                'section': 'profile',
+                'message': 'Consider adding full address',
+                'suggestion': 'Full address can be helpful for local employers'
+            })
+        
+        # Professional summary (30 points)
+        summary_score = self._validate_summary(cv_profile.summary)
+        score += int(summary_score * 0.3)  # Convert to 30-point scale
+        
+        # Online presence (20 points)
+        if cv_profile.linkedin: score += 10
+        else:
+            self.issues.append({
+                'type': 'missing_content',
+                'severity': 'medium',
+                'section': 'profile',
+                'message': 'LinkedIn profile missing',
+                'suggestion': 'Add LinkedIn profile to showcase professional network'
+            })
+        
+        if cv_profile.github or cv_profile.portfolio: score += 10
+        else:
+            self.suggestions.append({
+                'type': 'enhancement',
+                'section': 'profile',
+                'message': 'Consider adding GitHub or portfolio link',
+                'suggestion': 'Showcase your work with GitHub or portfolio links'
+            })
+        
+        # Photo (10 points)
+        if cv_profile.photo: score += 10
+        else:
+            self.suggestions.append({
+                'type': 'optional_content',
+                'section': 'profile',
+                'message': 'Consider adding professional photo',
+                'suggestion': 'Professional photo can make your CV more memorable'
+            })
+        
+        return min(score, 100)
+    
+    def _validate_projects(self, projects) -> int:
+        """Validate projects section quality (0-100 points)."""
+        if not projects:
+            self.issues.append({
+                'type': 'missing_section',
+                'severity': 'medium',
+                'section': 'projects',
+                'message': 'No projects listed',
+                'suggestion': 'Add 2-3 relevant projects to showcase your skills'
+            })
+            return 0
+        
+        project_count = len(projects)
+        score = 0
+        
+        # Basic presence (40 points)
+        score += 40
+        
+        # Quantity bonus (30 points)
+        if project_count >= 3: score += 30
+        elif project_count >= 2: score += 20
+        else:
+            self.suggestions.append({
+                'type': 'enhancement',
+                'section': 'projects',
+                'message': f'Only {project_count} project(s) listed',
+                'suggestion': 'Add 2-3 projects for better demonstration of skills'
+            })
+        
+        # Quality assessment (30 points)
+        detailed_projects = 0
+        linked_projects = 0
+        
+        for project in projects:
+            if project.description and len(project.description.split()) >= 20:
+                detailed_projects += 1
+            else:
+                self.issues.append({
+                    'type': 'insufficient_detail',
+                    'severity': 'medium',
+                    'section': 'projects',
+                    'message': f'Project "{project.title}" needs more detail',
+                    'suggestion': 'Add detailed description with technologies used and outcomes'
+                })
+            
+            if project.link:
+                linked_projects += 1
+        
+        # Quality scoring
+        if detailed_projects == project_count: score += 15
+        elif detailed_projects >= project_count // 2: score += 10
+        
+        if linked_projects >= project_count // 2: score += 15
+        elif linked_projects >= 1: score += 10
+        else:
+            self.suggestions.append({
+                'type': 'enhancement',
+                'section': 'projects',
+                'message': 'Consider adding project links',
+                'suggestion': 'Include GitHub repositories or live demo links'
+            })
+        
+        return min(score, 100)
+    
+    def _categorize_recommendations(self) -> Dict:
+        """Categorize issues and suggestions into recommendation levels."""
+        recommendations = {
+            'critical': [],
+            'important': [],
+            'suggestions': [],
+            'strengths': []
+        }
+        
+        # Categorize issues
+        for issue in self.issues:
+            if issue['severity'] == 'critical':
+                recommendations['critical'].append(issue['suggestion'])
+            elif issue['severity'] == 'high':
+                recommendations['important'].append(issue['suggestion'])
+            else:
+                recommendations['suggestions'].append(issue['suggestion'])
+        
+        # Add general suggestions
+        for suggestion in self.suggestions:
+            if suggestion['type'] in ['enhancement', 'quantification']:
+                recommendations['suggestions'].append(suggestion['suggestion'])
+        
+        # Identify strengths (sections with high scores would be added here)
+        # This could be enhanced based on individual section scores
+        
+        return recommendations
     
     def _validate_summary(self, summary: str) -> int:
         """Validate professional summary quality (0-100 points)."""
@@ -103,30 +271,26 @@ class CVValidator:
             })
             return 0
         
-        config = CVIntelligenceConfig
         word_count = len(summary.split())
-        min_words = config.get_content_threshold('summary', 'min_words')
-        max_words = config.get_content_threshold('summary', 'max_words')
-        
-        score = 0  # Initialize score
+        score = 0
         
         # Length check (20 points)
-        if word_count < min_words:
+        if word_count < 15:
             self.issues.append({
                 'type': 'too_short',
                 'severity': 'medium',
                 'section': 'summary',
                 'message': f'Summary too short ({word_count} words)',
-                'suggestion': f'Expand to {config.get_content_threshold("summary", "optimal_min")}-{config.get_content_threshold("summary", "optimal_max")} words for optimal impact'
+                'suggestion': 'Expand to 20-50 words for optimal impact'
             })
             score += 5
-        elif word_count > max_words:
+        elif word_count > 80:
             self.issues.append({
                 'type': 'too_long',
                 'severity': 'low',
                 'section': 'summary',
                 'message': f'Summary too long ({word_count} words)',
-                'suggestion': f'Condense to {config.get_content_threshold("summary", "optimal_min")}-{config.get_content_threshold("summary", "optimal_max")} words for better readability'
+                'suggestion': 'Condense to 20-50 words for better readability'
             })
             score += 15
         else:
@@ -218,7 +382,7 @@ class CVValidator:
                 'type': 'incomplete_info',
                 'severity': 'high',
                 'section': 'experience',
-                'message': f'Missing job title or company for experience entry',
+                'message': 'Missing job title or company for experience entry',
                 'suggestion': 'Ensure all experience entries have job title and company'
             })
         
@@ -251,29 +415,26 @@ class CVValidator:
     
     def _validate_description(self, description: str, section: str) -> int:
         """Validate description quality for any section."""
-        config = CVIntelligenceConfig
         score = 0
         word_count = len(description.split())
-        min_words = config.get_content_threshold('experience_description', 'min_words')
-        max_words = config.get_content_threshold('experience_description', 'max_words')
         
         # Length check (25 points)
-        if word_count < min_words:
+        if word_count < 10:
             self.issues.append({
                 'type': 'too_short',
                 'severity': 'medium',
                 'section': section,
                 'message': f'Description too short ({word_count} words)',
-                'suggestion': f'Expand with specific achievements and responsibilities ({config.get_content_threshold("experience_description", "optimal_min")}-{config.get_content_threshold("experience_description", "optimal_max")} words)'
+                'suggestion': 'Expand with specific achievements and responsibilities (20-100 words)'
             })
             score += 5
-        elif word_count > max_words:
+        elif word_count > 150:
             self.issues.append({
                 'type': 'too_long',
                 'severity': 'low',
                 'section': section,
                 'message': f'Description too long ({word_count} words)',
-                'suggestion': f'Condense to key achievements ({config.get_content_threshold("experience_description", "optimal_min")}-{config.get_content_threshold("experience_description", "optimal_max")} words)'
+                'suggestion': 'Condense to key achievements (20-100 words)'
             })
             score += 20
         else:
@@ -312,7 +473,6 @@ class CVValidator:
     
     def _validate_education(self, education_entries) -> int:
         """Validate education section quality."""
-        config = CVIntelligenceConfig
         if not education_entries:
             self.issues.append({
                 'type': 'missing_section',
@@ -323,11 +483,11 @@ class CVValidator:
             })
             return 0
         
-        score = config.get_education_threshold('base_score')  # Base score for having education
+        score = 60  # Base score for having education
         
         for edu in education_entries:
             if edu.degree and edu.institution and edu.field_of_study:
-                score += config.get_education_threshold('complete_info_bonus')
+                score += 20
             else:
                 self.issues.append({
                     'type': 'incomplete_info',
@@ -337,17 +497,16 @@ class CVValidator:
                     'suggestion': 'Include degree, field of study, and institution'
                 })
             
-            if edu.gpa and edu.gpa >= config.get_education_threshold('good_gpa_threshold'):
-                score += config.get_education_threshold('good_gpa_bonus')  # Bonus for good GPA
+            if edu.gpa and edu.gpa >= 3.5:
+                score += 10  # Bonus for good GPA
             
             if edu.description:
-                score += config.get_education_threshold('description_bonus')  # Bonus for additional details
+                score += 10  # Bonus for additional details
         
         return min(score, 100)
     
     def _validate_skills(self, skills) -> int:
         """Validate skills section quality."""
-        config = CVIntelligenceConfig
         if not skills:
             self.issues.append({
                 'type': 'missing_section',
@@ -360,61 +519,68 @@ class CVValidator:
         
         skill_count = len(skills)
         score = 0
-        min_count = config.get_skills_threshold('min_count')
-        max_count = config.get_skills_threshold('max_count')
-        optimal_min = config.get_skills_threshold('optimal_min')
-        optimal_max = config.get_skills_threshold('optimal_max')
         
         # Quantity scoring
-        if skill_count < min_count:
+        if skill_count < 3:
             self.suggestions.append({
                 'type': 'insufficient_content',
                 'section': 'skills',
                 'message': f'Only {skill_count} skills listed',
-                'suggestion': f'Add {optimal_min}-{optimal_max} relevant skills for better coverage'
+                'suggestion': 'Add 5-10 relevant skills for better coverage'
             })
             score += 30
-        elif skill_count > max_count:
+        elif skill_count > 15:
             self.suggestions.append({
                 'type': 'too_many',
                 'section': 'skills',
                 'message': f'{skill_count} skills may be too many',
-                'suggestion': f'Focus on {optimal_min}-{optimal_max} most relevant skills'
+                'suggestion': 'Focus on 5-10 most relevant skills'
             })
             score += 70
         else:
-            score += config.get_scoring_points('skills', 'base_points')
+            score += 80
         
         # Category diversity
         categories = set(skill.category for skill in skills)
         if len(categories) > 1:
-            score += config.get_scoring_points('skills', 'diversity_bonus')  # Bonus for diverse skill categories
+            score += 20  # Bonus for diverse skill categories
         
         return min(score, 100)
     
     def _validate_completeness(self, cv_profile) -> int:
         """Validate overall CV completeness."""
-        config = CVIntelligenceConfig
         score = 0
         
         # Required sections
         if cv_profile.summary:
-            score += config.get_scoring_points('completeness', 'summary_points')
+            score += 20
         if cv_profile.experiences.exists():
-            score += config.get_scoring_points('completeness', 'experience_points')
+            score += 30
         if cv_profile.educations.exists():
-            score += config.get_scoring_points('completeness', 'education_points')
+            score += 25
         if cv_profile.skills.exists():
-            score += config.get_scoring_points('completeness', 'skills_points')
+            score += 15
         
         # Optional but valuable sections
         if cv_profile.projects.exists():
-            score += config.get_scoring_points('completeness', 'projects_bonus')
+            score += 5
         if cv_profile.certifications.exists():
-            score += config.get_scoring_points('completeness', 'certifications_bonus')
+            score += 5
         
         return min(score, 100)
-
+    
+    def _get_grade_for_score(self, score: float) -> str:
+        """Convert numerical score to letter grade."""
+        if score >= 90:
+            return 'A'
+        elif score >= 80:
+            return 'B'
+        elif score >= 70:
+            return 'C'
+        elif score >= 60:
+            return 'D'
+        else:
+            return 'F'
     
     def _get_priority_improvements(self) -> List[Dict]:
         """Get top 3 priority improvements based on impact."""

@@ -41,6 +41,8 @@ LOCAL_APPS = [
     'apps.pdf_generator',
     'apps.administration',
     'apps.cv_intelligence',
+    'apps.workflow',
+    'apps.version_history',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

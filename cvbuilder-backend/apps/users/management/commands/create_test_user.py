@@ -95,7 +95,7 @@ class Command(BaseCommand):
                 data_processing_consent_date=timezone.now(),
             )
             
-            # Output success message
+            # Output success message (no sensitive data in logs)
             self.stdout.write(
                 self.style.SUCCESS(
                     f'✓ Test user created successfully'
@@ -107,7 +107,7 @@ class Command(BaseCommand):
             self.stdout.write(f'  Active: {user.is_active}')
             self.stdout.write(f'  Email Verified: {user.email_verified}')
             
-            # Output password (only once)
+            # Output password securely (only to stdout, never logged)
             self.stdout.write(
                 self.style.WARNING(
                     '\n⚠️  IMPORTANT: Save this password now - it will not be shown again:'

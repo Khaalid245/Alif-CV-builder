@@ -1,0 +1,40 @@
+{% extends "email/base_notification.html" %}
+
+{% block content %}
+<div class="content">
+    <h1 class="title">🚨 Security Alert for Your Account</h1>
+    
+    <div class="message">
+        <p>Hello {{ user_name }},</p>
+        <p>We detected a security event on your EduCV account that requires your attention.</p>
+    </div>
+    
+    <div class="info-box priority-urgent">
+        <p><strong>Alert Type:</strong> {{ alert_type }}</p>
+        <p><strong>IP Address:</strong> {{ ip_address }}</p>
+        <p><strong>Time:</strong> {{ timestamp }}</p>
+        <p><strong>Action Taken:</strong> {{ action_taken }}</p>
+    </div>
+    
+    <div class="message">
+        <p><strong>What should you do?</strong></p>
+        <ul>
+            <li>If this was you, no action is needed</li>
+            <li>If this wasn't you, please secure your account immediately</li>
+            <li>Consider changing your password</li>
+            <li>Review your recent account activity</li>
+        </ul>
+    </div>
+    
+    <div style="text-align: center; margin: 30px 0;">
+        <a href="/account/security" class="cta-button" style="background-color: #e74c3c;">Secure My Account</a>
+    </div>
+    
+    <div class="message">
+        <p><strong>Need Help?</strong></p>
+        <p>If you believe your account has been compromised or if you have any questions about this alert, please contact our support team immediately.</p>
+        
+        <p>Stay safe,<br><strong>The EduCV Security Team</strong></p>
+    </div>
+</div>
+{% endblock %}

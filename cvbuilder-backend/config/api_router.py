@@ -20,6 +20,12 @@ urlpatterns = [
     path('cv/', include('apps.pdf_generator.urls')),
     path('cv/', include('apps.cv_intelligence.urls')),
 
+    # Workflow Control System
+    path('workflow/', include('apps.workflow.urls')),
+
+    # Version History System
+    path('version-history/', include('apps.version_history.urls')),
+
     # Phase 5 — Admin Dashboard
     path('administration/', include('apps.administration.urls')),
 ]

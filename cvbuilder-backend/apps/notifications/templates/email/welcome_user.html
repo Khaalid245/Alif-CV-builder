@@ -1,0 +1,36 @@
+{% extends "email/base_notification.html" %}
+
+{% block content %}
+<div class="content">
+    <h1 class="title">Welcome to EduCV, {{ user_name }}! 🎓</h1>
+    
+    <div class="message">
+        <p>Welcome to <strong>EduCV</strong>, the university CV builder platform designed to help students like you create professional CVs that stand out.</p>
+        
+        <p>With EduCV, you can:</p>
+        <ul>
+            <li>✨ Create professional CVs with beautiful templates</li>
+            <li>📊 Track your CV completion progress</li>
+            <li>📄 Generate multiple PDF formats (Classic, Modern, Academic)</li>
+            <li>🔍 Get intelligent CV analysis and recommendations</li>
+            <li>📈 Manage different versions of your CV</li>
+        </ul>
+        
+        <p>Your CV profile has been created and you're ready to start building your professional future!</p>
+    </div>
+    
+    <div style="text-align: center; margin: 30px 0;">
+        <a href="/cv/edit" class="cta-button">Start Building Your CV</a>
+    </div>
+    
+    <div class="info-box">
+        <p><strong>💡 Pro Tip:</strong> Complete all sections of your CV to unlock the full potential of our platform. A complete CV gets better analysis results and more professional templates!</p>
+    </div>
+    
+    <div class="message">
+        <p>If you have any questions or need help getting started, our support team is here to help.</p>
+        <p>Best of luck with your CV building journey!</p>
+        <p><strong>The EduCV Team</strong></p>
+    </div>
+</div>
+{% endblock %}
