@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/premium_portfolio_colors.dart';
 import 'public_nav_bar.dart';
 import 'public_footer.dart';
 
@@ -19,7 +19,7 @@ class PublicLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: PremiumPortfolioColors.background,
       body: Column(
         children: [
           if (showNav) const PublicNavBar(),

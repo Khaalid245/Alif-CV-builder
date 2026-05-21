@@ -2,52 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/theme/premium_portfolio_colors.dart';
-import '../../../../core/widgets/premium_floating_card.dart';
-import '../../../../core/widgets/premium_tag.dart';
 import '../widgets/public_layout.dart';
 
-class AboutScreen extends StatefulWidget {
+class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
-
-  @override
-  State<AboutScreen> createState() => _AboutScreenState();
-}
-
-class _AboutScreenState extends State<AboutScreen>
-    with TickerProviderStateMixin {
-  late AnimationController _fadeController;
-  late AnimationController _floatController;
-  late Animation<double> _fadeAnimation;
-  late Animation<double> _floatAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _fadeController = AnimationController(
-      duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
-    _floatController = AnimationController(
-      duration: const Duration(milliseconds: 3000),
-      vsync: this,
-    );
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _fadeController, curve: Curves.easeOut),
-    );
-    _floatAnimation = Tween<double>(begin: -10.0, end: 10.0).animate(
-      CurvedAnimation(parent: _floatController, curve: Curves.easeInOut),
-    );
-    
-    _fadeController.forward();
-    _floatController.repeat(reverse: true);
-  }
-
-  @override
-  void dispose() {
-    _fadeController.dispose();
-    _floatController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,83 +14,17 @@ class _AboutScreenState extends State<AboutScreen>
         decoration: const BoxDecoration(
           color: PremiumPortfolioColors.background,
         ),
-        child: Stack(
+        child: Column(
           children: [
-            // Grid overlay background
-            _buildGridOverlay(),
-            // Floating decorative elements
-            _buildFloatingElements(),
-            // Main content
-            FadeTransition(
-              opacity: _fadeAnimation,
-              child: Column(
-                children: [
-                  _buildHeroSection(),
-                  _buildMissionSection(),
-                  _buildUniversityEndorsement(),
-                  _buildStatisticsSection(),
-                  _buildTechnologySection(),
-                  const SizedBox(height: 80),
-                ],
-              ),
-            ),
+            _buildHeroSection(),
+            _buildMissionSection(),
+            _buildUniversityEndorsement(),
+            _buildStatisticsSection(),
+            _buildTechnologySection(),
+            const SizedBox(height: 80),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildGridOverlay() {
-    return Positioned.fill(
-      child: CustomPaint(
-        painter: GridOverlayPainter(),
-      ),
-    );
-  }
-
-  Widget _buildFloatingElements() {
-    return AnimatedBuilder(
-      animation: _floatAnimation,
-      builder: (context, child) {
-        return Stack(
-          children: [
-            Positioned(
-              top: 100 + _floatAnimation.value,
-              right: 100,
-              child: Container(
-                width: 200,
-                height: 200,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: RadialGradient(
-                    colors: [
-                      PremiumPortfolioColors.accentPurple.withValues(alpha: 0.1),
-                      PremiumPortfolioColors.accentPurple.withValues(alpha: 0.0),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              top: 300 - _floatAnimation.value,
-              left: 50,
-              child: Container(
-                width: 150,
-                height: 150,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: RadialGradient(
-                    colors: [
-                      PremiumPortfolioColors.accentBlue.withValues(alpha: 0.08),
-                      PremiumPortfolioColors.accentBlue.withValues(alpha: 0.0),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        );
-      },
     );
   }
 
@@ -208,22 +100,10 @@ class _AboutScreenState extends State<AboutScreen>
                 spacing: 12,
                 runSpacing: 12,
                 children: [
-                  PremiumTag(
-                    text: 'CV Builder',
-                    icon: LucideIcons.fileText,
-                  ),
-                  PremiumTag(
-                    text: 'Student Platform',
-                    icon: LucideIcons.graduationCap,
-                  ),
-                  PremiumTag(
-                    text: 'Career Ready',
-                    icon: LucideIcons.briefcase,
-                  ),
-                  PremiumTag(
-                    text: 'Professional Templates',
-                    icon: LucideIcons.layout,
-                  ),
+                  _buildTag('CV Builder'),
+                  _buildTag('Student Platform'),
+                  _buildTag('Career Ready'),
+                  _buildTag('Professional Templates'),
                 ],
               ),
             ],
@@ -232,7 +112,7 @@ class _AboutScreenState extends State<AboutScreen>
         const SizedBox(width: 60),
         Expanded(
           flex: 2,
-          child: _buildHeroVisualCard(),
+          child: _buildHeroCard(),
         ),
       ],
     );
@@ -290,20 +170,51 @@ class _AboutScreenState extends State<AboutScreen>
           spacing: 8,
           runSpacing: 8,
           children: [
-            PremiumTag(text: 'CV Builder', icon: LucideIcons.fileText),
-            PremiumTag(text: 'Student Platform', icon: LucideIcons.graduationCap),
-            PremiumTag(text: 'Career Ready', icon: LucideIcons.briefcase),
+            _buildTag('CV Builder'),
+            _buildTag('Student Platform'),
+            _buildTag('Career Ready'),
           ],
         ),
         const SizedBox(height: 40),
-        _buildHeroVisualCard(),
+        _buildHeroCard(),
       ],
     );
   }
 
-  Widget _buildHeroVisualCard() {
-    return PremiumFloatingCard(
+  Widget _buildTag(String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        color: PremiumPortfolioColors.accentPurple.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: PremiumPortfolioColors.accentPurple.withValues(alpha: 0.2),
+          width: 1,
+        ),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
+          color: PremiumPortfolioColors.accentPurple,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeroCard() {
+    return Container(
       padding: const EdgeInsets.all(32),
+      decoration: BoxDecoration(
+        color: PremiumPortfolioColors.cardBackground,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: PremiumPortfolioColors.borderLight,
+          width: 1,
+        ),
+        boxShadow: PremiumPortfolioColors.cardShadow,
+      ),
       child: Column(
         children: [
           Row(
@@ -435,8 +346,17 @@ class _AboutScreenState extends State<AboutScreen>
   }
 
   Widget _buildTestimonialCard() {
-    return PremiumFloatingCard(
+    return Container(
       padding: const EdgeInsets.all(32),
+      decoration: BoxDecoration(
+        color: PremiumPortfolioColors.cardBackground,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: PremiumPortfolioColors.borderLight,
+          width: 1,
+        ),
+        boxShadow: PremiumPortfolioColors.cardShadow,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -530,50 +450,57 @@ class _AboutScreenState extends State<AboutScreen>
         const SizedBox(height: 32),
         ...points.map((point) => Container(
           margin: const EdgeInsets.only(bottom: 24),
-          child: PremiumFloatingCard(
-            padding: const EdgeInsets.all(24),
-            child: Row(
-              children: [
-                Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: PremiumPortfolioColors.accentPurple.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(
-                    point['icon'] as IconData,
-                    color: PremiumPortfolioColors.accentPurple,
-                    size: 24,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        point['title'] as String,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: PremiumPortfolioColors.primaryText,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        point['description'] as String,
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: PremiumPortfolioColors.secondaryText,
-                          height: 1.4,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: PremiumPortfolioColors.cardBackground,
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(
+              color: PremiumPortfolioColors.borderLight,
+              width: 1,
             ),
+            boxShadow: PremiumPortfolioColors.cardShadow,
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: PremiumPortfolioColors.accentPurple.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  point['icon'] as IconData,
+                  color: PremiumPortfolioColors.accentPurple,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      point['title'] as String,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: PremiumPortfolioColors.primaryText,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      point['description'] as String,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: PremiumPortfolioColors.secondaryText,
+                        height: 1.4,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         )),
       ],
@@ -586,8 +513,17 @@ class _AboutScreenState extends State<AboutScreen>
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 800),
-          child: PremiumFloatingCard(
+          child: Container(
             padding: const EdgeInsets.all(48),
+            decoration: BoxDecoration(
+              color: PremiumPortfolioColors.cardBackground,
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(
+                color: PremiumPortfolioColors.borderLight,
+                width: 1,
+              ),
+              boxShadow: PremiumPortfolioColors.cardShadow,
+            ),
             child: Column(
               children: [
                 Container(
@@ -630,55 +566,11 @@ class _AboutScreenState extends State<AboutScreen>
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 32),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildInlineStatistic('2,400+', 'Students'),
-                    Container(
-                      width: 1,
-                      height: 40,
-                      color: PremiumPortfolioColors.borderLight,
-                      margin: const EdgeInsets.symmetric(horizontal: 24),
-                    ),
-                    _buildInlineStatistic('8,900+', 'CVs Generated'),
-                    Container(
-                      width: 1,
-                      height: 40,
-                      color: PremiumPortfolioColors.borderLight,
-                      margin: const EdgeInsets.symmetric(horizontal: 24),
-                    ),
-                    _buildInlineStatistic('95%', 'Success Rate'),
-                  ],
-                ),
               ],
             ),
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildInlineStatistic(String value, String label) {
-    return Column(
-      children: [
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.w700,
-            color: PremiumPortfolioColors.accentPurple,
-          ),
-        ),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-            color: PremiumPortfolioColors.secondaryText,
-          ),
-        ),
-      ],
     );
   }
 
@@ -760,8 +652,17 @@ class _AboutScreenState extends State<AboutScreen>
   }
 
   Widget _buildStatCard(Map<String, dynamic> stat) {
-    return PremiumFloatingCard(
+    return Container(
       padding: const EdgeInsets.all(32),
+      decoration: BoxDecoration(
+        color: PremiumPortfolioColors.cardBackground,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: PremiumPortfolioColors.borderLight,
+          width: 1,
+        ),
+        boxShadow: PremiumPortfolioColors.cardShadow,
+      ),
       child: Column(
         children: [
           Container(
@@ -810,8 +711,6 @@ class _AboutScreenState extends State<AboutScreen>
       {'name': 'JWT', 'icon': LucideIcons.shield},
       {'name': 'Docker', 'icon': LucideIcons.box},
       {'name': 'DigitalOcean', 'icon': LucideIcons.cloud},
-      {'name': 'WeasyPrint', 'icon': LucideIcons.printer},
-      {'name': 'Redis', 'icon': LucideIcons.zap},
     ];
 
     return Container(
@@ -846,9 +745,36 @@ class _AboutScreenState extends State<AboutScreen>
               spacing: 16,
               runSpacing: 16,
               children: technologies.map((tech) {
-                return _buildTechnologyChip(
-                  tech['name'] as String,
-                  tech['icon'] as IconData,
+                return Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                  decoration: BoxDecoration(
+                    color: PremiumPortfolioColors.cardBackground,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: PremiumPortfolioColors.borderLight,
+                      width: 1,
+                    ),
+                    boxShadow: PremiumPortfolioColors.cardShadow,
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        tech['icon'] as IconData,
+                        size: 20,
+                        color: PremiumPortfolioColors.accentPurple,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        tech['name'] as String,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: PremiumPortfolioColors.primaryText,
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               }).toList(),
             ),
@@ -857,63 +783,4 @@ class _AboutScreenState extends State<AboutScreen>
       ),
     );
   }
-
-  Widget _buildTechnologyChip(String name, IconData icon) {
-    return PremiumFloatingCard(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      borderRadius: 20,
-      enableHover: true,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            icon,
-            size: 20,
-            color: PremiumPortfolioColors.accentPurple,
-          ),
-          const SizedBox(width: 8),
-          Text(
-            name,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: PremiumPortfolioColors.primaryText,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class GridOverlayPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = PremiumPortfolioColors.gridOverlay
-      ..strokeWidth = 1;
-
-    const gridSize = 40.0;
-
-    // Draw vertical lines
-    for (double x = 0; x <= size.width; x += gridSize) {
-      canvas.drawLine(
-        Offset(x, 0),
-        Offset(x, size.height),
-        paint,
-      );
-    }
-
-    // Draw horizontal lines
-    for (double y = 0; y <= size.height; y += gridSize) {
-      canvas.drawLine(
-        Offset(0, y),
-        Offset(size.width, y),
-        paint,
-      );
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
