@@ -146,8 +146,11 @@ class CVIntelligenceErrorHandler:
     def handle_exception(exception: Exception, request=None, user=None) -> Response:
         """Handle exceptions and return appropriate API response."""
         
-        # Log the error with sanitized inputs
-        sanitized_exception = str(exception)[:200].replace('\n', ' ').replace('\r', '')
+        # SECURITY: Sanitize exception message to prevent log injection
+        sanitized_exception = str(exception)[:200]
+        # Remove newlines, carriage returns, and other control characters
+        sanitized_exception = ''.join(char for char in sanitized_exception if ord(char) >= 32 or char in '\t')
+        
         logger.error(
             f'CV Intelligence error: {type(exception).__name__}: {sanitized_exception}',
             extra={
@@ -196,8 +199,10 @@ class CVIntelligenceErrorHandler:
     @staticmethod
     def log_analysis_metrics(user, analysis_results: Dict, duration: float):
         """Log analysis performance metrics."""
-        # Sanitize grade value to prevent log injection
-        grade = str(analysis_results.get('grade', 'Unknown')).replace('\n', '').replace('\r', '')
+        # SECURITY: Sanitize grade value to prevent log injection
+        grade = str(analysis_results.get('grade', 'Unknown'))
+        # Remove control characters and limit length
+        grade = ''.join(char for char in grade[:10] if ord(char) >= 32 or char in '\t')
         
         logger.info(
             "CV analysis completed",

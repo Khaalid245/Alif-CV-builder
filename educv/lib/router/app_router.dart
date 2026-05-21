@@ -17,8 +17,15 @@ import '../features/account/presentation/screens/account_screen.dart';
 import '../features/account/presentation/screens/change_password_screen.dart';
 import '../features/cv/presentation/screens/cv_form_screen.dart';
 import '../features/cv/presentation/screens/cv_preview_screen.dart';
+import '../features/cv_intelligence/presentation/screens/cv_intelligence_screen.dart';
 import '../features/pdf/presentation/screens/pdf_result_screen.dart';
 import '../features/pdf/presentation/screens/pdf_preview_screen.dart';
+import '../features/version_history/presentation/screens/version_history_screen.dart';
+import '../features/notifications/presentation/screens/notification_center_screen.dart';
+import '../features/notifications/presentation/screens/notification_preferences_screen.dart';
+import '../features/analytics/presentation/screens/analytics_dashboard_screen.dart';
+import '../features/template_engine/presentation/screens/template_catalog_screen.dart';
+import '../features/template_engine/presentation/screens/template_detail_screen.dart';
 import '../features/admin/presentation/screens/admin_shell.dart';
 import '../features/admin/presentation/screens/student_detail_screen.dart'
     as admin_screens;
@@ -49,6 +56,13 @@ class AppRoutes {
   static const String cvForm = '/cv/form';
   static const String cvPreview = '/cv/preview';
   static const String pdfResult = '/pdf/result';
+  static const String cvIntelligence = '/cv/intelligence';
+  static const String versionHistory = '/cv/version-history';
+  static const String notificationCenter = '/notifications';
+  static const String notificationPreferences = '/notifications/preferences';
+  static const String analytics = '/analytics';
+  static const String templateCatalog = '/templates';
+  static const String templateDetail = '/templates/:slug';
   static const String admin = '/admin';
   static const String adminStudentDetail = '/admin/students/:id';
 }
@@ -130,7 +144,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (_, __) => const OnboardingScreen(),
       ),
 
-      // STUDENT SHELL with 4 tabs
+      // STUDENT SHELL with 5 tabs
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return StudentShell(navigationShell: navigationShell);
@@ -163,7 +177,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               ),
             ],
           ),
-          // Branch 4: Account
+          // Branch 4: CV Intelligence
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.cvIntelligence,
+                builder: (context, state) => const CVIntelligenceScreen(),
+              ),
+            ],
+          ),
+          // Branch 5: Account
           StatefulShellBranch(
             routes: [
               GoRoute(
@@ -194,8 +217,39 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const ChangePasswordScreen(),
       ),
       GoRoute(
+        path: AppRoutes.cvIntelligence,
+        builder: (context, state) => const CVIntelligenceScreen(),
+      ),
+      GoRoute(
         path: AppRoutes.pdfResult,
         builder: (context, state) => const PDFResultScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.versionHistory,
+        builder: (context, state) => const VersionHistoryScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.notificationCenter,
+        builder: (context, state) => const NotificationCenterScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.notificationPreferences,
+        builder: (context, state) => const NotificationPreferencesScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.analytics,
+        builder: (context, state) => const AnalyticsDashboardScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.templateCatalog,
+        builder: (context, state) => const TemplateCatalogScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.templateDetail,
+        builder: (context, state) {
+          final slug = state.pathParameters['slug']!;
+          return TemplateDetailScreen(templateSlug: slug);
+        },
       ),
       GoRoute(
         path: '/pdf/preview/:id',

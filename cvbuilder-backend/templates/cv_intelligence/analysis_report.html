@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Analysis Report - {{ user_name }}</title>
+</head>
+<body>
+    <!-- Header Section -->
+    <div class="header">
+        <h1>CV Analysis Report</h1>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h2 style="margin: 0; color: #2563eb;">{{ user_name }}</h2>
+                <p style="margin: 0.25rem 0; color: #666;">{{ user_email }}</p>
+            </div>
+            <div style="text-align: right;">
+                <p style="margin: 0; font-weight: 600;">Report Date</p>
+                <p style="margin: 0; color: #666;">{{ report_date }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Executive Summary -->
+    <div class="score-card">
+        <h2 class="section-title">Executive Summary</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <div>
+                <h3 style="margin: 0; font-size: 2.5rem; color: #2563eb;">{{ overall_score|floatformat:1 }}/100</h3>
+                <p style="margin: 0.5rem 0; font-weight: 600;">Overall CV Score</p>
+                {% if readiness_score %}
+                <p style="margin: 0; color: #666;">Readiness Score: {{ readiness_score|floatformat:1 }}/100 ({{ readiness_grade }})</p>
+                {% endif %}
+            </div>
+            {% if has_benchmarking %}
+            <div>
+                <h3 style="margin: 0; font-size: 2.5rem; color: #059669;">{{ percentile_rank|floatformat:0 }}th</h3>
+                <p style="margin: 0.5rem 0; font-weight: 600;">Percentile Rank</p>
+                <p style="margin: 0; color: #666;">{{ performance_level|title }} Performance</p>
+            </div>
+            {% endif %}
+        </div>
+        <p style="margin-top: 1rem; padding: 1rem; background: #f0f9ff; border-radius: 6px; border-left: 4px solid #2563eb;">
+            <strong>Analysis Date:</strong> {{ analysis_date|date:"F d, Y" }} at {{ analysis_date|time:"g:i A" }}
+        </p>
+    </div>
+
+    <!-- Section Scores -->
+    {% if has_section_scores %}
+    <div style="margin: 2rem 0;">
+        <h2 class="section-title">Section Performance Breakdown</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Section</th>
+                    <th>Score</th>
+                    <th>Performance</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for section, score in section_scores.items %}
+                <tr>
+                    <td style="font-weight: 600;">{{ section|title }}</td>
+                    <td>{{ score|floatformat:1 }}/100</td>
+                    <td>
+                        {% if score >= 90 %}
+                            <span style="color: #059669; font-weight: 600;">Excellent</span>
+                        {% elif score >= 75 %}
+                            <span style="color: #2563eb; font-weight: 600;">Strong</span>
+                        {% elif score >= 60 %}
+                            <span style="color: #d97706; font-weight: 600;">Average</span>
+                        {% elif score >= 40 %}
+                            <span style="color: #dc2626; font-weight: 600;">Needs Improvement</span>
+                        {% else %}
+                            <span style="color: #991b1b; font-weight: 600;">Poor</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    <!-- Benchmarking Results -->
+    {% if has_benchmarking %}
+    <div style="margin: 2rem 0;">
+        <h2 class="section-title">Peer Benchmarking</h2>
+        <div class="score-card">
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-bottom: 1rem;">
+                <div style="text-align: center;">
+                    <h3 style="margin: 0; color: #2563eb;">{{ user_rank }}</h3>
+                    <p style="margin: 0; font-size: 0.9rem; color: #666;">Your Rank</p>
+                    <p style="margin: 0; font-size: 0.8rem; color: #999;">out of {{ total_participants }}</p>
+                </div>
+                <div style="text-align: center;">
+                    <h3 style="margin: 0; color: #059669;">{{ average_score|floatformat:1 }}</h3>
+                    <p style="margin: 0; font-size: 0.9rem; color: #666;">Average Score</p>
+                    <p style="margin: 0; font-size: 0.8rem; color: #999;">among peers</p>
+                </div>
+                <div style="text-align: center;">
+                    <h3 style="margin: 0; color: #dc2626;">{{ top_score|floatformat:1 }}</h3>
+                    <p style="margin: 0; font-size: 0.9rem; color: #666;">Top Score</p>
+                    <p style="margin: 0; font-size: 0.8rem; color: #999;">highest performer</p>
+                </div>
+            </div>
+            
+            <div style="background: #f8fafc; padding: 1rem; border-radius: 6px;">
+                <h4 style="margin: 0 0 0.5rem 0; color: #374151;">Performance Summary</h4>
+                <p style="margin: 0;">{{ performance_description }}</p>
+                
+                {% if benchmark_insights %}
+                <ul style="margin: 0.5rem 0 0 0; padding-left: 1.5rem;">
+                    {% for insight in benchmark_insights %}
+                    <li style="margin: 0.25rem 0;">{{ insight }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Recommendations -->
+    {% if total_recommendations > 0 %}
+    <div style="margin: 2rem 0;">
+        <h2 class="section-title">Improvement Recommendations</h2>
+        
+        {% if critical_recommendations %}
+        <h3 style="color: #dc2626; margin: 1.5rem 0 1rem 0;">🚨 Critical Issues</h3>
+        {% for rec in critical_recommendations %}
+        <div class="recommendation critical">
+            <h4 style="margin: 0 0 0.5rem 0;">{{ rec.title|default:"Critical Issue" }}</h4>
+            <p style="margin: 0;">{{ rec.description|default:rec.title }}</p>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% if important_recommendations %}
+        <h3 style="color: #d97706; margin: 1.5rem 0 1rem 0;">⚠️ Important Improvements</h3>
+        {% for rec in important_recommendations %}
+        <div class="recommendation">
+            <h4 style="margin: 0 0 0.5rem 0;">{{ rec.title|default:"Important Improvement" }}</h4>
+            <p style="margin: 0;">{{ rec.description|default:rec.title }}</p>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% if suggestions %}
+        <h3 style="color: #2563eb; margin: 1.5rem 0 1rem 0;">💡 Suggestions</h3>
+        {% for rec in suggestions %}
+        <div class="recommendation" style="background: #eff6ff; border-left-color: #2563eb;">
+            <h4 style="margin: 0 0 0.5rem 0;">{{ rec.title|default:"Suggestion" }}</h4>
+            <p style="margin: 0;">{{ rec.description|default:rec.title }}</p>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Strengths and Weaknesses -->
+    <div style="margin: 2rem 0;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <!-- Strengths -->
+            {% if has_strengths %}
+            <div>
+                <h2 class="section-title" style="color: #059669;">✅ Strengths</h2>
+                {% for strength in strengths %}
+                <div class="strength">
+                    <p style="margin: 0;">{{ strength }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Weaknesses -->
+            {% if has_weaknesses %}
+            <div>
+                <h2 class="section-title" style="color: #dc2626;">❌ Areas for Improvement</h2>
+                {% for weakness in weaknesses %}
+                <div class="weakness">
+                    <p style="margin: 0;">{{ weakness }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #e2e8f0; text-align: center; color: #666; font-size: 0.9rem;">
+        <p style="margin: 0;">This report was generated by EduCV - University CV Builder Platform</p>
+        <p style="margin: 0.25rem 0;">Generated on {{ generated_at|date:"F d, Y" }} at {{ generated_at|time:"g:i A" }}</p>
+        <p style="margin: 0.25rem 0;">Analysis Version: {{ analysis_version }}</p>
+    </div>
+</body>
+</html>

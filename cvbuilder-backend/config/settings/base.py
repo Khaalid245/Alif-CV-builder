@@ -43,6 +43,9 @@ LOCAL_APPS = [
     'apps.cv_intelligence',
     'apps.workflow',
     'apps.version_history',
+    'apps.analytics',
+    'apps.notifications',
+    'apps.template_engine',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

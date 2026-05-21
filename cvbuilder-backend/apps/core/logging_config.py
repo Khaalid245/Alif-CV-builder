@@ -45,14 +45,14 @@ def configure_structlog():
     )
 
 
-# Initialize structured logging
-configure_structlog()
+# Replace the insecure logging_config.py with the secure version
+# The secure_logging.py already exists and should be used instead
 
-# Create structured loggers
-app_logger = structlog.get_logger("educv.app")
-security_logger = structlog.get_logger("educv.security")
-performance_logger = structlog.get_logger("educv.performance")
-business_logger = structlog.get_logger("educv.business")
+# Import the secure logging classes
+from apps.core.secure_logging import (
+    SecurityLogger, BusinessLogger, PerformanceLogger, ApplicationLogger,
+    app_logger, security_logger, performance_logger, business_logger
+)
 
 
 class SecurityLogger:

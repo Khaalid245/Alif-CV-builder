@@ -54,6 +54,10 @@ class StudentShell extends StatelessWidget {
               label: 'Downloads',
             ),
             BottomNavigationBarItem(
+              icon: Icon(LucideIcons.brain),
+              label: 'Intelligence',
+            ),
+            BottomNavigationBarItem(
               icon: Icon(LucideIcons.user),
               label: 'Account',
             ),

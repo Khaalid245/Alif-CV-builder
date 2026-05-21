@@ -271,6 +271,7 @@ class _PDFPreviewScreenState extends ConsumerState<PDFPreviewScreen> {
 
       final filePath = await FileSaver.savePDF(
         bytes: pdfBytes,
+        fileName: '${templateName}_CV.pdf',
         templateName: templateName,
       );
 

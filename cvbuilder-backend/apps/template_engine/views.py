@@ -13,7 +13,7 @@ from django.shortcuts import get_object_or_404
 import logging
 
 from apps.core.responses import success_response, error_response
-from apps.core.permissions import IsStudentUser, IsAdminUser
+from apps.core.permissions import IsAdminUser
 from .models import (
     Industry, Role, TemplateCategory, Template, SectionConfiguration,
     BrandingConfiguration, UserTemplatePreference, TemplateUsage,

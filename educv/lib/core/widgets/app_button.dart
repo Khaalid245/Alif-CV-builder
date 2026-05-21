@@ -131,9 +131,12 @@ class AppButton extends StatelessWidget {
         children: [
           Icon(icon, size: 16),
           const SizedBox(width: 8),
-          Text(
-            text,
-            style: _getTextStyle(),
+          Flexible(
+            child: Text(
+              text,
+              style: _getTextStyle(),
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ],
       );

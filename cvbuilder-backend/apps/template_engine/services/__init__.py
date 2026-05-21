@@ -16,7 +16,7 @@ from django.template.loader import get_template
 from django.conf import settings
 import logging
 
-from .models import (
+from ..models import (
     Template, Industry, Role, TemplateCategory, SectionConfiguration,
     BrandingConfiguration, UserTemplatePreference, TemplateUsage,
     TemplatePerformanceMetric, TemplateRecommendation

@@ -11,6 +11,7 @@ from rest_framework import status
 from apps.cv.models import CVProfile, Education, Experience, Skill, Project
 from apps.cv_intelligence.models import CVAnalysis
 from apps.cv_intelligence.validators import CVValidator
+from .test_fixtures import SecureTestFixtures
 
 User = get_user_model()
 
@@ -19,12 +20,8 @@ class EnhancedCVValidatorTest(TestCase):
     """Test the enhanced CV validator with detailed section scoring."""
     
     def setUp(self):
-        self.user = User.objects.create_user(
-            email='test@university.edu',
-            password='testpass123',
-            full_name='Test Student',
-            student_id='STU001'
-        )
+        # SECURITY: Use secure test fixtures instead of hardcoded credentials
+        self.user = SecureTestFixtures.create_test_user()
         self.cv = CVProfile.objects.create(student=self.user)
         self.validator = CVValidator()
     
@@ -309,12 +306,8 @@ class EnhancedCVAnalysisAPITest(APITestCase):
     """Test the enhanced CV analysis API endpoints."""
     
     def setUp(self):
-        self.user = User.objects.create_user(
-            email='test@university.edu',
-            password='testpass123',
-            full_name='Test Student',
-            student_id='STU001'
-        )
+        # SECURITY: Use secure test fixtures instead of hardcoded credentials
+        self.user = SecureTestFixtures.create_api_test_user()
         self.client.force_authenticate(user=self.user)
         self.cv = CVProfile.objects.create(student=self.user)
     

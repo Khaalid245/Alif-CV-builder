@@ -103,4 +103,14 @@ class ApiClient {
       options: options,
     );
   }
+
+  /// Set authentication token for API requests
+  void setAuthToken(String token) {
+    _dio.options.headers['Authorization'] = 'Bearer $token';
+  }
+
+  /// Remove authentication token from API requests
+  void removeAuthToken() {
+    _dio.options.headers.remove('Authorization');
+  }
 }

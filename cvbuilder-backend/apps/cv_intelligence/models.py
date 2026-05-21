@@ -128,10 +128,19 @@ class AnalysisIssue(models.Model):
         OVERALL = 'overall', 'Overall'
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(
+        'users.User',
+        on_delete=models.CASCADE,
+        related_name='analysis_issues',
+        null=True,
+        blank=True
+    )
     analysis = models.ForeignKey(
         CVAnalysis,
         on_delete=models.CASCADE,
-        related_name='issues'
+        related_name='issues',
+        null=True,
+        blank=True
     )
     
     # Issue Details
@@ -197,10 +206,19 @@ class ContentRecommendation(models.Model):
         LOW = 'low', 'Low Priority'
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(
+        'users.User',
+        on_delete=models.CASCADE,
+        related_name='content_recommendations',
+        null=True,
+        blank=True
+    )
     analysis = models.ForeignKey(
         CVAnalysis,
         on_delete=models.CASCADE,
-        related_name='recommendations'
+        related_name='recommendations',
+        null=True,
+        blank=True
     )
     
     # Recommendation Details
@@ -353,3 +371,95 @@ class AnalysisConfiguration(models.Model):
             }
         )
         return config
+
+
+class CVAnalysisHistory(models.Model):
+    """
+    Historical record of CV analysis results.
+    Stores snapshots of analysis results for tracking progress over time.
+    """
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(
+        'users.User',
+        on_delete=models.CASCADE,
+        related_name='cv_analysis_history'
+    )
+    
+    # Core Analysis Results
+    overall_score = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
+        help_text='Overall CV score (0-100)'
+    )
+    readiness_score = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
+        null=True,
+        blank=True,
+        help_text='CV readiness score for job applications'
+    )
+    readiness_grade = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True,
+        help_text='Letter grade representation of readiness'
+    )
+    
+    # Detailed Scores and Analysis
+    section_scores = models.JSONField(
+        default=dict,
+        help_text='Scores for each CV section (profile, experience, etc.)'
+    )
+    recommendations = models.JSONField(
+        default=list,
+        help_text='List of improvement recommendations'
+    )
+    strengths = models.JSONField(
+        default=list,
+        help_text='Identified CV strengths'
+    )
+    weaknesses = models.JSONField(
+        default=list,
+        help_text='Identified areas for improvement'
+    )
+    
+    # Analysis Metadata
+    analysis_version = models.CharField(
+        max_length=20,
+        default='1.0',
+        help_text='Version of analysis algorithm used'
+    )
+    total_recommendations = models.IntegerField(
+        default=0,
+        help_text='Total number of recommendations generated'
+    )
+    
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        db_table = 'cv_analysis_history'
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['user', '-created_at']),
+            models.Index(fields=['overall_score']),
+            models.Index(fields=['created_at']),
+        ]
+        verbose_name = 'CV Analysis History'
+        verbose_name_plural = 'CV Analysis Histories'
+    
+    def __str__(self):
+        return f'Analysis History - {self.user.email} ({self.overall_score}%) - {self.created_at.strftime("%Y-%m-%d %H:%M")}'
+    
+    @property
+    def formatted_date(self):
+        """Return formatted creation date."""
+        return self.created_at.strftime('%B %d, %Y at %I:%M %p')
+    
+    @property
+    def recommendation_count(self):
+        """Return count of recommendations."""
+        return len(self.recommendations) if isinstance(self.recommendations, list) else 0

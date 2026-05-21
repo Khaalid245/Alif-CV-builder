@@ -30,9 +30,14 @@ class SensitiveDataFilter:
     
     @classmethod
     def sanitize_message(cls, message):
-        """Sanitize sensitive data from log message."""
+        """Sanitize sensitive data from log message with XSS protection."""
+        import html
+        
         if not isinstance(message, str):
             message = str(message)
+        
+        # HTML escape the entire message first to prevent XSS
+        message = html.escape(message)
         
         # Replace sensitive patterns
         for pattern_name, pattern in cls.SENSITIVE_PATTERNS.items():
@@ -50,7 +55,8 @@ class SensitiveDataFilter:
     
     @staticmethod
     def _mask_email(match):
-        """Partially mask email addresses."""
+        """Partially mask email addresses with HTML escaping."""
+        import html
         email = match.group(0)
         try:
             local, domain = email.split('@')
@@ -66,7 +72,8 @@ class SensitiveDataFilter:
             else:
                 masked_domain = '*' * len(domain)
             
-            return f"{masked_local}@{masked_domain}"
+            # HTML escape the result to prevent XSS
+            return html.escape(f"{masked_local}@{masked_domain}")
         except:
             return "***MASKED_EMAIL***"
 

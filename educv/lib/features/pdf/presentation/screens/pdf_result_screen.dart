@@ -339,6 +339,7 @@ class _PDFResultScreenState extends ConsumerState<PDFResultScreen> {
 
       final filePath = await FileSaver.savePDF(
         bytes: pdfBytes,
+        fileName: '${cv.templateDisplay}_CV.pdf',
         templateName: cv.templateDisplay,
       );
 

@@ -3,7 +3,7 @@ Serializers for CV Intelligence API responses.
 Ensures consistent data format for frontend integration.
 """
 from rest_framework import serializers
-from .models import CVAnalysis, ContentSuggestion, ValidationIssue
+from .models import CVAnalysis, ContentRecommendation, AnalysisIssue, CVAnalysisHistory
 
 
 class CVAnalysisSerializer(serializers.ModelSerializer):
@@ -51,33 +51,36 @@ class CVAnalysisSerializer(serializers.ModelSerializer):
         return analysis_data.get('priority_improvements', [])[:3]
 
 
-class ContentSuggestionSerializer(serializers.ModelSerializer):
-    """Serializer for content suggestions."""
+class ContentRecommendationSerializer(serializers.ModelSerializer):
+    """Serializer for content recommendations."""
     
-    section_display = serializers.CharField(source='get_section_type_display', read_only=True)
-    suggestion_display = serializers.CharField(source='get_suggestion_type_display', read_only=True)
+    section_display = serializers.CharField(source='get_section_display', read_only=True)
+    recommendation_display = serializers.CharField(source='get_recommendation_type_display', read_only=True)
     
     class Meta:
-        model = ContentSuggestion
+        model = ContentRecommendation
         fields = [
-            'id', 'section_type', 'section_display', 'suggestion_type', 
-            'suggestion_display', 'original_content', 'suggested_content',
-            'improvement_reason', 'applied', 'created_at'
+            'id', 'recommendation_type', 'recommendation_display', 'priority', 
+            'section', 'section_display', 'title', 'description', 'example',
+            'target_field', 'current_content', 'suggested_content',
+            'expected_score_improvement', 'applied', 'created_at'
         ]
         read_only_fields = fields
 
 
-class ValidationIssueSerializer(serializers.ModelSerializer):
-    """Serializer for validation issues."""
+class AnalysisIssueSerializer(serializers.ModelSerializer):
+    """Serializer for analysis issues."""
     
     issue_display = serializers.CharField(source='get_issue_type_display', read_only=True)
     severity_display = serializers.CharField(source='get_severity_display', read_only=True)
     
     class Meta:
-        model = ValidationIssue
+        model = AnalysisIssue
         fields = [
             'id', 'issue_type', 'issue_display', 'severity', 'severity_display',
-            'section_type', 'description', 'suggestion', 'resolved', 'created_at'
+            'section', 'title', 'description', 'recommendation', 
+            'field_name', 'current_value', 'suggested_value',
+            'resolved', 'created_at'
         ]
         read_only_fields = fields
 
@@ -119,8 +122,8 @@ class CVIntelligenceDashboardSerializer(serializers.Serializer):
     pending_suggestions = serializers.IntegerField()
     
     # Recent activity
-    top_suggestions = ContentSuggestionSerializer(many=True)
-    critical_issues_list = ValidationIssueSerializer(many=True)
+    top_recommendations = ContentRecommendationSerializer(many=True)
+    critical_issues_list = AnalysisIssueSerializer(many=True)
     
     # Progress tracking
     last_analysis_date = serializers.DateTimeField(allow_null=True)
@@ -154,3 +157,36 @@ class ResolveIssueSerializer(serializers.Serializer):
     
     resolution_notes = serializers.CharField(required=False, allow_blank=True)
     was_helpful = serializers.BooleanField(default=True)
+
+
+class CVAnalysisHistorySerializer(serializers.ModelSerializer):
+    """Serializer for CV analysis history records."""
+    
+    formatted_date = serializers.ReadOnlyField()
+    recommendation_count = serializers.ReadOnlyField()
+    
+    class Meta:
+        model = CVAnalysisHistory
+        fields = [
+            'id', 'overall_score', 'readiness_score', 'readiness_grade',
+            'section_scores', 'recommendations', 'strengths', 'weaknesses',
+            'analysis_version', 'total_recommendations', 'recommendation_count',
+            'created_at', 'formatted_date'
+        ]
+        read_only_fields = fields
+
+
+class CVAnalysisHistoryListSerializer(serializers.ModelSerializer):
+    """Lightweight serializer for history list view."""
+    
+    formatted_date = serializers.ReadOnlyField()
+    recommendation_count = serializers.ReadOnlyField()
+    
+    class Meta:
+        model = CVAnalysisHistory
+        fields = [
+            'id', 'overall_score', 'readiness_score', 'readiness_grade',
+            'total_recommendations', 'recommendation_count',
+            'created_at', 'formatted_date'
+        ]
+        read_only_fields = fields

@@ -464,6 +464,7 @@ class _CVDownloadsScreenState extends ConsumerState<CVDownloadsScreen> {
       // Save PDF to temporary location
       final path = await FileSaver.savePDF(
         bytes: bytes,
+        fileName: '${cv.templateDisplay}_CV.pdf',
         templateName: cv.templateDisplay,
       );
 

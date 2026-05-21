@@ -7,6 +7,7 @@ from django.db.models.signals import post_save, post_delete, m2m_changed
 from django.dispatch import receiver
 from django.utils import timezone
 from django.core.cache import cache
+from django.db import models
 import logging
 
 from .models import (

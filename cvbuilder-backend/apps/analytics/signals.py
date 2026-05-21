@@ -7,9 +7,8 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
 
-from apps.cv.models import CVProfile
+from apps.cv.models import CVProfile, GeneratedCV
 from apps.cv_intelligence.models import CVAnalysis
-from apps.pdf_generator.models import GeneratedCV
 from .services import analytics_service
 from .models import AnalyticsEvent
 

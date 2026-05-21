@@ -4,7 +4,7 @@ Role-based access control for template management and usage.
 """
 from rest_framework import permissions
 from django.contrib.auth import get_user_model
-from .models import Template, UserTemplatePreference
+from ..models import Template, UserTemplatePreference
 
 User = get_user_model()
 
@@ -178,7 +178,7 @@ class CanManageTemplateRecommendations(permissions.BasePermission):
             return True
         
         # Users can only view/update their own recommendations
-        from .models import TemplateRecommendation
+        from ..models import TemplateRecommendation
         if isinstance(obj, TemplateRecommendation):
             if request.method in permissions.SAFE_METHODS:
                 return obj.user == request.user

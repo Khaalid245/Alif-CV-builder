@@ -24,6 +24,7 @@ from rest_framework_simplejwt.token_blacklist.models import OutstandingToken, Bl
 from rest_framework_simplejwt.views import TokenRefreshView as BaseTokenRefreshView
 
 from apps.core.responses import success_response, error_response
+from apps.core.secure_logging import SecurityLogger
 from apps.core.utils import get_client_ip
 from .models import User, AuditLog
 from .serializers import (
@@ -111,10 +112,12 @@ class LoginView(APIView):
         user = authenticate(request, username=email, password=password)
 
         if user is None:
-            # Log failed attempt with IP — critical for security monitoring
-            security_logger.warning(
-                'Failed login attempt | email=%s | ip=%s | ua=%s',
-                email, ip, request.META.get('HTTP_USER_AGENT', ''),
+            # Use secure logging that sanitizes sensitive data
+            SecurityLogger.log_login_attempt(
+                user_email=email,
+                success=False,
+                ip_address=ip,
+                user_agent=request.META.get('HTTP_USER_AGENT', '')
             )
             return error_response(
                 'Invalid email or password.',
@@ -129,7 +132,12 @@ class LoginView(APIView):
             )
 
         if user.status == User.Status.SUSPENDED:
-            security_logger.warning('Suspended account login attempt | email=%s | ip=%s', email, ip)
+            SecurityLogger.log_login_attempt(
+                user_email=email,
+                success=False,
+                ip_address=ip,
+                user_agent=request.META.get('HTTP_USER_AGENT', '')
+            )
             return error_response(
                 'Your account has been suspended. Please contact support.',
                 status_code=status.HTTP_403_FORBIDDEN,
@@ -144,7 +152,12 @@ class LoginView(APIView):
         # Successful login
         user.record_login()
         AuditLog.log(user, AuditLog.Action.LOGIN, request)
-        logger.info('Student logged in: %s | ip=%s', user.email, ip)
+        SecurityLogger.log_login_attempt(
+            user_email=email,
+            success=True,
+            ip_address=ip,
+            user_agent=request.META.get('HTTP_USER_AGENT', '')
+        )
 
         return success_response(
             'Login successful.',
@@ -288,7 +301,10 @@ class PasswordResetConfirmView(APIView):
             BlacklistedToken.objects.get_or_create(token=outstanding)
 
         AuditLog.log(user, AuditLog.Action.PASSWORD_CHANGED, request)
-        security_logger.info('Password reset completed: %s', user.email)
+        SecurityLogger.log_password_change(
+            user_id=str(user.id),
+            ip_address=get_client_ip(request)
+        )
 
         return success_response('Password reset successfully.')
 
@@ -381,7 +397,10 @@ class ChangePasswordView(APIView):
             BlacklistedToken.objects.get_or_create(token=token)
 
         AuditLog.log(request.user, AuditLog.Action.PASSWORD_CHANGED, request)
-        security_logger.info('Password changed — all sessions invalidated: %s', request.user.email)
+        SecurityLogger.log_password_change(
+            user_id=str(request.user.id),
+            ip_address=get_client_ip(request)
+        )
 
         return success_response(
             'Password changed successfully. Please log in again with your new password.',
@@ -429,7 +448,10 @@ class RequestDeletionView(APIView):
             request,
             extra_data={'reason': reason},
         )
-        security_logger.info('Data deletion requested: %s', request.user.email)
+        SecurityLogger.log_data_deletion_request(
+            user_id=str(request.user.id),
+            ip_address=get_client_ip(request)
+        )
 
         return success_response(
             'Your data deletion request has been submitted. '

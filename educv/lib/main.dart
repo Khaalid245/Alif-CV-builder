@@ -27,6 +27,12 @@ Future<void> main() async {
     ),
   );
 
+  // Optimize performance for keyboard animations
+  SystemChrome.setEnabledSystemUIMode(
+    SystemUiMode.edgeToEdge,
+    overlays: [SystemUiOverlay.top],
+  );
+
   runApp(
     const ProviderScope(
       child: App(),

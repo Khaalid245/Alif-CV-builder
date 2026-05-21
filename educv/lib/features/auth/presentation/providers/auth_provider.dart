@@ -15,6 +15,91 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
 // Current user provider
 final currentUserProvider = StateProvider<StudentModel?>((ref) => null);
 
+// Auth state model
+class AuthState {
+  final StudentModel? user;
+  final bool isAuthenticated;
+  final bool isLoading;
+  final String? error;
+
+  const AuthState({
+    this.user,
+    this.isAuthenticated = false,
+    this.isLoading = false,
+    this.error,
+  });
+
+  AuthState copyWith({
+    StudentModel? user,
+    bool? isAuthenticated,
+    bool? isLoading,
+    String? error,
+  }) {
+    return AuthState(
+      user: user ?? this.user,
+      isAuthenticated: isAuthenticated ?? this.isAuthenticated,
+      isLoading: isLoading ?? this.isLoading,
+      error: error,
+    );
+  }
+}
+
+// Auth provider
+final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
+  return AuthNotifier(ref);
+});
+
+class AuthNotifier extends StateNotifier<AuthState> {
+  final Ref ref;
+
+  AuthNotifier(this.ref) : super(const AuthState()) {
+    _checkAuthStatus();
+  }
+
+  Future<void> _checkAuthStatus() async {
+    try {
+      final secureStorage = ref.read(secureStorageProvider);
+      final accessToken = await secureStorage.getAccessToken();
+      
+      if (accessToken != null && accessToken.isNotEmpty) {
+        final userId = await secureStorage.getUserId();
+        final email = await secureStorage.getUserEmail();
+        final role = await secureStorage.getUserRole();
+        
+        if (userId != null && email != null) {
+          state = state.copyWith(
+            user: StudentModel(
+              id: userId,
+              email: email,
+              fullName: '', // Not stored in secure storage
+              studentId: '', // Not stored in secure storage
+              role: role ?? 'student',
+              status: 'active',
+              termsConsent: true,
+              marketingConsent: false,
+              dataProcessingConsent: true,
+              createdAt: DateTime.now(),
+            ),
+            isAuthenticated: true,
+          );
+        }
+      }
+    } catch (e) {
+      // Silent fail for auth check
+    }
+  }
+
+  Future<void> logout() async {
+    try {
+      final secureStorage = ref.read(secureStorageProvider);
+      await secureStorage.clearAll();
+      state = const AuthState();
+    } catch (e) {
+      state = state.copyWith(error: e.toString());
+    }
+  }
+}
+
 // Login provider
 final loginProvider = AsyncNotifierProvider<LoginNotifier, AuthResponse?>(() {
   return LoginNotifier();
@@ -49,6 +134,12 @@ class LoginNotifier extends AsyncNotifier<AuthResponse?> {
 
       // Set current user in provider
       ref.read(currentUserProvider.notifier).state = authResponse.student;
+      
+      // Update auth state
+      ref.read(authProvider.notifier).state = AuthState(
+        user: authResponse.student,
+        isAuthenticated: true,
+      );
 
       state = AsyncData(authResponse);
     } catch (e) {
@@ -105,6 +196,13 @@ class RegisterNotifier extends AsyncNotifier<AuthResponse?> {
         role: authResponse.student.role,
       );
       ref.read(currentUserProvider.notifier).state = authResponse.student;
+      
+      // Update auth state
+      ref.read(authProvider.notifier).state = AuthState(
+        user: authResponse.student,
+        isAuthenticated: true,
+      );
+      
       state = AsyncData(authResponse);
     } catch (e, stackTrace) {
       state = AsyncError(e, stackTrace);

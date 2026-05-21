@@ -174,26 +174,55 @@ class Command(BaseCommand):
             self.stdout.write('No unused templates found')
 
     def _optimize_database(self, dry_run=False):
-        """Optimize database tables using parameterized queries."""
+        """Optimize database tables using safe SQL construction."""
         if dry_run:
             self.stdout.write('  → Would optimize database tables')
             return
         
         try:
             from django.db import connection
+            from django.db.models import get_models
+            from apps.template_engine.models import (
+                Template, TemplateUsage, TemplatePerformanceMetric, 
+                TemplateRecommendation
+            )
             
-            # Use parameterized queries to prevent SQL injection
-            table_names = [
-                'templates',
-                'template_usage', 
-                'template_performance_metrics',
-                'template_recommendations'
+            # Get actual table names from Django models (safe)
+            models_to_optimize = [
+                Template,
+                TemplateUsage, 
+                TemplatePerformanceMetric,
+                TemplateRecommendation
             ]
             
             with connection.cursor() as cursor:
-                for table_name in table_names:
-                    # Use parameterized query with %s placeholder
-                    cursor.execute('VACUUM ANALYZE %s', [table_name])
+                for model in models_to_optimize:
+                    # Use Django's _meta to get the actual table name (safe)
+                    table_name = model._meta.db_table
+                    
+                    # Validate table name contains only safe characters
+                    if not table_name.replace('_', '').replace('-', '').isalnum():
+                        self.stdout.write(
+                            self.style.WARNING(f'Skipping unsafe table name: {table_name}')
+                        )
+                        continue
+                    
+                    # Use Django's connection.ops.quote_name for safe table name quoting
+                    quoted_table = connection.ops.quote_name(table_name)
+                    
+                    # Use connection-specific SQL for table analysis
+                    if connection.vendor == 'mysql':
+                        sql = f'ANALYZE TABLE {quoted_table}'
+                    elif connection.vendor == 'postgresql':
+                        sql = f'ANALYZE {quoted_table}'
+                    else:
+                        # Skip unsupported databases
+                        self.stdout.write(
+                            self.style.WARNING(f'Skipping optimization for {connection.vendor} database')
+                        )
+                        continue
+                    
+                    cursor.execute(sql)
                     self.stdout.write(f'  ✓ Optimized table: {table_name}')
                     
         except Exception as e:

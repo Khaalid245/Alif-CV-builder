@@ -15,6 +15,7 @@ dependencies:
   flutter_riverpod: ^2.4.9
   hooks_riverpod: ^2.4.9
   flutter_hooks: ^0.20.3
+  provider: ^6.1.1
 
   # HTTP & Networking
   dio: ^5.4.0
@@ -26,9 +27,13 @@ dependencies:
   flutter_secure_storage: ^9.0.0
   shared_preferences: ^2.2.2
 
+  # Charts & Visualization
+  fl_chart: ^0.68.0
+
   # Fonts & Icons
   google_fonts: ^6.1.0
   lucide_icons: ^0.257.0
+  flutter_animate: ^4.5.0
 
   # Environment
   flutter_dotenv: ^5.1.0
@@ -47,6 +52,10 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
+  mockito: ^5.4.4
+  build_runner: ^2.4.7
+  integration_test:
+    sdk: flutter
 
 flutter:
   uses-material-design: true

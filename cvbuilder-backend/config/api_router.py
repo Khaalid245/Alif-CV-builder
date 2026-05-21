@@ -26,6 +26,15 @@ urlpatterns = [
     # Version History System
     path('version-history/', include('apps.version_history.urls')),
 
+    # Analytics & Benchmarking System
+    path('analytics/', include('apps.analytics.urls')),
+
+    # Notifications & Alerts System
+    path('notifications/', include('apps.notifications.urls')),
+
+    # Dynamic Template Engine
+    path('templates/', include('apps.template_engine.urls')),
+
     # Phase 5 — Admin Dashboard
     path('administration/', include('apps.administration.urls')),
 ]

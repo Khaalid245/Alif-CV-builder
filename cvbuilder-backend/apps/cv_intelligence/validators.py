@@ -36,56 +36,89 @@ class CVValidator:
         Comprehensive CV validation.
         Returns detailed analysis with scores and suggestions.
         """
+        import logging
+        logger = logging.getLogger(__name__)
+        
+        logger.info(f'Starting CV validation for profile {cv_profile.id}')
+        
         self.issues = []
         self.suggestions = []
         
-        # Validate each section with detailed scoring
-        profile_score = self._validate_profile_section(cv_profile)
-        experience_score = self._validate_experiences(cv_profile.experiences.all())
-        education_score = self._validate_education(cv_profile.educations.all())
-        skills_score = self._validate_skills(cv_profile.skills.all())
-        projects_score = self._validate_projects(cv_profile.projects.all())
-        
-        # Calculate overall score using weights
-        total_score = (
-            profile_score * 0.25 +
-            experience_score * 0.25 +
-            education_score * 0.20 +
-            skills_score * 0.15 +
-            projects_score * 0.15
-        )
-        
-        grade = self._get_grade_for_score(total_score)
-        
-        # Determine submission readiness
-        is_submission_ready = (
-            total_score >= 70 and
-            profile_score >= 60 and
-            experience_score >= 60 and
-            education_score >= 60 and
-            skills_score >= 60 and
-            projects_score >= 50
-        )
-        
-        # Categorize recommendations
-        recommendations = self._categorize_recommendations()
-        
-        return {
-            'overall_score': round(total_score),
-            'grade': grade,
-            'is_submission_ready': is_submission_ready,
-            'score_breakdown': {
-                'profile': profile_score,
-                'experience': experience_score,
-                'education': education_score,
-                'skills': skills_score,
-                'projects': projects_score
-            },
-            'issues': self.issues,
-            'suggestions': self.suggestions,
-            'recommendations': recommendations,
-            'priority_improvements': self._get_priority_improvements()
-        }
+        try:
+            # Validate each section with detailed scoring
+            logger.info(f'Validating profile section for {cv_profile.id}')
+            profile_score = self._validate_profile_section(cv_profile)
+            logger.info(f'Profile score: {profile_score}')
+            
+            logger.info(f'Validating experiences for {cv_profile.id}')
+            experience_score = self._validate_experiences(cv_profile.experiences.all())
+            logger.info(f'Experience score: {experience_score}')
+            
+            logger.info(f'Validating education for {cv_profile.id}')
+            education_score = self._validate_education(cv_profile.educations.all())
+            logger.info(f'Education score: {education_score}')
+            
+            logger.info(f'Validating skills for {cv_profile.id}')
+            skills_score = self._validate_skills(cv_profile.skills.all())
+            logger.info(f'Skills score: {skills_score}')
+            
+            logger.info(f'Validating projects for {cv_profile.id}')
+            projects_score = self._validate_projects(cv_profile.projects.all())
+            logger.info(f'Projects score: {projects_score}')
+            
+            # Calculate overall score using weights
+            logger.info(f'Calculating overall score for {cv_profile.id}')
+            total_score = (
+                profile_score * 0.25 +
+                experience_score * 0.25 +
+                education_score * 0.20 +
+                skills_score * 0.15 +
+                projects_score * 0.15
+            )
+            logger.info(f'Total score calculated: {total_score}')
+            
+            grade = self._get_grade_for_score(total_score)
+            logger.info(f'Grade assigned: {grade}')
+            
+            # Determine submission readiness
+            is_submission_ready = (
+                total_score >= 70 and
+                profile_score >= 60 and
+                experience_score >= 60 and
+                education_score >= 60 and
+                skills_score >= 60 and
+                projects_score >= 50
+            )
+            logger.info(f'Submission ready: {is_submission_ready}')
+            
+            # Categorize recommendations
+            logger.info(f'Categorizing recommendations for {cv_profile.id}')
+            recommendations = self._categorize_recommendations()
+            logger.info(f'Recommendations categorized: {len(recommendations)} categories')
+            
+            result = {
+                'overall_score': round(total_score),
+                'grade': grade,
+                'is_submission_ready': is_submission_ready,
+                'score_breakdown': {
+                    'profile': profile_score,
+                    'experience': experience_score,
+                    'education': education_score,
+                    'skills': skills_score,
+                    'projects': projects_score
+                },
+                'issues': self.issues,
+                'suggestions': self.suggestions,
+                'recommendations': recommendations,
+                'priority_improvements': self._get_priority_improvements()
+            }
+            
+            logger.info(f'CV validation completed successfully for {cv_profile.id}')
+            return result
+            
+        except Exception as e:
+            logger.error(f'CV validation failed for {cv_profile.id}: {str(e)}', exc_info=True)
+            raise
     
     def _validate_profile_section(self, cv_profile) -> int:
         """Validate complete profile section including contact info and summary."""

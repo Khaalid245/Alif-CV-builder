@@ -39,11 +39,91 @@ class AppTypography {
         color: AppColors.textPrimary,
       );
 
+  // H4 headings - weight 600, line-height 1.3
+  static TextStyle get h4 => const TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w600,
+        height: 1.3,
+        color: AppColors.textPrimary,
+      );
+
+  // H5 headings - weight 600, line-height 1.3
+  static TextStyle get h5 => const TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w600,
+        height: 1.3,
+        color: AppColors.textPrimary,
+      );
+
+  // H6 headings - weight 600, line-height 1.3
+  static TextStyle get h6 => const TextStyle(
+        fontSize: 12,
+        fontWeight: FontWeight.w600,
+        height: 1.3,
+        color: AppColors.textPrimary,
+      );
+
+  // Heading Small - weight 600, line-height 1.3
+  static TextStyle get headingSmall => const TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w600,
+        height: 1.3,
+        color: AppColors.textPrimary,
+      );
+
+  // Heading Medium - weight 600, line-height 1.25
+  static TextStyle get headingMedium => const TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+        height: 1.25,
+        color: AppColors.textPrimary,
+      );
+
   // Body text - weight 400, no letter-spacing, line-height 1.6
   static TextStyle get body => const TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.w400,
         letterSpacing: 0,
+        height: 1.6,
+        color: AppColors.textSecondary,
+      );
+
+  // Body1 text - weight 400, line-height 1.5
+  static TextStyle get body1 => const TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w400,
+        height: 1.5,
+        color: AppColors.textSecondary,
+      );
+
+  // Body2 text - weight 400, line-height 1.4
+  static TextStyle get body2 => const TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+        height: 1.4,
+        color: AppColors.textSecondary,
+      );
+
+  // Body Medium - weight 500, line-height 1.5
+  static TextStyle get bodyMedium => const TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+        height: 1.5,
+        color: AppColors.textSecondary,
+      );
+
+  // Body Small - weight 400, line-height 1.4
+  static TextStyle get bodySmall => const TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+        height: 1.4,
+        color: AppColors.textSecondary,
+      );
+
+  // Body Large - weight 400, line-height 1.6
+  static TextStyle get bodyLarge => const TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.w400,
         height: 1.6,
         color: AppColors.textSecondary,
       );

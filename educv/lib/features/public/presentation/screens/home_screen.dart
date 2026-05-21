@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/public_layout.dart';
-import '../widgets/hero_section.dart';
-import '../widgets/stats_bar.dart';
-import '../widgets/how_it_works_section.dart';
-import '../widgets/templates_section.dart';
-import '../widgets/features_grid.dart';
-import '../widgets/cta_banner.dart';
+import '../widgets/premium_dark_layout.dart';
+import '../widgets/premium_hero_section.dart';
+import '../widgets/premium_dark_stats_section.dart';
+import '../widgets/premium_dark_how_it_works_section.dart';
+import '../widgets/premium_dark_templates_section.dart';
+import '../widgets/premium_dark_features_grid.dart';
+import '../widgets/premium_dark_cta_banner.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const PublicLayout(
+    return const PremiumDarkLayout(
       child: Column(
         children: [
-          HeroSection(),
-          StatsBar(),
-          HowItWorksSection(),
-          TemplatesSection(),
-          FeaturesGrid(),
-          CTABanner(),
+          PremiumHeroSection(),
+          PremiumDarkStatsSection(),
+          PremiumDarkHowItWorksSection(),
+          PremiumDarkTemplatesSection(),
+          PremiumDarkFeaturesGrid(),
+          PremiumDarkCTABanner(),
         ],
       ),
     );
