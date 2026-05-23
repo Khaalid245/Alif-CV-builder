@@ -3,39 +3,99 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
-class PremiumHeroSection extends StatelessWidget {
-  const PremiumHeroSection({super.key});
+import '../../../../core/theme/premium_dark_colors.dart';
+import '../../../../core/theme/premium_dark_typography.dart';
+import '../../../../core/widgets/premium_saas_grid_background.dart';
+
+class PremiumSaaSHeroSection extends StatelessWidget {
+  const PremiumSaaSHeroSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      constraints: const BoxConstraints(minHeight: 800),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color(0xFF070B14),
-            Color(0xFF0D1320),
-            Color(0xFF111827),
+    return PremiumSaaSGridBackground(
+      opacity: 0.03,
+      child: Container(
+        width: double.infinity,
+        constraints: const BoxConstraints(minHeight: 800),
+        child: Stack(
+          children: [
+            // Animated gradient orbs
+            _buildAnimatedOrbs(),
+            // Main content
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 120),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 1200),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      final isDesktop = constraints.maxWidth >= 900;
+                      return isDesktop ? _buildDesktopLayout() : _buildMobileLayout();
+                    },
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 120),
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 1200),
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final isDesktop = constraints.maxWidth >= 900;
-                return isDesktop ? _buildDesktopLayout() : _buildMobileLayout();
-              },
+    );
+  }
+
+  Widget _buildAnimatedOrbs() {
+    return Stack(
+      children: [
+        // Top-left orb
+        Positioned(
+          top: 100,
+          left: -100,
+          child: Container(
+            width: 300,
+            height: 300,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: RadialGradient(
+                colors: [
+                  const Color(0xFF4F46E5).withValues(alpha: 0.15),
+                  Colors.transparent,
+                ],
+              ),
             ),
+          ).animate(
+            onPlay: (controller) => controller.repeat(reverse: true),
+          ).moveX(
+            begin: 0,
+            end: 50,
+            duration: 8000.ms,
+            curve: Curves.easeInOut,
           ),
         ),
-      ),
+        // Bottom-right orb
+        Positioned(
+          bottom: 50,
+          right: -150,
+          child: Container(
+            width: 400,
+            height: 400,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: RadialGradient(
+                colors: [
+                  const Color(0xFF7C3AED).withValues(alpha: 0.1),
+                  Colors.transparent,
+                ],
+              ),
+            ),
+          ).animate(
+            onPlay: (controller) => controller.repeat(reverse: true),
+          ).moveY(
+            begin: 0,
+            end: -30,
+            duration: 6000.ms,
+            curve: Curves.easeInOut,
+          ),
+        ),
+      ],
     );
   }
 
@@ -120,14 +180,18 @@ class PremiumHeroSection extends StatelessWidget {
               color: Color(0xFF4F46E5),
               shape: BoxShape.circle,
             ),
+          ).animate(
+            onPlay: (controller) => controller.repeat(),
+          ).shimmer(
+            duration: 2000.ms,
+            color: const Color(0xFF4F46E5).withValues(alpha: 0.5),
           ),
           const SizedBox(width: 12),
-          const Text(
+          Text(
             'OFFICIAL UNIVERSITY PLATFORM',
-            style: TextStyle(
+            style: PremiumDarkTypography.captionBold.copyWith(
+              color: const Color(0xFF4F46E5),
               fontSize: 12,
-              fontWeight: FontWeight.w700,
-              color: Color(0xFF4F46E5),
               letterSpacing: 0.5,
             ),
           ),
@@ -148,7 +212,7 @@ class PremiumHeroSection extends StatelessWidget {
         ),
         children: [
           const TextSpan(
-            text: 'Your career starts\nwith a ',
+            text: 'Your career starts\\nwith a ',
             style: TextStyle(color: Colors.white),
           ),
           TextSpan(
@@ -257,6 +321,11 @@ class PremiumHeroSection extends StatelessWidget {
           ),
         ),
       ),
+    ).animate(
+      onPlay: (controller) => controller.repeat(reverse: true),
+    ).shimmer(
+      duration: 3000.ms,
+      color: Colors.white.withValues(alpha: 0.1),
     );
   }
 
@@ -421,7 +490,14 @@ class PremiumHeroSection extends StatelessWidget {
           _buildDownloadSection(),
         ],
       ),
-    ).animate().fadeIn(duration: 1000.ms, delay: 400.ms).slideX(begin: 0.3, end: 0);
+    ).animate().fadeIn(duration: 1000.ms, delay: 400.ms).slideX(begin: 0.3, end: 0).then().animate(
+      onPlay: (controller) => controller.repeat(reverse: true),
+    ).moveY(
+      begin: 0,
+      end: -8,
+      duration: 4000.ms,
+      curve: Curves.easeInOut,
+    );
   }
 
   Widget _buildDashboardHeader() {
@@ -430,8 +506,8 @@ class PremiumHeroSection extends StatelessWidget {
         Container(
           width: 56,
           height: 56,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
               colors: [Color(0xFF4F46E5), Color(0xFF7C3AED)],
             ),
             shape: BoxShape.circle,
@@ -448,7 +524,7 @@ class PremiumHeroSection extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 16),
-        Flexible(
+        Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -509,12 +585,12 @@ class PremiumHeroSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'CV COMPLETION',
           style: TextStyle(
             fontSize: 11,
             fontWeight: FontWeight.w700,
-            color: Color(0xFF4F46E5),
+            color: const Color(0xFF4F46E5),
             letterSpacing: 0.5,
           ),
         ),
@@ -543,7 +619,7 @@ class PremiumHeroSection extends StatelessWidget {
             ),
           ),
         ),
-        Flexible(
+        Expanded(
           child: Container(
             height: 8,
             decoration: BoxDecoration(
@@ -585,12 +661,12 @@ class PremiumHeroSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'TOP SKILLS',
           style: TextStyle(
             fontSize: 11,
             fontWeight: FontWeight.w700,
-            color: Color(0xFF4F46E5),
+            color: const Color(0xFF4F46E5),
             letterSpacing: 0.5,
           ),
         ),
@@ -652,7 +728,7 @@ class PremiumHeroSection extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 16),
-          Flexible(
+          Expanded(
             child: Text(
               '3 CVs generated · Modern, Classic, Academic',
               style: TextStyle(
@@ -661,9 +737,9 @@ class PremiumHeroSection extends StatelessWidget {
               ),
             ),
           ),
-          const Text(
+          Text(
             'Download',
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,
               color: Color(0xFF4F46E5),

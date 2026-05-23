@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'dart:ui';
 
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/widgets/app_button.dart';
+import '../../../../core/theme/premium_portfolio_colors.dart';
 import 'educv_logo.dart';
 
 class PublicNavBar extends StatelessWidget {
@@ -12,28 +12,31 @@ class PublicNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 60,
-      decoration: const BoxDecoration(
-        color: AppColors.background,
+      height: 72,
+      decoration: BoxDecoration(
+        color: PremiumPortfolioColors.background.withValues(alpha: 0.9),
         border: Border(
-          bottom: BorderSide(color: AppColors.divider, width: 1),
+          bottom: BorderSide(
+            color: PremiumPortfolioColors.borderLight,
+            width: 1,
+          ),
         ),
       ),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final isWeb = constraints.maxWidth >= 800;
-
-          if (isWeb) {
-            return _buildWebNavBar(context);
-          } else {
-            return _buildMobileNavBar(context);
-          }
-        },
+      child: ClipRRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final isDesktop = constraints.maxWidth >= 900;
+              return isDesktop ? _buildDesktopNavBar(context) : _buildMobileNavBar(context);
+            },
+          ),
+        ),
       ),
     );
   }
 
-  Widget _buildWebNavBar(BuildContext context) {
+  Widget _buildDesktopNavBar(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 40),
       child: Row(
@@ -53,14 +56,13 @@ class PublicNavBar extends StatelessWidget {
           ),
           Row(
             children: [
-              _buildCompactButton(
+              _buildSecondaryButton(
                 context,
                 'Sign In',
                 () => context.go('/login'),
-                isSecondary: true,
               ),
-              const SizedBox(width: 10),
-              _buildCompactButton(
+              const SizedBox(width: 16),
+              _buildPrimaryButton(
                 context,
                 'Get Started',
                 () => context.go('/register'),
@@ -74,15 +76,18 @@ class PublicNavBar extends StatelessWidget {
 
   Widget _buildMobileNavBar(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Row(
         children: [
           const EduCVLogo(),
           const Spacer(),
           IconButton(
             onPressed: () => _showMobileDrawer(context),
-            icon: const Icon(LucideIcons.menu,
-                size: 22, color: AppColors.textPrimary),
+            icon: Icon(
+              LucideIcons.menu,
+              size: 24,
+              color: PremiumPortfolioColors.primaryText,
+            ),
           ),
         ],
       ),
@@ -91,53 +96,108 @@ class PublicNavBar extends StatelessWidget {
 
   Widget _buildNavLink(BuildContext context, String text, String route) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      child: GestureDetector(
-        onTap: () {
-          if (route.startsWith('/#')) {
-            // Handle scroll to section or navigate to home with anchor
-            context.go('/');
-          } else {
-            context.go(route);
-          }
-        },
-        child: Text(
-          text,
-          style: const TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
-            color: Color(0xFF4A4A4A),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: GestureDetector(
+          onTap: () {
+            if (route.startsWith('/#')) {
+              context.go('/');
+            } else {
+              context.go(route);
+            }
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+                color: PremiumPortfolioColors.secondaryText,
+                height: 1.2,
+              ),
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildCompactButton(
+  Widget _buildSecondaryButton(
     BuildContext context,
     String text,
-    VoidCallback onPressed, {
-    bool isSecondary = false,
-  }) {
-    return SizedBox(
-      height: 32,
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: isSecondary ? Colors.transparent : AppColors.primary,
-          foregroundColor: isSecondary ? AppColors.textPrimary : Colors.white,
-          side: isSecondary ? const BorderSide(color: AppColors.divider) : null,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          elevation: 0,
+    VoidCallback onPressed,
+  ) {
+    return Container(
+      height: 40,
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      decoration: BoxDecoration(
+        color: PremiumPortfolioColors.cardBackground,
+        border: Border.all(
+          color: PremiumPortfolioColors.borderLight,
+          width: 1,
         ),
-        child: Text(
-          text,
-          style: const TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w600,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onPressed,
+          borderRadius: BorderRadius.circular(12),
+          child: Center(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: PremiumPortfolioColors.primaryText,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPrimaryButton(
+    BuildContext context,
+    String text,
+    VoidCallback onPressed,
+  ) {
+    return Container(
+      height: 40,
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            PremiumPortfolioColors.accentPurple,
+            PremiumPortfolioColors.accentBlue,
+          ],
+        ),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: PremiumPortfolioColors.accentPurple.withValues(alpha: 0.3),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onPressed,
+          borderRadius: BorderRadius.circular(12),
+          child: Center(
+            child: Text(
+              text,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            ),
           ),
         ),
       ),
@@ -148,13 +208,17 @@ class PublicNavBar extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor: PremiumPortfolioColors.background,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) => Container(
         height: MediaQuery.of(context).size.height * 0.9,
         padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: PremiumPortfolioColors.background,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -164,40 +228,43 @@ class PublicNavBar extends StatelessWidget {
                 const Spacer(),
                 IconButton(
                   onPressed: () => Navigator.pop(context),
-                  icon: const Icon(LucideIcons.x,
-                      size: 22, color: AppColors.textPrimary),
+                  icon: Icon(
+                    LucideIcons.x,
+                    size: 24,
+                    color: PremiumPortfolioColors.primaryText,
+                  ),
                 ),
               ],
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 32),
             _buildMobileNavLink(context, 'Home', '/'),
-            const Divider(),
             _buildMobileNavLink(context, 'How it works', '/#how-it-works'),
-            const Divider(),
             _buildMobileNavLink(context, 'Templates', '/#templates'),
-            const Divider(),
             _buildMobileNavLink(context, 'About', '/about'),
-            const Divider(),
             _buildMobileNavLink(context, 'Contact', '/contact'),
             const Spacer(),
             Column(
               children: [
                 SizedBox(
                   width: double.infinity,
-                  child: AppButton.secondary(
-                    label: 'Sign In',
-                    onPressed: () {
+                  height: 48,
+                  child: _buildSecondaryButton(
+                    context,
+                    'Sign In',
+                    () {
                       Navigator.pop(context);
                       context.go('/login');
                     },
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 16),
                 SizedBox(
                   width: double.infinity,
-                  child: AppButton.primary(
-                    label: 'Get Started',
-                    onPressed: () {
+                  height: 48,
+                  child: _buildPrimaryButton(
+                    context,
+                    'Get Started',
+                    () {
                       Navigator.pop(context);
                       context.go('/register');
                     },
@@ -212,26 +279,30 @@ class PublicNavBar extends StatelessWidget {
   }
 
   Widget _buildMobileNavLink(BuildContext context, String text, String route) {
-    return SizedBox(
-      height: 48,
+    return Container(
       width: double.infinity,
-      child: GestureDetector(
-        onTap: () {
-          Navigator.pop(context);
-          if (route.startsWith('/#')) {
-            context.go('/');
-          } else {
-            context.go(route);
-          }
-        },
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            text,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: AppColors.textPrimary,
+      margin: const EdgeInsets.only(bottom: 8),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {
+            Navigator.pop(context);
+            if (route.startsWith('/#')) {
+              context.go('/');
+            } else {
+              context.go(route);
+            }
+          },
+          borderRadius: BorderRadius.circular(12),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: PremiumPortfolioColors.secondaryText,
+              ),
             ),
           ),
         ),

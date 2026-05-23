@@ -3,37 +3,32 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
-class PremiumDarkCTABanner extends StatelessWidget {
-  const PremiumDarkCTABanner({super.key});
+import '../../../../core/widgets/premium_saas_grid_background.dart';
+
+class PremiumSaasCTABanner extends StatelessWidget {
+  const PremiumSaasCTABanner({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 120),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color(0xFF111827),
-            Color(0xFF0D1320),
-            Color(0xFF070B14),
-          ],
+    return PremiumSaaSGridBackground(
+      opacity: 0.03,
+      showRadialGradient: true,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 120),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              const Color(0xFF070B14),
+              const Color(0xFF0D1320),
+              const Color(0xFF4F46E5).withValues(alpha: 0.08),
+            ],
+          ),
         ),
-      ),
-      child: SizedBox(
-        height: 600,
         child: Stack(
           children: [
-            // Subtle grid background
-            Positioned.fill(
-              child: IgnorePointer(
-                child: CustomPaint(
-                  painter: _GridPainter(),
-                ),
-              ),
-            ),
             // Floating gradient orbs
             _buildFloatingOrbs(),
             // Main content
@@ -77,7 +72,7 @@ class PremiumDarkCTABanner extends StatelessWidget {
                             ],
                           ).createShader(bounds),
                           child: Text(
-                            'Your professional CV is\n3 minutes away',
+                            'Your professional CV is\\n3 minutes away',
                             style: TextStyle(
                               fontSize: isDesktop ? 48 : 36,
                               fontWeight: FontWeight.w900,
@@ -110,7 +105,15 @@ class PremiumDarkCTABanner extends StatelessWidget {
                         _buildCTAButton(context)
                             .animate(delay: 600.ms)
                             .fadeIn(duration: 800.ms)
-                            .scale(begin: const Offset(0.8, 0.8), end: const Offset(1.0, 1.0)),
+                            .scale(begin: const Offset(0.8, 0.8), end: const Offset(1.0, 1.0))
+                            .then()
+                            .animate(
+                              onPlay: (controller) => controller.repeat(reverse: true),
+                            )
+                            .shimmer(
+                              duration: 3000.ms,
+                              color: Colors.white.withValues(alpha: 0.1),
+                            ),
                         
                         const SizedBox(height: 40),
                         
@@ -144,11 +147,18 @@ class PremiumDarkCTABanner extends StatelessWidget {
               shape: BoxShape.circle,
               gradient: RadialGradient(
                 colors: [
-                  const Color(0xFF4F46E5).withValues(alpha: 0.15),
+                  const Color(0xFF4F46E5).withValues(alpha: 0.2),
                   Colors.transparent,
                 ],
               ),
             ),
+          ).animate(
+            onPlay: (controller) => controller.repeat(reverse: true),
+          ).moveX(
+            begin: 0,
+            end: 30,
+            duration: 6000.ms,
+            curve: Curves.easeInOut,
           ),
         ),
         // Right orb
@@ -162,11 +172,18 @@ class PremiumDarkCTABanner extends StatelessWidget {
               shape: BoxShape.circle,
               gradient: RadialGradient(
                 colors: [
-                  const Color(0xFF7C3AED).withValues(alpha: 0.12),
+                  const Color(0xFF7C3AED).withValues(alpha: 0.15),
                   Colors.transparent,
                 ],
               ),
             ),
+          ).animate(
+            onPlay: (controller) => controller.repeat(reverse: true),
+          ).moveY(
+            begin: 0,
+            end: -20,
+            duration: 5000.ms,
+            curve: Curves.easeInOut,
           ),
         ),
       ],
@@ -289,37 +306,4 @@ class PremiumDarkCTABanner extends StatelessWidget {
       ],
     );
   }
-}
-
-class _GridPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.02)
-      ..strokeWidth = 1.0
-      ..style = PaintingStyle.stroke;
-
-    const gridSize = 50.0;
-
-    // Draw vertical lines
-    for (double x = 0; x <= size.width; x += gridSize) {
-      canvas.drawLine(
-        Offset(x, 0),
-        Offset(x, size.height),
-        paint,
-      );
-    }
-
-    // Draw horizontal lines
-    for (double y = 0; y <= size.height; y += gridSize) {
-      canvas.drawLine(
-        Offset(0, y),
-        Offset(size.width, y),
-        paint,
-      );
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

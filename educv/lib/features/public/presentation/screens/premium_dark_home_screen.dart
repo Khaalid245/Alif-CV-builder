@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../widgets/premium_dark_layout.dart';
 import '../widgets/premium_hero_section.dart';
-import '../widgets/stats_bar.dart';
-import '../widgets/how_it_works_section.dart';
+import '../widgets/premium_dark_stats_section.dart';
+import '../widgets/premium_dark_how_it_works_section.dart';
 import '../widgets/templates_section.dart';
-import '../widgets/features_grid.dart';
-import '../widgets/cta_banner.dart';
+import '../widgets/premium_dark_features_grid.dart';
+import '../widgets/premium_dark_cta_banner.dart';
 
 class PremiumDarkHomeScreen extends StatelessWidget {
   const PremiumDarkHomeScreen({super.key});
@@ -17,11 +17,11 @@ class PremiumDarkHomeScreen extends StatelessWidget {
       child: Column(
         children: [
           PremiumHeroSection(),
-          StatsBar(),
-          HowItWorksSection(),
+          PremiumDarkStatsSection(),
+          PremiumDarkHowItWorksSection(),
           TemplatesSection(),
-          FeaturesGrid(),
-          CTABanner(),
+          PremiumDarkFeaturesGrid(),
+          PremiumDarkCTABanner(),
         ],
       ),
     );
