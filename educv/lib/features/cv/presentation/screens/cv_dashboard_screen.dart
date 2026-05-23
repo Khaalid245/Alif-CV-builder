@@ -4,9 +4,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_spacing.dart';
-import '../../../../core/theme/app_typography.dart';
+import '../../../../core/theme/premium_portfolio_colors.dart';
 import '../../../../core/storage/secure_storage.dart';
 import '../../../../core/widgets/section_card.dart';
 import '../../../../core/widgets/app_loader.dart';
@@ -47,19 +45,23 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
     final cvProfileAsync = ref.watch(cvProfileProvider);
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: PremiumPortfolioColors.background,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: PremiumPortfolioColors.background,
         elevation: 0,
         title: Text(
           'Home',
-          style: AppTypography.h2.copyWith(color: const Color(0xFF0A0A0A)),
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.w600,
+            color: PremiumPortfolioColors.primaryText,
+          ),
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
           child: Container(
             height: 1,
-            color: AppColors.divider,
+            color: PremiumPortfolioColors.borderLight,
           ),
         ),
         actions: [
@@ -70,7 +72,7 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
               margin: const EdgeInsets.only(right: 16),
               child: CircleAvatar(
                 radius: 16,
-                backgroundColor: const Color(0xFF1565C0),
+                backgroundColor: PremiumPortfolioColors.accentPurple,
                 child: Text(
                   _getInitials(user?.fullName ?? ''),
                   style: const TextStyle(
@@ -95,18 +97,23 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
               const Icon(
                 LucideIcons.alertCircle,
                 size: 48,
-                color: AppColors.error,
+                color: PremiumPortfolioColors.error,
               ),
               const SizedBox(height: 16),
               Text(
                 'Failed to load dashboard',
-                style: AppTypography.h3,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: PremiumPortfolioColors.primaryText,
+                ),
               ),
               const SizedBox(height: 8),
               Text(
                 error.toString(),
-                style: AppTypography.body.copyWith(
-                  color: AppColors.textSecondary,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: PremiumPortfolioColors.secondaryText,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -132,7 +139,7 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
 
   Widget _buildDashboard(CVProfileModel profile) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(AppSpacing.md),
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -142,22 +149,22 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
           // Greeting
           _buildGreeting(profile),
 
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: 24),
 
           // Completion Card
           _buildCompletionCard(profile),
 
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: 24),
 
           // Quick Actions
           _buildQuickActions(),
 
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: 24),
 
           // Recent Downloads Section
           _buildRecentDownloadsSection(),
 
-          const SizedBox(height: AppSpacing.xxl), // Bottom padding
+          const SizedBox(height: 48), // Bottom padding
         ],
       ),
     );
@@ -179,13 +186,18 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
       children: [
         Text(
           '$greeting, $firstName',
-          style: AppTypography.h1,
+          style: TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.w700,
+            color: PremiumPortfolioColors.primaryText,
+          ),
         ),
         const SizedBox(height: 4),
         Text(
           dateStr,
-          style: AppTypography.body.copyWith(
-            color: AppColors.textSecondary,
+          style: TextStyle(
+            fontSize: 16,
+            color: PremiumPortfolioColors.secondaryText,
           ),
         ),
       ],
@@ -218,14 +230,14 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
     }
 
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.md),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.background,
+        color: PremiumPortfolioColors.cardBackground,
         border: Border.all(
-          color: AppColors.divider,
+          color: PremiumPortfolioColors.borderLight,
           width: 0.5,
         ),
-        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
         children: [
@@ -239,34 +251,42 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
                   children: [
                     CircularProgressIndicator(
                       value: pct / 100,
-                      backgroundColor: const Color(0xFFEAF2FF),
-                      color: AppColors.primary,
+                      backgroundColor: PremiumPortfolioColors.accentPurple.withValues(alpha: 0.1),
+                      color: PremiumPortfolioColors.accentPurple,
                       strokeWidth: 4,
                     ),
                     Text(
                       '$pct%',
-                      style: AppTypography.caption.copyWith(
-                        color: AppColors.primary,
+                      style: TextStyle(
+                        fontSize: 12,
                         fontWeight: FontWeight.w600,
+                        color: PremiumPortfolioColors.accentPurple,
                       ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(width: AppSpacing.md),
+              const SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'CV completion',
-                      style: AppTypography.h3,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: PremiumPortfolioColors.primaryText,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       '${_filledSectionCount(profile)}'
                       ' of 7 sections filled',
-                      style: AppTypography.caption,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: PremiumPortfolioColors.secondaryText,
+                      ),
                     ),
                   ],
                 ),
@@ -274,16 +294,16 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
             ],
           ),
           if (pct < 100 && tip.isNotEmpty) ...[
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: 16),
             GestureDetector(
               onTap: () => context.go('/cv/form',
                   extra: {'initialStep': tipStep}),
               child: Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFFF8E1),
+                  color: PremiumPortfolioColors.warning.withValues(alpha: 0.1),
                   border: Border.all(
-                    color: const Color(0xFFFFCC02),
+                    color: PremiumPortfolioColors.warning,
                     width: 0.5,
                   ),
                   borderRadius: BorderRadius.circular(8),
@@ -299,16 +319,18 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
                     Expanded(
                       child: Text(
                         tip,
-                        style: AppTypography.caption.copyWith(
-                          color: const Color(0xFFE65100),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: PremiumPortfolioColors.warning,
                           height: 1.5,
                         ),
                       ),
                     ),
                     Text(
                       'Add now',
-                      style: AppTypography.caption.copyWith(
-                        color: const Color(0xFFE65100),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: PremiumPortfolioColors.warning,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -340,7 +362,11 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
       children: [
         Text(
           'Quick actions',
-          style: AppTypography.h3.copyWith(color: const Color(0xFF0A0A0A)),
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: PremiumPortfolioColors.primaryText,
+          ),
         ),
         const SizedBox(height: 12),
         Row(
@@ -379,12 +405,12 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: AppColors.background,
+          color: PremiumPortfolioColors.cardBackground,
           border: Border.all(
-            color: AppColors.divider,
+            color: PremiumPortfolioColors.borderLight,
             width: 0.5,
           ),
-          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+          borderRadius: BorderRadius.circular(10),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -393,27 +419,30 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
               width: 32,
               height: 32,
               decoration: BoxDecoration(
-                color: const Color(0xFFEAF2FF),
+                color: PremiumPortfolioColors.accentPurple.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
                 icon,
                 size: 16,
-                color: AppColors.primary,
+                color: PremiumPortfolioColors.accentPurple,
               ),
             ),
             const SizedBox(height: 12),
             Text(
               title,
-              style: AppTypography.body.copyWith(
+              style: TextStyle(
+                fontSize: 16,
                 fontWeight: FontWeight.w600,
+                color: PremiumPortfolioColors.primaryText,
               ),
             ),
             const SizedBox(height: 4),
             Text(
               subtitle,
-              style: AppTypography.caption.copyWith(
-                color: AppColors.textSecondary,
+              style: TextStyle(
+                fontSize: 12,
+                color: PremiumPortfolioColors.secondaryText,
               ),
             ),
           ],
@@ -431,9 +460,9 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
       margin: const EdgeInsets.only(bottom: 14),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
-        color: const Color(0xFFEAF2FF),
-        border: Border.all(color: const Color(0xFFBBDEFB), width: 0.5),
-        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+        color: PremiumPortfolioColors.accentBlue.withValues(alpha: 0.1),
+        border: Border.all(color: PremiumPortfolioColors.accentBlue.withValues(alpha: 0.3), width: 0.5),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -460,10 +489,10 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
                 _isAnnouncementDismissed = true;
               });
             },
-            child: const Icon(
+            child: Icon(
               LucideIcons.x,
               size: 16,
-              color: Color(0xFF90CAF9),
+              color: PremiumPortfolioColors.accentBlue.withValues(alpha: 0.6),
             ),
           ),
         ],
@@ -505,7 +534,11 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
           children: [
             Text(
               'Recent downloads',
-              style: AppTypography.h3.copyWith(color: const Color(0xFF0A0A0A)),
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: PremiumPortfolioColors.primaryText,
+              ),
             ),
             const Spacer(),
             TextButton(
@@ -514,8 +547,9 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
               },
               child: Text(
                 'View all',
-                style: AppTypography.body.copyWith(
-                  color: AppColors.primary,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: PremiumPortfolioColors.accentPurple,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -571,14 +605,19 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
               children: [
                 Text(
                   name.isNotEmpty ? name : 'User',
-                  style: AppTypography.h3,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: PremiumPortfolioColors.primaryText,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 4),
                 Text(
                   email,
-                  style: AppTypography.body.copyWith(
-                    color: AppColors.textSecondary,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: PremiumPortfolioColors.secondaryText,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -590,7 +629,7 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
             // Divider
             Container(
               height: 1,
-              color: AppColors.divider,
+              color: PremiumPortfolioColors.borderLight,
             ),
 
             const SizedBox(height: 8),
@@ -599,12 +638,13 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
             ListTile(
               leading: const Icon(
                 LucideIcons.logOut,
-                color: AppColors.error,
+                color: PremiumPortfolioColors.error,
               ),
               title: Text(
                 'Sign out',
-                style: AppTypography.body.copyWith(
-                  color: AppColors.error,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: PremiumPortfolioColors.error,
                 ),
               ),
               onTap: () async {
@@ -622,7 +662,7 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
-          color: AppColors.divider,
+          color: PremiumPortfolioColors.borderLight,
           width: 0.5,
           style: BorderStyle.solid,
         ),
@@ -651,8 +691,9 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
             },
             child: Text(
               'Generate my CVs',
-              style: AppTypography.body.copyWith(
-                color: AppColors.primary,
+              style: TextStyle(
+                fontSize: 16,
+                color: PremiumPortfolioColors.accentPurple,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -680,16 +721,18 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
               children: [
                 Text(
                   cv.templateDisplay,
-                  style: AppTypography.body.copyWith(
+                  style: TextStyle(
+                    fontSize: 16,
                     fontWeight: FontWeight.w500,
-                    color: const Color(0xFF0A0A0A),
+                    color: PremiumPortfolioColors.primaryText,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   TimeUtils.timeAgo(cv.generatedAt),
-                  style: AppTypography.caption.copyWith(
-                    color: const Color(0xFF6B7280),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: PremiumPortfolioColors.secondaryText,
                   ),
                 ),
               ],
@@ -703,13 +746,13 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
               width: 28,
               height: 28,
               decoration: BoxDecoration(
-                color: const Color(0xFFEAF2FF),
+                color: PremiumPortfolioColors.accentPurple.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(6),
               ),
               child: const Icon(
                 LucideIcons.download,
                 size: 14,
-                color: Color(0xFF1565C0),
+                color: PremiumPortfolioColors.accentPurple,
               ),
             ),
           ),
@@ -724,7 +767,7 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
       height: 36,
       decoration: BoxDecoration(
         border: Border.all(
-          color: AppColors.divider,
+          color: PremiumPortfolioColors.borderLight,
           width: 0.5,
         ),
         borderRadius: BorderRadius.circular(3),
@@ -746,7 +789,7 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
             height: 2,
             width: double.infinity,
             decoration: BoxDecoration(
-              color: AppColors.divider,
+              color: PremiumPortfolioColors.borderLight,
               borderRadius: BorderRadius.circular(1),
             ),
           ),
@@ -754,7 +797,7 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
           Container(
             height: 2,
             width: double.infinity * 0.8,
-            color: AppColors.divider,
+            color: PremiumPortfolioColors.borderLight,
           ),
         ],
       ),
@@ -770,7 +813,7 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('${cv.templateDisplay} CV downloaded successfully'),
-            backgroundColor: AppColors.success,
+            backgroundColor: PremiumPortfolioColors.success,
           ),
         );
       }
@@ -779,7 +822,7 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Failed to download CV: ${e.toString()}'),
-            backgroundColor: AppColors.error,
+            backgroundColor: PremiumPortfolioColors.error,
           ),
         );
       }

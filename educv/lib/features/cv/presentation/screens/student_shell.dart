@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
-import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/premium_portfolio_colors.dart';
 
 class StudentShell extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
@@ -12,32 +12,30 @@ class StudentShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: PremiumPortfolioColors.background,
       body: navigationShell,
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
-          color: AppColors.background,
+          color: PremiumPortfolioColors.cardBackground,
           border: Border(
-            top: BorderSide(
-              color: AppColors.divider,
-              width: 1,
-            ),
+            top: BorderSide(color: PremiumPortfolioColors.borderLight),
           ),
         ),
         child: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
-          backgroundColor: AppColors.background,
+          backgroundColor: PremiumPortfolioColors.cardBackground,
           elevation: 0,
           currentIndex: navigationShell.currentIndex,
           onTap: (index) => navigationShell.goBranch(index),
-          selectedItemColor: AppColors.primary,
-          unselectedItemColor: AppColors.textPrimary.withOpacity(0.4),
+          selectedItemColor: PremiumPortfolioColors.accentPurple,
+          unselectedItemColor: PremiumPortfolioColors.lightText,
           selectedLabelStyle: const TextStyle(
-            fontSize: 9,
-            fontWeight: FontWeight.w500,
+            fontSize: 10,
+            fontWeight: FontWeight.w600,
           ),
           unselectedLabelStyle: const TextStyle(
-            fontSize: 9,
-            fontWeight: FontWeight.w500,
+            fontSize: 10,
+            fontWeight: FontWeight.w400,
           ),
           iconSize: 22,
           items: const [

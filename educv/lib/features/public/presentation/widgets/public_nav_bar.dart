@@ -46,11 +46,11 @@ class PublicNavBar extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildNavLink(context, 'Home', '/'),
-                _buildNavLink(context, 'How it works', '/#how-it-works'),
-                _buildNavLink(context, 'Templates', '/#templates'),
-                _buildNavLink(context, 'About', '/about'),
-                _buildNavLink(context, 'Contact', '/contact'),
+                _buildNavLink(context, 'Home', '/', LucideIcons.home),
+                _buildNavLink(context, 'How it works', '/#how-it-works', LucideIcons.layoutList),
+                _buildNavLink(context, 'Templates', '/#templates', LucideIcons.fileText),
+                _buildNavLink(context, 'About', '/about', LucideIcons.info),
+                _buildNavLink(context, 'Contact', '/contact', LucideIcons.mail),
               ],
             ),
           ),
@@ -59,12 +59,14 @@ class PublicNavBar extends StatelessWidget {
               _buildSecondaryButton(
                 context,
                 'Sign In',
+                LucideIcons.logIn,
                 () => context.go('/login'),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 12),
               _buildPrimaryButton(
                 context,
                 'Get Started',
+                LucideIcons.arrowRight,
                 () => context.go('/register'),
               ),
             ],
@@ -94,9 +96,9 @@ class PublicNavBar extends StatelessWidget {
     );
   }
 
-  Widget _buildNavLink(BuildContext context, String text, String route) {
+  Widget _buildNavLink(BuildContext context, String text, String route, IconData icon) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: MouseRegion(
         cursor: SystemMouseCursors.click,
         child: GestureDetector(
@@ -107,17 +109,25 @@ class PublicNavBar extends StatelessWidget {
               context.go(route);
             }
           },
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-            child: Text(
-              text,
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                icon,
+                size: 15,
                 color: PremiumPortfolioColors.secondaryText,
-                height: 1.2,
               ),
-            ),
+              const SizedBox(width: 6),
+              Text(
+                text,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                  color: PremiumPortfolioColors.secondaryText,
+                  height: 1.2,
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -127,11 +137,12 @@ class PublicNavBar extends StatelessWidget {
   Widget _buildSecondaryButton(
     BuildContext context,
     String text,
+    IconData icon,
     VoidCallback onPressed,
   ) {
     return Container(
       height: 40,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
         color: PremiumPortfolioColors.cardBackground,
         border: Border.all(
@@ -145,15 +156,24 @@ class PublicNavBar extends StatelessWidget {
         child: InkWell(
           onTap: onPressed,
           borderRadius: BorderRadius.circular(12),
-          child: Center(
-            child: Text(
-              text,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                icon,
+                size: 16,
                 color: PremiumPortfolioColors.primaryText,
               ),
-            ),
+              const SizedBox(width: 8),
+              Text(
+                text,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: PremiumPortfolioColors.primaryText,
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -163,13 +183,14 @@ class PublicNavBar extends StatelessWidget {
   Widget _buildPrimaryButton(
     BuildContext context,
     String text,
+    IconData icon,
     VoidCallback onPressed,
   ) {
     return Container(
       height: 40,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
+        gradient: const LinearGradient(
           colors: [
             PremiumPortfolioColors.accentPurple,
             PremiumPortfolioColors.accentBlue,
@@ -189,15 +210,24 @@ class PublicNavBar extends StatelessWidget {
         child: InkWell(
           onTap: onPressed,
           borderRadius: BorderRadius.circular(12),
-          child: Center(
-            child: Text(
-              text,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                text,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Icon(
+                icon,
+                size: 16,
                 color: Colors.white,
               ),
-            ),
+            ],
           ),
         ),
       ),
@@ -215,9 +245,9 @@ class PublicNavBar extends StatelessWidget {
       builder: (context) => Container(
         height: MediaQuery.of(context).size.height * 0.9,
         padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: PremiumPortfolioColors.background,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -228,7 +258,7 @@ class PublicNavBar extends StatelessWidget {
                 const Spacer(),
                 IconButton(
                   onPressed: () => Navigator.pop(context),
-                  icon: Icon(
+                  icon: const Icon(
                     LucideIcons.x,
                     size: 24,
                     color: PremiumPortfolioColors.primaryText,
@@ -237,11 +267,11 @@ class PublicNavBar extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 32),
-            _buildMobileNavLink(context, 'Home', '/'),
-            _buildMobileNavLink(context, 'How it works', '/#how-it-works'),
-            _buildMobileNavLink(context, 'Templates', '/#templates'),
-            _buildMobileNavLink(context, 'About', '/about'),
-            _buildMobileNavLink(context, 'Contact', '/contact'),
+            _buildMobileNavLink(context, 'Home', '/', LucideIcons.home),
+            _buildMobileNavLink(context, 'How it works', '/#how-it-works', LucideIcons.layoutList),
+            _buildMobileNavLink(context, 'Templates', '/#templates', LucideIcons.fileText),
+            _buildMobileNavLink(context, 'About', '/about', LucideIcons.info),
+            _buildMobileNavLink(context, 'Contact', '/contact', LucideIcons.mail),
             const Spacer(),
             Column(
               children: [
@@ -251,19 +281,21 @@ class PublicNavBar extends StatelessWidget {
                   child: _buildSecondaryButton(
                     context,
                     'Sign In',
+                    LucideIcons.logIn,
                     () {
                       Navigator.pop(context);
                       context.go('/login');
                     },
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
                 SizedBox(
                   width: double.infinity,
                   height: 48,
                   child: _buildPrimaryButton(
                     context,
                     'Get Started',
+                    LucideIcons.arrowRight,
                     () {
                       Navigator.pop(context);
                       context.go('/register');
@@ -278,10 +310,10 @@ class PublicNavBar extends StatelessWidget {
     );
   }
 
-  Widget _buildMobileNavLink(BuildContext context, String text, String route) {
+  Widget _buildMobileNavLink(BuildContext context, String text, String route, IconData icon) {
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: const EdgeInsets.only(bottom: 4),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
@@ -295,14 +327,38 @@ class PublicNavBar extends StatelessWidget {
           },
           borderRadius: BorderRadius.circular(12),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            child: Text(
-              text,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: PremiumPortfolioColors.secondaryText,
-              ),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            child: Row(
+              children: [
+                Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: PremiumPortfolioColors.accentPurple.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(
+                    icon,
+                    size: 18,
+                    color: PremiumPortfolioColors.accentPurple,
+                  ),
+                ),
+                const SizedBox(width: 14),
+                Text(
+                  text,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: PremiumPortfolioColors.primaryText,
+                  ),
+                ),
+                const Spacer(),
+                const Icon(
+                  LucideIcons.chevronRight,
+                  size: 16,
+                  color: PremiumPortfolioColors.secondaryText,
+                ),
+              ],
             ),
           ),
         ),

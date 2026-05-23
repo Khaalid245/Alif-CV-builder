@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../core/storage/secure_storage.dart';
 import '../features/auth/presentation/providers/auth_provider.dart';
 import '../features/auth/presentation/screens/login_screen.dart';
 import '../features/auth/presentation/screens/forgot_password_screen.dart';
@@ -33,6 +32,7 @@ import '../features/public/presentation/screens/home_screen.dart';
 import '../features/public/presentation/screens/about_screen.dart';
 import '../features/public/presentation/screens/contact_screen.dart';
 import '../features/public/presentation/screens/faq_screen.dart';
+import '../features/public/presentation/screens/privacy_screen.dart';
 import '../features/public/presentation/widgets/public_layout.dart';
 
 // Route name constants
@@ -68,8 +68,13 @@ class AppRoutes {
 }
 
 final appRouterProvider = Provider<GoRouter>((ref) {
+  // Notifier that triggers router refresh when auth state changes
+  final authNotifier = _AuthChangeNotifier(ref);
+  ref.onDispose(authNotifier.dispose);
+
   return GoRouter(
     initialLocation: AppRoutes.splash,
+    refreshListenable: authNotifier,
     routes: [
       // PUBLIC ROUTES (no auth required)
       GoRoute(
@@ -90,32 +95,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.privacy,
         name: 'privacy',
-        builder: (_, __) => const PublicLayout(
-          child: Center(
-            child: Padding(
-              padding: EdgeInsets.all(40),
-              child: Text(
-                'Privacy — Phase W4',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
-              ),
-            ),
-          ),
-        ),
+        builder: (_, __) => const PrivacyScreen(),
       ),
       GoRoute(
         path: AppRoutes.terms,
         name: 'terms',
-        builder: (_, __) => const PublicLayout(
-          child: Center(
-            child: Padding(
-              padding: EdgeInsets.all(40),
-              child: Text(
-                'Terms — Phase W4',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
-              ),
-            ),
-          ),
-        ),
+        builder: (_, __) => const PrivacyScreen(),
       ),
       GoRoute(
         path: AppRoutes.faq,
@@ -217,10 +202,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const ChangePasswordScreen(),
       ),
       GoRoute(
-        path: AppRoutes.cvIntelligence,
-        builder: (context, state) => const CVIntelligenceScreen(),
-      ),
-      GoRoute(
         path: AppRoutes.pdfResult,
         builder: (context, state) => const PDFResultScreen(),
       ),
@@ -278,9 +259,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
         if (currentPath == AppRoutes.splash) return null;
 
-        final secureStorage = ref.read(secureStorageProvider);
-        final accessToken = await secureStorage.getAccessToken();
-        final isAuthenticated = accessToken != null;
+        // Use in-memory auth state first (set immediately on login)
+        final authState = ref.read(authProvider);
+        final isAuthenticated = authState.isAuthenticated;
 
         // Unauthenticated — block protected routes
         if (!isAuthenticated) {
@@ -298,23 +279,36 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         if (currentPath == AppRoutes.login ||
             currentPath == AppRoutes.register ||
             currentPath == AppRoutes.forgotPassword) {
-          final userRole = await secureStorage.getUserRole();
-          return userRole == 'admin' ? AppRoutes.admin : AppRoutes.cvDashboard;
+          final role = authState.user?.role;
+          return role == 'admin' ? AppRoutes.admin : AppRoutes.cvDashboard;
         }
 
         // Admin guard — only admins can access /admin routes
         if (currentPath.startsWith('/admin')) {
-          final user = ref.read(currentUserProvider);
-          if (user != null && user.role != 'admin') {
+          if (authState.user?.role != 'admin') {
             return AppRoutes.cvDashboard;
           }
         }
 
         return null;
       } catch (e) {
-        print('Router redirect error: $e');
         return AppRoutes.home;
       }
     },
   );
 });
+
+// Bridges Riverpod authProvider to GoRouter's refreshListenable
+class _AuthChangeNotifier extends ChangeNotifier {
+  _AuthChangeNotifier(Ref ref) {
+    _sub = ref.listen<AuthState>(authProvider, (_, __) => notifyListeners());
+  }
+
+  late final ProviderSubscription<AuthState> _sub;
+
+  @override
+  void dispose() {
+    _sub.close();
+    super.dispose();
+  }
+}

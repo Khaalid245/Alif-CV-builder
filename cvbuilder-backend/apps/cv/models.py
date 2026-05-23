@@ -238,7 +238,7 @@ class Certification(models.Model):
         ordering = ['-issue_date']
 
     def __str__(self):
-        return f'{self.name} — {self.issuer}'n
+        return f'{self.name} — {self.issuer}'
     
 
 
