@@ -9,6 +9,9 @@ import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/theme/app_spacing.dart';
 import '../../../../../core/theme/app_typography.dart';
 import '../../../../../core/widgets/app_input.dart';
+import '../../../../../core/widgets/enterprise_validation.dart';
+import '../../../../../core/widgets/enterprise_api_handler.dart';
+import '../../../../../core/widgets/enterprise_toast.dart';
 import 'package:educv/features/auth/presentation/providers/auth_provider.dart';
 import '../../providers/cv_provider.dart';
 import '../section_divider.dart';
@@ -20,7 +23,8 @@ class PersonalInfoStep extends ConsumerStatefulWidget {
   ConsumerState<PersonalInfoStep> createState() => _PersonalInfoStepState();
 }
 
-class _PersonalInfoStepState extends ConsumerState<PersonalInfoStep> {
+class _PersonalInfoStepState extends ConsumerState<PersonalInfoStep>
+    with RealTimeValidation {
   final _formKey = GlobalKey<FormState>();
   final _phoneController = TextEditingController();
   final _cityController = TextEditingController();
@@ -113,28 +117,36 @@ class _PersonalInfoStepState extends ConsumerState<PersonalInfoStep> {
 
             const SizedBox(height: AppSpacing.md),
 
-            AppInput(
+            // Phone Number with real-time validation
+            EnterpriseValidatedInput(
               label: 'Phone Number',
               hint: '+1 234 567 8900',
               controller: _phoneController,
               keyboardType: TextInputType.phone,
-              validator: _validatePhone,
+              validator: EnterpriseValidators.phone,
+              onValidationChanged: (result) => updateValidation('phone', result),
             ),
 
             const SizedBox(height: AppSpacing.md),
 
-            AppInput(
+            // City with validation
+            EnterpriseValidatedInput(
               label: 'City',
               hint: 'e.g. New York',
               controller: _cityController,
+              validator: (value) => EnterpriseValidators.required(value, 'City'),
+              onValidationChanged: (result) => updateValidation('city', result),
             ),
 
             const SizedBox(height: AppSpacing.md),
 
-            AppInput(
+            // Country with validation
+            EnterpriseValidatedInput(
               label: 'Country',
               hint: 'e.g. United States',
               controller: _countryController,
+              validator: (value) => EnterpriseValidators.required(value, 'Country'),
+              onValidationChanged: (result) => updateValidation('country', result),
             ),
 
             const SizedBox(height: AppSpacing.xl),
@@ -142,38 +154,41 @@ class _PersonalInfoStepState extends ConsumerState<PersonalInfoStep> {
             const SectionDivider(label: 'Online Presence'),
             const SizedBox(height: AppSpacing.lg),
 
-            AppInput(
+            // LinkedIn with URL validation
+            EnterpriseValidatedInput(
               label: 'LinkedIn Profile',
               hint: 'linkedin.com/in/yourname',
               controller: _linkedinController,
               keyboardType: TextInputType.url,
-              prefixIcon:
-                  const Icon(LucideIcons.linkedin, color: AppColors.textHint),
-              validator: _validateUrl,
+              prefixIcon: LucideIcons.linkedin,
+              validator: (value) => EnterpriseValidators.url(value),
+              onValidationChanged: (result) => updateValidation('linkedin', result),
             ),
 
             const SizedBox(height: AppSpacing.md),
 
-            AppInput(
+            // GitHub with URL validation
+            EnterpriseValidatedInput(
               label: 'GitHub Profile',
               hint: 'github.com/yourname',
               controller: _githubController,
               keyboardType: TextInputType.url,
-              prefixIcon:
-                  const Icon(LucideIcons.github, color: AppColors.textHint),
-              validator: _validateUrl,
+              prefixIcon: LucideIcons.github,
+              validator: (value) => EnterpriseValidators.url(value),
+              onValidationChanged: (result) => updateValidation('github', result),
             ),
 
             const SizedBox(height: AppSpacing.md),
 
-            AppInput(
+            // Portfolio with URL validation
+            EnterpriseValidatedInput(
               label: 'Portfolio Website',
               hint: 'yourwebsite.com',
               controller: _portfolioController,
               keyboardType: TextInputType.url,
-              prefixIcon:
-                  const Icon(LucideIcons.link, color: AppColors.textHint),
-              validator: _validateUrl,
+              prefixIcon: LucideIcons.link,
+              validator: (value) => EnterpriseValidators.url(value),
+              onValidationChanged: (result) => updateValidation('portfolio', result),
             ),
 
             const SizedBox(height: AppSpacing.xl),
@@ -181,19 +196,14 @@ class _PersonalInfoStepState extends ConsumerState<PersonalInfoStep> {
             const SectionDivider(label: 'Professional Summary'),
             const SizedBox(height: AppSpacing.lg),
 
-            AppInput(
+            // Summary with character count validation
+            EnterpriseValidatedInput(
               label: 'About You',
-              hint:
-                  'Write 2-3 sentences about your background, skills and career goals...',
+              hint: 'Write 2-3 sentences about your background, skills and career goals...',
               controller: _summaryController,
               maxLines: 5,
-              maxLength: 500,
-              validator: (value) {
-                if (value != null && value.length > 500) {
-                  return 'Summary must be 500 characters or less';
-                }
-                return null;
-              },
+              validator: (value) => EnterpriseValidators.maxLength(value, 500, 'Summary'),
+              onValidationChanged: (result) => updateValidation('summary', result),
             ),
 
             const SizedBox(height: AppSpacing.xl),
@@ -267,45 +277,40 @@ class _PersonalInfoStepState extends ConsumerState<PersonalInfoStep> {
     }
   }
 
-  String? _validatePhone(String? value) {
-    if (value == null || value.isEmpty) return null;
-    final digits = value.replaceAll(RegExp(r'[^\d]'), '');
-    if (digits.length < 7) return 'Phone number must have at least 7 digits';
-    return null;
-  }
-
-  String? _validateUrl(String? value) {
-    if (value == null || value.isEmpty) return null;
-    final url = value.startsWith('http') ? value : 'https://$value';
-    const pattern =
-        r'^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$';
-    if (!RegExp(pattern).hasMatch(url)) return 'Please enter a valid URL';
-    return null;
-  }
-
-  // Called by cv_form_screen.dart when Next is tapped on step 0
+  // Enhanced save with enterprise error handling
   Future<bool> _saveData() async {
-    if (!(_formKey.currentState?.validate() ?? false)) return false;
-    ref.read(cvFormLoadingProvider.notifier).state = true;
-    try {
-      if (_selectedPhoto != null) {
-        await ref.read(cvProfileProvider.notifier).uploadPhoto(_selectedPhoto!);
-      }
-      final data = {
-        'phone': _phoneController.text.trim(),
-        'city': _cityController.text.trim(),
-        'country': _countryController.text.trim(),
-        'linkedin': _linkedinController.text.trim(),
-        'github': _githubController.text.trim(),
-        'portfolio': _portfolioController.text.trim(),
-        'summary': _summaryController.text.trim(),
-      };
-      await ref.read(cvProfileProvider.notifier).updateProfile(data);
-      return true;
-    } catch (_) {
+    // Validate all fields first
+    if (!isFormValid) {
+      context.showWarningToast('Please fix the errors before continuing');
       return false;
-    } finally {
-      ref.read(cvFormLoadingProvider.notifier).state = false;
     }
+
+    return await EnterpriseAsyncOperation.execute<bool>(
+      context,
+      operation: () async {
+        // Upload photo if selected
+        if (_selectedPhoto != null) {
+          await ref.read(cvProfileProvider.notifier).uploadPhoto(_selectedPhoto!);
+        }
+        
+        // Update profile data
+        final data = {
+          'phone': _phoneController.text.trim(),
+          'city': _cityController.text.trim(),
+          'country': _countryController.text.trim(),
+          'linkedin': _linkedinController.text.trim(),
+          'github': _githubController.text.trim(),
+          'portfolio': _portfolioController.text.trim(),
+          'summary': _summaryController.text.trim(),
+        };
+        
+        await ref.read(cvProfileProvider.notifier).updateProfile(data);
+        return true;
+      },
+      loadingMessage: 'Saving your information...',
+      successMessage: 'Personal information saved successfully!',
+      errorMessage: 'Failed to save personal information',
+      showLoadingToast: false, // We'll use the form loading state instead
+    ) ?? false;
   }
 }

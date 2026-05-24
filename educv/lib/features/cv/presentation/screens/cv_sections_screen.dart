@@ -3,10 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_typography.dart';
-import '../../../../core/widgets/app_button.dart';
+import '../../../../core/theme/premium_portfolio_colors.dart';
+import '../../../../core/widgets/enterprise_loading.dart';
+import '../../../../core/widgets/enterprise_components.dart';
+import '../../../../core/accessibility/accessibility_foundation.dart';
+import '../../../../core/accessibility/accessible_navigation.dart';
+import '../../../../core/performance/performance_foundation.dart';
+import '../../../../core/performance/optimized_components.dart';
 import '../providers/cv_provider.dart';
+import '../../data/models/cv_models.dart';
 
 class CVSectionsScreen extends ConsumerStatefulWidget {
   const CVSectionsScreen({super.key});
@@ -15,10 +20,30 @@ class CVSectionsScreen extends ConsumerStatefulWidget {
   ConsumerState<CVSectionsScreen> createState() => _CVSectionsScreenState();
 }
 
-class _CVSectionsScreenState extends ConsumerState<CVSectionsScreen> {
+class _CVSectionsScreenState extends ConsumerState<CVSectionsScreen>
+    with TickerProviderStateMixin {
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
+
   @override
   void initState() {
     super.initState();
+    _fadeController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _fadeController, curve: Curves.easeOut),
+    );
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.3),
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(parent: _fadeController, curve: Curves.easeOut),
+    );
+    _fadeController.forward();
+    
     // Fetch CV data when screen loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(cvProfileProvider.notifier).fetch();
@@ -26,289 +51,367 @@ class _CVSectionsScreenState extends ConsumerState<CVSectionsScreen> {
   }
 
   @override
+  void dispose() {
+    _fadeController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final cvAsync = ref.watch(cvProfileProvider);
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: Text(
-          'My CV',
-          style: AppTypography.h2.copyWith(color: const Color(0xFF0A0A0A)),
-        ),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1),
-          child: Container(
-            height: 1,
-            color: AppColors.divider,
-          ),
-        ),
+      backgroundColor: PremiumPortfolioColors.background,
+      appBar: AccessibleAppBar(
+        title: 'My CV',
+        onBackPressed: () {
+          if (Navigator.canPop(context)) {
+            Navigator.pop(context);
+          } else {
+            context.go('/cv/dashboard');
+          }
+        },
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: cvAsync.when(
-          loading: () => const Center(
-            child: CircularProgressIndicator(),
-          ),
-          error: (error, stack) => Center(
-            child: Text('Error loading CV data: $error'),
-          ),
-          data: (cvProfile) {
-            if (cvProfile == null) {
-              return const Center(
-                child: Text('No CV data found'),
-              );
-            }
-
-            final completedSections = _getCompletedSectionsCount(cvProfile);
-            final completionPercentage = cvProfile.completionPercentage;
-
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Overall Progress
-                _buildProgressSection(completionPercentage, completedSections),
-
-                const SizedBox(height: 20),
-
-                // Section List
-                _buildSectionsList(cvProfile),
-
-                const SizedBox(height: 24),
-
-                // Generate Button
-                AppButton.primary(
-                  label: 'Generate my 3 CVs',
-                  icon: LucideIcons.fileDown,
-                  onPressed: () => context.go('/pdf/result'),
-                ),
-              ],
-            );
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget _buildProgressSection(
-      int completionPercentage, int completedSections) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            const Text(
-              'Profile strength',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: Color(0xFF0A0A0A),
-              ),
-            ),
-            const Spacer(),
-            Text(
-              '$completionPercentage%',
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF1565C0),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(3),
-          child: LinearProgressIndicator(
-            value: completionPercentage / 100,
-            color: const Color(0xFF1565C0),
-            backgroundColor: const Color(0xFFEAF2FF),
-            minHeight: 5,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          '$completedSections of 7 sections complete',
-          style: AppTypography.caption.copyWith(
-            color: const Color(0xFF6B7280),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSectionsList(dynamic cvProfile) {
-    final sections = _getSections(cvProfile);
-
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: AppColors.divider,
-          width: 0.5,
-        ),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
+      body: Stack(
         children: [
-          for (int i = 0; i < sections.length; i++) ...[
-            _buildSectionTile(sections[i]),
-            if (i < sections.length - 1) const Divider(height: 1, indent: 54),
-          ],
+          // Grid background
+          _buildGridBackground(),
+          // Main content with enterprise loading
+          EnterpriseLoadingManager(
+            state: cvAsync.when(
+              loading: () => LoadingState.loading,
+              error: (_, __) => LoadingState.error,
+              data: (profile) => profile == null ? LoadingState.empty : LoadingState.loaded,
+            ),
+            loadingWidget: const CVSectionsSkeleton(),
+            errorMessage: cvAsync.hasError ? cvAsync.error.toString() : null,
+            emptyMessage: 'No CV data found',
+            onRetry: () => ref.read(cvProfileProvider.notifier).fetch(),
+            child: cvAsync.hasValue && cvAsync.value != null
+                ? FadeTransition(
+                    opacity: _fadeAnimation,
+                    child: SlideTransition(
+                      position: _slideAnimation,
+                      child: _buildCVContent(cvAsync.value!),
+                    ),
+                  )
+                : const SizedBox.shrink(),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildSectionTile(CVSectionData section) {
-    return InkWell(
-      onTap: () =>
-          context.go('/cv/form', extra: {'initialStep': section.stepIndex}),
-      borderRadius: BorderRadius.circular(10),
+  Widget _buildGridBackground() {
+    return Positioned.fill(
+      child: CustomPaint(
+        painter: CVGridPainter(),
+      ),
+    );
+  }
+
+  Widget _buildCVContent(CVProfileModel cvProfile) {
+    return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-        child: Row(
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 100), // Bottom padding for nav bar
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Icon Box
-            Container(
-              width: 28,
-              height: 28,
-              decoration: BoxDecoration(
-                color: section.hasData
-                    ? const Color(0xFFEAF2FF)
-                    : AppColors.surface,
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: Icon(
-                section.icon,
-                size: 16,
-                color: section.hasData
-                    ? const Color(0xFF1565C0)
-                    : const Color(0xFF9E9E9E),
-              ),
+            // Simple Header
+            SizedBox(
+              width: double.infinity,
+              child: _buildSimpleHeader(cvProfile),
             ),
-
-            const SizedBox(width: 12),
-
-            // Section Info
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    section.name,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF0A0A0A),
-                    ),
-                  ),
-                  Text(
-                    section.hasData ? section.countLabel : 'Not added yet',
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: section.hasData
-                          ? const Color(0xFF6B7280)
-                          : const Color(0xFF9E9E9E),
-                    ),
-                  ),
-                ],
-              ),
+            
+            const SizedBox(height: 16),
+            
+            // Clean Sections List
+            SizedBox(
+              width: double.infinity,
+              child: _buildCleanSectionsList(cvProfile),
             ),
-
-            // Status Indicator
-            if (section.hasData)
-              const Icon(
-                LucideIcons.checkCircle,
-                size: 16,
-                color: AppColors.success,
-              )
-            else
-              const Text(
-                'Add',
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF1565C0),
-                ),
-              ),
+            
+            const SizedBox(height: 20),
+            
+            // Simple Generate Button
+            SizedBox(
+              width: double.infinity,
+              child: _buildSimpleGenerateButton(),
+            ),
+            
+            const SizedBox(height: 16),
           ],
         ),
       ),
     );
   }
 
-  int _getCompletedSectionsCount(dynamic cvProfile) {
+  Widget _buildSimpleHeader(CVProfileModel cvProfile) {
+    return Semantics(
+      container: true,
+      child: Container(
+        padding: const EdgeInsets.all(16), // Reduced padding
+        decoration: BoxDecoration(
+          color: PremiumPortfolioColors.cardBackground,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: PremiumPortfolioColors.borderLight),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Semantics(
+                    header: true,
+                    child: Text(
+                      'Build Your CV',
+                      style: TextStyle(
+                        fontSize: 20, // Further reduced font size
+                        fontWeight: FontWeight.w700,
+                        color: PremiumPortfolioColors.primaryText,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Complete the sections below to create your professional CV',
+                    style: TextStyle(
+                      fontSize: 12, // Further reduced font size
+                      color: PremiumPortfolioColors.secondaryText,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Simple Progress Indicator
+            Semantics(
+              label: AccessibilityLabels.cvProgress,
+              value: '${cvProfile.completionPercentage} percent complete',
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4), // Further reduced padding
+                decoration: BoxDecoration(
+                  color: cvProfile.completionPercentage >= 80
+                      ? PremiumPortfolioColors.success.withValues(alpha: 0.1)
+                      : PremiumPortfolioColors.accentPurple.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12), // Further reduced radius
+                  border: Border.all(
+                    color: cvProfile.completionPercentage >= 80
+                        ? PremiumPortfolioColors.success
+                        : PremiumPortfolioColors.accentPurple,
+                  ),
+                ),
+                child: Text(
+                  '${cvProfile.completionPercentage}% Complete',
+                  style: TextStyle(
+                    fontSize: 10, // Further reduced font size
+                    fontWeight: FontWeight.w600,
+                    color: cvProfile.completionPercentage >= 80
+                        ? PremiumPortfolioColors.success
+                        : PremiumPortfolioColors.accentPurple,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCleanSectionsList(CVProfileModel cvProfile) {
+    final sections = _getSections(cvProfile);
+    
+    return OptimizedEnterpriseCard(
+      child: Column(
+        children: [
+          // Header
+          OptimizedSectionHeader(
+            title: 'CV Sections',
+            subtitle: '${_getCompletedSectionsCount(cvProfile)} of ${sections.length} completed',
+          ),
+          
+          // Sections List
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: sections.length,
+            itemBuilder: (context, index) {
+              final section = sections[index];
+              return PerformantAnimatedWidget(
+                fadeIn: true,
+                slideIn: true,
+                duration: Duration(milliseconds: 300 + (index * 100)),
+                child: OptimizedListItem(
+                  leading: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: section.hasData
+                          ? PremiumPortfolioColors.success.withValues(alpha: 0.1)
+                          : PremiumPortfolioColors.accentPurple.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(
+                      section.icon,
+                      size: 20,
+                      color: section.hasData
+                          ? PremiumPortfolioColors.success
+                          : PremiumPortfolioColors.accentPurple,
+                    ),
+                  ),
+                  title: section.name,
+                  subtitle: section.hasData ? section.countLabel : 'Not added yet',
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (section.hasData)
+                        EnterpriseStatusBadge.success('Complete')
+                      else
+                        EnterpriseStatusBadge.info('Add'),
+                      const SizedBox(width: 8),
+                      Icon(
+                        LucideIcons.chevronRight,
+                        size: 16,
+                        color: PremiumPortfolioColors.secondaryText,
+                      ),
+                    ],
+                  ),
+                  onTap: () => context.go('/cv/form', extra: {'initialStep': section.stepIndex}),
+                  showDivider: index < sections.length - 1,
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+
+
+  Widget _buildSimpleGenerateButton() {
+    return ResponsiveBuilder(
+      builder: (context, constraints) {
+        return MicroInteractionButton(
+          onPressed: () => context.go('/pdf/result'),
+          child: Container(
+            width: double.infinity,
+            height: constraints.isMobile ? 48 : 56,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  PremiumPortfolioColors.accentPurple,
+                  PremiumPortfolioColors.accentBlue,
+                ],
+              ),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    LucideIcons.download,
+                    size: constraints.isMobile ? 18 : 20,
+                    color: Colors.white,
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    'Generate My CVs',
+                    style: TextStyle(
+                      fontSize: constraints.isMobile ? 14 : 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  String _buildSectionSemanticLabel(CVSectionData section) {
+    final status = section.hasData 
+        ? AccessibilityLabels.cvSectionComplete 
+        : AccessibilityLabels.cvSectionIncomplete;
+    return '${section.name} section, $status, ${section.countLabel}';
+  }
+
+
+
+  int _getCompletedSectionsCount(CVProfileModel cvProfile) {
     final sections = _getSections(cvProfile);
     return sections.where((section) => section.hasData).length;
   }
 
-  List<CVSectionData> _getSections(dynamic cvProfile) {
+  List<CVSectionData> _getSections(CVProfileModel cvProfile) {
     return [
       CVSectionData(
         name: 'Personal Info',
         icon: LucideIcons.user,
         stepIndex: 0,
-        hasData: (cvProfile.phone?.isNotEmpty == true) ||
-            (cvProfile.summary?.isNotEmpty == true),
+        hasData: (cvProfile.phone.isNotEmpty) || (cvProfile.summary.isNotEmpty),
         countLabel: _getPersonalInfoLabel(cvProfile),
       ),
       CVSectionData(
         name: 'Education',
         icon: LucideIcons.graduationCap,
         stepIndex: 1,
-        hasData: cvProfile.education?.isNotEmpty == true,
-        countLabel: '${cvProfile.education?.length ?? 0} entries',
+        hasData: cvProfile.education.isNotEmpty,
+        countLabel: '${cvProfile.education.length} ${cvProfile.education.length == 1 ? 'entry' : 'entries'}',
       ),
       CVSectionData(
         name: 'Experience',
         icon: LucideIcons.briefcase,
         stepIndex: 2,
-        hasData: cvProfile.experiences?.isNotEmpty == true,
-        countLabel: '${cvProfile.experiences?.length ?? 0} entries',
+        hasData: cvProfile.experiences.isNotEmpty,
+        countLabel: '${cvProfile.experiences.length} ${cvProfile.experiences.length == 1 ? 'position' : 'positions'}',
       ),
       CVSectionData(
         name: 'Skills',
         icon: LucideIcons.zap,
         stepIndex: 3,
-        hasData: cvProfile.skills?.isNotEmpty == true,
-        countLabel: '${cvProfile.skills?.length ?? 0} skills',
+        hasData: cvProfile.skills.isNotEmpty,
+        countLabel: '${cvProfile.skills.length} ${cvProfile.skills.length == 1 ? 'skill' : 'skills'}',
       ),
       CVSectionData(
         name: 'Languages',
         icon: LucideIcons.globe,
         stepIndex: 4,
-        hasData: cvProfile.languages?.isNotEmpty == true,
-        countLabel: '${cvProfile.languages?.length ?? 0} languages',
+        hasData: cvProfile.languages.isNotEmpty,
+        countLabel: '${cvProfile.languages.length} ${cvProfile.languages.length == 1 ? 'language' : 'languages'}',
       ),
       CVSectionData(
         name: 'Projects',
         icon: LucideIcons.code2,
         stepIndex: 5,
-        hasData: cvProfile.projects?.isNotEmpty == true,
-        countLabel: '${cvProfile.projects?.length ?? 0} projects',
+        hasData: cvProfile.projects.isNotEmpty,
+        countLabel: '${cvProfile.projects.length} ${cvProfile.projects.length == 1 ? 'project' : 'projects'}',
       ),
       CVSectionData(
         name: 'Certifications',
         icon: LucideIcons.award,
         stepIndex: 6,
-        hasData: cvProfile.certifications?.isNotEmpty == true,
-        countLabel: '${cvProfile.certifications?.length ?? 0} certs',
+        hasData: cvProfile.certifications.isNotEmpty,
+        countLabel: '${cvProfile.certifications.length} ${cvProfile.certifications.length == 1 ? 'certificate' : 'certificates'}',
       ),
     ];
   }
 
-  String _getPersonalInfoLabel(dynamic cvProfile) {
-    final hasPhone = cvProfile.phone?.isNotEmpty == true;
-    final hasSummary = cvProfile.summary?.isNotEmpty == true;
+  String _getPersonalInfoLabel(CVProfileModel cvProfile) {
+    final hasPhone = cvProfile.phone.isNotEmpty;
+    final hasSummary = cvProfile.summary.isNotEmpty;
 
     if (hasPhone && hasSummary) {
-      return 'Profile filled';
+      return 'Profile completed';
     } else if (hasPhone || hasSummary) {
-      return 'Partially filled';
+      return 'Partially completed';
     } else {
-      return 'Not added yet';
+      return 'Not started';
     }
   }
 }
@@ -327,4 +430,36 @@ class CVSectionData {
     required this.hasData,
     required this.countLabel,
   });
+}
+
+class CVGridPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = PremiumPortfolioColors.gridOverlay
+      ..strokeWidth = 0.5;
+
+    const gridSize = 60.0;
+
+    // Draw vertical lines
+    for (double x = 0; x <= size.width; x += gridSize) {
+      canvas.drawLine(
+        Offset(x, 0),
+        Offset(x, size.height),
+        paint,
+      );
+    }
+
+    // Draw horizontal lines
+    for (double y = 0; y <= size.height; y += gridSize) {
+      canvas.drawLine(
+        Offset(0, y),
+        Offset(size.width, y),
+        paint,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

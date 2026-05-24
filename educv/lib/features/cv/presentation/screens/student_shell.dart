@@ -13,7 +13,10 @@ class StudentShell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: PremiumPortfolioColors.background,
-      body: navigationShell,
+      body: Container(
+        width: double.infinity,
+        child: navigationShell,
+      ),
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
           color: PremiumPortfolioColors.cardBackground,

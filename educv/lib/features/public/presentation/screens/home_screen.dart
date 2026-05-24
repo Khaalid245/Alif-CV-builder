@@ -46,115 +46,150 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     return PublicLayout(
-      child: Container(
-        decoration: const BoxDecoration(
-          color: PremiumPortfolioColors.background,
-        ),
-        child: Stack(
-          children: [
-            // Grid overlay background
-            _buildGridOverlay(),
-            // Main content with animations
-            FadeTransition(
-              opacity: _fadeAnimation,
-              child: SlideTransition(
-                position: _slideAnimation,
-                child: Column(
-                  children: [
-                    _buildHeroSection(),
-                    _buildStatsSection(),
-                    _buildHowItWorksSection(),
-                    _buildTemplatesSection(),
-                    _buildFeaturesSection(),
-                    _buildCTASection(),
-                    const SizedBox(height: 80),
-                  ],
-                ),
+      child: Stack(
+        children: [
+          // Grid overlay background
+          _buildGridOverlay(),
+          // Main content with animations - Direct content without Container wrapper
+          FadeTransition(
+            opacity: _fadeAnimation,
+            child: SlideTransition(
+              position: _slideAnimation,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _buildHeroSection(),
+                  _buildStatsSection(),
+                  _buildHowItWorksSection(),
+                  _buildTemplatesSection(),
+                  _buildFeaturesSection(),
+                  _buildCTASection(),
+                  const SizedBox(height: 80),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildGridOverlay() {
     return Positioned.fill(
-      child: CustomPaint(
-        painter: HomeGridPainter(),
+      child: IgnorePointer(
+        child: CustomPaint(
+          painter: HomeGridPainter(),
+        ),
       ),
     );
   }
 
   Widget _buildHeroSection() {
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 120),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 1200),
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: BoxDecoration(
-                color: PremiumPortfolioColors.accentPurple.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: PremiumPortfolioColors.accentPurple.withValues(alpha: 0.2),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1200),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: PremiumPortfolioColors.accentPurple.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: PremiumPortfolioColors.accentPurple.withValues(alpha: 0.2),
+                  ),
+                ),
+                child: Text(
+                  'UNIVERSITY CV BUILDER',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: PremiumPortfolioColors.accentPurple,
+                    letterSpacing: 1.2,
+                  ),
                 ),
               ),
-              child: Text(
-                'UNIVERSITY CV BUILDER',
+              const SizedBox(height: 32),
+              Text(
+                'Professional CVs\nMade Simple',
                 style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: PremiumPortfolioColors.accentPurple,
-                  letterSpacing: 1.2,
-                ),
-              ),
-            ),
-            const SizedBox(height: 32),
-            Text(
-              'Professional CVs\nMade Simple',
-              style: TextStyle(
-                fontSize: 64,
-                fontWeight: FontWeight.w800,
-                color: PremiumPortfolioColors.primaryText,
-                height: 1.1,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 24),
-            ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 700),
-              child: Text(
-                'Fill in your information once. Get 3 professionally designed CVs as ready-to-download PDFs. No design skills needed.',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
-                  color: PremiumPortfolioColors.secondaryText,
-                  height: 1.6,
+                  fontSize: 64,
+                  fontWeight: FontWeight.w800,
+                  color: PremiumPortfolioColors.primaryText,
+                  height: 1.1,
                 ),
                 textAlign: TextAlign.center,
               ),
-            ),
-            const SizedBox(height: 48),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildPremiumButton(
-                  'Get Started Free',
-                  () => context.go('/register'),
-                  isPrimary: true,
+              const SizedBox(height: 24),
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 700),
+                child: Text(
+                  'Fill in your information once. Get 3 professionally designed CVs as ready-to-download PDFs. No design skills needed.',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400,
+                    color: PremiumPortfolioColors.secondaryText,
+                    height: 1.6,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                const SizedBox(width: 24),
-                _buildPremiumButton(
-                  'View Templates',
-                  () => context.go('/#templates'),
-                  isPrimary: false,
-                ),
-              ],
-            ),
-          ],
+              ),
+              const SizedBox(height: 48),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  if (constraints.maxWidth < 600) {
+                    // Mobile: Stack buttons vertically
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(
+                          width: double.infinity,
+                          child: _buildPremiumButton(
+                            'Get Started Free',
+                            () => context.go('/register'),
+                            isPrimary: true,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        SizedBox(
+                          width: double.infinity,
+                          child: _buildPremiumButton(
+                            'View Templates',
+                            () => context.go('/#templates'),
+                            isPrimary: false,
+                          ),
+                        ),
+                      ],
+                    );
+                  } else {
+                    // Desktop: Row layout
+                    return Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _buildPremiumButton(
+                          'Get Started Free',
+                          () => context.go('/register'),
+                          isPrimary: true,
+                        ),
+                        const SizedBox(width: 24),
+                        _buildPremiumButton(
+                          'View Templates',
+                          () => context.go('/#templates'),
+                          isPrimary: false,
+                        ),
+                      ],
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -162,17 +197,43 @@ class _HomeScreenState extends State<HomeScreen>
 
   Widget _buildStatsSection() {
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 80),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 1200),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _buildStatCard('3', 'Professional\nTemplates'),
-            _buildStatCard('1000+', 'Students\nHelped'),
-            _buildStatCard('100%', 'Free for\nStudents'),
-            _buildStatCard('24/7', 'Platform\nAccess'),
-          ],
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1200),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              // Responsive layout for stats
+              if (constraints.maxWidth < 768) {
+                // Mobile: Stack vertically
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildStatCard('3', 'Professional\nTemplates'),
+                    const SizedBox(height: 24),
+                    _buildStatCard('1000+', 'Students\nHelped'),
+                    const SizedBox(height: 24),
+                    _buildStatCard('100%', 'Free for\nStudents'),
+                    const SizedBox(height: 24),
+                    _buildStatCard('24/7', 'Platform\nAccess'),
+                  ],
+                );
+              } else {
+                // Desktop/Tablet: Row layout
+                return Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(child: _buildStatCard('3', 'Professional\nTemplates')),
+                    Expanded(child: _buildStatCard('1000+', 'Students\nHelped')),
+                    Expanded(child: _buildStatCard('100%', 'Free for\nStudents')),
+                    Expanded(child: _buildStatCard('24/7', 'Platform\nAccess')),
+                  ],
+                );
+              }
+            },
+          ),
         ),
       ),
     );
@@ -211,43 +272,67 @@ class _HomeScreenState extends State<HomeScreen>
 
   Widget _buildHowItWorksSection() {
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 80),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 1200),
-        child: Column(
-          children: [
-            Text(
-              'How It Works',
-              style: TextStyle(
-                fontSize: 48,
-                fontWeight: FontWeight.w800,
-                color: PremiumPortfolioColors.primaryText,
-                height: 1.1,
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1200),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'How It Works',
+                style: TextStyle(
+                  fontSize: 48,
+                  fontWeight: FontWeight.w800,
+                  color: PremiumPortfolioColors.primaryText,
+                  height: 1.1,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Three simple steps to your professional CV',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w400,
-                color: PremiumPortfolioColors.secondaryText,
-                height: 1.6,
+              const SizedBox(height: 16),
+              Text(
+                'Three simple steps to your professional CV',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w400,
+                  color: PremiumPortfolioColors.secondaryText,
+                  height: 1.6,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 64),
-            Row(
-              children: [
-                Expanded(child: _buildStepCard('1', 'Fill Information', 'Add your education, skills, and experience once')),
-                const SizedBox(width: 32),
-                Expanded(child: _buildStepCard('2', 'Generate CVs', 'Platform creates 3 professional PDF templates')),
-                const SizedBox(width: 32),
-                Expanded(child: _buildStepCard('3', 'Download & Apply', 'Choose the best CV for each job application')),
-              ],
-            ),
-          ],
+              const SizedBox(height: 64),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  if (constraints.maxWidth < 768) {
+                    // Mobile: Stack vertically
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _buildStepCard('1', 'Fill Information', 'Add your education, skills, and experience once'),
+                        const SizedBox(height: 32),
+                        _buildStepCard('2', 'Generate CVs', 'Platform creates 3 professional PDF templates'),
+                        const SizedBox(height: 32),
+                        _buildStepCard('3', 'Download & Apply', 'Choose the best CV for each job application'),
+                      ],
+                    );
+                  } else {
+                    // Desktop/Tablet: Row layout
+                    return Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Expanded(child: _buildStepCard('1', 'Fill Information', 'Add your education, skills, and experience once')),
+                        const SizedBox(width: 32),
+                        Expanded(child: _buildStepCard('2', 'Generate CVs', 'Platform creates 3 professional PDF templates')),
+                        const SizedBox(width: 32),
+                        Expanded(child: _buildStepCard('3', 'Download & Apply', 'Choose the best CV for each job application')),
+                      ],
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -311,43 +396,67 @@ class _HomeScreenState extends State<HomeScreen>
 
   Widget _buildTemplatesSection() {
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 80),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 1200),
-        child: Column(
-          children: [
-            Text(
-              'Choose Your Style',
-              style: TextStyle(
-                fontSize: 48,
-                fontWeight: FontWeight.w800,
-                color: PremiumPortfolioColors.primaryText,
-                height: 1.1,
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1200),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Choose Your Style',
+                style: TextStyle(
+                  fontSize: 48,
+                  fontWeight: FontWeight.w800,
+                  color: PremiumPortfolioColors.primaryText,
+                  height: 1.1,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Three professionally designed templates for every career path',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w400,
-                color: PremiumPortfolioColors.secondaryText,
-                height: 1.6,
+              const SizedBox(height: 16),
+              Text(
+                'Three professionally designed templates for every career path',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w400,
+                  color: PremiumPortfolioColors.secondaryText,
+                  height: 1.6,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 64),
-            Row(
-              children: [
-                Expanded(child: _buildTemplateCard('Classic', 'Corporate & Government', 'Navy blue sidebar, formal layout')),
-                const SizedBox(width: 32),
-                Expanded(child: _buildTemplateCard('Modern', 'Tech & Startups', 'Clean design, teal accents')),
-                const SizedBox(width: 32),
-                Expanded(child: _buildTemplateCard('Academic', 'Research & Education', 'Structured format, burgundy theme')),
-              ],
-            ),
-          ],
+              const SizedBox(height: 64),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  if (constraints.maxWidth < 768) {
+                    // Mobile: Stack vertically
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _buildTemplateCard('Classic', 'Corporate & Government', 'Navy blue sidebar, formal layout'),
+                        const SizedBox(height: 32),
+                        _buildTemplateCard('Modern', 'Tech & Startups', 'Clean design, teal accents'),
+                        const SizedBox(height: 32),
+                        _buildTemplateCard('Academic', 'Research & Education', 'Structured format, burgundy theme'),
+                      ],
+                    );
+                  } else {
+                    // Desktop/Tablet: Row layout
+                    return Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Expanded(child: _buildTemplateCard('Classic', 'Corporate & Government', 'Navy blue sidebar, formal layout')),
+                        const SizedBox(width: 32),
+                        Expanded(child: _buildTemplateCard('Modern', 'Tech & Startups', 'Clean design, teal accents')),
+                        const SizedBox(width: 32),
+                        Expanded(child: _buildTemplateCard('Academic', 'Research & Education', 'Structured format, burgundy theme')),
+                      ],
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -412,37 +521,71 @@ class _HomeScreenState extends State<HomeScreen>
 
   Widget _buildFeaturesSection() {
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 80),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 1200),
-        child: Column(
-          children: [
-            Text(
-              'Why Choose EduCV?',
-              style: TextStyle(
-                fontSize: 48,
-                fontWeight: FontWeight.w800,
-                color: PremiumPortfolioColors.primaryText,
-                height: 1.1,
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1200),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Why Choose EduCV?',
+                style: TextStyle(
+                  fontSize: 48,
+                  fontWeight: FontWeight.w800,
+                  color: PremiumPortfolioColors.primaryText,
+                  height: 1.1,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 64),
-            GridView.count(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisCount: 2,
-              crossAxisSpacing: 32,
-              mainAxisSpacing: 32,
-              childAspectRatio: 1.2,
-              children: [
-                _buildFeatureCard(LucideIcons.shield, 'Secure & Private', 'Your data is protected with enterprise-grade security'),
-                _buildFeatureCard(LucideIcons.zap, 'Instant Generation', 'Get all 3 CVs in seconds, not hours'),
-                _buildFeatureCard(LucideIcons.users, 'University Approved', 'Built for students, endorsed by faculty'),
-                _buildFeatureCard(LucideIcons.download, 'Always Accessible', 'Download your CVs anytime, anywhere'),
-              ],
-            ),
-          ],
+              const SizedBox(height: 64),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  if (constraints.maxWidth < 768) {
+                    // Mobile: Single column - NO GridView
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _buildFeatureCard(LucideIcons.shield, 'Secure & Private', 'Your data is protected with enterprise-grade security'),
+                        const SizedBox(height: 32),
+                        _buildFeatureCard(LucideIcons.zap, 'Instant Generation', 'Get all 3 CVs in seconds, not hours'),
+                        const SizedBox(height: 32),
+                        _buildFeatureCard(LucideIcons.users, 'University Approved', 'Built for students, endorsed by faculty'),
+                        const SizedBox(height: 32),
+                        _buildFeatureCard(LucideIcons.download, 'Always Accessible', 'Download your CVs anytime, anywhere'),
+                      ],
+                    );
+                  } else {
+                    // Desktop/Tablet: Use Wrap instead of GridView to avoid scroll conflicts
+                    return Wrap(
+                      spacing: 32,
+                      runSpacing: 32,
+                      alignment: WrapAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: (constraints.maxWidth - 32) / 2,
+                          child: _buildFeatureCard(LucideIcons.shield, 'Secure & Private', 'Your data is protected with enterprise-grade security'),
+                        ),
+                        SizedBox(
+                          width: (constraints.maxWidth - 32) / 2,
+                          child: _buildFeatureCard(LucideIcons.zap, 'Instant Generation', 'Get all 3 CVs in seconds, not hours'),
+                        ),
+                        SizedBox(
+                          width: (constraints.maxWidth - 32) / 2,
+                          child: _buildFeatureCard(LucideIcons.users, 'University Approved', 'Built for students, endorsed by faculty'),
+                        ),
+                        SizedBox(
+                          width: (constraints.maxWidth - 32) / 2,
+                          child: _buildFeatureCard(LucideIcons.download, 'Always Accessible', 'Download your CVs anytime, anywhere'),
+                        ),
+                      ],
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -500,43 +643,50 @@ class _HomeScreenState extends State<HomeScreen>
 
   Widget _buildCTASection() {
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 80),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 800),
-        child: _PremiumHoverCard(
-          child: Padding(
-            padding: const EdgeInsets.all(64),
-            child: Column(
-              children: [
-                Text(
-                  'Ready to Build Your Professional CV?',
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.w800,
-                    color: PremiumPortfolioColors.primaryText,
-                    height: 1.2,
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 800),
+          child: _PremiumHoverCard(
+            child: Padding(
+              padding: const EdgeInsets.all(64),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Ready to Build Your Professional CV?',
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.w800,
+                      color: PremiumPortfolioColors.primaryText,
+                      height: 1.2,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Join thousands of students who have already created their professional CVs with EduCV.',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    color: PremiumPortfolioColors.secondaryText,
-                    height: 1.6,
+                  const SizedBox(height: 16),
+                  Text(
+                    'Join thousands of students who have already created their professional CVs with EduCV.',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      color: PremiumPortfolioColors.secondaryText,
+                      height: 1.6,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 32),
-                _buildPremiumButton(
-                  'Start Building Now',
-                  () => context.go('/register'),
-                  isPrimary: true,
-                  isLarge: true,
-                ),
-              ],
+                  const SizedBox(height: 32),
+                  SizedBox(
+                    width: double.infinity,
+                    child: _buildPremiumButton(
+                      'Start Building Now',
+                      () => context.go('/register'),
+                      isPrimary: true,
+                      isLarge: true,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
