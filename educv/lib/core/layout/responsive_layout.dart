@@ -29,9 +29,9 @@ class ResponsiveLayout extends StatelessWidget {
 }
 
 class BreakPoints {
-  static const double mobile = 600;
+  static const double mobile = 768;
   static const double tablet = 1024;
-  static const double desktop = 1200;
+  static const double desktop = 1024;
 }
 
 class ResponsiveBuilder extends StatelessWidget {

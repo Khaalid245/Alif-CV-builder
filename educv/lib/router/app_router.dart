@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../core/layout/improved_app_layout.dart';
 import '../features/auth/presentation/providers/auth_provider.dart';
 import '../features/auth/presentation/screens/login_screen.dart';
 import '../features/auth/presentation/screens/forgot_password_screen.dart';
 import '../features/auth/presentation/screens/register_screen.dart';
 import '../features/auth/presentation/screens/splash_screen.dart';
-import '../features/cv/presentation/screens/student_shell.dart';
-import '../features/cv/presentation/screens/onboarding_screen.dart';
+import '../features/cv/presentation/screens/improved_onboarding_screen.dart';
 import '../features/cv/presentation/screens/cv_dashboard_screen.dart';
 import '../features/cv/presentation/screens/cv_sections_screen.dart';
 import '../features/cv/presentation/screens/cv_downloads_screen.dart';
 import '../features/account/presentation/screens/account_screen.dart';
 import '../features/account/presentation/screens/change_password_screen.dart';
-import '../features/cv/presentation/screens/cv_form_screen.dart';
+import '../features/cv/presentation/screens/improved_cv_form_screen.dart';
 import '../features/cv/presentation/screens/cv_preview_screen.dart';
 import '../features/cv_intelligence/presentation/screens/cv_intelligence_screen.dart';
 import '../features/pdf/presentation/screens/pdf_result_screen.dart';
@@ -126,117 +126,131 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.onboarding,
         name: 'onboarding',
-        builder: (_, __) => const OnboardingScreen(),
+        builder: (_, __) => const ImprovedOnboardingScreen(),
       ),
 
-      // STUDENT SHELL with 5 tabs
-      StatefulShellRoute.indexedStack(
-        builder: (context, state, navigationShell) {
-          return StudentShell(navigationShell: navigationShell);
-        },
-        branches: [
-          // Branch 1: Home (Dashboard)
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: AppRoutes.cvDashboard,
-                builder: (context, state) => const CVDashboardScreen(),
-              ),
-            ],
-          ),
-          // Branch 2: My CV (Sections)
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: AppRoutes.cvSections,
-                builder: (context, state) => const CVSectionsScreen(),
-              ),
-            ],
-          ),
-          // Branch 3: Downloads
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: AppRoutes.cvDownloads,
-                builder: (context, state) => const CVDownloadsScreen(),
-              ),
-            ],
-          ),
-          // Branch 4: CV Intelligence
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: AppRoutes.cvIntelligence,
-                builder: (context, state) => const CVIntelligenceScreen(),
-              ),
-            ],
-          ),
-          // Branch 5: Account
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: AppRoutes.account,
-                builder: (context, state) => const AccountScreen(),
-              ),
-            ],
-          ),
-        ],
+      // PROTECTED ROUTES (with sidebar layout)
+      GoRoute(
+        path: AppRoutes.cvDashboard,
+        builder: (context, state) => ImprovedAppLayout(
+          currentRoute: state.uri.path,
+          child: const CVDashboardScreen(),
+        ),
       ),
-
-      // Other CV routes (outside shell)
+      GoRoute(
+        path: AppRoutes.cvSections,
+        builder: (context, state) => ImprovedAppLayout(
+          currentRoute: state.uri.path,
+          child: const CVSectionsScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.cvDownloads,
+        builder: (context, state) => ImprovedAppLayout(
+          currentRoute: state.uri.path,
+          child: const CVDownloadsScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.cvIntelligence,
+        builder: (context, state) => ImprovedAppLayout(
+          currentRoute: state.uri.path,
+          child: const CVIntelligenceScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.account,
+        builder: (context, state) => AppLayout(
+          currentRoute: state.uri.path,
+          child: const AccountScreen(),
+        ),
+      ),
       GoRoute(
         path: AppRoutes.cvForm,
         builder: (context, state) {
           final stepParam = state.uri.queryParameters['step'];
           final initialStep =
               stepParam != null ? int.tryParse(stepParam) ?? 0 : 0;
-          return CVFormScreen(initialStep: initialStep);
+          return ImprovedAppLayout(
+            currentRoute: state.uri.path,
+            child: ImprovedCVFormScreen(initialStep: initialStep),
+          );
         },
       ),
       GoRoute(
         path: AppRoutes.cvPreview,
-        builder: (context, state) => const CVPreviewScreen(),
+        builder: (context, state) => AppLayout(
+          currentRoute: state.uri.path,
+          child: const CVPreviewScreen(),
+        ),
       ),
       GoRoute(
         path: AppRoutes.changePassword,
-        builder: (context, state) => const ChangePasswordScreen(),
+        builder: (context, state) => AppLayout(
+          currentRoute: state.uri.path,
+          child: const ChangePasswordScreen(),
+        ),
       ),
       GoRoute(
         path: AppRoutes.pdfResult,
-        builder: (context, state) => const PDFResultScreen(),
+        builder: (context, state) => AppLayout(
+          currentRoute: state.uri.path,
+          child: const PDFResultScreen(),
+        ),
       ),
       GoRoute(
         path: AppRoutes.versionHistory,
-        builder: (context, state) => const VersionHistoryScreen(),
+        builder: (context, state) => AppLayout(
+          currentRoute: state.uri.path,
+          child: const VersionHistoryScreen(),
+        ),
       ),
       GoRoute(
         path: AppRoutes.notificationCenter,
-        builder: (context, state) => const NotificationCenterScreen(),
+        builder: (context, state) => AppLayout(
+          currentRoute: state.uri.path,
+          child: const NotificationCenterScreen(),
+        ),
       ),
       GoRoute(
         path: AppRoutes.notificationPreferences,
-        builder: (context, state) => const NotificationPreferencesScreen(),
+        builder: (context, state) => AppLayout(
+          currentRoute: state.uri.path,
+          child: const NotificationPreferencesScreen(),
+        ),
       ),
       GoRoute(
         path: AppRoutes.analytics,
-        builder: (context, state) => const AnalyticsDashboardScreen(),
+        builder: (context, state) => AppLayout(
+          currentRoute: state.uri.path,
+          child: const AnalyticsDashboardScreen(),
+        ),
       ),
       GoRoute(
         path: AppRoutes.templateCatalog,
-        builder: (context, state) => const TemplateCatalogScreen(),
+        builder: (context, state) => AppLayout(
+          currentRoute: state.uri.path,
+          child: const TemplateCatalogScreen(),
+        ),
       ),
       GoRoute(
         path: AppRoutes.templateDetail,
         builder: (context, state) {
           final slug = state.pathParameters['slug']!;
-          return TemplateDetailScreen(templateSlug: slug);
+          return AppLayout(
+            currentRoute: state.uri.path,
+            child: TemplateDetailScreen(templateSlug: slug),
+          );
         },
       ),
       GoRoute(
         path: '/pdf/preview/:id',
         builder: (context, state) {
           final id = state.pathParameters['id']!;
-          return PDFPreviewScreen(generatedCvId: id);
+          return AppLayout(
+            currentRoute: state.uri.path,
+            child: PDFPreviewScreen(generatedCvId: id),
+          );
         },
       ),
       // Admin shell — contains all 4 tabs via IndexedStack
