@@ -249,15 +249,13 @@ class AccountScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             const ListTile(
-              leading:
-                  Icon(LucideIcons.smartphone, color: Color(0xFF2E7D32)),
+              leading: Icon(LucideIcons.smartphone, color: Color(0xFF2E7D32)),
               title: Text('Current device'),
               subtitle: Text('Active now'),
               contentPadding: EdgeInsets.zero,
             ),
             const ListTile(
-              leading:
-                  Icon(LucideIcons.monitor, color: Color(0xFF6B7280)),
+              leading: Icon(LucideIcons.monitor, color: Color(0xFF6B7280)),
               title: Text('Other device'),
               subtitle: Text('Last seen 2 days ago'),
               contentPadding: EdgeInsets.zero,

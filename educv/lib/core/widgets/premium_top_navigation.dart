@@ -244,7 +244,8 @@ class _PremiumTopNavigationState extends State<PremiumTopNavigation>
                           borderRadius:
                               BorderRadius.circular(PremiumSaaSTheme.radiusSm),
                           child: Container(
-                            padding: const EdgeInsets.all(PremiumSaaSTheme.space1),
+                            padding:
+                                const EdgeInsets.all(PremiumSaaSTheme.space1),
                             child: const Icon(
                               LucideIcons.x,
                               color: PremiumSaaSTheme.textTertiary,
@@ -255,7 +256,8 @@ class _PremiumTopNavigationState extends State<PremiumTopNavigation>
                       )
                     else ...[
                       Container(
-                        margin: const EdgeInsets.only(right: PremiumSaaSTheme.space2),
+                        margin: const EdgeInsets.only(
+                            right: PremiumSaaSTheme.space2),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [

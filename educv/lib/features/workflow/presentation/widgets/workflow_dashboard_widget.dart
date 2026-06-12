@@ -157,7 +157,8 @@ class WorkflowDashboardStatsWidget extends StatelessWidget {
             child: LinearProgressIndicator(
               value: percentage / 100,
               backgroundColor: AppColors.surface,
-              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
+              valueColor:
+                  const AlwaysStoppedAnimation<Color>(AppColors.primary),
             ),
           ),
           const SizedBox(width: AppSpacing.sm),

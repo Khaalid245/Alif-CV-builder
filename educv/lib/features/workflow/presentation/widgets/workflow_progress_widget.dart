@@ -60,7 +60,8 @@ class WorkflowProgressWidget extends StatelessWidget {
             child: LinearProgressIndicator(
               value: (currentIndex + 1) / states.length,
               backgroundColor: AppColors.border,
-              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
+              valueColor:
+                  const AlwaysStoppedAnimation<Color>(AppColors.primary),
             ),
           ),
         ],
@@ -114,7 +115,8 @@ class WorkflowProgressWidget extends StatelessWidget {
               LinearProgressIndicator(
                 value: (currentIndex + 1) / states.length,
                 backgroundColor: AppColors.border,
-                valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
+                valueColor:
+                    const AlwaysStoppedAnimation<Color>(AppColors.primary),
               ),
               const SizedBox(height: AppSpacing.md),
               // State indicators

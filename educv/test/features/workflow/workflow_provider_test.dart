@@ -77,8 +77,8 @@ void main() {
 
       test('should handle loading error', () async {
         // Arrange
-        when(mockRepository.getCVWorkflow('test-cv-id'))
-            .thenThrow(const AppException(message: 'Network error', statusCode: 500));
+        when(mockRepository.getCVWorkflow('test-cv-id')).thenThrow(
+            const AppException(message: 'Network error', statusCode: 500));
 
         // Act
         final notifier =
@@ -217,7 +217,8 @@ void main() {
           pageSize: anyNamed('pageSize'),
           status: anyNamed('status'),
           workflowConfigId: anyNamed('workflowConfigId'),
-        )).thenThrow(const AppException(message: 'Failed to load', statusCode: 500));
+        )).thenThrow(
+            const AppException(message: 'Failed to load', statusCode: 500));
 
         // Act
         final notifier = container.read(workflowInstancesProvider.notifier);
@@ -326,8 +327,8 @@ void main() {
           'instance-1',
           page: anyNamed('page'),
           pageSize: anyNamed('pageSize'),
-        )).thenThrow(
-            const AppException(message: 'History load failed', statusCode: 500));
+        )).thenThrow(const AppException(
+            message: 'History load failed', statusCode: 500));
 
         // Act
         final notifier =

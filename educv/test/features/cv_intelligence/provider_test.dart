@@ -69,8 +69,8 @@ void main() {
 
       test('should handle loading error', () async {
         // Arrange
-        when(mockRepository.getLatestAnalysis())
-            .thenThrow(const AppException(message: 'Network error', statusCode: 500));
+        when(mockRepository.getLatestAnalysis()).thenThrow(
+            const AppException(message: 'Network error', statusCode: 500));
 
         // Act
         final notifier = container.read(analysisProvider.notifier);
