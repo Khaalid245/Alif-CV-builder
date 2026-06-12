@@ -70,17 +70,26 @@ class _EnterpriseCardState extends State<EnterpriseCard>
                 decoration: BoxDecoration(
                   color:
                       widget.backgroundColor ?? EnterpriseTheme.cardBackground,
-                  borderRadius: BorderRadius.circular(EnterpriseTheme.radiusLg),
-                  border: Border.all(color: EnterpriseTheme.cardBorder),
+                  borderRadius:
+                      BorderRadius.circular(EnterpriseTheme.radius2xl),
+                  border:
+                      Border.all(color: EnterpriseTheme.cardBorder, width: 0.5),
                   boxShadow: widget.boxShadow ??
                       [
                         BoxShadow(
                           color: EnterpriseTheme.gray900.withOpacity(
-                              0.05 + (_elevationAnimation.value * 0.05)),
-                          blurRadius: 6 + (_elevationAnimation.value * 10),
+                              0.03 + (_elevationAnimation.value * 0.03)),
+                          blurRadius: 8 + (_elevationAnimation.value * 16),
                           offset:
-                              Offset(0, 1 + (_elevationAnimation.value * 4)),
+                              Offset(0, 2 + (_elevationAnimation.value * 6)),
                         ),
+                        if (_elevationAnimation.value > 0)
+                          BoxShadow(
+                            color: EnterpriseTheme.primaryPurple
+                                .withOpacity(_elevationAnimation.value * 0.02),
+                            blurRadius: 8,
+                            offset: const Offset(0, 4),
+                          ),
                       ],
                 ),
                 child: widget.child,
@@ -179,18 +188,18 @@ class ActionCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 56,
-            height: 56,
+            width: 48,
+            height: 48,
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [color.withOpacity(0.1), color.withOpacity(0.05)],
+                colors: [color.withOpacity(0.15), color.withOpacity(0.05)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.circular(EnterpriseTheme.radiusLg),
-              border: Border.all(color: color.withOpacity(0.2)),
+              border: Border.all(color: color.withOpacity(0.2), width: 0.5),
             ),
-            child: Icon(icon, color: color, size: 28),
+            child: Icon(icon, color: color, size: 24),
           ),
           const SizedBox(height: EnterpriseTheme.spacing20),
           Text(title, style: EnterpriseTheme.h4),
@@ -220,19 +229,19 @@ class StatusBadge extends StatelessWidget {
 
     switch (type) {
       case StatusType.success:
-        backgroundColor = EnterpriseTheme.success.withOpacity(0.1);
+        backgroundColor = EnterpriseTheme.success.withOpacity(0.08);
         textColor = EnterpriseTheme.success;
         break;
       case StatusType.warning:
-        backgroundColor = EnterpriseTheme.warning.withOpacity(0.1);
+        backgroundColor = EnterpriseTheme.warning.withOpacity(0.08);
         textColor = EnterpriseTheme.warning;
         break;
       case StatusType.error:
-        backgroundColor = EnterpriseTheme.error.withOpacity(0.1);
+        backgroundColor = EnterpriseTheme.error.withOpacity(0.08);
         textColor = EnterpriseTheme.error;
         break;
       case StatusType.info:
-        backgroundColor = EnterpriseTheme.info.withOpacity(0.1);
+        backgroundColor = EnterpriseTheme.info.withOpacity(0.08);
         textColor = EnterpriseTheme.info;
         break;
     }

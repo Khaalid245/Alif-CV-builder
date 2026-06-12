@@ -1,30 +1,31 @@
 import 'package:flutter/material.dart';
 
 class EnterpriseTheme {
-  // Primary Colors - Emerald Green (Formerly Purple)
-  static const Color primaryPurple = Color(0xFF10B981); // Emerald 500
-  static const Color primaryPurpleLight = Color(0xFF34D399); // Emerald 400
-  static const Color primaryPurpleDark = Color(0xFF059669); // Emerald 600
+  // Primary Colors - Indigo
+  static const Color primaryPurple = Color(0xFF4F46E5); // Indigo 600
+  static const Color primaryPurpleLight = Color(0xFF6366F1); // Indigo 500
+  static const Color primaryPurpleDark = Color(0xFF4338CA); // Indigo 700
 
   // Accent Colors
   static const Color accentBlue = Color(0xFF3B82F6);
-  static const Color accentTeal = Color(0xFF06B6D4);
+  static const Color accentTeal = Color(0xFF14B8A6);
   static const Color accentGreen = Color(0xFF10B981);
   static const Color accentOrange = Color(0xFFF59E0B);
   static const Color accentRed = Color(0xFFEF4444);
+  static const Color accentRose = Color(0xFFF43F5E);
 
-  // Neutral Colors
+  // Neutral Colors - Slate
   static const Color white = Color(0xFFFFFFFF);
-  static const Color gray50 = Color(0xFFF9FAFB);
-  static const Color gray100 = Color(0xFFF3F4F6);
-  static const Color gray200 = Color(0xFFE5E7EB);
-  static const Color gray300 = Color(0xFFD1D5DB);
-  static const Color gray400 = Color(0xFF9CA3AF);
-  static const Color gray500 = Color(0xFF6B7280);
-  static const Color gray600 = Color(0xFF4B5563);
-  static const Color gray700 = Color(0xFF374151);
-  static const Color gray800 = Color(0xFF1F2937);
-  static const Color gray900 = Color(0xFF111827);
+  static const Color gray50 = Color(0xFFF8FAFC); // Slate 50
+  static const Color gray100 = Color(0xFFF1F5F9); // Slate 100
+  static const Color gray200 = Color(0xFFE2E8F0); // Slate 200
+  static const Color gray300 = Color(0xFFCBD5E1); // Slate 300
+  static const Color gray400 = Color(0xFF94A3B8); // Slate 400
+  static const Color gray500 = Color(0xFF64748B); // Slate 500
+  static const Color gray600 = Color(0xFF475569); // Slate 600
+  static const Color gray700 = Color(0xFF334155); // Slate 700
+  static const Color gray800 = Color(0xFF1E293B); // Slate 800
+  static const Color gray900 = Color(0xFF0F172A); // Slate 900
 
   // Semantic Colors
   static const Color success = accentGreen;
@@ -71,37 +72,47 @@ class EnterpriseTheme {
   // Shadows
   static List<BoxShadow> get shadowSm => [
         BoxShadow(
-          color: gray900.withOpacity(0.05),
-          blurRadius: 6,
-          offset: const Offset(0, 1),
+          color: gray900.withOpacity(0.03),
+          blurRadius: 8,
+          offset: const Offset(0, 2),
         ),
       ];
 
   static List<BoxShadow> get shadowMd => [
         BoxShadow(
-          color: gray900.withOpacity(0.1),
-          blurRadius: 15,
+          color: gray900.withOpacity(0.04),
+          blurRadius: 16,
           offset: const Offset(0, 4),
+        ),
+        BoxShadow(
+          color: primaryPurple.withOpacity(0.02),
+          blurRadius: 8,
+          offset: const Offset(0, 2),
         ),
       ];
 
   static List<BoxShadow> get shadowLg => [
         BoxShadow(
-          color: gray900.withOpacity(0.1),
-          blurRadius: 25,
-          offset: const Offset(0, 10),
+          color: gray900.withOpacity(0.05),
+          blurRadius: 24,
+          offset: const Offset(0, 8),
+        ),
+        BoxShadow(
+          color: primaryPurple.withOpacity(0.04),
+          blurRadius: 12,
+          offset: const Offset(0, 4),
         ),
       ];
 
   // Glassmorphism Effect
   static BoxDecoration get glassmorphism => BoxDecoration(
         color: white.withOpacity(0.7),
-        borderRadius: BorderRadius.circular(radiusLg),
-        border: Border.all(color: white.withOpacity(0.2)),
+        borderRadius: BorderRadius.circular(radius2xl),
+        border: Border.all(color: white.withOpacity(0.8), width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: gray900.withOpacity(0.1),
-            blurRadius: 20,
+            color: primaryPurple.withOpacity(0.03),
+            blurRadius: 24,
             offset: const Offset(0, 8),
           ),
         ],
@@ -109,7 +120,7 @@ class EnterpriseTheme {
 
   // Gradients
   static LinearGradient get primaryGradient => const LinearGradient(
-        colors: [primaryPurple, primaryPurpleLight],
+        colors: [Color(0xFF4F46E5), Color(0xFF7C3AED)], // Indigo to Violet
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       );
@@ -126,13 +137,15 @@ class EnterpriseTheme {
         fontWeight: FontWeight.w700,
         color: textPrimary,
         height: 1.2,
+        letterSpacing: -0.5,
       );
 
   static TextStyle get h2 => const TextStyle(
         fontSize: 24,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w700,
         color: textPrimary,
         height: 1.3,
+        letterSpacing: -0.3,
       );
 
   static TextStyle get h3 => const TextStyle(
@@ -140,13 +153,15 @@ class EnterpriseTheme {
         fontWeight: FontWeight.w600,
         color: textPrimary,
         height: 1.4,
+        letterSpacing: -0.2,
       );
 
   static TextStyle get h4 => const TextStyle(
         fontSize: 18,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w600,
         color: textPrimary,
         height: 1.4,
+        letterSpacing: -0.1,
       );
 
   static TextStyle get bodyLarge => const TextStyle(
@@ -172,7 +187,7 @@ class EnterpriseTheme {
 
   static TextStyle get labelLarge => const TextStyle(
         fontSize: 14,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w600,
         color: textPrimary,
         height: 1.4,
       );
@@ -186,8 +201,9 @@ class EnterpriseTheme {
 
   static TextStyle get labelSmall => const TextStyle(
         fontSize: 10,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w600,
         color: textTertiary,
         height: 1.4,
+        letterSpacing: 0.5,
       );
 }

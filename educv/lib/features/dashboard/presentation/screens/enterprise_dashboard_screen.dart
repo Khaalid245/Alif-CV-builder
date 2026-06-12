@@ -176,6 +176,8 @@ class _EnterpriseDashboardScreenState extends State<EnterpriseDashboardScreen>
 
   Widget _buildGreetingSection() {
     return EnterpriseCard(
+      backgroundColor: EnterpriseTheme.primaryPurple.withOpacity(0.02),
+      boxShadow: const [], // flat inside the top section
       child: ResponsiveBuilder(
         builder: (context, deviceType) {
           if (deviceType.isMobile) {
@@ -289,7 +291,7 @@ class _EnterpriseDashboardScreenState extends State<EnterpriseDashboardScreen>
               title: 'CV Downloads',
               value: '8',
               icon: LucideIcons.download,
-              color: EnterpriseTheme.accentTeal,
+              color: EnterpriseTheme.accentOrange,
               subtitle: 'This month',
             ),
           ],
