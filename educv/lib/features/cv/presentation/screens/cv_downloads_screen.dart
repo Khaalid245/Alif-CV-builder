@@ -5,9 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/foundation.dart';
 
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_typography.dart';
-import '../../../../core/widgets/app_button.dart';
+import '../../../../core/theme/enterprise_theme.dart';
+import '../../../../core/widgets/enterprise_ui_components.dart';
 import '../../../../core/widgets/empty_state.dart';
 import '../../../../core/utils/time_utils.dart';
 import '../../../../core/utils/file_saver.dart';
@@ -34,19 +33,19 @@ class _CVDownloadsScreenState extends ConsumerState<CVDownloadsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: EnterpriseTheme.backgroundSecondary,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: EnterpriseTheme.backgroundSecondary,
         elevation: 0,
         title: Text(
           'Downloads',
-          style: AppTypography.h2.copyWith(color: const Color(0xFF0A0A0A)),
+          style: EnterpriseTheme.h2,
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
           child: Container(
             height: 1,
-            color: AppColors.divider,
+            color: EnterpriseTheme.cardBorder,
           ),
         ),
         actions: [
@@ -55,7 +54,7 @@ class _CVDownloadsScreenState extends ConsumerState<CVDownloadsScreen> {
             icon: const Icon(
               LucideIcons.share2,
               size: 20,
-              color: Color(0xFF0A0A0A),
+              color: EnterpriseTheme.textPrimary,
             ),
           ),
         ],
@@ -107,27 +106,26 @@ class _CVDownloadsScreenState extends ConsumerState<CVDownloadsScreen> {
             const Icon(
               LucideIcons.alertCircle,
               size: 48,
-              color: AppColors.error,
+              color: EnterpriseTheme.error,
             ),
             const SizedBox(height: 16),
             Text(
               'Error loading downloads',
-              style: AppTypography.h3.copyWith(
-                color: AppColors.error,
+              style: EnterpriseTheme.h3.copyWith(
+                color: EnterpriseTheme.error,
               ),
             ),
             const SizedBox(height: 8),
             Text(
               error,
-              style: AppTypography.body.copyWith(
-                color: const Color(0xFF6B7280),
-              ),
+              style: EnterpriseTheme.bodyMedium,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
-            AppButton.secondary(
-              label: 'Retry',
+            EnterpriseButton(
+              text: 'Retry',
               icon: LucideIcons.refreshCw,
+              type: ButtonType.secondary,
               onPressed: () {
                 ref.read(pdfHistoryProvider.notifier).fetch();
               },
@@ -198,44 +196,36 @@ class _CVDownloadsScreenState extends ConsumerState<CVDownloadsScreen> {
           // Regenerate Row
           Container(
             decoration: BoxDecoration(
+              color: EnterpriseTheme.cardBackground,
               border: Border.all(
-                color: AppColors.divider,
+                color: EnterpriseTheme.cardBorder,
                 width: 0.5,
-                style: BorderStyle.solid,
               ),
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(EnterpriseTheme.radiusLg),
+              boxShadow: EnterpriseTheme.shadowSm,
             ),
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(EnterpriseTheme.spacing16),
             child: Row(
               children: [
                 const Icon(
                   LucideIcons.refreshCw,
                   size: 16,
-                  color: Color(0xFF9E9E9E),
+                  color: EnterpriseTheme.textTertiary,
                 ),
-                const SizedBox(width: 10),
-                const Expanded(
+                const SizedBox(width: EnterpriseTheme.spacing12),
+                Expanded(
                   child: Text(
                     'Regenerate all 3 CVs',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF0A0A0A),
-                    ),
+                    style: EnterpriseTheme.labelLarge,
                   ),
                 ),
-                TextButton(
+                EnterpriseButton(
+                  text: 'Generate',
+                  size: ButtonSize.small,
                   onPressed: () {
                     ref.read(generateCVsProvider.notifier).reset();
                     context.go('/pdf/result');
                   },
-                  child: Text(
-                    'Generate',
-                    style: AppTypography.body.copyWith(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
                 ),
               ],
             ),
@@ -247,21 +237,23 @@ class _CVDownloadsScreenState extends ConsumerState<CVDownloadsScreen> {
 
   Widget _buildDownloadTemplateCard(GeneratedCVModel cv, bool isFeatured) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 10),
+      margin: const EdgeInsets.only(bottom: EnterpriseTheme.spacing16),
       decoration: BoxDecoration(
+        color: EnterpriseTheme.cardBackground,
         border: Border.all(
-          color: isFeatured ? AppColors.primary : AppColors.divider,
+          color: isFeatured ? EnterpriseTheme.primaryPurple : EnterpriseTheme.cardBorder,
           width: isFeatured ? 1.0 : 0.5,
         ),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(EnterpriseTheme.radiusLg),
+        boxShadow: EnterpriseTheme.shadowSm,
       ),
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(EnterpriseTheme.spacing16),
       child: Row(
         children: [
           // CV Thumbnail
           _buildCVThumbnail(cv.template, isFeatured),
 
-          const SizedBox(width: 14),
+          const SizedBox(width: EnterpriseTheme.spacing16),
 
           // CV Info
           Expanded(
@@ -270,27 +262,17 @@ class _CVDownloadsScreenState extends ConsumerState<CVDownloadsScreen> {
               children: [
                 Text(
                   cv.templateDisplay,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF0A0A0A),
-                  ),
+                  style: EnterpriseTheme.h4,
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: EnterpriseTheme.spacing4),
                 Text(
                   '${cv.downloadCount} downloads',
-                  style: const TextStyle(
-                    fontSize: 11,
-                    color: Color(0xFF6B7280),
-                  ),
+                  style: EnterpriseTheme.bodySmall,
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: EnterpriseTheme.spacing4),
                 Text(
                   TimeUtils.timeAgo(cv.generatedAt),
-                  style: const TextStyle(
-                    fontSize: 10,
-                    color: Color(0xFF9E9E9E),
-                  ),
+                  style: EnterpriseTheme.labelSmall,
                 ),
               ],
             ),
@@ -299,22 +281,20 @@ class _CVDownloadsScreenState extends ConsumerState<CVDownloadsScreen> {
           // Action Buttons
           Column(
             children: [
-              // Download PDF Button
-              _buildActionButton(
+              EnterpriseButton(
                 icon: LucideIcons.download,
-                label: 'PDF',
-                isFeatured: isFeatured,
-                onTap: () => _downloadCV(cv),
+                text: 'PDF',
+                type: isFeatured ? ButtonType.primary : ButtonType.secondary,
+                size: ButtonSize.small,
+                onPressed: () => _downloadCV(cv),
               ),
-
-              const SizedBox(height: 8),
-
-              // Share Button
-              _buildActionButton(
+              const SizedBox(height: EnterpriseTheme.spacing8),
+              EnterpriseButton(
                 icon: LucideIcons.share2,
-                label: 'Share',
-                isFeatured: false,
-                onTap: () => _shareCV(cv),
+                text: 'Share',
+                type: ButtonType.outline,
+                size: ButtonSize.small,
+                onPressed: () => _shareCV(cv),
               ),
             ],
           ),
@@ -323,108 +303,65 @@ class _CVDownloadsScreenState extends ConsumerState<CVDownloadsScreen> {
     );
   }
 
-  Widget _buildActionButton({
-    required IconData icon,
-    required String label,
-    required bool isFeatured,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: isFeatured ? AppColors.primary : AppColors.surface,
-          border: isFeatured
-              ? null
-              : Border.all(
-                  color: AppColors.divider,
-                  width: 0.5,
-                ),
-          borderRadius: BorderRadius.circular(6),
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              icon,
-              size: 13,
-              color: isFeatured ? Colors.white : const Color(0xFF4A4A4A),
-            ),
-            const SizedBox(width: 4),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w500,
-                color: isFeatured ? Colors.white : const Color(0xFF4A4A4A),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildCVThumbnail(String template, bool isFeatured) {
     Color primaryColor;
     switch (template) {
       case 'classic':
-        primaryColor = AppColors.primary;
+        primaryColor = EnterpriseTheme.primaryPurple;
         break;
       case 'modern':
-        primaryColor = const Color(0xFF00ACC1);
+        primaryColor = EnterpriseTheme.accentBlue;
         break;
       case 'academic':
-        primaryColor = const Color(0xFF8E24AA);
+        primaryColor = EnterpriseTheme.accentTeal;
         break;
       default:
-        primaryColor = AppColors.primary;
+        primaryColor = EnterpriseTheme.primaryPurple;
     }
 
     return Container(
-      width: 36,
-      height: 48,
+      width: 48,
+      height: 64,
       decoration: BoxDecoration(
         border: Border.all(
-          color: AppColors.divider,
+          color: EnterpriseTheme.cardBorder,
           width: 0.5,
         ),
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(EnterpriseTheme.radiusSm),
         color:
-            isFeatured ? AppColors.primary.withOpacity(0.1) : AppColors.surface,
+            isFeatured ? primaryColor.withOpacity(0.05) : EnterpriseTheme.backgroundTertiary,
       ),
-      padding: const EdgeInsets.all(4),
+      padding: const EdgeInsets.all(8),
       child: Column(
         children: [
           Container(
-            height: 3,
+            height: 4,
             width: double.infinity * 0.8,
             decoration: BoxDecoration(
               color: primaryColor,
-              borderRadius: BorderRadius.circular(1),
+              borderRadius: BorderRadius.circular(2),
             ),
           ),
-          const SizedBox(height: 2),
+          const SizedBox(height: 4),
           Container(
-            height: 2,
+            height: 3,
             width: double.infinity * 0.6,
             decoration: BoxDecoration(
-              color: AppColors.divider,
-              borderRadius: BorderRadius.circular(1),
+              color: EnterpriseTheme.cardBorder,
+              borderRadius: BorderRadius.circular(2),
             ),
           ),
-          const SizedBox(height: 2),
+          const SizedBox(height: 4),
           Container(
             height: 2,
             width: double.infinity * 0.9,
-            color: AppColors.divider,
+            color: EnterpriseTheme.cardBorder,
           ),
-          const SizedBox(height: 2),
+          const SizedBox(height: 4),
           Container(
             height: 2,
             width: double.infinity * 0.7,
-            color: AppColors.divider,
+            color: EnterpriseTheme.cardBorder,
           ),
         ],
       ),
@@ -440,7 +377,7 @@ class _CVDownloadsScreenState extends ConsumerState<CVDownloadsScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('${cv.templateDisplay} CV downloaded successfully'),
-            backgroundColor: AppColors.success,
+            backgroundColor: EnterpriseTheme.success,
           ),
         );
       }
@@ -449,7 +386,7 @@ class _CVDownloadsScreenState extends ConsumerState<CVDownloadsScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Failed to download CV: ${e.toString()}'),
-            backgroundColor: AppColors.error,
+            backgroundColor: EnterpriseTheme.error,
           ),
         );
       }
@@ -482,7 +419,7 @@ class _CVDownloadsScreenState extends ConsumerState<CVDownloadsScreen> {
             const SnackBar(
               content: Text(
                   'File sharing not available on web. Use download instead.'),
-              backgroundColor: AppColors.primary,
+              backgroundColor: EnterpriseTheme.primaryPurple,
             ),
           );
         }
@@ -492,7 +429,7 @@ class _CVDownloadsScreenState extends ConsumerState<CVDownloadsScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Failed to share CV: ${e.toString()}'),
-            backgroundColor: AppColors.error,
+            backgroundColor: EnterpriseTheme.error,
           ),
         );
       }
@@ -514,14 +451,12 @@ class _CVDownloadsScreenState extends ConsumerState<CVDownloadsScreen> {
           children: [
             Text(
               'Share your CV',
-              style: AppTypography.h3,
+              style: EnterpriseTheme.h3,
             ),
             const SizedBox(height: 8),
             Text(
               'Choose how to share your CV with recruiters',
-              style: AppTypography.body.copyWith(
-                color: const Color(0xFF6B7280),
-              ),
+              style: EnterpriseTheme.bodyMedium,
             ),
 
             const SizedBox(height: 24),
@@ -532,28 +467,22 @@ class _CVDownloadsScreenState extends ConsumerState<CVDownloadsScreen> {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
+                  color: EnterpriseTheme.primaryPurple.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(EnterpriseTheme.radiusSm),
                 ),
                 child: const Icon(
                   LucideIcons.share2,
                   size: 20,
-                  color: AppColors.primary,
+                  color: EnterpriseTheme.primaryPurple,
                 ),
               ),
-              title: const Text(
+              title: Text(
                 'Share PDF file',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
+                style: EnterpriseTheme.labelLarge,
               ),
-              subtitle: const Text(
+              subtitle: Text(
                 'Share your CV as a PDF file',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Color(0xFF6B7280),
-                ),
+                style: EnterpriseTheme.bodySmall,
               ),
               onTap: () async {
                 Navigator.pop(context);
@@ -567,7 +496,7 @@ class _CVDownloadsScreenState extends ConsumerState<CVDownloadsScreen> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('No CVs available to share'),
-                      backgroundColor: AppColors.error,
+                      backgroundColor: EnterpriseTheme.error,
                     ),
                   );
                 }
@@ -582,28 +511,22 @@ class _CVDownloadsScreenState extends ConsumerState<CVDownloadsScreen> {
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF5F5F5),
-                    borderRadius: BorderRadius.circular(8),
+                    color: EnterpriseTheme.backgroundTertiary,
+                    borderRadius: BorderRadius.circular(EnterpriseTheme.radiusSm),
                   ),
                   child: const Icon(
                     LucideIcons.link,
                     size: 20,
-                    color: Color(0xFF9E9E9E),
+                    color: EnterpriseTheme.textTertiary,
                   ),
                 ),
-                title: const Text(
+                title: Text(
                   'Share link · Coming soon',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: EnterpriseTheme.labelLarge,
                 ),
-                subtitle: const Text(
+                subtitle: Text(
                   'Share a link to your online CV',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Color(0xFF6B7280),
-                  ),
+                  style: EnterpriseTheme.bodySmall,
                 ),
               ),
             ),
