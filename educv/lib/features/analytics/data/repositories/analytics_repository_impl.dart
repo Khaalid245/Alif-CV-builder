@@ -31,8 +31,9 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
     final queryParams = <String, String>{};
 
     if (snapshotType != null) queryParams['snapshot_type'] = snapshotType;
-    if (submissionReady != null)
+    if (submissionReady != null) {
       queryParams['submission_ready'] = submissionReady.toString();
+    }
     if (limit != null) queryParams['limit'] = limit.toString();
     if (offset != null) queryParams['offset'] = offset.toString();
 

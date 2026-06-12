@@ -87,7 +87,7 @@ void main() {
           overallScore: 75.0,
           sectionScores: {},
           recommendations: [],
-          submissionReadiness: SubmissionReadinessModel(
+          submissionReadiness: const SubmissionReadinessModel(
             isReady: false,
             readinessScore: 60.0,
             readyAspects: [],
@@ -115,7 +115,7 @@ void main() {
     group('SectionScoreModel', () {
       test('should calculate percentage correctly', () {
         // Arrange
-        final sectionScore = SectionScoreModel(
+        const sectionScore = SectionScoreModel(
           score: 80.0,
           maxScore: 100.0,
           weight: 1.0,
@@ -135,7 +135,7 @@ void main() {
 
       test('should handle zero max score', () {
         // Arrange
-        final sectionScore = SectionScoreModel(
+        const sectionScore = SectionScoreModel(
           score: 50.0,
           maxScore: 0.0,
           weight: 1.0,
@@ -152,7 +152,7 @@ void main() {
 
       test('should categorize performance levels correctly', () {
         // Test excellent
-        final excellent = SectionScoreModel(
+        const excellent = SectionScoreModel(
           score: 95.0,
           maxScore: 100.0,
           weight: 1.0,
@@ -165,7 +165,7 @@ void main() {
         expect(excellent.isExcellent, isTrue);
 
         // Test good
-        final good = SectionScoreModel(
+        const good = SectionScoreModel(
           score: 75.0,
           maxScore: 100.0,
           weight: 1.0,
@@ -178,7 +178,7 @@ void main() {
         expect(good.isGood, isTrue);
 
         // Test average
-        final average = SectionScoreModel(
+        const average = SectionScoreModel(
           score: 55.0,
           maxScore: 100.0,
           weight: 1.0,
@@ -191,7 +191,7 @@ void main() {
         expect(average.isAverage, isTrue);
 
         // Test poor
-        final poor = SectionScoreModel(
+        const poor = SectionScoreModel(
           score: 30.0,
           maxScore: 100.0,
           weight: 1.0,
@@ -283,7 +283,7 @@ void main() {
     group('SubmissionReadinessModel', () {
       test('should determine readiness level correctly', () {
         // Excellent
-        final excellent = SubmissionReadinessModel(
+        const excellent = SubmissionReadinessModel(
           isReady: true,
           readinessScore: 95.0,
           readyAspects: ['All sections complete'],
@@ -295,7 +295,7 @@ void main() {
         expect(excellent.readinessLevel, equals('Excellent'));
 
         // Good
-        final good = SubmissionReadinessModel(
+        const good = SubmissionReadinessModel(
           isReady: true,
           readinessScore: 80.0,
           readyAspects: ['Most sections complete'],
@@ -307,7 +307,7 @@ void main() {
         expect(good.readinessLevel, equals('Good'));
 
         // Fair
-        final fair = SubmissionReadinessModel(
+        const fair = SubmissionReadinessModel(
           isReady: false,
           readinessScore: 65.0,
           readyAspects: ['Basic info complete'],
@@ -319,7 +319,7 @@ void main() {
         expect(fair.readinessLevel, equals('Fair'));
 
         // Needs Improvement
-        final needsWork = SubmissionReadinessModel(
+        const needsWork = SubmissionReadinessModel(
           isReady: false,
           readinessScore: 40.0,
           readyAspects: [],
@@ -335,7 +335,7 @@ void main() {
     group('BenchmarkingDataModel', () {
       test('should determine performance level correctly', () {
         // Top 10%
-        final top10 = BenchmarkingDataModel(
+        const top10 = BenchmarkingDataModel(
           percentileRank: 95.0,
           comparisonGroup: 'Computer Science Students',
           sectionPercentiles: {},
@@ -345,7 +345,7 @@ void main() {
         expect(top10.performanceLevel, equals('Top 10%'));
 
         // Top 25%
-        final top25 = BenchmarkingDataModel(
+        const top25 = BenchmarkingDataModel(
           percentileRank: 80.0,
           comparisonGroup: 'Engineering Students',
           sectionPercentiles: {},
@@ -355,7 +355,7 @@ void main() {
         expect(top25.performanceLevel, equals('Top 25%'));
 
         // Above Average
-        final aboveAverage = BenchmarkingDataModel(
+        const aboveAverage = BenchmarkingDataModel(
           percentileRank: 60.0,
           comparisonGroup: 'All Students',
           sectionPercentiles: {},
@@ -365,7 +365,7 @@ void main() {
         expect(aboveAverage.performanceLevel, equals('Above Average'));
 
         // Below Average
-        final belowAverage = BenchmarkingDataModel(
+        const belowAverage = BenchmarkingDataModel(
           percentileRank: 30.0,
           comparisonGroup: 'All Students',
           sectionPercentiles: {},
@@ -375,7 +375,7 @@ void main() {
         expect(belowAverage.performanceLevel, equals('Below Average'));
 
         // Bottom 25%
-        final bottom25 = BenchmarkingDataModel(
+        const bottom25 = BenchmarkingDataModel(
           percentileRank: 15.0,
           comparisonGroup: 'All Students',
           sectionPercentiles: {},
@@ -389,7 +389,7 @@ void main() {
     group('BenchmarkInsightModel', () {
       test('should identify insight severity correctly', () {
         // Positive
-        final positive = BenchmarkInsightModel(
+        const positive = BenchmarkInsightModel(
           type: 'performance',
           message: 'Great job!',
           severity: 'positive',
@@ -400,7 +400,7 @@ void main() {
         expect(positive.isNegative, isFalse);
 
         // Warning
-        final warning = BenchmarkInsightModel(
+        const warning = BenchmarkInsightModel(
           type: 'improvement',
           message: 'Could be better',
           severity: 'warning',
@@ -409,7 +409,7 @@ void main() {
         expect(warning.isWarning, isTrue);
 
         // Negative
-        final negative = BenchmarkInsightModel(
+        const negative = BenchmarkInsightModel(
           type: 'issue',
           message: 'Needs attention',
           severity: 'negative',

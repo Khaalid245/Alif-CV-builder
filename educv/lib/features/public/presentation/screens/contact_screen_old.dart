@@ -123,7 +123,7 @@ class _ContactScreenState extends State<ContactScreen>
                       .withValues(alpha: 0.2),
                 ),
               ),
-              child: Text(
+              child: const Text(
                 'GET IN TOUCH',
                 style: TextStyle(
                   fontSize: 12,
@@ -134,7 +134,7 @@ class _ContactScreenState extends State<ContactScreen>
               ),
             ),
             const SizedBox(height: 24),
-            Text(
+            const Text(
               'We are here to help',
               style: TextStyle(
                 fontSize: 48,
@@ -147,7 +147,7 @@ class _ContactScreenState extends State<ContactScreen>
             const SizedBox(height: 16),
             ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 600),
-              child: Text(
+              child: const Text(
                 'Questions about your account, CV generation, or the platform? Reach out and we will respond within one business day.',
                 style: TextStyle(
                   fontSize: 18,
@@ -209,7 +209,7 @@ class _ContactScreenState extends State<ContactScreen>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Contact Information',
           style: TextStyle(
             fontSize: 24,
@@ -277,7 +277,7 @@ class _ContactScreenState extends State<ContactScreen>
                 children: [
                   Text(
                     label.toUpperCase(),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
                       color: PremiumPortfolioColors.secondaryText,
@@ -287,7 +287,7 @@ class _ContactScreenState extends State<ContactScreen>
                   const SizedBox(height: 4),
                   Text(
                     value,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: PremiumPortfolioColors.primaryText,

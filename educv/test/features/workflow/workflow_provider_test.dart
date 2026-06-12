@@ -78,7 +78,7 @@ void main() {
       test('should handle loading error', () async {
         // Arrange
         when(mockRepository.getCVWorkflow('test-cv-id'))
-            .thenThrow(AppException(message: 'Network error', statusCode: 500));
+            .thenThrow(const AppException(message: 'Network error', statusCode: 500));
 
         // Act
         final notifier =
@@ -139,7 +139,7 @@ void main() {
         when(mockRepository.getAvailableTransitions(mockWorkflow.id))
             .thenAnswer((_) async => mockTransitions);
         when(mockRepository.performTransition(any, any)).thenThrow(
-            AppException(message: 'Transition failed', statusCode: 400));
+            const AppException(message: 'Transition failed', statusCode: 400));
 
         // Act
         final notifier =
@@ -217,7 +217,7 @@ void main() {
           pageSize: anyNamed('pageSize'),
           status: anyNamed('status'),
           workflowConfigId: anyNamed('workflowConfigId'),
-        )).thenThrow(AppException(message: 'Failed to load', statusCode: 500));
+        )).thenThrow(const AppException(message: 'Failed to load', statusCode: 500));
 
         // Act
         final notifier = container.read(workflowInstancesProvider.notifier);
@@ -327,7 +327,7 @@ void main() {
           page: anyNamed('page'),
           pageSize: anyNamed('pageSize'),
         )).thenThrow(
-            AppException(message: 'History load failed', statusCode: 500));
+            const AppException(message: 'History load failed', statusCode: 500));
 
         // Act
         final notifier =

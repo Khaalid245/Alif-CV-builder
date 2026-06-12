@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
 import '../theme/app_typography.dart';
 import 'accessibility_foundation.dart';
@@ -142,7 +140,7 @@ class _AccessibleInputState extends State<AccessibleInput> {
         children: [
           TextSpan(text: widget.label),
           if (widget.required)
-            TextSpan(
+            const TextSpan(
               text: ' *',
               style: TextStyle(
                 color: AccessibleColors.errorAccessible,
@@ -206,7 +204,7 @@ class _AccessibleInputState extends State<AccessibleInput> {
         counterText: '',
 
         // Error styling
-        errorStyle: TextStyle(
+        errorStyle: const TextStyle(
           color: AccessibleColors.errorAccessible,
           fontSize: 14,
           fontWeight: FontWeight.w500,
@@ -255,7 +253,7 @@ class _AccessibleInputState extends State<AccessibleInput> {
     if (hasError) {
       return Semantics(
         label: AccessibilityLabels.invalidInput,
-        child: Icon(
+        child: const Icon(
           LucideIcons.alertCircle,
           color: AccessibleColors.errorAccessible,
           size: 20,
@@ -272,7 +270,7 @@ class _AccessibleInputState extends State<AccessibleInput> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
+          const Icon(
             LucideIcons.alertCircle,
             size: 16,
             color: AccessibleColors.errorAccessible,
@@ -281,7 +279,7 @@ class _AccessibleInputState extends State<AccessibleInput> {
           Expanded(
             child: Text(
               _errorMessage!,
-              style: TextStyle(
+              style: const TextStyle(
                 color: AccessibleColors.errorAccessible,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
@@ -405,7 +403,7 @@ class _AccessibleDropdownState<T> extends State<AccessibleDropdown<T>> {
               children: [
                 TextSpan(text: widget.label),
                 if (widget.required)
-                  TextSpan(
+                  const TextSpan(
                     text: ' *',
                     style: TextStyle(
                       color: AccessibleColors.errorAccessible,
@@ -419,7 +417,7 @@ class _AccessibleDropdownState<T> extends State<AccessibleDropdown<T>> {
 
           // Dropdown
           DropdownButtonFormField<T>(
-            value: widget.value,
+            initialValue: widget.value,
             items: widget.items,
             onChanged: (value) {
               widget.onChanged?.call(value);
@@ -439,7 +437,7 @@ class _AccessibleDropdownState<T> extends State<AccessibleDropdown<T>> {
                   ? AccessibleColors.backgroundAccessible
                   : AccessibleColors.surfaceAccessible,
             ),
-            style: TextStyle(
+            style: const TextStyle(
               color: AccessibleColors.textPrimaryAccessible,
               fontSize: 16,
             ),

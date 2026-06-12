@@ -113,7 +113,7 @@ void main() {
 
   group('SectionScoreModel', () {
     test('should calculate percentage correctly', () {
-      final model = SectionScoreModel(
+      const model = SectionScoreModel(
         score: 85.0,
         maxScore: 100.0,
         weight: 1.0,
@@ -130,7 +130,7 @@ void main() {
     });
 
     test('should handle zero max score', () {
-      final model = SectionScoreModel(
+      const model = SectionScoreModel(
         score: 85.0,
         maxScore: 0.0,
         weight: 1.0,
@@ -145,7 +145,7 @@ void main() {
     });
 
     test('should categorize performance levels correctly', () {
-      final excellent = SectionScoreModel(
+      const excellent = SectionScoreModel(
         score: 95.0,
         maxScore: 100.0,
         weight: 1.0,
@@ -156,7 +156,7 @@ void main() {
         details: {},
       );
 
-      final good = SectionScoreModel(
+      const good = SectionScoreModel(
         score: 75.0,
         maxScore: 100.0,
         weight: 1.0,
@@ -167,7 +167,7 @@ void main() {
         details: {},
       );
 
-      final average = SectionScoreModel(
+      const average = SectionScoreModel(
         score: 55.0,
         maxScore: 100.0,
         weight: 1.0,
@@ -178,7 +178,7 @@ void main() {
         details: {},
       );
 
-      final poor = SectionScoreModel(
+      const poor = SectionScoreModel(
         score: 35.0,
         maxScore: 100.0,
         weight: 1.0,
@@ -258,7 +258,7 @@ void main() {
 
   group('SubmissionReadinessModel', () {
     test('should determine readiness level correctly', () {
-      final excellent = SubmissionReadinessModel(
+      const excellent = SubmissionReadinessModel(
         isReady: true,
         readinessScore: 95.0,
         readyAspects: [],
@@ -268,7 +268,7 @@ void main() {
         details: {},
       );
 
-      final good = SubmissionReadinessModel(
+      const good = SubmissionReadinessModel(
         isReady: true,
         readinessScore: 80.0,
         readyAspects: [],
@@ -278,7 +278,7 @@ void main() {
         details: {},
       );
 
-      final fair = SubmissionReadinessModel(
+      const fair = SubmissionReadinessModel(
         isReady: false,
         readinessScore: 65.0,
         readyAspects: [],
@@ -288,7 +288,7 @@ void main() {
         details: {},
       );
 
-      final needsWork = SubmissionReadinessModel(
+      const needsWork = SubmissionReadinessModel(
         isReady: false,
         readinessScore: 45.0,
         readyAspects: [],
@@ -307,7 +307,7 @@ void main() {
 
   group('BenchmarkingDataModel', () {
     test('should determine performance level correctly', () {
-      final top10 = BenchmarkingDataModel(
+      const top10 = BenchmarkingDataModel(
         percentileRank: 95.0,
         comparisonGroup: 'test',
         sectionPercentiles: {},
@@ -315,7 +315,7 @@ void main() {
         statistics: {},
       );
 
-      final top25 = BenchmarkingDataModel(
+      const top25 = BenchmarkingDataModel(
         percentileRank: 80.0,
         comparisonGroup: 'test',
         sectionPercentiles: {},
@@ -323,7 +323,7 @@ void main() {
         statistics: {},
       );
 
-      final aboveAverage = BenchmarkingDataModel(
+      const aboveAverage = BenchmarkingDataModel(
         percentileRank: 60.0,
         comparisonGroup: 'test',
         sectionPercentiles: {},
@@ -331,7 +331,7 @@ void main() {
         statistics: {},
       );
 
-      final belowAverage = BenchmarkingDataModel(
+      const belowAverage = BenchmarkingDataModel(
         percentileRank: 30.0,
         comparisonGroup: 'test',
         sectionPercentiles: {},
@@ -339,7 +339,7 @@ void main() {
         statistics: {},
       );
 
-      final bottom25 = BenchmarkingDataModel(
+      const bottom25 = BenchmarkingDataModel(
         percentileRank: 15.0,
         comparisonGroup: 'test',
         sectionPercentiles: {},
@@ -357,21 +357,21 @@ void main() {
 
   group('BenchmarkInsightModel', () {
     test('should identify severity levels correctly', () {
-      final positive = BenchmarkInsightModel(
+      const positive = BenchmarkInsightModel(
         type: 'test',
         message: 'Good job',
         severity: 'positive',
         data: {},
       );
 
-      final warning = BenchmarkInsightModel(
+      const warning = BenchmarkInsightModel(
         type: 'test',
         message: 'Be careful',
         severity: 'warning',
         data: {},
       );
 
-      final negative = BenchmarkInsightModel(
+      const negative = BenchmarkInsightModel(
         type: 'test',
         message: 'Needs work',
         severity: 'negative',
@@ -450,7 +450,7 @@ void main() {
     });
 
     test('should parse DateTime values correctly', () {
-      final validDate = '2024-01-01T00:00:00Z';
+      const validDate = '2024-01-01T00:00:00Z';
       final parsed = CVAnalysisModel._parseDateTime(validDate);
 
       expect(parsed, isNotNull);

@@ -242,7 +242,7 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen>
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
+              const Icon(
                 LucideIcons.checkCircle2,
                 size: 16,
                 color: PremiumSaaSTheme.accentGreen,
@@ -250,7 +250,7 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen>
               const SizedBox(width: 6),
               Text(
                 '${profile.completionPercentage}% Complete',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                   color: PremiumSaaSTheme.accentGreen,
@@ -402,7 +402,7 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen>
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
+                  const Icon(
                     LucideIcons.trendingUp,
                     color: PremiumSaaSTheme.accentGreen,
                     size: 14,
@@ -1187,7 +1187,7 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen>
             color: PremiumSaaSTheme.textSecondary.withOpacity(0.5),
           ),
           const SizedBox(height: 16),
-          Text(
+          const Text(
             'No CVs generated yet',
             style: TextStyle(
               fontSize: 16,
@@ -1196,7 +1196,7 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen>
             ),
           ),
           const SizedBox(height: 8),
-          Text(
+          const Text(
             'Generate your first professional CV to see it here',
             style: TextStyle(
               fontSize: 14,

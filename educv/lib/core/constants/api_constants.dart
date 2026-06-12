@@ -7,7 +7,7 @@ class ApiConstants {
       final url = buildTimeUrl.isNotEmpty ? buildTimeUrl : Env.apiBaseUrl;
 
       // CRITICAL: Fail fast if API URL is not configured
-      if (url == null || url.isEmpty) {
+      if (url.isEmpty) {
         throw Exception(
           'FATAL: API_BASE_URL environment variable not set. '
           'Please configure assets/env/.env with a valid backend URL. '

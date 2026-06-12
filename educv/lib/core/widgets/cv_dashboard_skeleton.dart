@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../theme/premium_portfolio_colors.dart';
 
 class DashboardSkeleton extends StatelessWidget {
   const DashboardSkeleton({super.key});

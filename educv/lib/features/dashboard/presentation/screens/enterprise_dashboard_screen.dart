@@ -263,7 +263,7 @@ class _EnterpriseDashboardScreenState extends State<EnterpriseDashboardScreen>
           crossAxisSpacing: EnterpriseTheme.spacing16,
           mainAxisSpacing: EnterpriseTheme.spacing16,
           childAspectRatio: deviceType.isMobile ? 1.2 : 1.4,
-          children: [
+          children: const [
             StatCard(
               title: 'Profile Progress',
               value: '85%',
@@ -447,7 +447,7 @@ class _EnterpriseDashboardScreenState extends State<EnterpriseDashboardScreen>
         children: [
           Row(
             children: [
-              Icon(
+              const Icon(
                 LucideIcons.sparkles,
                 color: EnterpriseTheme.primaryPurple,
                 size: 20,
@@ -589,7 +589,7 @@ class _EnterpriseDashboardScreenState extends State<EnterpriseDashboardScreen>
 
   Widget _buildMobileBottomNav() {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: EnterpriseTheme.cardBackground,
         border: Border(
           top: BorderSide(color: EnterpriseTheme.cardBorder),

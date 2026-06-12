@@ -110,10 +110,10 @@ class CompletionStatisticsCard extends StatelessWidget {
                     ),
                     titlesData: FlTitlesData(
                       show: true,
-                      rightTitles: AxisTitles(
+                      rightTitles: const AxisTitles(
                         sideTitles: SideTitles(showTitles: false),
                       ),
-                      topTitles: AxisTitles(
+                      topTitles: const AxisTitles(
                         sideTitles: SideTitles(showTitles: false),
                       ),
                       bottomTitles: AxisTitles(
@@ -183,7 +183,7 @@ class CompletionStatisticsCard extends StatelessWidget {
                   padding: const EdgeInsets.only(bottom: AppSpacing.sm),
                   child: _buildSectionBar(entry.key, entry.value),
                 );
-              }).toList(),
+              }),
             ],
           ],
         ),

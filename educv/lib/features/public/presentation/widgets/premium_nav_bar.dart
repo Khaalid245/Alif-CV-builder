@@ -15,7 +15,7 @@ class PremiumNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 72,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: PremiumDarkColors.glassBackground,
         border: Border(
           bottom: BorderSide(color: PremiumDarkColors.border, width: 1),
@@ -178,11 +178,11 @@ class PremiumNavBar extends StatelessWidget {
           ],
         ),
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: PremiumDarkColors.glow,
             blurRadius: 20,
-            offset: const Offset(0, 4),
+            offset: Offset(0, 4),
           ),
         ],
       ),

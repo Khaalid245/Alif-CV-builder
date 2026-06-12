@@ -166,7 +166,7 @@ class _CVSectionsScreenState extends ConsumerState<CVSectionsScreen>
                 children: [
                   Semantics(
                     header: true,
-                    child: Text(
+                    child: const Text(
                       'Build Your CV',
                       style: TextStyle(
                         fontSize: 20, // Further reduced font size
@@ -176,7 +176,7 @@ class _CVSectionsScreenState extends ConsumerState<CVSectionsScreen>
                     ),
                   ),
                   const SizedBox(height: 4),
-                  Text(
+                  const Text(
                     'Complete the sections below to create your professional CV',
                     style: TextStyle(
                       fontSize: 12, // Further reduced font size
@@ -279,7 +279,7 @@ class _CVSectionsScreenState extends ConsumerState<CVSectionsScreen>
                       else
                         EnterpriseStatusBadge.info('Add'),
                       const SizedBox(width: 8),
-                      Icon(
+                      const Icon(
                         LucideIcons.chevronRight,
                         size: 16,
                         color: PremiumPortfolioColors.secondaryText,
@@ -307,7 +307,7 @@ class _CVSectionsScreenState extends ConsumerState<CVSectionsScreen>
             width: double.infinity,
             height: constraints.isMobile ? 48 : 56,
             decoration: BoxDecoration(
-              gradient: LinearGradient(
+              gradient: const LinearGradient(
                 colors: [
                   PremiumPortfolioColors.accentPurple,
                   PremiumPortfolioColors.accentBlue,

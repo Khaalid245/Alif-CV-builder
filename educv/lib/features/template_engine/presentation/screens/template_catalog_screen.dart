@@ -52,8 +52,7 @@ class _TemplateCatalogScreenState extends ConsumerState<TemplateCatalogScreen> {
 
     // Watch the user's CV profile to extract their target role
     final profileAsync = ref.watch(cvProfileProvider);
-    final targetRole = profileAsync.whenOrNull(data: (p) => p?.targetRole)
-        as Map<String, dynamic>?;
+    final targetRole = profileAsync.whenOrNull(data: (p) => p?.targetRole);
     final roleSlug = targetRole?['slug'] as String?;
     final roleName = targetRole?['name'] as String?;
 

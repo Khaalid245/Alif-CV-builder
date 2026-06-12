@@ -13,7 +13,7 @@ class PremiumDarkFooter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: PremiumDarkColors.glassBackground,
         border: Border(
           top: BorderSide(color: PremiumDarkColors.border, width: 1),
@@ -108,7 +108,7 @@ class PremiumDarkFooter extends StatelessWidget {
         const SizedBox(height: 60),
         Container(
           height: 1,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [
                 Colors.transparent,
@@ -196,7 +196,7 @@ class PremiumDarkFooter extends StatelessWidget {
         const SizedBox(height: 40),
         Container(
           height: 1,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [
                 Colors.transparent,

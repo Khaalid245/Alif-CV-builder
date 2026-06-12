@@ -1,7 +1,6 @@
 // BenchmarkingDataModel and BenchmarkInsightModel moved to CV Intelligence module
 // Use: import 'package:educv/features/cv_intelligence/data/models/cv_intelligence_models.dart';
 
-import '../../../cv_intelligence/data/models/cv_intelligence_models.dart';
 
 class ScoreSnapshotModel {
   final String id;

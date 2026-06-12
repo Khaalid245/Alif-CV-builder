@@ -1,5 +1,6 @@
 /// Workflow Control System data models for EduCV
 /// Production-quality models with comprehensive error handling and validation
+library;
 
 class WorkflowConfigurationModel {
   final String id;

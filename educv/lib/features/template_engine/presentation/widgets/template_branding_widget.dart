@@ -85,11 +85,11 @@ class _TemplateBrandingWidgetState extends State<TemplateBrandingWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+            const Row(
               children: [
-                const Icon(LucideIcons.palette, size: 20),
-                const SizedBox(width: 8),
-                const Text(
+                Icon(LucideIcons.palette, size: 20),
+                SizedBox(width: 8),
+                Text(
                   'Color Scheme',
                   style: TextStyle(
                     fontSize: 16,
@@ -183,11 +183,11 @@ class _TemplateBrandingWidgetState extends State<TemplateBrandingWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+            const Row(
               children: [
-                const Icon(LucideIcons.type, size: 20),
-                const SizedBox(width: 8),
-                const Text(
+                Icon(LucideIcons.type, size: 20),
+                SizedBox(width: 8),
+                Text(
                   'Typography',
                   style: TextStyle(
                     fontSize: 16,
@@ -210,7 +210,7 @@ class _TemplateBrandingWidgetState extends State<TemplateBrandingWidget> {
             const SizedBox(height: 8),
 
             DropdownButtonFormField<String>(
-              value: _fontFamily,
+              initialValue: _fontFamily,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -262,11 +262,11 @@ class _TemplateBrandingWidgetState extends State<TemplateBrandingWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+            const Row(
               children: [
-                const Icon(LucideIcons.layout, size: 20),
-                const SizedBox(width: 8),
-                const Text(
+                Icon(LucideIcons.layout, size: 20),
+                SizedBox(width: 8),
+                Text(
                   'Layout Spacing',
                   style: TextStyle(
                     fontSize: 16,
@@ -348,11 +348,11 @@ class _TemplateBrandingWidgetState extends State<TemplateBrandingWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+            const Row(
               children: [
-                const Icon(LucideIcons.eye, size: 20),
-                const SizedBox(width: 8),
-                const Text(
+                Icon(LucideIcons.eye, size: 20),
+                SizedBox(width: 8),
+                Text(
                   'Preview Customization',
                   style: TextStyle(
                     fontSize: 16,

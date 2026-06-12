@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/api_client_provider.dart';
 import '../exceptions/app_exception.dart';
 import '../network/api_response.dart';
-import '../../features/auth/presentation/providers/auth_provider.dart';
 
 class AuthUtils {
   static Future<bool> isTokenValid(WidgetRef ref) async {

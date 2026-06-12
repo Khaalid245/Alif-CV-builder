@@ -237,10 +237,10 @@ class _TemplateTab extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           boxShadow: isSelected
               ? [
-                  BoxShadow(
+                  const BoxShadow(
                     color: PremiumDarkColors.glow,
                     blurRadius: 20,
-                    offset: const Offset(0, 4),
+                    offset: Offset(0, 4),
                   ),
                 ]
               : null,
@@ -391,7 +391,7 @@ class _InfoPanel extends StatelessWidget {
                     const SizedBox(height: 24),
                     Container(
                       height: 1,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
                             Colors.transparent,
@@ -463,11 +463,11 @@ class _InfoPanel extends StatelessWidget {
           ],
         ),
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: PremiumDarkColors.glow,
             blurRadius: 20,
-            offset: const Offset(0, 8),
+            offset: Offset(0, 8),
           ),
         ],
       ),

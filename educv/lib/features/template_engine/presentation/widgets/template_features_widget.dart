@@ -49,11 +49,11 @@ class TemplateFeaturesWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+            const Row(
               children: [
-                const Icon(LucideIcons.info, size: 20),
-                const SizedBox(width: 8),
-                const Text(
+                Icon(LucideIcons.info, size: 20),
+                SizedBox(width: 8),
+                Text(
                   'Template Overview',
                   style: TextStyle(
                     fontSize: 16,
@@ -107,11 +107,11 @@ class TemplateFeaturesWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+            const Row(
               children: [
-                const Icon(LucideIcons.star, size: 20),
-                const SizedBox(width: 8),
-                const Text(
+                Icon(LucideIcons.star, size: 20),
+                SizedBox(width: 8),
+                Text(
                   'Key Features',
                   style: TextStyle(
                     fontSize: 16,
@@ -157,11 +157,11 @@ class TemplateFeaturesWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+            const Row(
               children: [
-                const Icon(LucideIcons.layout, size: 20),
-                const SizedBox(width: 8),
-                const Text(
+                Icon(LucideIcons.layout, size: 20),
+                SizedBox(width: 8),
+                Text(
                   'Layout Details',
                   style: TextStyle(
                     fontSize: 16,
@@ -223,11 +223,11 @@ class TemplateFeaturesWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+            const Row(
               children: [
-                const Icon(LucideIcons.shield, size: 20),
-                const SizedBox(width: 8),
-                const Text(
+                Icon(LucideIcons.shield, size: 20),
+                SizedBox(width: 8),
+                Text(
                   'Compatibility',
                   style: TextStyle(
                     fontSize: 16,
@@ -276,11 +276,11 @@ class TemplateFeaturesWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+            const Row(
               children: [
-                const Icon(LucideIcons.target, size: 20),
-                const SizedBox(width: 8),
-                const Text(
+                Icon(LucideIcons.target, size: 20),
+                SizedBox(width: 8),
+                Text(
                   'Best For',
                   style: TextStyle(
                     fontSize: 16,

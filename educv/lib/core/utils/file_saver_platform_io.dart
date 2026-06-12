@@ -19,6 +19,6 @@ Future<String> savePdfForPlatform({
 Future<void> openFileForPlatform(String filePath) async {
   final result = await OpenFilex.open(filePath);
   if (result.type != ResultType.done) {
-    throw AppException(message: 'Could not open file');
+    throw const AppException(message: 'Could not open file');
   }
 }

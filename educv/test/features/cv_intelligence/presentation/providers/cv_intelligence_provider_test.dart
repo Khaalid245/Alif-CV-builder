@@ -48,7 +48,7 @@ void main() {
 
     test('should handle error when loading latest analysis', () async {
       // Arrange
-      final exception = AppException(message: 'Network error', statusCode: 500);
+      const exception = AppException(message: 'Network error', statusCode: 500);
       when(mockRepository.getLatestAnalysis()).thenThrow(exception);
 
       // Act
@@ -82,7 +82,7 @@ void main() {
 
     test('should handle error during CV analysis', () async {
       // Arrange
-      final exception =
+      const exception =
           AppException(message: 'Analysis failed', statusCode: 400);
       when(mockRepository.analyzeCV(options: anyNamed('options')))
           .thenThrow(exception);
@@ -118,7 +118,7 @@ void main() {
 
     test('should clear error', () async {
       // Arrange
-      final exception = AppException(message: 'Test error', statusCode: 500);
+      const exception = AppException(message: 'Test error', statusCode: 500);
       when(mockRepository.getLatestAnalysis()).thenThrow(exception);
 
       final notifier = container.read(analysisProvider.notifier);
@@ -462,7 +462,7 @@ CVAnalysisModel _createMockAnalysis({String id = 'analysis-1'}) {
     userId: 'user-1',
     overallScore: 85.0,
     sectionScores: {
-      'education': SectionScoreModel(
+      'education': const SectionScoreModel(
         score: 90.0,
         maxScore: 100.0,
         weight: 1.0,

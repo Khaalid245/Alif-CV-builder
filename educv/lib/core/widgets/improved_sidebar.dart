@@ -58,7 +58,7 @@ class _ImprovedSidebarState extends State<ImprovedSidebar>
         width: widget.isCollapsed ? 80 : 280,
         decoration: BoxDecoration(
           color: PremiumSaaSTheme.lightSurface,
-          border: Border(
+          border: const Border(
             right: BorderSide(
               color: PremiumSaaSTheme.lightBorder,
               width: 1,
@@ -166,10 +166,10 @@ class _ImprovedSidebarState extends State<ImprovedSidebar>
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              gradient: LinearGradient(
+              gradient: const LinearGradient(
                 colors: [
                   PremiumSaaSTheme.accentGreen,
-                  const Color(0xFF34D399), // lighter emerald
+                  Color(0xFF34D399), // lighter emerald
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -191,7 +191,7 @@ class _ImprovedSidebarState extends State<ImprovedSidebar>
           ),
           if (!widget.isCollapsed) ...[
             const SizedBox(width: 16),
-            Expanded(
+            const Expanded(
               child: Text(
                 'EduCV',
                 style: TextStyle(
@@ -239,7 +239,7 @@ class _ImprovedSidebarState extends State<ImprovedSidebar>
           padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 8),
           child: Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w700,
               color: PremiumSaaSTheme.textTertiary,
@@ -328,9 +328,9 @@ class _ImprovedSidebarState extends State<ImprovedSidebar>
                   bottom: 8,
                   child: Container(
                     width: 3,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: PremiumSaaSTheme.accentGreen,
-                      borderRadius: const BorderRadius.only(
+                      borderRadius: BorderRadius.only(
                         topRight: Radius.circular(4),
                         bottomRight: Radius.circular(4),
                       ),
@@ -400,9 +400,9 @@ class _ImprovedSidebarState extends State<ImprovedSidebar>
                       bottom: 10,
                       child: Container(
                         width: 3,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: PremiumSaaSTheme.accentGreen,
-                          borderRadius: const BorderRadius.only(
+                          borderRadius: BorderRadius.only(
                             topRight: Radius.circular(4),
                             bottomRight: Radius.circular(4),
                           ),
@@ -425,7 +425,7 @@ class _ImprovedSidebarState extends State<ImprovedSidebar>
 
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         border: Border(
           top: BorderSide(
             color: PremiumSaaSTheme.lightBorder,
@@ -455,7 +455,7 @@ class _ImprovedSidebarState extends State<ImprovedSidebar>
                           children: [
                             Text(
                               name,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
                                 color: PremiumSaaSTheme.textPrimary,
@@ -466,7 +466,7 @@ class _ImprovedSidebarState extends State<ImprovedSidebar>
                             const SizedBox(height: 2),
                             Text(
                               email,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 12,
                                 color: PremiumSaaSTheme.textSecondary,
                               ),
@@ -476,7 +476,7 @@ class _ImprovedSidebarState extends State<ImprovedSidebar>
                           ],
                         ),
                       ),
-                      Icon(
+                      const Icon(
                         LucideIcons.settings,
                         size: 16,
                         color: PremiumSaaSTheme.textTertiary,
@@ -504,7 +504,7 @@ class _ImprovedSidebarState extends State<ImprovedSidebar>
       child: Center(
         child: Text(
           initials,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w700,
             color: PremiumSaaSTheme.textPrimary,

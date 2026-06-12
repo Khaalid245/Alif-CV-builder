@@ -11,7 +11,7 @@ class AppConfig {
       const buildTimeUrl = String.fromEnvironment('API_BASE_URL');
       final url = buildTimeUrl.isNotEmpty ? buildTimeUrl : Env.apiBaseUrl;
 
-      if (url == null || url.isEmpty) {
+      if (url.isEmpty) {
         return _getDefaultApiUrl();
       }
 
@@ -94,11 +94,11 @@ class AppConfig {
   static List<String> get allowedImageFormats => 'jpg,jpeg,png,webp'.split(',');
 
   // ─── Cache Configuration ───────────────────────────────────────────────────
-  static Duration get cacheTimeoutShort => Duration(minutes: 5);
+  static Duration get cacheTimeoutShort => const Duration(minutes: 5);
 
-  static Duration get cacheTimeoutMedium => Duration(minutes: 30);
+  static Duration get cacheTimeoutMedium => const Duration(minutes: 30);
 
-  static Duration get cacheTimeoutLong => Duration(hours: 1);
+  static Duration get cacheTimeoutLong => const Duration(hours: 1);
 
   // ─── CV Intelligence Configuration ─────────────────────────────────────────
   static Map<String, int> get cvScoringWeights => {
@@ -150,9 +150,9 @@ class AppConfig {
   static int get snapshotIntervalHours => 24;
 
   // ─── Network Configuration ─────────────────────────────────────────────────
-  static Duration get networkTimeout => Duration(seconds: 30);
+  static Duration get networkTimeout => const Duration(seconds: 30);
 
-  static Duration get connectionTimeout => Duration(seconds: 10);
+  static Duration get connectionTimeout => const Duration(seconds: 10);
 
   static int get maxRetryAttempts => 3;
 

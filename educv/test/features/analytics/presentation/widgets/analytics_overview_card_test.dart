@@ -8,7 +8,7 @@ void main() {
     late UserSummaryModel testUserSummary;
 
     setUp(() {
-      testUserSummary = UserSummaryModel(
+      testUserSummary = const UserSummaryModel(
         latestScore: 85,
         latestCompletion: 90,
         submissionReady: true,
@@ -51,7 +51,7 @@ void main() {
     });
 
     testWidgets('should not show percentile rank when null', (tester) async {
-      final summaryWithoutPercentile = UserSummaryModel(
+      const summaryWithoutPercentile = UserSummaryModel(
         latestScore: 85,
         latestCompletion: 90,
         submissionReady: true,
@@ -88,7 +88,7 @@ void main() {
 
     testWidgets('should show not ready status when submission not ready',
         (tester) async {
-      final notReadySummary = UserSummaryModel(
+      const notReadySummary = UserSummaryModel(
         latestScore: 45,
         latestCompletion: 60,
         submissionReady: false,
@@ -110,7 +110,7 @@ void main() {
     });
 
     testWidgets('should handle empty grade correctly', (tester) async {
-      final summaryWithoutGrade = UserSummaryModel(
+      const summaryWithoutGrade = UserSummaryModel(
         latestScore: 85,
         latestCompletion: 90,
         submissionReady: true,
@@ -148,7 +148,7 @@ void main() {
     testWidgets('should show different percentile descriptions based on rank',
         (tester) async {
       // Test excellent performance (90th+ percentile)
-      final excellentSummary = UserSummaryModel(
+      const excellentSummary = UserSummaryModel(
         latestScore: 95,
         latestCompletion: 100,
         submissionReady: true,
@@ -169,7 +169,7 @@ void main() {
     });
 
     testWidgets('should handle low performance correctly', (tester) async {
-      final lowPerformanceSummary = UserSummaryModel(
+      const lowPerformanceSummary = UserSummaryModel(
         latestScore: 30,
         latestCompletion: 40,
         submissionReady: false,

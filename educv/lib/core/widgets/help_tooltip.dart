@@ -149,7 +149,7 @@ class _HelpTooltipState extends State<HelpTooltip>
                     width: 32,
                     height: 32,
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
+                      gradient: const LinearGradient(
                         colors: [
                           PremiumPortfolioColors.accentPurple,
                           PremiumPortfolioColors.accentBlue,
@@ -167,7 +167,7 @@ class _HelpTooltipState extends State<HelpTooltip>
                   Expanded(
                     child: Text(
                       widget.title,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                         color: PremiumPortfolioColors.primaryText,
@@ -176,7 +176,7 @@ class _HelpTooltipState extends State<HelpTooltip>
                   ),
                   IconButton(
                     onPressed: _hideTooltip,
-                    icon: Icon(
+                    icon: const Icon(
                       LucideIcons.x,
                       size: 16,
                       color: PremiumPortfolioColors.secondaryText,
@@ -195,7 +195,7 @@ class _HelpTooltipState extends State<HelpTooltip>
               padding: const EdgeInsets.all(16),
               child: Text(
                 widget.message,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   color: PremiumPortfolioColors.secondaryText,
                   height: 1.5,
@@ -206,21 +206,21 @@ class _HelpTooltipState extends State<HelpTooltip>
             // Footer
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: PremiumPortfolioColors.background,
-                borderRadius: const BorderRadius.only(
+                borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(12),
                   bottomRight: Radius.circular(12),
                 ),
               ),
-              child: Row(
+              child: const Row(
                 children: [
                   Icon(
                     LucideIcons.lightbulb,
                     size: 14,
                     color: PremiumPortfolioColors.warning,
                   ),
-                  const SizedBox(width: 6),
+                  SizedBox(width: 6),
                   Text(
                     'Tip: Click anywhere to close',
                     style: TextStyle(
@@ -284,7 +284,7 @@ class QuickHelpButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
+        gradient: const LinearGradient(
           colors: [
             PremiumPortfolioColors.accentPurple,
             PremiumPortfolioColors.accentBlue,
@@ -306,7 +306,7 @@ class QuickHelpButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
+            child: const Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(
@@ -314,7 +314,7 @@ class QuickHelpButton extends StatelessWidget {
                   color: Colors.white,
                   size: 16,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   'Need Help?',
                   style: TextStyle(
@@ -375,7 +375,7 @@ class HelpDialog extends StatelessWidget {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
+                      gradient: const LinearGradient(
                         colors: [
                           PremiumPortfolioColors.accentPurple,
                           PremiumPortfolioColors.accentBlue,
@@ -390,7 +390,7 @@ class HelpDialog extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 16),
-                  Expanded(
+                  const Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -414,7 +414,7 @@ class HelpDialog extends StatelessWidget {
                   ),
                   IconButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    icon: Icon(
+                    icon: const Icon(
                       LucideIcons.x,
                       color: PremiumPortfolioColors.secondaryText,
                     ),
@@ -485,21 +485,21 @@ class HelpDialog extends StatelessWidget {
             // Footer
             Container(
               padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: PremiumPortfolioColors.background,
-                borderRadius: const BorderRadius.only(
+                borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(16),
                   bottomRight: Radius.circular(16),
                 ),
               ),
-              child: Row(
+              child: const Row(
                 children: [
                   Icon(
                     LucideIcons.mail,
                     size: 16,
                     color: PremiumPortfolioColors.accentPurple,
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Text(
                     'Still need help? Contact support',
                     style: TextStyle(
@@ -522,7 +522,7 @@ class HelpDialog extends StatelessWidget {
       children: [
         Text(
           title,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
             color: PremiumPortfolioColors.primaryText,
@@ -550,7 +550,7 @@ class HelpDialog extends StatelessWidget {
         children: [
           Text(
             item.question,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
               color: PremiumPortfolioColors.primaryText,
@@ -559,7 +559,7 @@ class HelpDialog extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             item.answer,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 13,
               color: PremiumPortfolioColors.secondaryText,
               height: 1.4,

@@ -24,7 +24,7 @@ class PremiumStatsBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: PremiumDarkColors.card,
         border: Border(
           top: BorderSide(color: PremiumDarkColors.border, width: 1),
@@ -49,7 +49,7 @@ class PremiumStatsBar extends StatelessWidget {
                         Container(
                           width: 1,
                           height: 50,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             gradient: LinearGradient(
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,

@@ -152,7 +152,7 @@ class _ImprovedOnboardingScreenState extends State<ImprovedOnboardingScreen>
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
+                  gradient: const LinearGradient(
                     colors: [
                       PremiumSaaSTheme.primaryPurple,
                       PremiumSaaSTheme.accentBlue,
@@ -167,7 +167,7 @@ class _ImprovedOnboardingScreenState extends State<ImprovedOnboardingScreen>
                 ),
               ),
               const SizedBox(width: 12),
-              Text(
+              const Text(
                 'EduCV',
                 style: TextStyle(
                   fontSize: 20,
@@ -178,7 +178,7 @@ class _ImprovedOnboardingScreenState extends State<ImprovedOnboardingScreen>
               const Spacer(),
               TextButton(
                 onPressed: () => context.go('/cv/dashboard'),
-                child: Text(
+                child: const Text(
                   'Skip Tour',
                   style: TextStyle(
                     fontSize: 14,
@@ -255,7 +255,7 @@ class _ImprovedOnboardingScreenState extends State<ImprovedOnboardingScreen>
           // Title and subtitle
           Text(
             step.title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 32,
               fontWeight: FontWeight.w800,
               color: PremiumSaaSTheme.textPrimary,
@@ -282,7 +282,7 @@ class _ImprovedOnboardingScreenState extends State<ImprovedOnboardingScreen>
             constraints: const BoxConstraints(maxWidth: 600),
             child: Text(
               step.description,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
                 color: PremiumSaaSTheme.textSecondary,
                 height: 1.6,
@@ -328,7 +328,7 @@ class _ImprovedOnboardingScreenState extends State<ImprovedOnboardingScreen>
                       Expanded(
                         child: Text(
                           feature,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: PremiumSaaSTheme.textPrimary,
@@ -402,7 +402,7 @@ class _ImprovedOnboardingScreenState extends State<ImprovedOnboardingScreen>
           height: 56,
           decoration: BoxDecoration(
             gradient: isPrimary
-                ? LinearGradient(
+                ? const LinearGradient(
                     colors: [
                       PremiumSaaSTheme.primaryPurple,
                       PremiumSaaSTheme.accentBlue,

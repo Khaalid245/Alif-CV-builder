@@ -157,7 +157,7 @@ class WorkflowDashboardStatsWidget extends StatelessWidget {
             child: LinearProgressIndicator(
               value: percentage / 100,
               backgroundColor: AppColors.surface,
-              valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
             ),
           ),
           const SizedBox(width: AppSpacing.sm),
@@ -340,7 +340,7 @@ class WorkflowInstanceCard extends StatelessWidget {
             const SizedBox(height: AppSpacing.sm),
             Row(
               children: [
-                Icon(
+                const Icon(
                   LucideIcons.calendar,
                   size: 14,
                   color: AppColors.textSecondary,
@@ -353,7 +353,7 @@ class WorkflowInstanceCard extends StatelessWidget {
                   ),
                 ),
                 const Spacer(),
-                Icon(
+                const Icon(
                   LucideIcons.clock,
                   size: 14,
                   color: AppColors.textSecondary,

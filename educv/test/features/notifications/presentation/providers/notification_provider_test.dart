@@ -88,7 +88,7 @@ void main() {
     });
 
     test('loadStats should update stats on success', () async {
-      final mockStats = NotificationStatsModel(
+      const mockStats = NotificationStatsModel(
         totalNotifications: 10,
         unreadNotifications: 3,
         notificationsByType: {'cv_updated': 5, 'pdf_generated': 3},
@@ -293,7 +293,7 @@ void main() {
     });
 
     test('updatePreferences should update preferences on success', () async {
-      final preferences = NotificationPreferencesModel(
+      const preferences = NotificationPreferencesModel(
         id: 'pref-id',
         emailNotificationsEnabled: false,
         inAppNotificationsEnabled: true,

@@ -63,7 +63,7 @@ class _TargetRolePickerState extends ConsumerState<TargetRolePicker> {
                     color: AppColors.primary.withOpacity(0.12),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     LucideIcons.target,
                     size: 18,
                     color: AppColors.primary,

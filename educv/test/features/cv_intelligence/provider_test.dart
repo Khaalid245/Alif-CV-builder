@@ -70,7 +70,7 @@ void main() {
       test('should handle loading error', () async {
         // Arrange
         when(mockRepository.getLatestAnalysis())
-            .thenThrow(AppException(message: 'Network error', statusCode: 500));
+            .thenThrow(const AppException(message: 'Network error', statusCode: 500));
 
         // Act
         final notifier = container.read(analysisProvider.notifier);
@@ -110,7 +110,7 @@ void main() {
         // Arrange
         when(mockRepository.getLatestAnalysis()).thenAnswer((_) async => null);
         when(mockRepository.analyzeCV(options: anyNamed('options'))).thenThrow(
-            AppException(message: 'Analysis failed', statusCode: 400));
+            const AppException(message: 'Analysis failed', statusCode: 400));
 
         final notifier = container.read(analysisProvider.notifier);
         await Future.delayed(Duration.zero); // Wait for initialization
@@ -146,7 +146,7 @@ void main() {
       test('should clear error', () async {
         // Arrange
         when(mockRepository.getLatestAnalysis())
-            .thenThrow(AppException(message: 'Error', statusCode: 500));
+            .thenThrow(const AppException(message: 'Error', statusCode: 500));
 
         final notifier = container.read(analysisProvider.notifier);
         await Future.delayed(Duration.zero); // Wait for initialization
@@ -516,7 +516,7 @@ CVAnalysisModel _createMockAnalysis({String? id}) {
     userId: 'user-789',
     overallScore: 85.5,
     sectionScores: {
-      'education': SectionScoreModel(
+      'education': const SectionScoreModel(
         score: 90.0,
         maxScore: 100.0,
         weight: 1.0,
@@ -556,7 +556,7 @@ RecommendationModel _createMockRecommendation({
 }
 
 SubmissionReadinessModel _createMockSubmissionReadiness() {
-  return SubmissionReadinessModel(
+  return const SubmissionReadinessModel(
     isReady: true,
     readinessScore: 85.0,
     readyAspects: ['Complete profile'],
@@ -568,7 +568,7 @@ SubmissionReadinessModel _createMockSubmissionReadiness() {
 }
 
 BenchmarkingDataModel _createMockBenchmarkingData() {
-  return BenchmarkingDataModel(
+  return const BenchmarkingDataModel(
     percentileRank: 75.0,
     comparisonGroup: 'Computer Science Students',
     sectionPercentiles: {'education': 80.0, 'skills': 70.0},

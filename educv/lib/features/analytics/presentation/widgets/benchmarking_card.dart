@@ -29,7 +29,7 @@ class BenchmarkingCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.compare_arrows,
                   color: AppColors.primary,
                 ),

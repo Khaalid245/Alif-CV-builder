@@ -67,7 +67,7 @@ class _PremiumHeroSectionState extends State<PremiumHeroSection>
       builder: (context, child) {
         return Container(
           width: double.infinity,
-          padding: EdgeInsets.all(PremiumSaaSTheme.space8),
+          padding: const EdgeInsets.all(PremiumSaaSTheme.space8),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
@@ -100,14 +100,14 @@ class _PremiumHeroSectionState extends State<PremiumHeroSection>
                         fontWeight: FontWeight.w800,
                       ),
                     ),
-                    SizedBox(height: PremiumSaaSTheme.space3),
+                    const SizedBox(height: PremiumSaaSTheme.space3),
                     Text(
                       widget.subtitle,
                       style: PremiumSaaSTheme.bodyLarge.copyWith(
                         color: PremiumSaaSTheme.textSecondary,
                       ),
                     ),
-                    SizedBox(height: PremiumSaaSTheme.space6),
+                    const SizedBox(height: PremiumSaaSTheme.space6),
                     Row(
                       children: [
                         _buildActionButton(
@@ -116,7 +116,7 @@ class _PremiumHeroSectionState extends State<PremiumHeroSection>
                           PremiumSaaSTheme.primaryPurple,
                           widget.onActionPressed,
                         ),
-                        SizedBox(width: PremiumSaaSTheme.space4),
+                        const SizedBox(width: PremiumSaaSTheme.space4),
                         _buildActionButton(
                           'AI Optimize',
                           LucideIcons.sparkles,
@@ -128,7 +128,7 @@ class _PremiumHeroSectionState extends State<PremiumHeroSection>
                   ],
                 ),
               ),
-              SizedBox(width: PremiumSaaSTheme.space8),
+              const SizedBox(width: PremiumSaaSTheme.space8),
               Expanded(
                 child: _buildProgressVisualization(),
               ),
@@ -147,7 +147,7 @@ class _PremiumHeroSectionState extends State<PremiumHeroSection>
         onTap: onPressed,
         borderRadius: BorderRadius.circular(PremiumSaaSTheme.radiusLg),
         child: Container(
-          padding: EdgeInsets.symmetric(
+          padding: const EdgeInsets.symmetric(
             horizontal: PremiumSaaSTheme.space5,
             vertical: PremiumSaaSTheme.space3,
           ),
@@ -168,7 +168,7 @@ class _PremiumHeroSectionState extends State<PremiumHeroSection>
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(icon, color: PremiumSaaSTheme.textInverse, size: 16),
-              SizedBox(width: PremiumSaaSTheme.space2),
+              const SizedBox(width: PremiumSaaSTheme.space2),
               Text(
                 text,
                 style: PremiumSaaSTheme.labelMedium.copyWith(
@@ -188,7 +188,7 @@ class _PremiumHeroSectionState extends State<PremiumHeroSection>
       animation: _progressAnimation,
       builder: (context, child) {
         return Container(
-          padding: EdgeInsets.all(PremiumSaaSTheme.space6),
+          padding: const EdgeInsets.all(PremiumSaaSTheme.space6),
           decoration: PremiumSaaSTheme.glassmorphismLight,
           child: Column(
             children: [
@@ -202,7 +202,7 @@ class _PremiumHeroSectionState extends State<PremiumHeroSection>
                       value: _progressAnimation.value,
                       strokeWidth: 8,
                       backgroundColor: Colors.white.withOpacity(0.2),
-                      valueColor: AlwaysStoppedAnimation<Color>(
+                      valueColor: const AlwaysStoppedAnimation<Color>(
                         PremiumSaaSTheme.primaryPurple,
                       ),
                     ),
@@ -226,7 +226,7 @@ class _PremiumHeroSectionState extends State<PremiumHeroSection>
                   ),
                 ],
               ),
-              SizedBox(height: PremiumSaaSTheme.space4),
+              const SizedBox(height: PremiumSaaSTheme.space4),
               Text(
                 'Profile Strength',
                 style: PremiumSaaSTheme.labelLarge.copyWith(
@@ -304,7 +304,7 @@ class _PremiumAnalyticsWidgetState extends State<PremiumAnalyticsWidget>
           return Transform.scale(
             scale: _scaleAnimation.value,
             child: Container(
-              padding: EdgeInsets.all(PremiumSaaSTheme.space6),
+              padding: const EdgeInsets.all(PremiumSaaSTheme.space6),
               decoration: BoxDecoration(
                 color: PremiumSaaSTheme.lightSurface,
                 borderRadius: BorderRadius.circular(PremiumSaaSTheme.radiusXl),
@@ -333,7 +333,7 @@ class _PremiumAnalyticsWidgetState extends State<PremiumAnalyticsWidget>
                   Row(
                     children: [
                       Container(
-                        padding: EdgeInsets.all(PremiumSaaSTheme.space3),
+                        padding: const EdgeInsets.all(PremiumSaaSTheme.space3),
                         decoration: BoxDecoration(
                           color: widget.color.withOpacity(0.1),
                           borderRadius:
@@ -347,7 +347,7 @@ class _PremiumAnalyticsWidgetState extends State<PremiumAnalyticsWidget>
                       ),
                       const Spacer(),
                       Container(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           horizontal: PremiumSaaSTheme.space2,
                           vertical: PremiumSaaSTheme.space1,
                         ),
@@ -366,7 +366,7 @@ class _PremiumAnalyticsWidgetState extends State<PremiumAnalyticsWidget>
                       ),
                     ],
                   ),
-                  SizedBox(height: PremiumSaaSTheme.space4),
+                  const SizedBox(height: PremiumSaaSTheme.space4),
                   Text(
                     widget.value,
                     style: PremiumSaaSTheme.headingLarge.copyWith(
@@ -374,14 +374,14 @@ class _PremiumAnalyticsWidgetState extends State<PremiumAnalyticsWidget>
                       fontWeight: FontWeight.w800,
                     ),
                   ),
-                  SizedBox(height: PremiumSaaSTheme.space1),
+                  const SizedBox(height: PremiumSaaSTheme.space1),
                   Text(
                     widget.title,
                     style: PremiumSaaSTheme.bodyMedium.copyWith(
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  SizedBox(height: PremiumSaaSTheme.space4),
+                  const SizedBox(height: PremiumSaaSTheme.space4),
                   _buildMiniChart(),
                 ],
               ),
@@ -393,7 +393,7 @@ class _PremiumAnalyticsWidgetState extends State<PremiumAnalyticsWidget>
   }
 
   Widget _buildMiniChart() {
-    return Container(
+    return SizedBox(
       height: 40,
       child: Row(
         children: widget.chartData.asMap().entries.map((entry) {
@@ -500,9 +500,9 @@ class _PremiumActionCardState extends State<PremiumActionCard>
             return Transform.scale(
               scale: _scaleAnimation.value,
               child: Container(
-                padding: EdgeInsets.all(PremiumSaaSTheme.space6),
+                padding: const EdgeInsets.all(PremiumSaaSTheme.space6),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
+                  gradient: const LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
@@ -559,21 +559,21 @@ class _PremiumActionCardState extends State<PremiumActionCard>
                         size: 28,
                       ),
                     ),
-                    SizedBox(height: PremiumSaaSTheme.space5),
+                    const SizedBox(height: PremiumSaaSTheme.space5),
                     Text(
                       widget.title,
                       style: PremiumSaaSTheme.headingSmall.copyWith(
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    SizedBox(height: PremiumSaaSTheme.space2),
+                    const SizedBox(height: PremiumSaaSTheme.space2),
                     Text(
                       widget.description,
                       style: PremiumSaaSTheme.bodyMedium.copyWith(
                         height: 1.5,
                       ),
                     ),
-                    SizedBox(height: PremiumSaaSTheme.space4),
+                    const SizedBox(height: PremiumSaaSTheme.space4),
                     Row(
                       children: [
                         Text(
@@ -583,7 +583,7 @@ class _PremiumActionCardState extends State<PremiumActionCard>
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        SizedBox(width: PremiumSaaSTheme.space2),
+                        const SizedBox(width: PremiumSaaSTheme.space2),
                         Icon(
                           LucideIcons.arrowRight,
                           color: widget.color,
@@ -630,7 +630,7 @@ class PremiumDataTable extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.all(PremiumSaaSTheme.space6),
+            padding: const EdgeInsets.all(PremiumSaaSTheme.space6),
             child: Row(
               children: [
                 Text(
@@ -655,11 +655,11 @@ class PremiumDataTable extends StatelessWidget {
             ),
           ),
           Container(
-            padding: EdgeInsets.symmetric(
+            padding: const EdgeInsets.symmetric(
               horizontal: PremiumSaaSTheme.space6,
               vertical: PremiumSaaSTheme.space3,
             ),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: PremiumSaaSTheme.lightSurfaceVariant,
               border: Border(
                 top: BorderSide(color: PremiumSaaSTheme.lightBorder),
@@ -684,7 +684,7 @@ class PremiumDataTable extends StatelessWidget {
             final index = entry.key;
             final row = entry.value;
             return Container(
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                 horizontal: PremiumSaaSTheme.space6,
                 vertical: PremiumSaaSTheme.space4,
               ),
@@ -702,7 +702,7 @@ class PremiumDataTable extends StatelessWidget {
                 }).toList(),
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );

@@ -15,10 +15,10 @@ class AppException implements Exception {
 
 class ServerException extends AppException {
   const ServerException({
-    required String message,
-    String? code,
-    dynamic details,
-  }) : super(message: message, code: code, details: details);
+    required super.message,
+    super.code,
+    super.details,
+  });
 
   @override
   String toString() => 'ServerException: $message';
@@ -26,10 +26,10 @@ class ServerException extends AppException {
 
 class NetworkException extends AppException {
   const NetworkException({
-    required String message,
-    String? code,
-    dynamic details,
-  }) : super(message: message, code: code, details: details);
+    required super.message,
+    super.code,
+    super.details,
+  });
 
   @override
   String toString() => 'NetworkException: $message';
@@ -37,10 +37,10 @@ class NetworkException extends AppException {
 
 class ValidationException extends AppException {
   const ValidationException({
-    required String message,
-    String? code,
-    dynamic details,
-  }) : super(message: message, code: code, details: details);
+    required super.message,
+    super.code,
+    super.details,
+  });
 
   @override
   String toString() => 'ValidationException: $message';

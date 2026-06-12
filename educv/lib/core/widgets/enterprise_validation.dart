@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
-import '../theme/app_spacing.dart';
-import '../theme/app_typography.dart';
 import '../accessibility/accessibility_foundation.dart';
 import '../accessibility/accessible_inputs.dart';
 
@@ -434,8 +431,9 @@ class _EnterpriseValidatedInputState extends State<EnterpriseValidatedInput> {
   String _buildSemanticLabel() {
     final parts = <String>[widget.label];
     if (widget.required) parts.add('required');
-    if (_validationResult.state == ValidationState.invalid)
+    if (_validationResult.state == ValidationState.invalid) {
       parts.add('invalid');
+    }
     if (_validationResult.state == ValidationState.valid) parts.add('valid');
     return parts.join(', ');
   }

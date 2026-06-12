@@ -28,9 +28,9 @@ class _LanguagesStepState extends ConsumerState<LanguagesStep> {
           ? _buildEmptyState()
           : _buildLanguagesList(languagesList),
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, _) => Center(
+      error: (error, _) => const Center(
         child: Padding(
-          padding: const EdgeInsets.all(24),
+          padding: EdgeInsets.all(24),
           child: Text(
             'Unable to load languages. Please try again.',
             style: TextStyle(
@@ -62,7 +62,7 @@ class _LanguagesStepState extends ConsumerState<LanguagesStep> {
             color: PremiumPortfolioColors.accentPurple.withOpacity(0.8),
           ),
           const SizedBox(height: 12),
-          Text(
+          const Text(
             'No languages yet',
             style: TextStyle(
               fontSize: 15,
@@ -193,7 +193,7 @@ class _LanguagesStepState extends ConsumerState<LanguagesStep> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(
+        title: const Text(
           'Remove language',
           style: TextStyle(
             fontSize: 18,
@@ -203,7 +203,7 @@ class _LanguagesStepState extends ConsumerState<LanguagesStep> {
         ),
         content: Text(
           'Remove "${language.language}" from your CV?',
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 14,
             color: PremiumPortfolioColors.secondaryText,
           ),
@@ -211,7 +211,7 @@ class _LanguagesStepState extends ConsumerState<LanguagesStep> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text(
+            child: const Text(
               'Cancel',
               style: TextStyle(color: PremiumPortfolioColors.secondaryText),
             ),
@@ -298,7 +298,7 @@ class _LanguageBottomSheetState extends ConsumerState<_LanguageBottomSheet> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'Proficiency',
                   style: TextStyle(
                     fontSize: 14,

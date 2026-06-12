@@ -33,7 +33,7 @@ class LocalHeuristicsEngine {
     double totalScore = 100.0;
 
     // 1. Profile Summary Check
-    if (profile.summary == null || profile.summary!.length < 50) {
+    if (profile.summary.length < 50) {
       totalScore -= 10;
       recommendations.add(RecommendationModel(
         id: 'local_summary_short',
@@ -51,7 +51,7 @@ class LocalHeuristicsEngine {
     // 2. Experience Action Verbs Check
     bool hasActionVerbs = false;
     for (var exp in profile.experiences) {
-      final descLower = exp.description?.toLowerCase() ?? '';
+      final descLower = exp.description.toLowerCase() ?? '';
       for (var verb in _actionVerbs) {
         if (descLower.contains(verb)) {
           hasActionVerbs = true;
@@ -92,7 +92,7 @@ class LocalHeuristicsEngine {
     }
 
     // 4. Contact Info Check
-    if (profile.phone == null || profile.phone!.isEmpty) {
+    if (profile.phone.isEmpty) {
       totalScore -= 5;
       recommendations.add(RecommendationModel(
         id: 'local_contact_phone',
@@ -114,7 +114,7 @@ class LocalHeuristicsEngine {
       overallScore: totalScore.clamp(0.0, 100.0),
       sectionScores: {
         'profile': SectionScoreModel(
-            score: (profile.summary?.isNotEmpty ?? false) ? 100.0 : 0.0,
+            score: (profile.summary.isNotEmpty ?? false) ? 100.0 : 0.0,
             maxScore: 100.0,
             weight: 1.0,
             status: 'good',

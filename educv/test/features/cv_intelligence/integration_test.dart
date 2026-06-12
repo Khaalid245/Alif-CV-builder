@@ -50,7 +50,7 @@ void main() {
           overrides: [
             cvIntelligenceRepositoryProvider.overrideWithValue(mockRepository),
           ],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: CVIntelligenceScreen(),
           ),
         ),
@@ -93,7 +93,7 @@ void main() {
           overrides: [
             cvIntelligenceRepositoryProvider.overrideWithValue(mockRepository),
           ],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: CVIntelligenceScreen(),
           ),
         ),
@@ -131,7 +131,7 @@ void main() {
           overrides: [
             cvIntelligenceRepositoryProvider.overrideWithValue(mockRepository),
           ],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: CVIntelligenceScreen(),
           ),
         ),
@@ -167,7 +167,7 @@ void main() {
           overrides: [
             cvIntelligenceRepositoryProvider.overrideWithValue(mockRepository),
           ],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: CVIntelligenceScreen(),
           ),
         ),
@@ -206,7 +206,7 @@ void main() {
           overrides: [
             cvIntelligenceRepositoryProvider.overrideWithValue(mockRepository),
           ],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: CVIntelligenceScreen(),
           ),
         ),
@@ -244,7 +244,7 @@ void main() {
           overrides: [
             cvIntelligenceRepositoryProvider.overrideWithValue(mockRepository),
           ],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: CVIntelligenceScreen(),
           ),
         ),
@@ -292,7 +292,7 @@ void main() {
           overrides: [
             cvIntelligenceRepositoryProvider.overrideWithValue(mockRepository),
           ],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: CVIntelligenceScreen(),
           ),
         ),
@@ -312,12 +312,12 @@ void main() {
     testWidgets('should handle error states gracefully', (tester) async {
       // Arrange
       when(mockRepository.getLatestAnalysis())
-          .thenThrow(AppException(message: 'Network error', statusCode: 500));
+          .thenThrow(const AppException(message: 'Network error', statusCode: 500));
       when(mockRepository.getRecommendations(
         category: anyNamed('category'),
         priority: anyNamed('priority'),
         includeImplemented: anyNamed('includeImplemented'),
-      )).thenThrow(AppException(
+      )).thenThrow(const AppException(
           message: 'Failed to load recommendations', statusCode: 500));
 
       // Act
@@ -326,7 +326,7 @@ void main() {
           overrides: [
             cvIntelligenceRepositoryProvider.overrideWithValue(mockRepository),
           ],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: CVIntelligenceScreen(),
           ),
         ),
@@ -364,7 +364,7 @@ void main() {
           overrides: [
             cvIntelligenceRepositoryProvider.overrideWithValue(mockRepository),
           ],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: CVIntelligenceScreen(),
           ),
         ),
@@ -403,7 +403,7 @@ void main() {
           overrides: [
             cvIntelligenceRepositoryProvider.overrideWithValue(mockRepository),
           ],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: Scaffold(
               body: CVIntelligenceSummaryWidget(),
             ),
@@ -428,7 +428,7 @@ void main() {
       // Arrange - Create a completer to control when the future completes
       when(mockRepository.getLatestAnalysis()).thenAnswer((_) async {
         // Simulate a delay
-        await Future.delayed(Duration(seconds: 1));
+        await Future.delayed(const Duration(seconds: 1));
         return _createMockAnalysis();
       });
       when(mockRepository.getRecommendations(
@@ -443,7 +443,7 @@ void main() {
           overrides: [
             cvIntelligenceRepositoryProvider.overrideWithValue(mockRepository),
           ],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: CVIntelligenceScreen(),
           ),
         ),
@@ -470,7 +470,7 @@ CVAnalysisModel _createMockAnalysis() {
     userId: 'user-789',
     overallScore: 85.5,
     sectionScores: {
-      'education': SectionScoreModel(
+      'education': const SectionScoreModel(
         score: 90.0,
         maxScore: 100.0,
         weight: 1.0,
@@ -509,7 +509,7 @@ RecommendationModel _createMockRecommendation({
 }
 
 SubmissionReadinessModel _createMockSubmissionReadiness() {
-  return SubmissionReadinessModel(
+  return const SubmissionReadinessModel(
     isReady: true,
     readinessScore: 85.0,
     readyAspects: ['Complete profile'],
@@ -521,7 +521,7 @@ SubmissionReadinessModel _createMockSubmissionReadiness() {
 }
 
 BenchmarkingDataModel _createMockBenchmarkingData() {
-  return BenchmarkingDataModel(
+  return const BenchmarkingDataModel(
     percentileRank: 75.0,
     comparisonGroup: 'Computer Science Students',
     sectionPercentiles: {'education': 80.0, 'skills': 70.0},

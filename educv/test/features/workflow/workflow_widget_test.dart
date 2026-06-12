@@ -311,7 +311,7 @@ void main() {
     testWidgets('should show no actions state when transitions are empty',
         (tester) async {
       await tester.pumpWidget(createTestWidget(
-        WorkflowTransitionActionsWidget(
+        const WorkflowTransitionActionsWidget(
           transitions: [],
         ),
       ));
@@ -531,7 +531,7 @@ void main() {
 
     testWidgets('should show empty state when no history', (tester) async {
       await tester.pumpWidget(createTestWidget(
-        TransitionHistoryWidget(
+        const TransitionHistoryWidget(
           history: [],
         ),
       ));
@@ -592,7 +592,7 @@ void main() {
 
   group('WorkflowDashboardStatsWidget', () {
     testWidgets('should display dashboard statistics', (tester) async {
-      final dashboard = WorkflowDashboardModel(
+      const dashboard = WorkflowDashboardModel(
         totalInstances: 100,
         activeInstances: 25,
         completedInstances: 70,
@@ -620,7 +620,7 @@ void main() {
     });
 
     testWidgets('should display state distribution', (tester) async {
-      final dashboard = WorkflowDashboardModel(
+      const dashboard = WorkflowDashboardModel(
         totalInstances: 100,
         activeInstances: 25,
         completedInstances: 70,
@@ -664,7 +664,7 @@ void main() {
 
     testWidgets('should show empty state when no instances', (tester) async {
       await tester.pumpWidget(createTestWidget(
-        WorkflowInstanceListWidget(
+        const WorkflowInstanceListWidget(
           instances: [],
         ),
       ));

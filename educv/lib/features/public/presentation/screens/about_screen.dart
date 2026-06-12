@@ -57,7 +57,7 @@ class AboutScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               RichText(
-                text: TextSpan(
+                text: const TextSpan(
                   children: [
                     TextSpan(
                       text: 'Built for ',
@@ -93,7 +93,7 @@ class AboutScreen extends StatelessWidget {
                   .fadeIn(duration: 800.ms)
                   .slideY(begin: 0.3, end: 0),
               const SizedBox(height: 24),
-              Text(
+              const Text(
                 'Born from a real problem — thousands of students graduating without knowing how to present themselves professionally. EduCV bridges that gap.',
                 style: TextStyle(
                   fontSize: 18,
@@ -139,7 +139,7 @@ class AboutScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         RichText(
-          text: TextSpan(
+          text: const TextSpan(
             children: [
               TextSpan(
                 text: 'Built for ',
@@ -175,7 +175,7 @@ class AboutScreen extends StatelessWidget {
             .fadeIn(duration: 800.ms)
             .slideY(begin: 0.3, end: 0),
         const SizedBox(height: 20),
-        Text(
+        const Text(
           'Born from a real problem — thousands of students graduating without knowing how to present themselves professionally.',
           style: TextStyle(
             fontSize: 16,
@@ -222,7 +222,7 @@ class AboutScreen extends StatelessWidget {
       ),
       child: Text(
         text,
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 13,
           fontWeight: FontWeight.w600,
           color: PremiumPortfolioColors.accentPurple,
@@ -245,14 +245,14 @@ class AboutScreen extends StatelessWidget {
                       .withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
+                child: const Icon(
                   LucideIcons.user,
                   color: PremiumPortfolioColors.accentPurple,
                   size: 24,
                 ),
               ),
               const SizedBox(width: 16),
-              Expanded(
+              const Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -286,14 +286,14 @@ class AboutScreen extends StatelessWidget {
                 color: PremiumPortfolioColors.success.withValues(alpha: 0.2),
               ),
             ),
-            child: Row(
+            child: const Row(
               children: [
                 Icon(
                   LucideIcons.checkCircle,
                   color: PremiumPortfolioColors.success,
                   size: 20,
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -405,14 +405,14 @@ class AboutScreen extends StatelessWidget {
                   color: PremiumPortfolioColors.accentNavy,
                   borderRadius: BorderRadius.circular(16),
                 ),
-                child: Icon(
+                child: const Icon(
                   LucideIcons.quote,
                   color: Colors.white,
                   size: 24,
                 ),
               ),
               const SizedBox(width: 16),
-              Expanded(
+              const Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -437,7 +437,7 @@ class AboutScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 24),
-          Text(
+          const Text(
             '"Our mission is to ensure that no student at this university is held back from opportunities because of a poorly formatted CV. EduCV represents our commitment to student success."',
             style: TextStyle(
               fontSize: 18,
@@ -484,7 +484,7 @@ class AboutScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Our Mission',
           style: TextStyle(
             fontSize: 32,
@@ -527,7 +527,7 @@ class AboutScreen extends StatelessWidget {
                       children: [
                         Text(
                           point['title'] as String,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                             color: PremiumPortfolioColors.primaryText,
@@ -536,7 +536,7 @@ class AboutScreen extends StatelessWidget {
                         const SizedBox(height: 4),
                         Text(
                           point['description'] as String,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 14,
                             color: PremiumPortfolioColors.secondaryText,
                             height: 1.4,
@@ -584,7 +584,7 @@ class AboutScreen extends StatelessWidget {
                   width: 80,
                   height: 80,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
+                    gradient: const LinearGradient(
                       colors: [
                         PremiumPortfolioColors.accentPurple,
                         PremiumPortfolioColors.accentBlue,
@@ -593,7 +593,7 @@ class AboutScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: PremiumPortfolioColors.cardShadow,
                   ),
-                  child: Icon(
+                  child: const Icon(
                     LucideIcons.award,
                     color: Colors.white,
                     size: 40,
@@ -615,7 +615,7 @@ class AboutScreen extends StatelessWidget {
                       curve: Curves.easeInOut,
                     ),
                 const SizedBox(height: 24),
-                Text(
+                const Text(
                   'Officially endorsed by University',
                   style: TextStyle(
                     fontSize: 28,
@@ -629,7 +629,7 @@ class AboutScreen extends StatelessWidget {
                     .fadeIn(duration: 800.ms)
                     .slideY(begin: 0.3, end: 0),
                 const SizedBox(height: 16),
-                Text(
+                const Text(
                   'EduCV was proposed by the university dean and implemented as the official CV building platform for all enrolled students. It meets the university\'s standards for student data privacy and professional development.',
                   style: TextStyle(
                     fontSize: 16,
@@ -697,7 +697,7 @@ class AboutScreen extends StatelessWidget {
           constraints: const BoxConstraints(maxWidth: 1200),
           child: Column(
             children: [
-              Text(
+              const Text(
                 'Platform Statistics',
                 style: TextStyle(
                   fontSize: 32,
@@ -777,7 +777,7 @@ class AboutScreen extends StatelessWidget {
           AnimatedCounter(
             value: stat['value'] as String,
             delay: Duration(milliseconds: 2600 + index * 100),
-            textStyle: TextStyle(
+            textStyle: const TextStyle(
               fontSize: 32,
               fontWeight: FontWeight.w800,
               color: PremiumPortfolioColors.primaryText,
@@ -787,7 +787,7 @@ class AboutScreen extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             stat['label'] as String,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
               color: PremiumPortfolioColors.secondaryText,
@@ -835,7 +835,7 @@ class AboutScreen extends StatelessWidget {
           constraints: const BoxConstraints(maxWidth: 1200),
           child: Column(
             children: [
-              Text(
+              const Text(
                 'Powered by modern technologies',
                 style: TextStyle(
                   fontSize: 32,
@@ -849,7 +849,7 @@ class AboutScreen extends StatelessWidget {
                   .fadeIn(duration: 800.ms)
                   .slideY(begin: 0.3, end: 0),
               const SizedBox(height: 16),
-              Text(
+              const Text(
                 'Built with enterprise-grade tools and frameworks for reliability, security, and performance.',
                 style: TextStyle(
                   fontSize: 16,
@@ -953,7 +953,7 @@ class _TechnologyChipState extends State<_TechnologyChip> {
             const SizedBox(width: 8),
             Text(
               widget.name,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
                 color: PremiumPortfolioColors.primaryText,

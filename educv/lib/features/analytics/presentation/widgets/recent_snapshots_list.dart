@@ -25,7 +25,7 @@ class RecentSnapshotsList extends StatelessWidget {
           padding: const EdgeInsets.all(AppSpacing.lg),
           child: Column(
             children: [
-              Icon(
+              const Icon(
                 Icons.analytics_outlined,
                 size: 48,
                 color: AppColors.textHint,
@@ -67,7 +67,7 @@ class RecentSnapshotsList extends StatelessWidget {
                 const Spacer(),
                 if (snapshots.length > maxItems)
                   Text(
-                    'Showing ${maxItems} of ${snapshots.length}',
+                    'Showing $maxItems of ${snapshots.length}',
                     style: AppTypography.caption.copyWith(
                       color: AppColors.textHint,
                     ),
@@ -86,7 +86,7 @@ class RecentSnapshotsList extends StatelessWidget {
                 if (!isLast) const Divider(height: 1),
               ],
             );
-          }).toList(),
+          }),
         ],
       ),
     );

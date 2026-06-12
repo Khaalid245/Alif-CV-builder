@@ -196,7 +196,7 @@ class AnalyticsOverviewCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(
+          const Icon(
             Icons.leaderboard,
             color: AppColors.primary,
             size: 32,

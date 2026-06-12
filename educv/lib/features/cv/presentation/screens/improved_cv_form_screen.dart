@@ -230,7 +230,7 @@ class _ImprovedCVFormScreenState extends ConsumerState<ImprovedCVFormScreen>
                       children: [
                         Text(
                           'Step ${currentStep + 1} of ${_steps.length}',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
                             color: PremiumSaaSTheme.textSecondary,
@@ -272,7 +272,7 @@ class _ImprovedCVFormScreenState extends ConsumerState<ImprovedCVFormScreen>
                   ),
                   child: Text(
                     '$completionPercentage%',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
                       color: PremiumSaaSTheme.primaryPurple,
@@ -385,14 +385,14 @@ class _ImprovedCVFormScreenState extends ConsumerState<ImprovedCVFormScreen>
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
-        title: Row(
+        title: const Row(
           children: [
             Icon(
               LucideIcons.alertTriangle,
               color: PremiumSaaSTheme.accentAmber,
               size: 24,
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Text(
               'Exit CV Builder?',
               style: TextStyle(
@@ -403,7 +403,7 @@ class _ImprovedCVFormScreenState extends ConsumerState<ImprovedCVFormScreen>
             ),
           ],
         ),
-        content: Text(
+        content: const Text(
           'Are you sure you want to go back to the dashboard? Any unsaved changes will be lost.',
           style: TextStyle(
             fontSize: 14,
@@ -414,7 +414,7 @@ class _ImprovedCVFormScreenState extends ConsumerState<ImprovedCVFormScreen>
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text(
+            child: const Text(
               'Stay Here',
               style: TextStyle(
                 fontSize: 14,

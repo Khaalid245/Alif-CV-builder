@@ -254,7 +254,7 @@ class _ModernDashboardHeaderState extends State<ModernDashboardHeader> {
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      Icon(
+                      const Icon(
                         LucideIcons.calendar,
                         size: 16,
                         color: ModernSaaSDashboardTheme.tertiaryText,
@@ -400,7 +400,7 @@ class _ModernDashboardHeaderState extends State<ModernDashboardHeader> {
               decoration: BoxDecoration(
                 color: ModernSaaSDashboardTheme.error,
                 borderRadius: BorderRadius.circular(8),
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(
                     color: ModernSaaSDashboardTheme.surfaceBackground,
                     blurRadius: 2,
@@ -516,7 +516,7 @@ class _ModernDashboardHeaderState extends State<ModernDashboardHeader> {
               ],
             ),
             const SizedBox(width: 8),
-            Icon(
+            const Icon(
               LucideIcons.chevronDown,
               size: 16,
               color: ModernSaaSDashboardTheme.tertiaryText,
@@ -644,7 +644,7 @@ class DashboardStatsHeader extends StatelessWidget {
   }
 
   Widget _buildMobileStats() {
-    return Container(
+    return SizedBox(
       height: 80,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,

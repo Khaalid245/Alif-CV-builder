@@ -9,14 +9,14 @@ class TransitionConfirmationDialog extends StatelessWidget {
   final String cancelText;
 
   const TransitionConfirmationDialog({
-    Key? key,
+    super.key,
     required this.title,
     required this.message,
     required this.onConfirm,
     this.onCancel,
     this.confirmText = 'Confirm',
     this.cancelText = 'Cancel',
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -42,7 +42,7 @@ class CVIntelligenceSummaryWidget extends ConsumerWidget {
             color: AppColors.primary.withOpacity(0.1),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Icon(
+          child: const Icon(
             LucideIcons.brain,
             size: 20,
             color: AppColors.primary,
@@ -225,7 +225,7 @@ class CVIntelligenceSummaryWidget extends ConsumerWidget {
             ),
             child: Row(
               children: [
-                Icon(
+                const Icon(
                   LucideIcons.alertTriangle,
                   size: 16,
                   color: AppColors.error,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
-import '../theme/app_colors.dart';
 
 // WCAG 2.1 AA compliant color system
 class AccessibleColors {

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
 import '../theme/app_typography.dart';
 import 'accessibility_foundation.dart';
@@ -33,7 +32,7 @@ class AccessibleAppBar extends StatelessWidget implements PreferredSizeWidget {
               label: backButtonSemanticLabel ?? AccessibilityLabels.backButton,
               button: true,
               child: IconButton(
-                icon: Icon(
+                icon: const Icon(
                   LucideIcons.arrowLeft,
                   color: AccessibleColors.textPrimaryAccessible,
                 ),
@@ -48,7 +47,7 @@ class AccessibleAppBar extends StatelessWidget implements PreferredSizeWidget {
         header: true,
         child: Text(
           title,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w600,
             color: AccessibleColors.textPrimaryAccessible,
@@ -393,9 +392,7 @@ class AccessibleNavigationRail extends StatelessWidget {
           onDestinationSelected?.call(index);
           AccessibilityAnnouncements.announceNavigation(
             context,
-            destinations[index].label is Widget
-                ? (destinations[index].label as Widget).toString()
-                : destinations[index].label.toString(),
+            (destinations[index].label).toString(),
           );
         },
         destinations: destinations.map((dest) {
@@ -409,10 +406,8 @@ class AccessibleNavigationRail extends StatelessWidget {
               child: dest.selectedIcon ?? dest.icon,
             ),
             label: Text(
-              dest.label is Widget
-                  ? (dest.label as Widget).toString()
-                  : dest.label.toString(),
-              style: TextStyle(
+              (dest.label).toString(),
+              style: const TextStyle(
                 color: AccessibleColors.textPrimaryAccessible,
               ),
             ),
@@ -421,19 +416,19 @@ class AccessibleNavigationRail extends StatelessWidget {
         leading: leading,
         trailing: trailing,
         backgroundColor: AccessibleColors.surfaceAccessible,
-        selectedIconTheme: IconThemeData(
+        selectedIconTheme: const IconThemeData(
           color: AccessibleColors.focusIndicator,
           size: 24,
         ),
-        unselectedIconTheme: IconThemeData(
+        unselectedIconTheme: const IconThemeData(
           color: AccessibleColors.textSecondaryAccessible,
           size: 24,
         ),
-        selectedLabelTextStyle: TextStyle(
+        selectedLabelTextStyle: const TextStyle(
           color: AccessibleColors.focusIndicator,
           fontWeight: FontWeight.w600,
         ),
-        unselectedLabelTextStyle: TextStyle(
+        unselectedLabelTextStyle: const TextStyle(
           color: AccessibleColors.textSecondaryAccessible,
           fontWeight: FontWeight.w500,
         ),
@@ -474,11 +469,11 @@ class AccessibleBottomNavigationBar extends StatelessWidget {
         backgroundColor: AccessibleColors.cardAccessible,
         selectedItemColor: AccessibleColors.focusIndicator,
         unselectedItemColor: AccessibleColors.textSecondaryAccessible,
-        selectedLabelStyle: TextStyle(
+        selectedLabelStyle: const TextStyle(
           fontWeight: FontWeight.w600,
           fontSize: 12,
         ),
-        unselectedLabelStyle: TextStyle(
+        unselectedLabelStyle: const TextStyle(
           fontWeight: FontWeight.w500,
           fontSize: 12,
         ),

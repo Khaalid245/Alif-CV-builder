@@ -4,7 +4,6 @@ import 'package:mockito/annotations.dart';
 import 'package:dio/dio.dart';
 
 import 'package:educv/core/network/api_client.dart';
-import 'package:educv/core/network/api_response.dart';
 import 'package:educv/core/exceptions/app_exception.dart';
 import 'package:educv/features/cv_intelligence/data/repositories/cv_intelligence_repository_impl.dart';
 import 'package:educv/features/cv_intelligence/data/models/cv_intelligence_models.dart';

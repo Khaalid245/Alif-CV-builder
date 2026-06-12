@@ -125,22 +125,22 @@ class PrivacyScreen extends StatelessWidget {
                 icon: LucideIcons.database,
                 title: '1. What data we collect',
                 items: [
-                  _PolicyItem(
+                  const _PolicyItem(
                     subtitle: 'Account information',
                     body:
                         'Your full name, university email address, and student ID. These are required to create your account and verify your enrollment.',
                   ),
-                  _PolicyItem(
+                  const _PolicyItem(
                     subtitle: 'CV content',
                     body:
                         'Education history, work experience, skills, languages, projects, and certifications that you voluntarily enter to build your CV.',
                   ),
-                  _PolicyItem(
+                  const _PolicyItem(
                     subtitle: 'Profile photo',
                     body:
                         'An optional profile photo (maximum 5 MB) used in your generated CV templates.',
                   ),
-                  _PolicyItem(
+                  const _PolicyItem(
                     subtitle: 'Usage data',
                     body:
                         'Login timestamps, IP addresses for security logging, and CV generation history. This data is used solely for security and platform improvement.',
@@ -151,22 +151,22 @@ class PrivacyScreen extends StatelessWidget {
                 icon: LucideIcons.settings,
                 title: '2. How we use your data',
                 items: [
-                  _PolicyItem(
+                  const _PolicyItem(
                     subtitle: 'CV generation',
                     body:
                         'Your data is used exclusively to generate your three professional PDF CV templates. It is never used for any other purpose without your explicit consent.',
                   ),
-                  _PolicyItem(
+                  const _PolicyItem(
                     subtitle: 'Account management',
                     body:
                         'To authenticate your identity, manage your session, and allow you to update or delete your information.',
                   ),
-                  _PolicyItem(
+                  const _PolicyItem(
                     subtitle: 'Security',
                     body:
                         'Failed login attempts and suspicious activity are logged with IP addresses to protect your account from unauthorized access.',
                   ),
-                  _PolicyItem(
+                  const _PolicyItem(
                     subtitle: 'Platform improvement',
                     body:
                         'Anonymized, aggregated usage statistics (e.g. number of CVs generated) may be used to improve the platform. No personally identifiable information is included.',
@@ -177,17 +177,17 @@ class PrivacyScreen extends StatelessWidget {
                 icon: LucideIcons.share2,
                 title: '3. Data sharing',
                 items: [
-                  _PolicyItem(
+                  const _PolicyItem(
                     subtitle: 'We do not sell your data',
                     body:
                         'Your personal information is never sold to third parties under any circumstances.',
                   ),
-                  _PolicyItem(
+                  const _PolicyItem(
                     subtitle: 'University administration',
                     body:
                         'Platform administrators can verify account status and view usage statistics. They cannot access your CV content.',
                   ),
-                  _PolicyItem(
+                  const _PolicyItem(
                     subtitle: 'Legal requirements',
                     body:
                         'We may disclose data if required by law or a valid court order. We will notify you unless legally prohibited from doing so.',
@@ -198,17 +198,17 @@ class PrivacyScreen extends StatelessWidget {
                 icon: LucideIcons.lock,
                 title: '4. Data security',
                 items: [
-                  _PolicyItem(
+                  const _PolicyItem(
                     subtitle: 'Encryption',
                     body:
                         'All data is transmitted over HTTPS. Passwords are hashed using industry-standard algorithms and are never stored in plain text.',
                   ),
-                  _PolicyItem(
+                  const _PolicyItem(
                     subtitle: 'Access control',
                     body:
                         'You can only access your own data. UUID-based identifiers prevent enumeration attacks. JWT tokens expire and are blacklisted on logout.',
                   ),
-                  _PolicyItem(
+                  const _PolicyItem(
                     subtitle: 'Audit logging',
                     body:
                         'Every significant action (login, CV generation, profile update) is recorded with a timestamp, IP address, and user agent for security auditing.',
@@ -219,22 +219,22 @@ class PrivacyScreen extends StatelessWidget {
                 icon: LucideIcons.userCheck,
                 title: '5. Your rights',
                 items: [
-                  _PolicyItem(
+                  const _PolicyItem(
                     subtitle: 'Access',
                     body:
                         'You can view all your stored data at any time through your account dashboard.',
                   ),
-                  _PolicyItem(
+                  const _PolicyItem(
                     subtitle: 'Correction',
                     body:
                         'You can update your personal information and CV content at any time.',
                   ),
-                  _PolicyItem(
+                  const _PolicyItem(
                     subtitle: 'Deletion',
                     body:
                         'You can request full deletion of your account and all associated data from Account Settings → Request Data Deletion. Requests are processed within 30 days.',
                   ),
-                  _PolicyItem(
+                  const _PolicyItem(
                     subtitle: 'Portability',
                     body:
                         'Your generated CVs are available for download at any time in PDF format.',
@@ -245,12 +245,12 @@ class PrivacyScreen extends StatelessWidget {
                 icon: LucideIcons.cookie,
                 title: '6. Cookies & storage',
                 items: [
-                  _PolicyItem(
+                  const _PolicyItem(
                     subtitle: 'Authentication tokens',
                     body:
                         'We store JWT access and refresh tokens in secure storage on your device to keep you logged in. These are cleared when you log out.',
                   ),
-                  _PolicyItem(
+                  const _PolicyItem(
                     subtitle: 'No tracking cookies',
                     body:
                         'We do not use advertising cookies, tracking pixels, or any third-party analytics that identify you personally.',
@@ -261,12 +261,12 @@ class PrivacyScreen extends StatelessWidget {
                 icon: LucideIcons.refreshCw,
                 title: '7. Policy updates',
                 items: [
-                  _PolicyItem(
+                  const _PolicyItem(
                     subtitle: 'Notification',
                     body:
                         'If we make material changes to this policy, we will notify you via email and display a notice on the platform before the changes take effect.',
                   ),
-                  _PolicyItem(
+                  const _PolicyItem(
                     subtitle: 'Continued use',
                     body:
                         'Continued use of the platform after a policy update constitutes acceptance of the revised terms.',

@@ -82,7 +82,7 @@ class _ModernSidebarState extends State<ModernSidebar>
           height: double.infinity,
           decoration: BoxDecoration(
             color: EnterpriseTheme.cardBackground,
-            border: Border(
+            border: const Border(
               right: BorderSide(color: EnterpriseTheme.cardBorder),
             ),
             boxShadow: EnterpriseTheme.shadowSm,
@@ -299,7 +299,7 @@ class _ModernSidebarState extends State<ModernSidebar>
                   children: [
                     Row(
                       children: [
-                        Icon(
+                        const Icon(
                           LucideIcons.sparkles,
                           color: EnterpriseTheme.primaryPurple,
                           size: 16,

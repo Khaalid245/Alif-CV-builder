@@ -106,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         .withValues(alpha: 0.2),
                   ),
                 ),
-                child: Text(
+                child: const Text(
                   'UNIVERSITY CV BUILDER',
                   style: TextStyle(
                     fontSize: 12,
@@ -117,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ),
               ),
               const SizedBox(height: 32),
-              Text(
+              const Text(
                 'Professional CVs\nMade Simple',
                 style: TextStyle(
                   fontSize: 64,
@@ -130,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               const SizedBox(height: 24),
               ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 700),
-                child: Text(
+                child: const Text(
                   'Fill in your information once. Get 3 professionally designed CVs as ready-to-download PDFs. No design skills needed.',
                   style: TextStyle(
                     fontSize: 20,
@@ -252,7 +252,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           children: [
             Text(
               number,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 36,
                 fontWeight: FontWeight.w800,
                 color: PremiumPortfolioColors.accentPurple,
@@ -261,7 +261,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             const SizedBox(height: 8),
             Text(
               label,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
                 color: PremiumPortfolioColors.secondaryText,
@@ -285,7 +285,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
+              const Text(
                 'How It Works',
                 style: TextStyle(
                   fontSize: 48,
@@ -296,7 +296,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
-              Text(
+              const Text(
                 'Three simple steps to your professional CV',
                 style: TextStyle(
                   fontSize: 18,
@@ -362,7 +362,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               width: 64,
               height: 64,
               decoration: BoxDecoration(
-                gradient: LinearGradient(
+                gradient: const LinearGradient(
                   colors: [
                     PremiumPortfolioColors.accentPurple,
                     PremiumPortfolioColors.accentBlue,
@@ -384,7 +384,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             const SizedBox(height: 24),
             Text(
               title,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
                 color: PremiumPortfolioColors.primaryText,
@@ -394,7 +394,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             const SizedBox(height: 12),
             Text(
               description,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
                 color: PremiumPortfolioColors.secondaryText,
@@ -418,7 +418,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
+              const Text(
                 'Choose Your Style',
                 style: TextStyle(
                   fontSize: 48,
@@ -429,7 +429,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
-              Text(
+              const Text(
                 'Three professionally designed templates for every career path',
                 style: TextStyle(
                   fontSize: 18,
@@ -509,7 +509,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       .withValues(alpha: 0.2),
                 ),
               ),
-              child: Icon(
+              child: const Icon(
                 LucideIcons.fileText,
                 size: 48,
                 color: PremiumPortfolioColors.accentPurple,
@@ -518,7 +518,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             const SizedBox(height: 24),
             Text(
               name,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
                 color: PremiumPortfolioColors.primaryText,
@@ -527,7 +527,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             const SizedBox(height: 8),
             Text(
               category,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
                 color: PremiumPortfolioColors.accentPurple,
@@ -536,7 +536,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             const SizedBox(height: 12),
             Text(
               description,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
                 color: PremiumPortfolioColors.secondaryText,
@@ -560,7 +560,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
+              const Text(
                 'Why Choose EduCV?',
                 style: TextStyle(
                   fontSize: 48,
@@ -672,7 +672,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             const SizedBox(height: 24),
             Text(
               title,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
                 color: PremiumPortfolioColors.primaryText,
@@ -682,7 +682,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             const SizedBox(height: 12),
             Text(
               description,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
                 color: PremiumPortfolioColors.secondaryText,
@@ -709,7 +709,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
+                  const Text(
                     'Ready to Build Your Professional CV?',
                     style: TextStyle(
                       fontSize: 32,
@@ -720,7 +720,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16),
-                  Text(
+                  const Text(
                     'Join thousands of students who have already created their professional CVs with EduCV.',
                     style: TextStyle(
                       fontSize: 16,
@@ -759,7 +759,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     final fontSize = isLarge ? 18.0 : 16.0;
     final padding = isLarge ? 32.0 : 24.0;
 
-    return Container(
+    return SizedBox(
       height: height,
       child: ElevatedButton(
         onPressed: onPressed,
@@ -774,7 +774,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         child: Container(
           decoration: BoxDecoration(
             gradient: isPrimary
-                ? LinearGradient(
+                ? const LinearGradient(
                     colors: [
                       PremiumPortfolioColors.accentPurple,
                       PremiumPortfolioColors.accentBlue,

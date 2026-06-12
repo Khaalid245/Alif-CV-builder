@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../theme/enterprise_theme.dart';
-import '../widgets/enterprise_ui_components.dart';
 
 class ModernTopBar extends StatefulWidget implements PreferredSizeWidget {
   final String title;
@@ -63,7 +62,7 @@ class _ModernTopBarState extends State<ModernTopBar>
         height: widget.preferredSize.height,
         decoration: BoxDecoration(
           color: EnterpriseTheme.cardBackground,
-          border: Border(
+          border: const Border(
             bottom: BorderSide(color: EnterpriseTheme.cardBorder),
           ),
           boxShadow: EnterpriseTheme.shadowSm,

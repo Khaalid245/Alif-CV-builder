@@ -81,8 +81,9 @@ class WorkflowRepositoryImpl implements WorkflowRepository {
       };
 
       if (status != null) queryParams['status'] = status;
-      if (workflowConfigId != null)
+      if (workflowConfigId != null) {
         queryParams['workflow_config'] = workflowConfigId;
+      }
 
       final response = await _apiClient.get<Map<String, dynamic>>(
         ApiConstants.workflowInstances,
@@ -278,10 +279,12 @@ class WorkflowRepositoryImpl implements WorkflowRepository {
   }) async {
     try {
       final queryParams = <String, dynamic>{};
-      if (workflowConfigId != null)
+      if (workflowConfigId != null) {
         queryParams['workflow_config'] = workflowConfigId;
-      if (startDate != null)
+      }
+      if (startDate != null) {
         queryParams['start_date'] = startDate.toIso8601String();
+      }
       if (endDate != null) queryParams['end_date'] = endDate.toIso8601String();
 
       final response = await _apiClient.get<Map<String, dynamic>>(

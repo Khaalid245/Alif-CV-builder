@@ -107,7 +107,7 @@ class _PremiumInputState extends State<PremiumInput>
                 ),
                 boxShadow: _isFocused
                     ? [
-                        BoxShadow(
+                        const BoxShadow(
                           color: PremiumDarkColors.blueGlow,
                           blurRadius: 20,
                           spreadRadius: 0,

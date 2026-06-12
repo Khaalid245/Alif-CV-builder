@@ -88,7 +88,7 @@ class ScoreTrendChart extends StatelessWidget {
                     drawVerticalLine: false,
                     horizontalInterval: 10,
                     getDrawingHorizontalLine: (value) {
-                      return FlLine(
+                      return const FlLine(
                         color: AppColors.divider,
                         strokeWidth: 1,
                       );
@@ -96,10 +96,10 @@ class ScoreTrendChart extends StatelessWidget {
                   ),
                   titlesData: FlTitlesData(
                     show: true,
-                    rightTitles: AxisTitles(
+                    rightTitles: const AxisTitles(
                       sideTitles: SideTitles(showTitles: false),
                     ),
-                    topTitles: AxisTitles(
+                    topTitles: const AxisTitles(
                       sideTitles: SideTitles(showTitles: false),
                     ),
                     bottomTitles: AxisTitles(

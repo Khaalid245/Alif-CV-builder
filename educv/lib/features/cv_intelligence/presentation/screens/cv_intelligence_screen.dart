@@ -421,7 +421,7 @@ class CVIntelligenceScreen extends HookConsumerWidget {
             elevation: 0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
-              side: BorderSide(color: AppColors.border),
+              side: const BorderSide(color: AppColors.border),
             ),
             child: const Padding(
               padding: EdgeInsets.all(AppSpacing.lg),
@@ -489,7 +489,7 @@ class CVIntelligenceScreen extends HookConsumerWidget {
                 children: [
                   Row(
                     children: [
-                      Icon(
+                      const Icon(
                         LucideIcons.trendingUp,
                         color: AppColors.primary,
                       ),
@@ -516,7 +516,7 @@ class CVIntelligenceScreen extends HookConsumerWidget {
                 children: [
                   Row(
                     children: [
-                      Icon(
+                      const Icon(
                         LucideIcons.trendingUp,
                         color: AppColors.textSecondary,
                       ),
@@ -557,7 +557,7 @@ class CVIntelligenceScreen extends HookConsumerWidget {
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: AppColors.border),
+        side: const BorderSide(color: AppColors.border),
       ),
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.lg),
@@ -566,7 +566,7 @@ class CVIntelligenceScreen extends HookConsumerWidget {
           children: [
             Row(
               children: [
-                Icon(
+                const Icon(
                   LucideIcons.cpu,
                   color: AppColors.primary,
                 ),
@@ -935,7 +935,7 @@ class CVIntelligenceScreen extends HookConsumerWidget {
                         AppColors.textSecondary.withOpacity(0.08)),
 
                   const SizedBox(width: 4),
-                  Icon(LucideIcons.chevronRight,
+                  const Icon(LucideIcons.chevronRight,
                       size: 16, color: AppColors.textSecondary),
                 ],
               ),
@@ -1416,7 +1416,7 @@ class SectionScoreCard extends StatelessWidget {
               ),
               if (onTap != null) ...[
                 const SizedBox(width: AppSpacing.sm),
-                Icon(
+                const Icon(
                   LucideIcons.chevronRight,
                   size: 16,
                   color: AppColors.textSecondary,

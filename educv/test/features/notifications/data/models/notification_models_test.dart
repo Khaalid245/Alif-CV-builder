@@ -183,7 +183,7 @@ void main() {
     });
 
     test('should convert to JSON correctly', () {
-      final preferences = NotificationPreferencesModel(
+      const preferences = NotificationPreferencesModel(
         id: 'pref-id',
         emailNotificationsEnabled: true,
         inAppNotificationsEnabled: false,
@@ -213,7 +213,7 @@ void main() {
     });
 
     test('should create copy with changes', () {
-      final original = NotificationPreferencesModel(
+      const original = NotificationPreferencesModel(
         id: 'pref-id',
         emailNotificationsEnabled: true,
         inAppNotificationsEnabled: true,

@@ -87,20 +87,20 @@ class SkeletonCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppSpacing.radiusCard),
         border: Border.all(color: AppColors.border),
       ),
-      child: Column(
+      child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SkeletonLoader(width: 120, height: 16),
-          const SizedBox(height: AppSpacing.sm),
-          const SkeletonLoader(width: double.infinity, height: 12),
-          const SizedBox(height: AppSpacing.xs),
-          const SkeletonLoader(width: 200, height: 12),
-          const SizedBox(height: AppSpacing.md),
+          SkeletonLoader(width: 120, height: 16),
+          SizedBox(height: AppSpacing.sm),
+          SkeletonLoader(width: double.infinity, height: 12),
+          SizedBox(height: AppSpacing.xs),
+          SkeletonLoader(width: 200, height: 12),
+          SizedBox(height: AppSpacing.md),
           Row(
             children: [
-              const SkeletonLoader(width: 80, height: 32),
-              const SizedBox(width: AppSpacing.sm),
-              const SkeletonLoader(width: 60, height: 32),
+              SkeletonLoader(width: 80, height: 32),
+              SizedBox(width: AppSpacing.sm),
+              SkeletonLoader(width: 60, height: 32),
             ],
           ),
         ],
@@ -116,25 +116,25 @@ class SkeletonListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
-      child: Row(
+      child: const Row(
         children: [
-          const SkeletonLoader(
+          SkeletonLoader(
             width: 48,
             height: 48,
             borderRadius: BorderRadius.all(Radius.circular(24)),
           ),
-          const SizedBox(width: AppSpacing.md),
+          SizedBox(width: AppSpacing.md),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SkeletonLoader(width: 150, height: 16),
-                const SizedBox(height: AppSpacing.xs),
-                const SkeletonLoader(width: 100, height: 12),
+                SkeletonLoader(width: 150, height: 16),
+                SizedBox(height: AppSpacing.xs),
+                SkeletonLoader(width: 100, height: 12),
               ],
             ),
           ),
-          const SkeletonLoader(width: 24, height: 24),
+          SkeletonLoader(width: 24, height: 24),
         ],
       ),
     );
@@ -153,11 +153,11 @@ class SkeletonStats extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppSpacing.radiusCard),
         border: Border.all(color: AppColors.border),
       ),
-      child: Column(
+      child: const Column(
         children: [
-          const SkeletonLoader(width: 60, height: 32),
-          const SizedBox(height: AppSpacing.sm),
-          const SkeletonLoader(width: 80, height: 14),
+          SkeletonLoader(width: 60, height: 32),
+          SizedBox(height: AppSpacing.sm),
+          SkeletonLoader(width: 80, height: 14),
         ],
       ),
     );

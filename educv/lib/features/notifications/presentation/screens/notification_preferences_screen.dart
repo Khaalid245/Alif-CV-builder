@@ -4,7 +4,6 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/widgets/app_button.dart';
-import '../../../../core/widgets/app_error_state.dart';
 import '../../../../core/widgets/app_loader.dart';
 import '../../../../core/widgets/section_card.dart';
 import '../../data/models/notification_models.dart';
@@ -59,9 +58,7 @@ class _NotificationPreferencesScreenState
             return const AppLoader();
           }
 
-          if (_preferences == null) {
-            _preferences = provider.preferences;
-          }
+          _preferences ??= provider.preferences;
 
           return _buildPreferencesForm();
         },
@@ -279,7 +276,7 @@ class _NotificationPreferencesScreenState
               ),
               dense: true,
             );
-          }).toList(),
+          }),
         ],
       ),
     );

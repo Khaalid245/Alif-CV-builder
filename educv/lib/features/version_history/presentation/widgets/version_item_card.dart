@@ -80,7 +80,7 @@ class VersionItemCard extends StatelessWidget {
               const SizedBox(height: AppSpacing.sm),
               Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.person_outline,
                     size: 16,
                     color: AppColors.textHint,
@@ -96,7 +96,7 @@ class VersionItemCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: AppSpacing.md),
-                  Icon(
+                  const Icon(
                     Icons.access_time,
                     size: 16,
                     color: AppColors.textHint,

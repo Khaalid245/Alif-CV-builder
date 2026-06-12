@@ -173,7 +173,7 @@ class PerformanceUtils {
 class OptimizedScrollController extends ScrollController {
   final Duration _debounceDelay;
   Timer? _debounceTimer;
-  VoidCallback? _onScrollEnd;
+  final VoidCallback? _onScrollEnd;
 
   OptimizedScrollController({
     Duration debounceDelay = const Duration(milliseconds: 100),

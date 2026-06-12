@@ -1,5 +1,6 @@
 /// Version History data models for EduCV
 /// Production-quality models with comprehensive error handling and validation
+library;
 
 class CVVersionModel {
   final String id;

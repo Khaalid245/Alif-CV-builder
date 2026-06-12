@@ -132,7 +132,7 @@ class TemplateFiltersWidget extends StatelessWidget {
     return Container(
       constraints: const BoxConstraints(minWidth: 120),
       child: DropdownButtonFormField<String>(
-        value: value,
+        initialValue: value,
         decoration: InputDecoration(
           labelText: label,
           border: OutlineInputBorder(

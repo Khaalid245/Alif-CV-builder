@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/theme/premium_portfolio_colors.dart';
 
@@ -13,7 +12,7 @@ class StudentShell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: PremiumPortfolioColors.background,
-      body: Container(
+      body: SizedBox(
         width: double.infinity,
         child: navigationShell,
       ),

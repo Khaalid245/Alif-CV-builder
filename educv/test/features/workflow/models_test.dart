@@ -508,7 +508,7 @@ void main() {
 
   group('WorkflowTransitionRequest', () {
     test('should convert to JSON correctly', () {
-      final request = WorkflowTransitionRequest(
+      const request = WorkflowTransitionRequest(
         transitionId: 'trans-123',
         comment: 'Test comment',
         metadata: {'key': 'value'},
@@ -522,7 +522,7 @@ void main() {
     });
 
     test('should handle null optional fields', () {
-      final request = WorkflowTransitionRequest(
+      const request = WorkflowTransitionRequest(
         transitionId: 'trans-123',
       );
 
@@ -574,7 +574,7 @@ void main() {
     });
 
     test('should convert to JSON correctly', () {
-      final model = WorkflowDashboardModel(
+      const model = WorkflowDashboardModel(
         totalInstances: 50,
         activeInstances: 10,
         completedInstances: 40,

@@ -4,7 +4,6 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
-import '../../../../core/widgets/app_input.dart';
 import '../../data/models/workflow_models.dart';
 
 class WorkflowTransitionActionsWidget extends StatelessWidget {
@@ -269,7 +268,7 @@ class _TransitionConfirmationDialogState
                   ],
                 ),
               ),
-              Icon(
+              const Icon(
                 LucideIcons.arrowRight,
                 color: AppColors.textSecondary,
               ),
@@ -347,7 +346,7 @@ class _TransitionConfirmationDialogState
       ),
       child: Row(
         children: [
-          Icon(
+          const Icon(
             LucideIcons.alertTriangle,
             size: 16,
             color: AppColors.warning,

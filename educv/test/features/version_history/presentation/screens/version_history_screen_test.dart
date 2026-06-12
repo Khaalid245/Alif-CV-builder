@@ -39,7 +39,7 @@ void main() {
     testWidgets('should display empty state when no versions', (tester) async {
       when(mockRepository.getVersionHistory()).thenAnswer((_) async => []);
       when(mockRepository.getVersionStats())
-          .thenAnswer((_) async => VersionStatsModel(
+          .thenAnswer((_) async => const VersionStatsModel(
                 totalVersions: 0,
                 oldestVersion: 0,
                 newestVersion: 0,
@@ -149,7 +149,7 @@ void main() {
       when(mockRepository.getVersionHistory())
           .thenAnswer((_) async => mockVersions);
       when(mockRepository.getVersionStats())
-          .thenAnswer((_) async => VersionStatsModel(
+          .thenAnswer((_) async => const VersionStatsModel(
                 totalVersions: 2,
                 oldestVersion: 1,
                 newestVersion: 2,
@@ -219,7 +219,7 @@ void main() {
       when(mockRepository.getVersionHistory())
           .thenAnswer((_) async => mockVersions);
       when(mockRepository.getVersionStats())
-          .thenAnswer((_) async => VersionStatsModel(
+          .thenAnswer((_) async => const VersionStatsModel(
                 totalVersions: 1,
                 oldestVersion: 1,
                 newestVersion: 1,

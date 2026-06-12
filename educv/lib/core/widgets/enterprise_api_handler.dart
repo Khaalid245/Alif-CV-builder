@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
 import '../errors/error_handler.dart';
 import '../errors/app_exception.dart';
 import 'enterprise_toast.dart';

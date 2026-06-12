@@ -123,7 +123,7 @@ class _ContactScreenState extends State<ContactScreen>
                       .withValues(alpha: 0.2),
                 ),
               ),
-              child: Text(
+              child: const Text(
                 'GET IN TOUCH',
                 style: TextStyle(
                   fontSize: 12,
@@ -134,7 +134,7 @@ class _ContactScreenState extends State<ContactScreen>
               ),
             ),
             const SizedBox(height: 24),
-            Text(
+            const Text(
               'We are here to help',
               style: TextStyle(
                 fontSize: 48,
@@ -147,7 +147,7 @@ class _ContactScreenState extends State<ContactScreen>
             const SizedBox(height: 16),
             ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 600),
-              child: Text(
+              child: const Text(
                 'Questions about your account, CV generation, or the platform? Reach out and we will respond within one business day.',
                 style: TextStyle(
                   fontSize: 18,
@@ -209,7 +209,7 @@ class _ContactScreenState extends State<ContactScreen>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Contact Information',
           style: TextStyle(
             fontSize: 24,
@@ -277,7 +277,7 @@ class _ContactScreenState extends State<ContactScreen>
                 children: [
                   Text(
                     label.toUpperCase(),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
                       color: PremiumPortfolioColors.secondaryText,
@@ -287,7 +287,7 @@ class _ContactScreenState extends State<ContactScreen>
                   const SizedBox(height: 4),
                   Text(
                     value,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: PremiumPortfolioColors.primaryText,
@@ -318,7 +318,7 @@ class _ContactScreenState extends State<ContactScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             'Send a message',
             style: TextStyle(
               fontSize: 24,
@@ -393,7 +393,7 @@ class _ContactScreenState extends State<ContactScreen>
       children: [
         Text(
           label,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
             color: PremiumPortfolioColors.primaryText,
@@ -405,13 +405,13 @@ class _ContactScreenState extends State<ContactScreen>
           validator: validator,
           keyboardType: keyboardType,
           maxLines: maxLines,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 16,
             color: PremiumPortfolioColors.primaryText,
           ),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: TextStyle(
+            hintStyle: const TextStyle(
               color: PremiumPortfolioColors.secondaryText,
             ),
             prefixIcon: icon != null
@@ -425,26 +425,26 @@ class _ContactScreenState extends State<ContactScreen>
             fillColor: PremiumPortfolioColors.background,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                 color: PremiumPortfolioColors.borderLight,
               ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                 color: PremiumPortfolioColors.borderLight,
               ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                 color: PremiumPortfolioColors.accentPurple,
                 width: 2,
               ),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                 color: PremiumPortfolioColors.error,
                 width: 2,
               ),
@@ -460,7 +460,7 @@ class _ContactScreenState extends State<ContactScreen>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Subject',
           style: TextStyle(
             fontSize: 14,
@@ -476,19 +476,19 @@ class _ContactScreenState extends State<ContactScreen>
             fillColor: PremiumPortfolioColors.background,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                 color: PremiumPortfolioColors.borderLight,
               ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                 color: PremiumPortfolioColors.borderLight,
               ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                 color: PremiumPortfolioColors.accentPurple,
                 width: 2,
               ),
@@ -500,7 +500,7 @@ class _ContactScreenState extends State<ContactScreen>
                     value: subject,
                     child: Text(
                       subject,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 16,
                         color: PremiumPortfolioColors.primaryText,
                       ),
@@ -520,7 +520,7 @@ class _ContactScreenState extends State<ContactScreen>
   }
 
   Widget _buildPremiumButton() {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: 56,
       child: ElevatedButton(
@@ -535,7 +535,7 @@ class _ContactScreenState extends State<ContactScreen>
         ),
         child: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
+            gradient: const LinearGradient(
               colors: [
                 PremiumPortfolioColors.accentPurple,
                 PremiumPortfolioColors.accentBlue,
@@ -561,7 +561,7 @@ class _ContactScreenState extends State<ContactScreen>
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                     ),
                   )
-                : Text(
+                : const Text(
                     'Send Message',
                     style: TextStyle(
                       fontSize: 16,
@@ -585,14 +585,14 @@ class _ContactScreenState extends State<ContactScreen>
             color: PremiumPortfolioColors.success.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(32),
           ),
-          child: Icon(
+          child: const Icon(
             LucideIcons.checkCircle,
             size: 32,
             color: PremiumPortfolioColors.success,
           ),
         ),
         const SizedBox(height: 24),
-        Text(
+        const Text(
           'Message sent!',
           style: TextStyle(
             fontSize: 24,
@@ -602,7 +602,7 @@ class _ContactScreenState extends State<ContactScreen>
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 8),
-        Text(
+        const Text(
           'We will get back to you within one business day.',
           style: TextStyle(
             fontSize: 16,
@@ -616,12 +616,12 @@ class _ContactScreenState extends State<ContactScreen>
           style: ElevatedButton.styleFrom(
             backgroundColor: PremiumPortfolioColors.background,
             foregroundColor: PremiumPortfolioColors.primaryText,
-            side: BorderSide(color: PremiumPortfolioColors.borderLight),
+            side: const BorderSide(color: PremiumPortfolioColors.borderLight),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
           ),
-          child: Text('Send another'),
+          child: const Text('Send another'),
         ),
       ],
     );
@@ -634,7 +634,7 @@ class _ContactScreenState extends State<ContactScreen>
         constraints: const BoxConstraints(maxWidth: 1200),
         child: Column(
           children: [
-            Text(
+            const Text(
               'Frequently Asked Questions',
               style: TextStyle(
                 fontSize: 32,
@@ -682,7 +682,7 @@ class _ContactScreenState extends State<ContactScreen>
         child: ExpansionTile(
           title: Text(
             question,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
               color: PremiumPortfolioColors.primaryText,
@@ -693,7 +693,7 @@ class _ContactScreenState extends State<ContactScreen>
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
               child: Text(
                 answer,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   color: PremiumPortfolioColors.secondaryText,
                   height: 1.5,

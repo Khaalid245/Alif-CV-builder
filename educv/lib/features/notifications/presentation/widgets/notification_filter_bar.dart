@@ -91,7 +91,7 @@ class NotificationFilterBar extends StatelessWidget {
                 value: type['value'],
                 child: Text(type['label']!),
               );
-            }).toList(),
+            }),
           ],
           onChanged: onTypeChanged,
           style: AppTypography.body2,
@@ -122,7 +122,7 @@ class NotificationFilterBar extends StatelessWidget {
                 value: status['value'],
                 child: Text(status['label']!),
               );
-            }).toList(),
+            }),
           ],
           onChanged: onStatusChanged,
           style: AppTypography.body2,

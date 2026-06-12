@@ -184,21 +184,21 @@ class PublicFooter extends StatelessWidget {
       builder: (context, constraints) {
         final isDesktop = constraints.maxWidth >= 600;
         if (isDesktop) {
-          return Row(
+          return const Row(
             children: [
-              const Text(
+              Text(
                 '© 2024 EduCV · University Name. All rights reserved.',
                 style: TextStyle(
                   fontSize: 12,
                   color: PremiumPortfolioColors.lightText,
                 ),
               ),
-              const Spacer(),
+              Spacer(),
               _FooterLink(
                   icon: LucideIcons.shield,
                   label: 'Privacy Policy',
                   route: '/privacy'),
-              const SizedBox(width: 20),
+              SizedBox(width: 20),
               _FooterLink(
                   icon: LucideIcons.scrollText,
                   label: 'Terms of Service',
@@ -206,24 +206,24 @@ class PublicFooter extends StatelessWidget {
             ],
           );
         }
-        return Column(
+        return const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               '© 2024 EduCV · University Name. All rights reserved.',
               style: TextStyle(
                 fontSize: 12,
                 color: PremiumPortfolioColors.lightText,
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             Row(
               children: [
                 _FooterLink(
                     icon: LucideIcons.shield,
                     label: 'Privacy Policy',
                     route: '/privacy'),
-                const SizedBox(width: 20),
+                SizedBox(width: 20),
                 _FooterLink(
                     icon: LucideIcons.scrollText,
                     label: 'Terms of Service',

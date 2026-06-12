@@ -35,7 +35,7 @@ void main() {
 
     test('loadDashboardData should update state correctly on success',
         () async {
-      final mockDashboard = AnalyticsDashboardModel(
+      const mockDashboard = AnalyticsDashboardModel(
         userSummary: UserSummaryModel(
           latestScore: 85,
           latestCompletion: 90,
@@ -132,7 +132,7 @@ void main() {
 
     test('loadBenchmarkingData should update benchmarking data on success',
         () async {
-      final mockBenchmarking = BenchmarkingDataModel(
+      const mockBenchmarking = BenchmarkingDataModel(
         userId: 'user-123',
         currentScore: 85.5,
         percentileRank: 75.0,
@@ -153,7 +153,7 @@ void main() {
 
     test('loadCompletionStatistics should update completion stats on success',
         () async {
-      final mockStats = CompletionStatisticsModel(
+      const mockStats = CompletionStatisticsModel(
         timePeriod: '30',
         totalUsers: 1000,
         averageCompletion: 75.5,
@@ -293,7 +293,7 @@ void main() {
         () async {
       when(mockRepository.getCompletionStatistics(
         timePeriod: 90,
-      )).thenAnswer((_) async => CompletionStatisticsModel(
+      )).thenAnswer((_) async => const CompletionStatisticsModel(
             timePeriod: '90',
             totalUsers: 500,
             averageCompletion: 70.0,
@@ -334,7 +334,7 @@ void main() {
     test('refreshAll should call all load methods', () async {
       // Mock all repository methods
       when(mockRepository.getDashboardData())
-          .thenAnswer((_) async => AnalyticsDashboardModel(
+          .thenAnswer((_) async => const AnalyticsDashboardModel(
                 userSummary: UserSummaryModel(
                   latestScore: 0,
                   latestCompletion: 0,
@@ -369,7 +369,7 @@ void main() {
             dataPointsCount: 0,
           ));
       when(mockRepository.getBenchmarkingData())
-          .thenAnswer((_) async => BenchmarkingDataModel(
+          .thenAnswer((_) async => const BenchmarkingDataModel(
                 userId: '',
                 currentScore: 0.0,
                 percentileRank: 0.0,
@@ -380,7 +380,7 @@ void main() {
               ));
       when(mockRepository.getCompletionStatistics(
         timePeriod: 30,
-      )).thenAnswer((_) async => CompletionStatisticsModel(
+      )).thenAnswer((_) async => const CompletionStatisticsModel(
             timePeriod: '30',
             totalUsers: 0,
             averageCompletion: 0.0,

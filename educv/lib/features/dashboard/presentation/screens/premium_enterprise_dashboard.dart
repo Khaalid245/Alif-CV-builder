@@ -152,7 +152,7 @@ class _PremiumEnterpriseDashboardState extends State<PremiumEnterpriseDashboard>
     return CustomScrollView(
       slivers: [
         SliverPadding(
-          padding: EdgeInsets.all(PremiumSaaSTheme.space6),
+          padding: const EdgeInsets.all(PremiumSaaSTheme.space6),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
               // Hero Section
@@ -167,7 +167,7 @@ class _PremiumEnterpriseDashboardState extends State<PremiumEnterpriseDashboard>
                 ),
               ),
 
-              SizedBox(height: PremiumSaaSTheme.space8),
+              const SizedBox(height: PremiumSaaSTheme.space8),
 
               // Analytics & AI Insights Section
               _buildAnimatedSection(
@@ -175,7 +175,7 @@ class _PremiumEnterpriseDashboardState extends State<PremiumEnterpriseDashboard>
                 child: _buildAnalyticsSection(),
               ),
 
-              SizedBox(height: PremiumSaaSTheme.space8),
+              const SizedBox(height: PremiumSaaSTheme.space8),
 
               // Quick Actions & Activity Section
               _buildAnimatedSection(
@@ -183,7 +183,7 @@ class _PremiumEnterpriseDashboardState extends State<PremiumEnterpriseDashboard>
                 child: _buildQuickActionsAndActivity(),
               ),
 
-              SizedBox(height: PremiumSaaSTheme.space8),
+              const SizedBox(height: PremiumSaaSTheme.space8),
 
               // Recent Downloads Table
               _buildAnimatedSection(
@@ -241,9 +241,9 @@ class _PremiumEnterpriseDashboardState extends State<PremiumEnterpriseDashboard>
                 fontWeight: FontWeight.w700,
               ),
             ),
-            SizedBox(width: PremiumSaaSTheme.space3),
+            const SizedBox(width: PremiumSaaSTheme.space3),
             Container(
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                 horizontal: PremiumSaaSTheme.space3,
                 vertical: PremiumSaaSTheme.space1,
               ),
@@ -254,12 +254,12 @@ class _PremiumEnterpriseDashboardState extends State<PremiumEnterpriseDashboard>
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
+                  const Icon(
                     LucideIcons.sparkles,
                     color: PremiumSaaSTheme.textInverse,
                     size: 12,
                   ),
-                  SizedBox(width: PremiumSaaSTheme.space1),
+                  const SizedBox(width: PremiumSaaSTheme.space1),
                   Text(
                     'AI Powered',
                     style: PremiumSaaSTheme.labelSmall.copyWith(
@@ -272,7 +272,7 @@ class _PremiumEnterpriseDashboardState extends State<PremiumEnterpriseDashboard>
             ),
           ],
         ),
-        SizedBox(height: PremiumSaaSTheme.space5),
+        const SizedBox(height: PremiumSaaSTheme.space5),
         ResponsiveBuilder(
           builder: (context, deviceType) {
             return GridView.count(
@@ -282,7 +282,7 @@ class _PremiumEnterpriseDashboardState extends State<PremiumEnterpriseDashboard>
               crossAxisSpacing: PremiumSaaSTheme.space4,
               mainAxisSpacing: PremiumSaaSTheme.space4,
               childAspectRatio: deviceType.isMobile ? 1.1 : 1.3,
-              children: [
+              children: const [
                 PremiumAnalyticsWidget(
                   title: 'ATS Score',
                   value: '92/100',
@@ -330,7 +330,7 @@ class _PremiumEnterpriseDashboardState extends State<PremiumEnterpriseDashboard>
           return Column(
             children: [
               _buildQuickActionsSection(),
-              SizedBox(height: PremiumSaaSTheme.space6),
+              const SizedBox(height: PremiumSaaSTheme.space6),
               _buildAIInsightsPanel(),
             ],
           );
@@ -343,7 +343,7 @@ class _PremiumEnterpriseDashboardState extends State<PremiumEnterpriseDashboard>
               flex: 2,
               child: _buildQuickActionsSection(),
             ),
-            SizedBox(width: PremiumSaaSTheme.space6),
+            const SizedBox(width: PremiumSaaSTheme.space6),
             Expanded(
               child: _buildAIInsightsPanel(),
             ),
@@ -363,7 +363,7 @@ class _PremiumEnterpriseDashboardState extends State<PremiumEnterpriseDashboard>
             fontWeight: FontWeight.w700,
           ),
         ),
-        SizedBox(height: PremiumSaaSTheme.space5),
+        const SizedBox(height: PremiumSaaSTheme.space5),
         ResponsiveBuilder(
           builder: (context, deviceType) {
             return GridView.count(
@@ -413,7 +413,7 @@ class _PremiumEnterpriseDashboardState extends State<PremiumEnterpriseDashboard>
 
   Widget _buildAIInsightsPanel() {
     return Container(
-      padding: EdgeInsets.all(PremiumSaaSTheme.space6),
+      padding: const EdgeInsets.all(PremiumSaaSTheme.space6),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -435,19 +435,19 @@ class _PremiumEnterpriseDashboardState extends State<PremiumEnterpriseDashboard>
           Row(
             children: [
               Container(
-                padding: EdgeInsets.all(PremiumSaaSTheme.space2),
+                padding: const EdgeInsets.all(PremiumSaaSTheme.space2),
                 decoration: BoxDecoration(
                   gradient: PremiumSaaSTheme.heroGradient,
                   borderRadius:
                       BorderRadius.circular(PremiumSaaSTheme.radiusMd),
                 ),
-                child: Icon(
+                child: const Icon(
                   LucideIcons.brain,
                   color: PremiumSaaSTheme.textInverse,
                   size: 16,
                 ),
               ),
-              SizedBox(width: PremiumSaaSTheme.space3),
+              const SizedBox(width: PremiumSaaSTheme.space3),
               Text(
                 'AI Insights',
                 style: PremiumSaaSTheme.headingSmall.copyWith(
@@ -456,7 +456,7 @@ class _PremiumEnterpriseDashboardState extends State<PremiumEnterpriseDashboard>
               ),
             ],
           ),
-          SizedBox(height: PremiumSaaSTheme.space5),
+          const SizedBox(height: PremiumSaaSTheme.space5),
           _buildInsightItem(
             'Add "Python" skill',
             'Based on your experience, this would increase job matches by 34%',
@@ -489,8 +489,8 @@ class _PremiumEnterpriseDashboardState extends State<PremiumEnterpriseDashboard>
   Widget _buildInsightItem(
       String title, String description, IconData icon, Color color) {
     return Container(
-      margin: EdgeInsets.only(bottom: PremiumSaaSTheme.space4),
-      padding: EdgeInsets.all(PremiumSaaSTheme.space4),
+      margin: const EdgeInsets.only(bottom: PremiumSaaSTheme.space4),
+      padding: const EdgeInsets.all(PremiumSaaSTheme.space4),
       decoration: BoxDecoration(
         color: PremiumSaaSTheme.lightSurface,
         borderRadius: BorderRadius.circular(PremiumSaaSTheme.radiusLg),
@@ -509,7 +509,7 @@ class _PremiumEnterpriseDashboardState extends State<PremiumEnterpriseDashboard>
             ),
             child: Icon(icon, color: color, size: 18),
           ),
-          SizedBox(width: PremiumSaaSTheme.space3),
+          const SizedBox(width: PremiumSaaSTheme.space3),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -520,7 +520,7 @@ class _PremiumEnterpriseDashboardState extends State<PremiumEnterpriseDashboard>
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                SizedBox(height: PremiumSaaSTheme.space1),
+                const SizedBox(height: PremiumSaaSTheme.space1),
                 Text(
                   description,
                   style: PremiumSaaSTheme.bodySmall.copyWith(
@@ -530,7 +530,7 @@ class _PremiumEnterpriseDashboardState extends State<PremiumEnterpriseDashboard>
               ],
             ),
           ),
-          Icon(
+          const Icon(
             LucideIcons.chevronRight,
             color: PremiumSaaSTheme.textTertiary,
             size: 16,
@@ -543,7 +543,7 @@ class _PremiumEnterpriseDashboardState extends State<PremiumEnterpriseDashboard>
   Widget _buildRecentDownloadsTable() {
     return PremiumDataTable(
       title: 'Recent Downloads',
-      headers: ['Template', 'Generated', 'Status', 'Actions'],
+      headers: const ['Template', 'Generated', 'Status', 'Actions'],
       onViewAll: () {},
       rows: [
         [
@@ -590,7 +590,7 @@ class _PremiumEnterpriseDashboardState extends State<PremiumEnterpriseDashboard>
           ),
           child: Icon(icon, color: color, size: 16),
         ),
-        SizedBox(width: PremiumSaaSTheme.space3),
+        const SizedBox(width: PremiumSaaSTheme.space3),
         Text(
           name,
           style: PremiumSaaSTheme.labelLarge.copyWith(
@@ -603,7 +603,7 @@ class _PremiumEnterpriseDashboardState extends State<PremiumEnterpriseDashboard>
 
   Widget _buildStatusBadge(String text, Color color) {
     return Container(
-      padding: EdgeInsets.symmetric(
+      padding: const EdgeInsets.symmetric(
         horizontal: PremiumSaaSTheme.space3,
         vertical: PremiumSaaSTheme.space1,
       ),
@@ -632,8 +632,8 @@ class _PremiumEnterpriseDashboardState extends State<PremiumEnterpriseDashboard>
             onTap: () {},
             borderRadius: BorderRadius.circular(PremiumSaaSTheme.radiusMd),
             child: Container(
-              padding: EdgeInsets.all(PremiumSaaSTheme.space2),
-              child: Icon(
+              padding: const EdgeInsets.all(PremiumSaaSTheme.space2),
+              child: const Icon(
                 LucideIcons.download,
                 color: PremiumSaaSTheme.primaryPurple,
                 size: 16,
@@ -641,15 +641,15 @@ class _PremiumEnterpriseDashboardState extends State<PremiumEnterpriseDashboard>
             ),
           ),
         ),
-        SizedBox(width: PremiumSaaSTheme.space2),
+        const SizedBox(width: PremiumSaaSTheme.space2),
         Material(
           color: Colors.transparent,
           child: InkWell(
             onTap: () {},
             borderRadius: BorderRadius.circular(PremiumSaaSTheme.radiusMd),
             child: Container(
-              padding: EdgeInsets.all(PremiumSaaSTheme.space2),
-              child: Icon(
+              padding: const EdgeInsets.all(PremiumSaaSTheme.space2),
+              child: const Icon(
                 LucideIcons.moreHorizontal,
                 color: PremiumSaaSTheme.textTertiary,
                 size: 16,
@@ -665,7 +665,7 @@ class _PremiumEnterpriseDashboardState extends State<PremiumEnterpriseDashboard>
     return Container(
       decoration: BoxDecoration(
         color: PremiumSaaSTheme.lightSurface,
-        border: Border(
+        border: const Border(
           top: BorderSide(color: PremiumSaaSTheme.lightBorder),
         ),
         boxShadow: PremiumSaaSTheme.shadowSoft,

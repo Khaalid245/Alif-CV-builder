@@ -215,14 +215,14 @@ class ScoreProgressionWidget extends ConsumerWidget {
                     text: 'You $verb from ',
                   ),
                   TextSpan(
-                    text: '${firstScore.toStringAsFixed(0)}',
+                    text: firstScore.toStringAsFixed(0),
                     style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         color: AppColors.textPrimary),
                   ),
                   const TextSpan(text: ' → '),
                   TextSpan(
-                    text: '${latestScore.toStringAsFixed(0)}',
+                    text: latestScore.toStringAsFixed(0),
                     style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         color: AppColors.textPrimary),

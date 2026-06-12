@@ -35,7 +35,6 @@ import '../features/public/presentation/screens/about_screen.dart';
 import '../features/public/presentation/screens/contact_screen.dart';
 import '../features/public/presentation/screens/faq_screen.dart';
 import '../features/public/presentation/screens/privacy_screen.dart';
-import '../features/public/presentation/widgets/public_layout.dart';
 
 // Route name constants
 class AppRoutes {

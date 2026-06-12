@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../theme/enterprise_theme.dart';
-import '../layout/responsive_layout.dart';
 
 // Enterprise Card Component
 class EnterpriseCard extends StatefulWidget {
@@ -132,7 +131,7 @@ class StatCard extends StatelessWidget {
               ),
               const Spacer(),
               if (onTap != null)
-                Icon(
+                const Icon(
                   LucideIcons.chevronRight,
                   color: EnterpriseTheme.textTertiary,
                   size: 16,
@@ -418,11 +417,11 @@ extension ButtonTypeExtension on ButtonType {
       case ButtonType.primary:
         return EnterpriseTheme.primaryGradient;
       case ButtonType.secondary:
-        return LinearGradient(
+        return const LinearGradient(
           colors: [EnterpriseTheme.gray100, EnterpriseTheme.gray200],
         );
       case ButtonType.outline:
-        return LinearGradient(
+        return const LinearGradient(
           colors: [Colors.transparent, Colors.transparent],
         );
     }

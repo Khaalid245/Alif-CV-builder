@@ -231,7 +231,7 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
 
       if (!apiResponse.success) {
         // Check if it's a "no analysis found" case
-        final message = apiResponse.message?.toLowerCase() ?? '';
+        final message = apiResponse.message.toLowerCase() ?? '';
         if (message.contains('not found') || message.contains('no analysis')) {
           return null; // Return null instead of throwing error
         }
@@ -316,7 +316,7 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
 
       if (!apiResponse.success) {
         // If no analysis exists, return empty recommendations instead of error
-        final message = apiResponse.message?.toLowerCase() ?? '';
+        final message = apiResponse.message.toLowerCase() ?? '';
         if (message.contains('not found') || message.contains('no analysis')) {
           return [];
         }
@@ -593,10 +593,10 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
         return file.path;
       }
 
-      throw AppException(message: 'Failed to download analysis report');
+      throw const AppException(message: 'Failed to download analysis report');
     } on DioException catch (e) {
       if (e.response?.statusCode == 400) {
-        throw AppException(
+        throw const AppException(
             message: 'No analysis found. Please run an analysis first.');
       }
       throw AppException(message: 'Network error: ${e.message}');

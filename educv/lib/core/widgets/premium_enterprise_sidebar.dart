@@ -86,7 +86,7 @@ class _PremiumEnterpriseSidebarState extends State<PremiumEnterpriseSidebar>
       builder: (context, child) {
         return Container(
           width: _widthAnimation.value,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
@@ -137,7 +137,7 @@ class _PremiumEnterpriseSidebarState extends State<PremiumEnterpriseSidebar>
             ),
           ),
           if (!widget.isCollapsed) ...[
-            SizedBox(width: PremiumSaaSTheme.space3),
+            const SizedBox(width: PremiumSaaSTheme.space3),
             FadeTransition(
               opacity: _fadeAnimation,
               child: Expanded(
@@ -169,7 +169,7 @@ class _PremiumEnterpriseSidebarState extends State<PremiumEnterpriseSidebar>
               onTap: widget.onToggle,
               borderRadius: BorderRadius.circular(PremiumSaaSTheme.radiusSm),
               child: Container(
-                padding: EdgeInsets.all(PremiumSaaSTheme.space2),
+                padding: const EdgeInsets.all(PremiumSaaSTheme.space2),
                 child: Icon(
                   widget.isCollapsed
                       ? LucideIcons.chevronRight
@@ -232,7 +232,7 @@ class _PremiumEnterpriseSidebarState extends State<PremiumEnterpriseSidebar>
     ];
 
     return ListView.builder(
-      padding: EdgeInsets.symmetric(vertical: PremiumSaaSTheme.space4),
+      padding: const EdgeInsets.symmetric(vertical: PremiumSaaSTheme.space4),
       itemCount: navItems.length,
       itemBuilder: (context, index) {
         final item = navItems[index];
@@ -245,7 +245,7 @@ class _PremiumEnterpriseSidebarState extends State<PremiumEnterpriseSidebar>
 
   Widget _buildNavItem(_NavItem item, bool isActive) {
     return Container(
-      margin: EdgeInsets.symmetric(
+      margin: const EdgeInsets.symmetric(
         horizontal: PremiumSaaSTheme.space3,
         vertical: PremiumSaaSTheme.space1,
       ),
@@ -259,7 +259,7 @@ class _PremiumEnterpriseSidebarState extends State<PremiumEnterpriseSidebar>
             borderRadius: BorderRadius.circular(PremiumSaaSTheme.radiusLg),
             child: AnimatedContainer(
               duration: PremiumSaaSTheme.animationFast,
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                 horizontal: PremiumSaaSTheme.space4,
                 vertical: PremiumSaaSTheme.space3,
               ),
@@ -281,7 +281,7 @@ class _PremiumEnterpriseSidebarState extends State<PremiumEnterpriseSidebar>
               ),
               child: Row(
                 children: [
-                  Container(
+                  SizedBox(
                     width: 20,
                     height: 20,
                     child: Icon(
@@ -293,7 +293,7 @@ class _PremiumEnterpriseSidebarState extends State<PremiumEnterpriseSidebar>
                     ),
                   ),
                   if (!widget.isCollapsed) ...[
-                    SizedBox(width: PremiumSaaSTheme.space3),
+                    const SizedBox(width: PremiumSaaSTheme.space3),
                     FadeTransition(
                       opacity: _fadeAnimation,
                       child: Expanded(
@@ -310,9 +310,9 @@ class _PremiumEnterpriseSidebarState extends State<PremiumEnterpriseSidebar>
                       ),
                     ),
                     if (item.badge != null) ...[
-                      SizedBox(width: PremiumSaaSTheme.space2),
+                      const SizedBox(width: PremiumSaaSTheme.space2),
                       Container(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           horizontal: PremiumSaaSTheme.space2,
                           vertical: PremiumSaaSTheme.space1,
                         ),
@@ -347,7 +347,7 @@ class _PremiumEnterpriseSidebarState extends State<PremiumEnterpriseSidebar>
   Widget _buildAIAssistant() {
     if (widget.isCollapsed) {
       return Container(
-        margin: EdgeInsets.all(PremiumSaaSTheme.space3),
+        margin: const EdgeInsets.all(PremiumSaaSTheme.space3),
         child: AnimatedBuilder(
           animation: _glowAnimation,
           builder: (context, child) {
@@ -378,14 +378,14 @@ class _PremiumEnterpriseSidebarState extends State<PremiumEnterpriseSidebar>
     }
 
     return Container(
-      margin: EdgeInsets.all(PremiumSaaSTheme.space4),
+      margin: const EdgeInsets.all(PremiumSaaSTheme.space4),
       child: FadeTransition(
         opacity: _fadeAnimation,
         child: AnimatedBuilder(
           animation: _glowAnimation,
           builder: (context, child) {
             return Container(
-              padding: EdgeInsets.all(PremiumSaaSTheme.space4),
+              padding: const EdgeInsets.all(PremiumSaaSTheme.space4),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
@@ -414,12 +414,12 @@ class _PremiumEnterpriseSidebarState extends State<PremiumEnterpriseSidebar>
                 children: [
                   Row(
                     children: [
-                      Icon(
+                      const Icon(
                         LucideIcons.sparkles,
                         color: PremiumSaaSTheme.primaryPurpleLight,
                         size: 16,
                       ),
-                      SizedBox(width: PremiumSaaSTheme.space2),
+                      const SizedBox(width: PremiumSaaSTheme.space2),
                       Text(
                         'AI Assistant',
                         style: PremiumSaaSTheme.labelMedium.copyWith(
@@ -429,17 +429,17 @@ class _PremiumEnterpriseSidebarState extends State<PremiumEnterpriseSidebar>
                       ),
                     ],
                   ),
-                  SizedBox(height: PremiumSaaSTheme.space2),
+                  const SizedBox(height: PremiumSaaSTheme.space2),
                   Text(
                     'Get AI-powered suggestions to optimize your CV',
                     style: PremiumSaaSTheme.bodySmall.copyWith(
                       color: PremiumSaaSTheme.textInverseSecondary,
                     ),
                   ),
-                  SizedBox(height: PremiumSaaSTheme.space3),
+                  const SizedBox(height: PremiumSaaSTheme.space3),
                   Container(
                     width: double.infinity,
-                    padding: EdgeInsets.symmetric(
+                    padding: const EdgeInsets.symmetric(
                       vertical: PremiumSaaSTheme.space2,
                     ),
                     decoration: BoxDecoration(
@@ -467,7 +467,7 @@ class _PremiumEnterpriseSidebarState extends State<PremiumEnterpriseSidebar>
 
   Widget _buildUserProfile() {
     return Container(
-      padding: EdgeInsets.all(PremiumSaaSTheme.space4),
+      padding: const EdgeInsets.all(PremiumSaaSTheme.space4),
       child: Row(
         children: [
           Container(
@@ -488,7 +488,7 @@ class _PremiumEnterpriseSidebarState extends State<PremiumEnterpriseSidebar>
             ),
           ),
           if (!widget.isCollapsed) ...[
-            SizedBox(width: PremiumSaaSTheme.space3),
+            const SizedBox(width: PremiumSaaSTheme.space3),
             FadeTransition(
               opacity: _fadeAnimation,
               child: Expanded(
@@ -503,7 +503,7 @@ class _PremiumEnterpriseSidebarState extends State<PremiumEnterpriseSidebar>
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.symmetric(
+                      padding: const EdgeInsets.symmetric(
                         horizontal: PremiumSaaSTheme.space2,
                         vertical: 2,
                       ),

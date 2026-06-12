@@ -91,7 +91,7 @@ class ModernWelcomeCard extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
+          const Icon(
             LucideIcons.checkCircle2,
             size: ModernSaaSDashboardTheme.iconSm,
             color: ModernSaaSDashboardTheme.success,
@@ -172,7 +172,7 @@ class ModernStatCard extends StatelessWidget {
                         ),
                       ),
                       const Spacer(),
-                      Icon(
+                      const Icon(
                         LucideIcons.trendingUp,
                         color: ModernSaaSDashboardTheme.success,
                         size: ModernSaaSDashboardTheme.iconSm,

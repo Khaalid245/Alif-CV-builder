@@ -21,7 +21,7 @@ void main() {
 
         // Act
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(
               body: ScoreDisplayWidget(
                 score: score,
@@ -47,7 +47,7 @@ void main() {
           (tester) async {
         // Act
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(
               body: ScoreDisplayWidget(
                 score: 85.0,
@@ -92,7 +92,7 @@ void main() {
       testWidgets('should display correct score colors', (tester) async {
         // Test excellent score (90+)
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(
               body: ScoreDisplayWidget(
                 score: 95.0,
@@ -108,7 +108,7 @@ void main() {
 
         // Test poor score (<50)
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(
               body: ScoreDisplayWidget(
                 score: 30.0,
@@ -127,7 +127,7 @@ void main() {
     group('SectionScoreCard', () {
       testWidgets('should display section score information', (tester) async {
         // Arrange
-        final sectionScore = SectionScoreModel(
+        const sectionScore = SectionScoreModel(
           score: 80.0,
           maxScore: 100.0,
           weight: 1.0,
@@ -159,7 +159,7 @@ void main() {
 
       testWidgets('should handle tap when onTap is provided', (tester) async {
         // Arrange
-        final sectionScore = SectionScoreModel(
+        const sectionScore = SectionScoreModel(
           score: 70.0,
           maxScore: 100.0,
           weight: 1.0,
@@ -424,7 +424,7 @@ void main() {
           (tester) async {
         // Act
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(
               body: RecommendationsList(
                 recommendations: [],
@@ -478,7 +478,7 @@ void main() {
     group('SubmissionReadinessWidget', () {
       testWidgets('should display readiness information', (tester) async {
         // Arrange
-        final readiness = SubmissionReadinessModel(
+        const readiness = SubmissionReadinessModel(
           isReady: true,
           readinessScore: 85.0,
           readyAspects: ['Complete profile', 'Good formatting'],
@@ -512,7 +512,7 @@ void main() {
 
       testWidgets('should show improve button when not ready', (tester) async {
         // Arrange
-        final readiness = SubmissionReadinessModel(
+        const readiness = SubmissionReadinessModel(
           isReady: false,
           readinessScore: 60.0,
           readyAspects: [],
@@ -547,7 +547,7 @@ void main() {
 
       testWidgets('should display correct readiness icons', (tester) async {
         // Test ready state
-        final readyReadiness = SubmissionReadinessModel(
+        const readyReadiness = SubmissionReadinessModel(
           isReady: true,
           readinessScore: 95.0,
           readyAspects: [],
@@ -568,7 +568,7 @@ void main() {
         expect(find.byIcon(LucideIcons.checkCircle), findsOneWidget);
 
         // Test not ready state
-        final notReadyReadiness = SubmissionReadinessModel(
+        const notReadyReadiness = SubmissionReadinessModel(
           isReady: false,
           readinessScore: 40.0,
           readyAspects: [],
@@ -593,7 +593,7 @@ void main() {
     group('ReadinessStatusBadge', () {
       testWidgets('should display compact readiness badge', (tester) async {
         // Arrange
-        final readiness = SubmissionReadinessModel(
+        const readiness = SubmissionReadinessModel(
           isReady: true,
           readinessScore: 90.0,
           readyAspects: [],
@@ -622,7 +622,7 @@ void main() {
 
       testWidgets('should display full readiness badge', (tester) async {
         // Arrange
-        final readiness = SubmissionReadinessModel(
+        const readiness = SubmissionReadinessModel(
           isReady: false,
           readinessScore: 75.0,
           readyAspects: [],

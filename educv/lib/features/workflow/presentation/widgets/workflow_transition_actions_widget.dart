@@ -4,7 +4,6 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
-import '../../../../core/widgets/app_loader.dart';
 import '../../data/models/workflow_models.dart';
 
 class WorkflowTransitionActionsWidget extends StatefulWidget {
@@ -195,7 +194,7 @@ class _WorkflowTransitionActionsWidgetState
         children: [
           Row(
             children: [
-              Icon(
+              const Icon(
                 LucideIcons.messageSquare,
                 size: 16,
                 color: AppColors.primary,

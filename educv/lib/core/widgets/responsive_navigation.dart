@@ -236,7 +236,7 @@ class ResponsiveNavigation extends StatelessWidget {
                     ],
                   ),
                 ),
-                Icon(
+                const Icon(
                   LucideIcons.moreHorizontal,
                   size: ModernSaaSDashboardTheme.iconSm,
                   color: ModernSaaSDashboardTheme.tertiaryText,

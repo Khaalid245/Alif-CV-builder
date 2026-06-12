@@ -1,5 +1,6 @@
 /// CV Intelligence data models for EduCV
 /// Production-quality models with comprehensive error handling and validation
+library;
 
 class CVAnalysisModel {
   final String id;

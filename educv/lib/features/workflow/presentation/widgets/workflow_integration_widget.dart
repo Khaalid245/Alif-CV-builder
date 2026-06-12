@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
@@ -12,8 +11,6 @@ import '../../../../core/utils/snackbar_helper.dart';
 import '../../data/models/workflow_models.dart';
 import '../providers/workflow_provider.dart';
 import '../widgets/workflow_state_widget.dart' as state_widget;
-import '../widgets/workflow_transition_widget.dart' as transition_widget;
-import '../widgets/workflow_dashboard_widget.dart';
 import '../widgets/workflow_progress_widget.dart' as progress_widget;
 import '../widgets/workflow_transition_actions_widget.dart' as actions_widget;
 import '../widgets/transition_confirmation_dialog.dart' as confirmation_dialog;
@@ -54,7 +51,7 @@ class WorkflowIntegrationWidget extends HookConsumerWidget {
   Widget _buildHeader(BuildContext context, WidgetRef ref) {
     return Row(
       children: [
-        Icon(
+        const Icon(
           LucideIcons.workflow,
           size: 20,
           color: AppColors.primary,
@@ -196,10 +193,10 @@ class WorkflowIntegrationWidget extends HookConsumerWidget {
             if (state.availableTransitions.length > 3)
               TextButton(
                 onPressed: () => _showAllActionsDialog(context, ref, state),
-                child: const Text('View All'),
                 style: TextButton.styleFrom(
                   foregroundColor: AppColors.primary,
                 ),
+                child: const Text('View All'),
               ),
           ],
         ),
@@ -268,10 +265,10 @@ class WorkflowIntegrationWidget extends HookConsumerWidget {
                 TextButton(
                   onPressed: () =>
                       _showFullHistoryDialog(context, ref, state.workflow!.id),
-                  child: const Text('View All'),
                   style: TextButton.styleFrom(
                     foregroundColor: AppColors.primary,
                   ),
+                  child: const Text('View All'),
                 ),
               ],
             ),

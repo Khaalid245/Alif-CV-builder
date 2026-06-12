@@ -116,7 +116,7 @@ class EnterpriseLoadingManager extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            const Icon(
               Icons.inbox_outlined,
               size: 64,
               color: AppColors.textHint,
@@ -171,11 +171,11 @@ class CVDashboardSkeleton extends StatelessWidget {
           const SizedBox(height: AppSpacing.xl),
 
           // Action buttons skeleton
-          Row(
+          const Row(
             children: [
               Expanded(
                   child: SkeletonLoader(width: double.infinity, height: 48)),
-              const SizedBox(width: AppSpacing.md),
+              SizedBox(width: AppSpacing.md),
               Expanded(
                   child: SkeletonLoader(width: double.infinity, height: 48)),
             ],
@@ -196,11 +196,11 @@ class CVSectionsSkeleton extends StatelessWidget {
         // Header skeleton
         Container(
           padding: const EdgeInsets.all(AppSpacing.lg),
-          child: Row(
+          child: const Row(
             children: [
-              const SkeletonLoader(width: 24, height: 24),
-              const SizedBox(width: AppSpacing.md),
-              const SkeletonLoader(width: 150, height: 24),
+              SkeletonLoader(width: 24, height: 24),
+              SizedBox(width: AppSpacing.md),
+              SkeletonLoader(width: 150, height: 24),
             ],
           ),
         ),

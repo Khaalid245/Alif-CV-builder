@@ -244,7 +244,7 @@ class _ProfileCompletionHeroCardState extends State<ProfileCompletionHeroCard>
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
+              const Icon(
                 LucideIcons.user,
                 size: 14,
                 color: ModernSaaSDashboardTheme.accentPurple,
@@ -381,7 +381,7 @@ class _ProfileCompletionHeroCardState extends State<ProfileCompletionHeroCard>
                 child: Container(
                   height: double.infinity,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
+                    gradient: const LinearGradient(
                       colors: [
                         ModernSaaSDashboardTheme.accentPurple,
                         ModernSaaSDashboardTheme.accentPurpleLight,
@@ -463,7 +463,7 @@ class _ProfileCompletionHeroCardState extends State<ProfileCompletionHeroCard>
               width: size * 0.6,
               height: size * 0.6,
               decoration: BoxDecoration(
-                gradient: LinearGradient(
+                gradient: const LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
@@ -734,7 +734,7 @@ class CompactProfileCompletionCard extends StatelessWidget {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
+                  gradient: const LinearGradient(
                     colors: [
                       ModernSaaSDashboardTheme.accentPurple,
                       ModernSaaSDashboardTheme.accentPurpleLight,
@@ -778,7 +778,7 @@ class CompactProfileCompletionCard extends StatelessWidget {
                               widthFactor: completionPercentage / 100.0,
                               child: Container(
                                 decoration: BoxDecoration(
-                                  gradient: LinearGradient(
+                                  gradient: const LinearGradient(
                                     colors: [
                                       ModernSaaSDashboardTheme.accentPurple,
                                       ModernSaaSDashboardTheme
@@ -808,7 +808,7 @@ class CompactProfileCompletionCard extends StatelessWidget {
               ),
 
               // Arrow
-              Icon(
+              const Icon(
                 LucideIcons.chevronRight,
                 size: 16,
                 color: ModernSaaSDashboardTheme.tertiaryText,

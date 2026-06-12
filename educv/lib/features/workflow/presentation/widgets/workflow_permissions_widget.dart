@@ -48,7 +48,7 @@ class RoleBasedWorkflowWidget extends ConsumerWidget {
       ),
       child: Row(
         children: [
-          Icon(
+          const Icon(
             LucideIcons.lock,
             size: 16,
             color: AppColors.warning,
@@ -160,7 +160,7 @@ class ConditionalWorkflowActions extends ConsumerWidget {
       ),
       child: Column(
         children: [
-          Icon(
+          const Icon(
             LucideIcons.logIn,
             size: 32,
             color: AppColors.info,
@@ -196,7 +196,7 @@ class ConditionalWorkflowActions extends ConsumerWidget {
       ),
       child: Column(
         children: [
-          Icon(
+          const Icon(
             LucideIcons.shield,
             size: 32,
             color: AppColors.warning,
@@ -259,7 +259,7 @@ class ConditionalWorkflowActions extends ConsumerWidget {
       ),
       child: Row(
         children: [
-          Icon(
+          const Icon(
             LucideIcons.info,
             size: 14,
             color: AppColors.textSecondary,
@@ -508,7 +508,7 @@ class _TransitionConfirmationDialogState
                   ],
                 ),
               ),
-              Icon(
+              const Icon(
                 LucideIcons.arrowRight,
                 color: AppColors.textSecondary,
               ),
@@ -560,7 +560,7 @@ class _TransitionConfirmationDialogState
       ),
       child: Row(
         children: [
-          Icon(
+          const Icon(
             LucideIcons.users,
             size: 14,
             color: AppColors.info,
@@ -618,7 +618,7 @@ class _TransitionConfirmationDialogState
       ),
       child: Row(
         children: [
-          Icon(
+          const Icon(
             LucideIcons.alertTriangle,
             size: 16,
             color: AppColors.warning,

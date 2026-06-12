@@ -178,7 +178,7 @@ void main() {
               ));
 
       await tester.pumpWidget(createTestApp(
-        WorkflowIntegrationWidget(cvId: 'cv-123'),
+        const WorkflowIntegrationWidget(cvId: 'cv-123'),
       ));
 
       await tester.pumpAndSettle();
@@ -249,7 +249,7 @@ void main() {
           .thenAnswer((_) async => [transitionWithComment]);
 
       await tester.pumpWidget(createTestApp(
-        WorkflowIntegrationWidget(cvId: 'cv-123'),
+        const WorkflowIntegrationWidget(cvId: 'cv-123'),
       ));
 
       await tester.pumpAndSettle();
@@ -327,7 +327,7 @@ void main() {
       )).thenAnswer((_) async => transitionLogs);
 
       await tester.pumpWidget(createTestApp(
-        WorkflowIntegrationWidget(
+        const WorkflowIntegrationWidget(
           cvId: 'cv-123',
           showFullHistory: true,
         ),
@@ -363,7 +363,7 @@ void main() {
           .thenThrow(Exception('Network error'));
 
       await tester.pumpWidget(createTestApp(
-        WorkflowIntegrationWidget(cvId: 'cv-123'),
+        const WorkflowIntegrationWidget(cvId: 'cv-123'),
       ));
 
       await tester.pumpAndSettle();
@@ -392,7 +392,7 @@ void main() {
           .thenAnswer((_) async => null);
 
       await tester.pumpWidget(createTestApp(
-        WorkflowIntegrationWidget(cvId: 'cv-123'),
+        const WorkflowIntegrationWidget(cvId: 'cv-123'),
       ));
 
       await tester.pumpAndSettle();
@@ -460,7 +460,7 @@ void main() {
               ));
 
       await tester.pumpWidget(createTestApp(
-        WorkflowIntegrationWidget(cvId: 'cv-123'),
+        const WorkflowIntegrationWidget(cvId: 'cv-123'),
       ));
 
       await tester.pumpAndSettle();
@@ -480,7 +480,7 @@ void main() {
           .thenAnswer((_) async => []);
 
       await tester.pumpWidget(createTestApp(
-        WorkflowIntegrationWidget(cvId: 'cv-123'),
+        const WorkflowIntegrationWidget(cvId: 'cv-123'),
       ));
 
       await tester.pumpAndSettle();
@@ -538,7 +538,7 @@ void main() {
           .thenAnswer((_) async => transitions);
 
       await tester.pumpWidget(createTestApp(
-        WorkflowIntegrationWidget(cvId: 'cv-123'),
+        const WorkflowIntegrationWidget(cvId: 'cv-123'),
       ));
 
       await tester.pumpAndSettle();
@@ -567,12 +567,12 @@ void main() {
     testWidgets('Loading states and transitions', (tester) async {
       // Mock delayed response to test loading state
       when(mockRepository.getCVWorkflow('cv-123')).thenAnswer((_) async {
-        await Future.delayed(Duration(milliseconds: 100));
+        await Future.delayed(const Duration(milliseconds: 100));
         return createTestWorkflow();
       });
 
       await tester.pumpWidget(createTestApp(
-        WorkflowIntegrationWidget(cvId: 'cv-123'),
+        const WorkflowIntegrationWidget(cvId: 'cv-123'),
       ));
 
       // Verify loading state is shown initially

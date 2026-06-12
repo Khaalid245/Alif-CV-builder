@@ -486,7 +486,7 @@ class _ModernSaaSSidebarState extends State<ModernSaaSSidebar>
                     ),
                   ),
                   const SizedBox(width: 8),
-                  Icon(
+                  const Icon(
                     LucideIcons.moreHorizontal,
                     size: 16,
                     color: ModernSaaSDashboardTheme.tertiaryText,
@@ -502,11 +502,11 @@ class _ModernSaaSSidebarState extends State<ModernSaaSSidebar>
 
   List<SidebarItemData> _getMainNavigationItems() {
     return [
-      SidebarItemData(
+      const SidebarItemData(
         icon: LucideIcons.home,
         label: 'Dashboard',
       ),
-      SidebarItemData(
+      const SidebarItemData(
         icon: LucideIcons.user,
         label: 'My CV',
       ),
@@ -515,19 +515,19 @@ class _ModernSaaSSidebarState extends State<ModernSaaSSidebar>
 
   List<SidebarItemData> _getCVBuilderItems() {
     return [
-      SidebarItemData(
+      const SidebarItemData(
         icon: LucideIcons.fileText,
         label: 'CV Form',
       ),
-      SidebarItemData(
+      const SidebarItemData(
         icon: LucideIcons.eye,
         label: 'Preview',
       ),
-      SidebarItemData(
+      const SidebarItemData(
         icon: LucideIcons.download,
         label: 'Downloads',
       ),
-      SidebarItemData(
+      const SidebarItemData(
         icon: LucideIcons.brain,
         label: 'CV Intelligence',
       ),
@@ -536,19 +536,19 @@ class _ModernSaaSSidebarState extends State<ModernSaaSSidebar>
 
   List<SidebarItemData> _getToolsItems() {
     return [
-      SidebarItemData(
+      const SidebarItemData(
         icon: LucideIcons.layout,
         label: 'Templates',
       ),
-      SidebarItemData(
+      const SidebarItemData(
         icon: LucideIcons.barChart3,
         label: 'Analytics',
       ),
-      SidebarItemData(
+      const SidebarItemData(
         icon: LucideIcons.bell,
         label: 'Notifications',
       ),
-      SidebarItemData(
+      const SidebarItemData(
         icon: LucideIcons.history,
         label: 'Version History',
       ),
@@ -557,11 +557,11 @@ class _ModernSaaSSidebarState extends State<ModernSaaSSidebar>
 
   List<SidebarItemData> _getAccountItems() {
     return [
-      SidebarItemData(
+      const SidebarItemData(
         icon: LucideIcons.settings,
         label: 'Account Settings',
       ),
-      SidebarItemData(
+      const SidebarItemData(
         icon: LucideIcons.key,
         label: 'Change Password',
       ),

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../router/app_router.dart';
-import '../../../notifications/presentation/providers/notification_provider.dart';
 import '../../../notifications/presentation/widgets/notification_badge.dart';
 
 class AppHeaderWithNotifications extends StatelessWidget

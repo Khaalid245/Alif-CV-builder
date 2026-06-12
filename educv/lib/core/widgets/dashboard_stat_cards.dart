@@ -632,7 +632,7 @@ class DashboardStatsGrid extends StatelessWidget {
 
 // Specialized stat cards for common use cases
 class ProfileSectionStatCard extends DashboardStatCard {
-  ProfileSectionStatCard({
+  const ProfileSectionStatCard({
     super.key,
     required int completedSections,
     required int totalSections,
@@ -655,7 +655,7 @@ class ProfileSectionStatCard extends DashboardStatCard {
 }
 
 class ExperienceStatCard extends DashboardStatCard {
-  ExperienceStatCard({
+  const ExperienceStatCard({
     super.key,
     required int experienceCount,
     super.onTap,

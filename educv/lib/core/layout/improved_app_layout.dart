@@ -78,7 +78,7 @@ class _ImprovedAppLayoutState extends ConsumerState<ImprovedAppLayout> {
                             onPressed: () =>
                                 _scaffoldKey.currentState?.openDrawer(),
                           ),
-                          Text(
+                          const Text(
                             'EduCV',
                             style: TextStyle(
                               fontSize: 16,
@@ -263,7 +263,7 @@ class _ImprovedAppLayoutState extends ConsumerState<ImprovedAppLayout> {
                     children: [
                       Text(
                         user?.fullName ?? 'User',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                           color: PremiumPortfolioColors.primaryText,
@@ -272,7 +272,7 @@ class _ImprovedAppLayoutState extends ConsumerState<ImprovedAppLayout> {
                       const SizedBox(height: 2),
                       Text(
                         user?.email ?? '',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 14,
                           color: PremiumPortfolioColors.secondaryText,
                         ),
@@ -286,7 +286,7 @@ class _ImprovedAppLayoutState extends ConsumerState<ImprovedAppLayout> {
                               PremiumPortfolioColors.success.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Text(
+                        child: const Text(
                           'Professional',
                           style: TextStyle(
                             fontSize: 12,
@@ -400,7 +400,7 @@ class _ImprovedAppLayoutState extends ConsumerState<ImprovedAppLayout> {
                   ),
                 ),
               ),
-              Icon(
+              const Icon(
                 Icons.chevron_right,
                 size: 16,
                 color: PremiumPortfolioColors.secondaryText,

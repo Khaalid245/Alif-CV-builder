@@ -7,12 +7,12 @@ class TransitionHistoryWidget extends StatelessWidget {
   final bool hasMore;
 
   const TransitionHistoryWidget({
-    Key? key,
+    super.key,
     required this.history,
     this.isLoading = false,
     this.onLoadMore,
     this.hasMore = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

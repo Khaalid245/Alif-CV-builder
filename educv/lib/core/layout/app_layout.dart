@@ -103,7 +103,7 @@ class _AppLayoutState extends ConsumerState<AppLayout> {
     }
 
     // CV Builder items (2-5)
-    final cvBuilderStartIndex = 2;
+    const cvBuilderStartIndex = 2;
     if (index >= cvBuilderStartIndex && index < cvBuilderStartIndex + 4) {
       final cvBuilderIndex = index - cvBuilderStartIndex;
       switch (cvBuilderIndex) {
@@ -124,7 +124,7 @@ class _AppLayoutState extends ConsumerState<AppLayout> {
     }
 
     // Tools items (6-9)
-    final toolsStartIndex = 6;
+    const toolsStartIndex = 6;
     if (index >= toolsStartIndex && index < toolsStartIndex + 4) {
       final toolsIndex = index - toolsStartIndex;
       switch (toolsIndex) {
@@ -145,7 +145,7 @@ class _AppLayoutState extends ConsumerState<AppLayout> {
     }
 
     // Account items (10-11)
-    final accountStartIndex = 10;
+    const accountStartIndex = 10;
     if (index >= accountStartIndex && index < accountStartIndex + 2) {
       final accountIndex = index - accountStartIndex;
       switch (accountIndex) {

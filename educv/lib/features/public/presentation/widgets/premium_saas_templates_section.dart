@@ -393,12 +393,12 @@ class _InfoPanel extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 32),
-                    Text(
+                    const Text(
                       'BEST FOR',
                       style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w700,
-                        color: const Color(0xFF4F46E5),
+                        color: Color(0xFF4F46E5),
                         letterSpacing: 0.5,
                       ),
                     ),
@@ -517,17 +517,17 @@ class _InfoPanel extends StatelessWidget {
         child: InkWell(
           onTap: () => context.go('/register'),
           borderRadius: BorderRadius.circular(20),
-          child: Center(
+          child: const Center(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(
+                Icon(
                   LucideIcons.fileDown,
                   size: 20,
                   color: Colors.white,
                 ),
-                const SizedBox(width: 12),
-                const Text(
+                SizedBox(width: 12),
+                Text(
                   'Use this template',
                   style: TextStyle(
                     fontSize: 16,

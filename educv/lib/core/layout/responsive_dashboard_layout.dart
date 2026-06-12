@@ -269,22 +269,22 @@ class DashboardSidebar extends StatelessWidget {
 
   Widget _buildNavigationItems() {
     final items = [
-      _NavigationItem(
+      const _NavigationItem(
         icon: LucideIcons.home,
         label: 'Dashboard',
         index: 0,
       ),
-      _NavigationItem(
+      const _NavigationItem(
         icon: LucideIcons.user,
         label: 'Profile',
         index: 1,
       ),
-      _NavigationItem(
+      const _NavigationItem(
         icon: LucideIcons.fileText,
         label: 'Generate CV',
         index: 2,
       ),
-      _NavigationItem(
+      const _NavigationItem(
         icon: LucideIcons.download,
         label: 'Downloads',
         index: 3,
@@ -356,10 +356,10 @@ class DashboardSidebar extends StatelessWidget {
       padding: EdgeInsets.all(isCollapsed ? 16 : 24),
       child: Row(
         children: [
-          CircleAvatar(
+          const CircleAvatar(
             radius: 16,
             backgroundColor: PremiumPortfolioColors.accentPurple,
-            child: const Text(
+            child: Text(
               'U',
               style: TextStyle(
                 fontSize: 12,

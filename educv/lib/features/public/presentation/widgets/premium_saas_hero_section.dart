@@ -3,7 +3,6 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
-import '../../../../core/theme/premium_dark_colors.dart';
 import '../../../../core/theme/premium_dark_typography.dart';
 import '../../../../core/widgets/premium_saas_grid_background.dart';
 
@@ -524,8 +523,8 @@ class PremiumSaaSHeroSection extends StatelessWidget {
         Container(
           width: 56,
           height: 56,
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
               colors: [Color(0xFF4F46E5), Color(0xFF7C3AED)],
             ),
             shape: BoxShape.circle,
@@ -603,12 +602,12 @@ class PremiumSaaSHeroSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'CV COMPLETION',
           style: TextStyle(
             fontSize: 11,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF4F46E5),
+            color: Color(0xFF4F46E5),
             letterSpacing: 0.5,
           ),
         ),
@@ -679,12 +678,12 @@ class PremiumSaaSHeroSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'TOP SKILLS',
           style: TextStyle(
             fontSize: 11,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF4F46E5),
+            color: Color(0xFF4F46E5),
             letterSpacing: 0.5,
           ),
         ),
@@ -755,9 +754,9 @@ class PremiumSaaSHeroSection extends StatelessWidget {
               ),
             ),
           ),
-          Text(
+          const Text(
             'Download',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,
               color: Color(0xFF4F46E5),

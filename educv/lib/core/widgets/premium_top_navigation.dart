@@ -98,7 +98,7 @@ class _PremiumTopNavigationState extends State<PremiumTopNavigation>
       height: widget.preferredSize.height,
       decoration: BoxDecoration(
         color: PremiumSaaSTheme.lightSurface,
-        border: Border(
+        border: const Border(
           bottom: BorderSide(
             color: PremiumSaaSTheme.lightBorder,
             width: 1,
@@ -107,7 +107,7 @@ class _PremiumTopNavigationState extends State<PremiumTopNavigation>
         boxShadow: PremiumSaaSTheme.shadowSoft,
       ),
       child: Padding(
-        padding: EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
           horizontal: PremiumSaaSTheme.space6,
           vertical: PremiumSaaSTheme.space3,
         ),
@@ -115,12 +115,12 @@ class _PremiumTopNavigationState extends State<PremiumTopNavigation>
           children: [
             if (widget.onMenuPressed != null) ...[
               _buildMenuButton(),
-              SizedBox(width: PremiumSaaSTheme.space4),
+              const SizedBox(width: PremiumSaaSTheme.space4),
             ],
             _buildWorkspaceSelector(),
-            SizedBox(width: PremiumSaaSTheme.space8),
+            const SizedBox(width: PremiumSaaSTheme.space8),
             Expanded(child: _buildIntelligentSearch()),
-            SizedBox(width: PremiumSaaSTheme.space6),
+            const SizedBox(width: PremiumSaaSTheme.space6),
             _buildActionButtons(),
           ],
         ),
@@ -135,8 +135,8 @@ class _PremiumTopNavigationState extends State<PremiumTopNavigation>
         onTap: widget.onMenuPressed,
         borderRadius: BorderRadius.circular(PremiumSaaSTheme.radiusMd),
         child: Container(
-          padding: EdgeInsets.all(PremiumSaaSTheme.space2),
-          child: Icon(
+          padding: const EdgeInsets.all(PremiumSaaSTheme.space2),
+          child: const Icon(
             LucideIcons.menu,
             color: PremiumSaaSTheme.textSecondary,
             size: 20,
@@ -148,7 +148,7 @@ class _PremiumTopNavigationState extends State<PremiumTopNavigation>
 
   Widget _buildWorkspaceSelector() {
     return Container(
-      padding: EdgeInsets.symmetric(
+      padding: const EdgeInsets.symmetric(
         horizontal: PremiumSaaSTheme.space3,
         vertical: PremiumSaaSTheme.space2,
       ),
@@ -167,21 +167,21 @@ class _PremiumTopNavigationState extends State<PremiumTopNavigation>
               gradient: PremiumSaaSTheme.heroGradient,
               borderRadius: BorderRadius.circular(PremiumSaaSTheme.radiusSm),
             ),
-            child: Icon(
+            child: const Icon(
               LucideIcons.briefcase,
               color: PremiumSaaSTheme.textInverse,
               size: 12,
             ),
           ),
-          SizedBox(width: PremiumSaaSTheme.space2),
+          const SizedBox(width: PremiumSaaSTheme.space2),
           Text(
             'Personal Workspace',
             style: PremiumSaaSTheme.labelMedium.copyWith(
               fontWeight: FontWeight.w600,
             ),
           ),
-          SizedBox(width: PremiumSaaSTheme.space1),
-          Icon(
+          const SizedBox(width: PremiumSaaSTheme.space1),
+          const Icon(
             LucideIcons.chevronDown,
             color: PremiumSaaSTheme.textTertiary,
             size: 14,
@@ -221,7 +221,7 @@ class _PremiumTopNavigationState extends State<PremiumTopNavigation>
                   color: PremiumSaaSTheme.textTertiary,
                 ),
                 prefixIcon: Container(
-                  padding: EdgeInsets.all(PremiumSaaSTheme.space3),
+                  padding: const EdgeInsets.all(PremiumSaaSTheme.space3),
                   child: Icon(
                     LucideIcons.search,
                     color: _isSearchFocused
@@ -244,8 +244,8 @@ class _PremiumTopNavigationState extends State<PremiumTopNavigation>
                           borderRadius:
                               BorderRadius.circular(PremiumSaaSTheme.radiusSm),
                           child: Container(
-                            padding: EdgeInsets.all(PremiumSaaSTheme.space1),
-                            child: Icon(
+                            padding: const EdgeInsets.all(PremiumSaaSTheme.space1),
+                            child: const Icon(
                               LucideIcons.x,
                               color: PremiumSaaSTheme.textTertiary,
                               size: 14,
@@ -255,7 +255,7 @@ class _PremiumTopNavigationState extends State<PremiumTopNavigation>
                       )
                     else ...[
                       Container(
-                        margin: EdgeInsets.only(right: PremiumSaaSTheme.space2),
+                        margin: const EdgeInsets.only(right: PremiumSaaSTheme.space2),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -268,7 +268,7 @@ class _PremiumTopNavigationState extends State<PremiumTopNavigation>
                   ],
                 ),
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(
+                contentPadding: const EdgeInsets.symmetric(
                   horizontal: PremiumSaaSTheme.space4,
                   vertical: PremiumSaaSTheme.space3,
                 ),
@@ -284,8 +284,8 @@ class _PremiumTopNavigationState extends State<PremiumTopNavigation>
 
   Widget _buildShortcutKey(String key) {
     return Container(
-      margin: EdgeInsets.only(left: PremiumSaaSTheme.space1),
-      padding: EdgeInsets.symmetric(
+      margin: const EdgeInsets.only(left: PremiumSaaSTheme.space1),
+      padding: const EdgeInsets.symmetric(
         horizontal: PremiumSaaSTheme.space2,
         vertical: 2,
       ),
@@ -310,9 +310,9 @@ class _PremiumTopNavigationState extends State<PremiumTopNavigation>
     return Row(
       children: [
         _buildAIAssistantButton(),
-        SizedBox(width: PremiumSaaSTheme.space3),
+        const SizedBox(width: PremiumSaaSTheme.space3),
         _buildNotificationButton(),
-        SizedBox(width: PremiumSaaSTheme.space3),
+        const SizedBox(width: PremiumSaaSTheme.space3),
         _buildProfileButton(),
       ],
     );
@@ -325,13 +325,13 @@ class _PremiumTopNavigationState extends State<PremiumTopNavigation>
         onTap: () {},
         borderRadius: BorderRadius.circular(PremiumSaaSTheme.radiusMd),
         child: Container(
-          padding: EdgeInsets.all(PremiumSaaSTheme.space2),
+          padding: const EdgeInsets.all(PremiumSaaSTheme.space2),
           decoration: BoxDecoration(
             gradient: PremiumSaaSTheme.heroGradient,
             borderRadius: BorderRadius.circular(PremiumSaaSTheme.radiusMd),
             boxShadow: PremiumSaaSTheme.shadowGlow,
           ),
-          child: Icon(
+          child: const Icon(
             LucideIcons.sparkles,
             color: PremiumSaaSTheme.textInverse,
             size: 18,
@@ -358,8 +358,8 @@ class _PremiumTopNavigationState extends State<PremiumTopNavigation>
                   borderRadius:
                       BorderRadius.circular(PremiumSaaSTheme.radiusMd),
                   child: Container(
-                    padding: EdgeInsets.all(PremiumSaaSTheme.space2),
-                    child: Icon(
+                    padding: const EdgeInsets.all(PremiumSaaSTheme.space2),
+                    child: const Icon(
                       LucideIcons.bell,
                       color: PremiumSaaSTheme.textSecondary,
                       size: 18,
@@ -372,7 +372,7 @@ class _PremiumTopNavigationState extends State<PremiumTopNavigation>
                   right: 4,
                   top: 4,
                   child: Container(
-                    padding: EdgeInsets.all(PremiumSaaSTheme.space1),
+                    padding: const EdgeInsets.all(PremiumSaaSTheme.space1),
                     decoration: BoxDecoration(
                       color: PremiumSaaSTheme.accentRose,
                       borderRadius: BorderRadius.circular(8),
@@ -415,7 +415,7 @@ class _PremiumTopNavigationState extends State<PremiumTopNavigation>
         onTap: widget.onProfilePressed,
         borderRadius: BorderRadius.circular(PremiumSaaSTheme.radiusLg),
         child: Container(
-          padding: EdgeInsets.symmetric(
+          padding: const EdgeInsets.symmetric(
             horizontal: PremiumSaaSTheme.space3,
             vertical: PremiumSaaSTheme.space2,
           ),
@@ -445,7 +445,7 @@ class _PremiumTopNavigationState extends State<PremiumTopNavigation>
                   ),
                 ),
               ),
-              SizedBox(width: PremiumSaaSTheme.space2),
+              const SizedBox(width: PremiumSaaSTheme.space2),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -465,8 +465,8 @@ class _PremiumTopNavigationState extends State<PremiumTopNavigation>
                   ),
                 ],
               ),
-              SizedBox(width: PremiumSaaSTheme.space2),
-              Icon(
+              const SizedBox(width: PremiumSaaSTheme.space2),
+              const Icon(
                 LucideIcons.chevronDown,
                 color: PremiumSaaSTheme.textTertiary,
                 size: 14,

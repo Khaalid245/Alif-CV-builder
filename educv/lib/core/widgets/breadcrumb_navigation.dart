@@ -16,7 +16,7 @@ class BreadcrumbNavigation extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
         border: Border(
           bottom: BorderSide(
@@ -37,7 +37,7 @@ class BreadcrumbNavigation extends StatelessWidget {
                 color: PremiumPortfolioColors.accentPurple.withOpacity(0.2),
               ),
             ),
-            child: Row(
+            child: const Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(
@@ -45,7 +45,7 @@ class BreadcrumbNavigation extends StatelessWidget {
                   size: 14,
                   color: PremiumPortfolioColors.accentPurple,
                 ),
-                const SizedBox(width: 6),
+                SizedBox(width: 6),
                 Text(
                   'You are here',
                   style: TextStyle(
@@ -130,8 +130,8 @@ class BreadcrumbNavigation extends StatelessWidget {
       // Add separator (except for last item)
       if (!isLast) {
         widgets.add(
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8),
             child: Icon(
               LucideIcons.chevronRight,
               size: 14,

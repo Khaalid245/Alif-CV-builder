@@ -123,7 +123,7 @@ class RecommendationCard extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
+          const Icon(
             LucideIcons.check,
             size: 12,
             color: AppColors.success,
@@ -162,7 +162,7 @@ class RecommendationCard extends StatelessWidget {
               label: Text(recommendation.actionText),
               style: OutlinedButton.styleFrom(
                 foregroundColor: AppColors.primary,
-                side: BorderSide(color: AppColors.primary),
+                side: const BorderSide(color: AppColors.primary),
               ),
             ),
           ),
@@ -263,7 +263,7 @@ class RecommendationsList extends StatelessWidget {
         padding: const EdgeInsets.all(AppSpacing.xl),
         child: Column(
           children: [
-            Icon(
+            const Icon(
               LucideIcons.checkCircle,
               size: 64,
               color: AppColors.success,
@@ -299,7 +299,7 @@ class RecommendationsList extends StatelessWidget {
       children: [
         Expanded(
           child: DropdownButtonFormField<String>(
-            value: selectedCategory,
+            initialValue: selectedCategory,
             decoration: const InputDecoration(
               labelText: 'Category',
               border: OutlineInputBorder(),
@@ -321,7 +321,7 @@ class RecommendationsList extends StatelessWidget {
         const SizedBox(width: AppSpacing.sm),
         Expanded(
           child: DropdownButtonFormField<String>(
-            value: selectedPriority,
+            initialValue: selectedPriority,
             decoration: const InputDecoration(
               labelText: 'Priority',
               border: OutlineInputBorder(),

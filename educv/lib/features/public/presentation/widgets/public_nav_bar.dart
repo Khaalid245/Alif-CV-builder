@@ -15,7 +15,7 @@ class PublicNavBar extends StatelessWidget {
       height: 72,
       decoration: BoxDecoration(
         color: PremiumPortfolioColors.background.withValues(alpha: 0.9),
-        border: Border(
+        border: const Border(
           bottom: BorderSide(
             color: PremiumPortfolioColors.borderLight,
             width: 1,
@@ -89,7 +89,7 @@ class PublicNavBar extends StatelessWidget {
           const Spacer(),
           IconButton(
             onPressed: () => _showMobileDrawer(context),
-            icon: Icon(
+            icon: const Icon(
               LucideIcons.menu,
               size: 24,
               color: PremiumPortfolioColors.primaryText,
