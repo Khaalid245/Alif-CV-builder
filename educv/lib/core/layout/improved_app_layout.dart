@@ -102,7 +102,10 @@ class _ImprovedAppLayoutState extends ConsumerState<ImprovedAppLayout> {
                           child: const Text(
                             'You are offline. Changes are saved locally.',
                             textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600),
                           ),
                         ),
                       Expanded(child: widget.child),
@@ -134,7 +137,10 @@ class _ImprovedAppLayoutState extends ConsumerState<ImprovedAppLayout> {
                           child: const Text(
                             'You are offline. Changes are saved locally.',
                             textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600),
                           ),
                         ),
                       Expanded(child: widget.child),
@@ -151,26 +157,26 @@ class _ImprovedAppLayoutState extends ConsumerState<ImprovedAppLayout> {
 
   int _getCurrentIndex() {
     final currentPath = widget.currentRoute ?? '';
-    
+
     // Quick Start (0-1)
     if (currentPath == '/cv/dashboard') return 0;
     if (currentPath == '/cv/form') return 2; // Build My CV
-    
+
     // My CV (2-5)
     if (currentPath == '/cv/preview') return 3;
     if (currentPath == '/cv/downloads') return 4;
     if (currentPath == '/cv/intelligence') return 5;
-    
+
     // Tools & Resources (6-9)
     if (currentPath == '/templates') return 6;
     if (currentPath == '/analytics') return 7;
     if (currentPath == '/cv/version-history') return 9;
-    
+
     // Account (8, 10)
     if (currentPath == '/notifications') return 8;
     if (currentPath == '/account') return 10;
     if (currentPath == '/account/change-password') return 10;
-    
+
     return 0; // Default to dashboard
   }
 
@@ -211,7 +217,7 @@ class _ImprovedAppLayoutState extends ConsumerState<ImprovedAppLayout> {
 
   void _showProfileBottomSheet(BuildContext context) {
     final user = ref.read(currentUserProvider);
-    
+
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,
@@ -232,9 +238,9 @@ class _ImprovedAppLayoutState extends ConsumerState<ImprovedAppLayout> {
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // User info
             Row(
               children: [
@@ -273,9 +279,11 @@ class _ImprovedAppLayoutState extends ConsumerState<ImprovedAppLayout> {
                       ),
                       const SizedBox(height: 4),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 2),
                         decoration: BoxDecoration(
-                          color: PremiumPortfolioColors.success.withOpacity(0.1),
+                          color:
+                              PremiumPortfolioColors.success.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
@@ -292,17 +300,17 @@ class _ImprovedAppLayoutState extends ConsumerState<ImprovedAppLayout> {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Divider
             Container(
               height: 1,
               color: PremiumPortfolioColors.borderLight,
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Menu items
             _buildProfileMenuItem(
               icon: Icons.person_outline,
@@ -312,7 +320,7 @@ class _ImprovedAppLayoutState extends ConsumerState<ImprovedAppLayout> {
                 context.go('/account');
               },
             ),
-            
+
             _buildProfileMenuItem(
               icon: Icons.lock_outline,
               title: 'Change Password',
@@ -321,7 +329,7 @@ class _ImprovedAppLayoutState extends ConsumerState<ImprovedAppLayout> {
                 context.go('/account/change-password');
               },
             ),
-            
+
             _buildProfileMenuItem(
               icon: Icons.help_outline,
               title: 'Help & Support',
@@ -330,17 +338,17 @@ class _ImprovedAppLayoutState extends ConsumerState<ImprovedAppLayout> {
                 // Add help navigation
               },
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Divider
             Container(
               height: 1,
               color: PremiumPortfolioColors.borderLight,
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Sign out
             _buildProfileMenuItem(
               icon: Icons.logout,
@@ -375,9 +383,9 @@ class _ImprovedAppLayoutState extends ConsumerState<ImprovedAppLayout> {
               Icon(
                 icon,
                 size: 20,
-                color: isDestructive 
-                  ? PremiumPortfolioColors.error
-                  : PremiumPortfolioColors.secondaryText,
+                color: isDestructive
+                    ? PremiumPortfolioColors.error
+                    : PremiumPortfolioColors.secondaryText,
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -386,9 +394,9 @@ class _ImprovedAppLayoutState extends ConsumerState<ImprovedAppLayout> {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
-                    color: isDestructive 
-                      ? PremiumPortfolioColors.error
-                      : PremiumPortfolioColors.primaryText,
+                    color: isDestructive
+                        ? PremiumPortfolioColors.error
+                        : PremiumPortfolioColors.primaryText,
                   ),
                 ),
               ),
@@ -410,8 +418,10 @@ class _ImprovedAppLayoutState extends ConsumerState<ImprovedAppLayout> {
     if (names.length == 1) {
       return names[0][0].toUpperCase();
     }
-    final firstInitial = names.first.isNotEmpty ? names.first[0].toUpperCase() : '';
-    final lastInitial = names.last.isNotEmpty ? names.last[0].toUpperCase() : '';
+    final firstInitial =
+        names.first.isNotEmpty ? names.first[0].toUpperCase() : '';
+    final lastInitial =
+        names.last.isNotEmpty ? names.last[0].toUpperCase() : '';
     return '$firstInitial$lastInitial';
   }
 

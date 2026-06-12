@@ -151,9 +151,12 @@ void main() {
       expect(find.text('Test Workflow'), findsOneWidget);
     });
 
-    testWidgets('should show different colors for different state types', (tester) async {
-      final initialWorkflow = createTestWorkflowInstance(currentStateType: 'initial');
-      final finalWorkflow = createTestWorkflowInstance(currentStateType: 'final');
+    testWidgets('should show different colors for different state types',
+        (tester) async {
+      final initialWorkflow =
+          createTestWorkflowInstance(currentStateType: 'initial');
+      final finalWorkflow =
+          createTestWorkflowInstance(currentStateType: 'final');
 
       // Test initial state
       await tester.pumpWidget(createTestWidget(
@@ -186,7 +189,8 @@ void main() {
       expect(tapped, true);
     });
 
-    testWidgets('should hide details when showDetails is false', (tester) async {
+    testWidgets('should hide details when showDetails is false',
+        (tester) async {
       final workflow = createTestWorkflowInstance();
 
       await tester.pumpWidget(createTestWidget(
@@ -304,7 +308,8 @@ void main() {
       expect(find.text('Save as Draft'), findsOneWidget);
     });
 
-    testWidgets('should show no actions state when transitions are empty', (tester) async {
+    testWidgets('should show no actions state when transitions are empty',
+        (tester) async {
       await tester.pumpWidget(createTestWidget(
         WorkflowTransitionActionsWidget(
           transitions: [],
@@ -312,7 +317,10 @@ void main() {
       ));
 
       expect(find.text('No Actions Available'), findsOneWidget);
-      expect(find.text('There are no available transitions from the current state.'), findsOneWidget);
+      expect(
+          find.text(
+              'There are no available transitions from the current state.'),
+          findsOneWidget);
     });
 
     testWidgets('should disable buttons when loading', (tester) async {
@@ -329,7 +337,8 @@ void main() {
       expect(button.onPressed, isNull);
     });
 
-    testWidgets('should call onTransition when button is tapped', (tester) async {
+    testWidgets('should call onTransition when button is tapped',
+        (tester) async {
       final transitions = [createTestTransition()];
       String? calledTransitionId;
       String? calledComment;
@@ -439,7 +448,8 @@ void main() {
       await tester.tap(find.text('Submit for Review').last);
       await tester.pumpAndSettle();
 
-      expect(find.text('Comment is required for this transition'), findsOneWidget);
+      expect(
+          find.text('Comment is required for this transition'), findsOneWidget);
     });
 
     testWidgets('should call onConfirm with comment', (tester) async {
@@ -486,7 +496,7 @@ void main() {
       String comment = 'Test comment',
     }) {
       final transition = createTestTransition();
-      
+
       return WorkflowTransitionLogModel(
         id: id,
         workflowInstanceId: 'instance-123',
@@ -527,10 +537,12 @@ void main() {
       ));
 
       expect(find.text('No History Available'), findsOneWidget);
-      expect(find.text('No transitions have been performed yet.'), findsOneWidget);
+      expect(
+          find.text('No transitions have been performed yet.'), findsOneWidget);
     });
 
-    testWidgets('should show load more button when hasMore is true', (tester) async {
+    testWidgets('should show load more button when hasMore is true',
+        (tester) async {
       final history = [createTestLog()];
 
       await tester.pumpWidget(createTestWidget(
@@ -544,7 +556,8 @@ void main() {
       expect(find.text('Load More'), findsOneWidget);
     });
 
-    testWidgets('should call onLoadMore when load more button is tapped', (tester) async {
+    testWidgets('should call onLoadMore when load more button is tapped',
+        (tester) async {
       final history = [createTestLog()];
       bool loadMoreCalled = false;
 
@@ -560,7 +573,8 @@ void main() {
       expect(loadMoreCalled, true);
     });
 
-    testWidgets('should show loading indicator when isLoading is true', (tester) async {
+    testWidgets('should show loading indicator when isLoading is true',
+        (tester) async {
       final history = [createTestLog()];
 
       await tester.pumpWidget(createTestWidget(
@@ -600,8 +614,8 @@ void main() {
 
       expect(find.text('Workflow Statistics'), findsOneWidget);
       expect(find.text('100'), findsOneWidget); // Total workflows
-      expect(find.text('25'), findsOneWidget);  // Active
-      expect(find.text('70'), findsOneWidget);  // Completed
+      expect(find.text('25'), findsOneWidget); // Active
+      expect(find.text('70'), findsOneWidget); // Completed
       expect(find.text('70.0%'), findsOneWidget); // Success rate
     });
 
@@ -656,10 +670,12 @@ void main() {
       ));
 
       expect(find.text('No Workflow Instances'), findsOneWidget);
-      expect(find.text('No workflow instances have been created yet.'), findsOneWidget);
+      expect(find.text('No workflow instances have been created yet.'),
+          findsOneWidget);
     });
 
-    testWidgets('should show load more button when hasMore is true', (tester) async {
+    testWidgets('should show load more button when hasMore is true',
+        (tester) async {
       final instances = [createTestWorkflowInstance()];
 
       await tester.pumpWidget(createTestWidget(
@@ -673,7 +689,8 @@ void main() {
       expect(find.text('Load More'), findsOneWidget);
     });
 
-    testWidgets('should call onInstanceTap when instance is tapped', (tester) async {
+    testWidgets('should call onInstanceTap when instance is tapped',
+        (tester) async {
       final instances = [createTestWorkflowInstance()];
       WorkflowInstanceModel? tappedInstance;
 
@@ -719,9 +736,12 @@ void main() {
       expect(tapped, true);
     });
 
-    testWidgets('should show different colors for different state types', (tester) async {
-      final initialInstance = createTestWorkflowInstance(currentStateType: 'initial');
-      final finalInstance = createTestWorkflowInstance(currentStateType: 'final');
+    testWidgets('should show different colors for different state types',
+        (tester) async {
+      final initialInstance =
+          createTestWorkflowInstance(currentStateType: 'initial');
+      final finalInstance =
+          createTestWorkflowInstance(currentStateType: 'final');
 
       // Test initial state
       await tester.pumpWidget(createTestWidget(

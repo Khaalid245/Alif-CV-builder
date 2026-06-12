@@ -79,9 +79,10 @@ class WorkflowRepositoryImpl implements WorkflowRepository {
         'page': page,
         'page_size': pageSize,
       };
-      
+
       if (status != null) queryParams['status'] = status;
-      if (workflowConfigId != null) queryParams['workflow_config'] = workflowConfigId;
+      if (workflowConfigId != null)
+        queryParams['workflow_config'] = workflowConfigId;
 
       final response = await _apiClient.get<Map<String, dynamic>>(
         ApiConstants.workflowInstances,
@@ -139,7 +140,8 @@ class WorkflowRepositoryImpl implements WorkflowRepository {
   }
 
   @override
-  Future<List<WorkflowTransitionModel>> getAvailableTransitions(String instanceId) async {
+  Future<List<WorkflowTransitionModel>> getAvailableTransitions(
+      String instanceId) async {
     try {
       final response = await _apiClient.get<Map<String, dynamic>>(
         '${ApiConstants.workflowInstances}$instanceId/available-transitions/',
@@ -152,7 +154,8 @@ class WorkflowRepositoryImpl implements WorkflowRepository {
         );
       }
 
-      final List<dynamic> transitionsData = apiResponse.data['transitions'] ?? [];
+      final List<dynamic> transitionsData =
+          apiResponse.data['transitions'] ?? [];
       return transitionsData
           .map((item) => WorkflowTransitionModel.fromJson(
                 Map<String, dynamic>.from(item),
@@ -222,7 +225,8 @@ class WorkflowRepositoryImpl implements WorkflowRepository {
       final apiResponse = ApiResponse.fromJson(response.data!, null);
       if (!apiResponse.success) {
         throw AppException(
-          message: apiResponse.message ?? 'Failed to get workflow configurations',
+          message:
+              apiResponse.message ?? 'Failed to get workflow configurations',
         );
       }
 
@@ -242,7 +246,8 @@ class WorkflowRepositoryImpl implements WorkflowRepository {
   }
 
   @override
-  Future<WorkflowConfigurationModel> getWorkflowConfiguration(String configId) async {
+  Future<WorkflowConfigurationModel> getWorkflowConfiguration(
+      String configId) async {
     try {
       final response = await _apiClient.get<Map<String, dynamic>>(
         '${ApiConstants.workflowConfigurations}$configId/',
@@ -273,8 +278,10 @@ class WorkflowRepositoryImpl implements WorkflowRepository {
   }) async {
     try {
       final queryParams = <String, dynamic>{};
-      if (workflowConfigId != null) queryParams['workflow_config'] = workflowConfigId;
-      if (startDate != null) queryParams['start_date'] = startDate.toIso8601String();
+      if (workflowConfigId != null)
+        queryParams['workflow_config'] = workflowConfigId;
+      if (startDate != null)
+        queryParams['start_date'] = startDate.toIso8601String();
       if (endDate != null) queryParams['end_date'] = endDate.toIso8601String();
 
       final response = await _apiClient.get<Map<String, dynamic>>(

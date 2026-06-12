@@ -4,7 +4,8 @@ part 'env.g.dart';
 
 @Envied(path: 'assets/env/.env', obfuscate: true)
 abstract class Env {
-  @EnviedField(varName: 'API_BASE_URL', defaultValue: 'http://localhost:8000/api/v1')
+  @EnviedField(
+      varName: 'API_BASE_URL', defaultValue: 'http://localhost:8000/api/v1')
   static final String apiBaseUrl = _Env.apiBaseUrl;
 
   @EnviedField(varName: 'APP_NAME', defaultValue: 'EduCV')

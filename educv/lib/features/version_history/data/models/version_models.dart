@@ -33,7 +33,8 @@ class CVVersionModel {
       changeSummary: json['change_summary'] ?? '',
       cvData: json['cv_data'] ?? {},
       changedBy: json['changed_by']?['full_name'],
-      changedAt: DateTime.parse(json['changed_at'] ?? DateTime.now().toIso8601String()),
+      changedAt: DateTime.parse(
+          json['changed_at'] ?? DateTime.now().toIso8601String()),
       ipAddress: json['ip_address'],
       dataSize: json['data_size'] ?? 0,
       fieldsChanged: List<String>.from(json['fields_changed'] ?? []),
@@ -66,7 +67,8 @@ class VersionDiffModel {
       fieldPath: json['field_path'] ?? '',
       oldValue: json['old_value'],
       newValue: json['new_value'],
-      createdAt: DateTime.parse(json['created_at'] ?? DateTime.now().toIso8601String()),
+      createdAt: DateTime.parse(
+          json['created_at'] ?? DateTime.now().toIso8601String()),
     );
   }
 }
@@ -89,8 +91,9 @@ class VersionComparisonModel {
       fromVersion: CVVersionModel.fromJson(json['from_version'] ?? {}),
       toVersion: CVVersionModel.fromJson(json['to_version'] ?? {}),
       differences: (json['differences'] as List<dynamic>?)
-          ?.map((d) => VersionDiffModel.fromJson(d))
-          .toList() ?? [],
+              ?.map((d) => VersionDiffModel.fromJson(d))
+              .toList() ??
+          [],
       summary: json['summary'] ?? {},
     );
   }
@@ -121,8 +124,9 @@ class VersionStatsModel {
       totalSizeMb: (json['total_size_mb'] ?? 0.0).toDouble(),
       changeTypes: Map<String, int>.from(json['change_types'] ?? {}),
       recentActivity: (json['recent_activity'] as List<dynamic>?)
-          ?.map((v) => CVVersionModel.fromJson(v))
-          .toList() ?? [],
+              ?.map((v) => CVVersionModel.fromJson(v))
+              .toList() ??
+          [],
     );
   }
 }

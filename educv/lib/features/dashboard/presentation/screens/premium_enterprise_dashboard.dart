@@ -10,14 +10,15 @@ class PremiumEnterpriseDashboard extends StatefulWidget {
   const PremiumEnterpriseDashboard({super.key});
 
   @override
-  State<PremiumEnterpriseDashboard> createState() => _PremiumEnterpriseDashboardState();
+  State<PremiumEnterpriseDashboard> createState() =>
+      _PremiumEnterpriseDashboardState();
 }
 
 class _PremiumEnterpriseDashboardState extends State<PremiumEnterpriseDashboard>
     with TickerProviderStateMixin {
   bool _isSidebarCollapsed = false;
   String _currentRoute = '/dashboard';
-  
+
   late AnimationController _pageController;
   late AnimationController _staggerController;
   late Animation<double> _pageAnimation;
@@ -36,10 +37,12 @@ class _PremiumEnterpriseDashboardState extends State<PremiumEnterpriseDashboard>
     );
 
     _pageAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _pageController, curve: PremiumSaaSTheme.curveEmphasized),
+      CurvedAnimation(
+          parent: _pageController, curve: PremiumSaaSTheme.curveEmphasized),
     );
     _staggerAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _staggerController, curve: PremiumSaaSTheme.curveDefault),
+      CurvedAnimation(
+          parent: _staggerController, curve: PremiumSaaSTheme.curveDefault),
     );
 
     _pageController.forward();
@@ -71,7 +74,8 @@ class _PremiumEnterpriseDashboardState extends State<PremiumEnterpriseDashboard>
           children: [
             PremiumEnterpriseSidebar(
               isCollapsed: _isSidebarCollapsed,
-              onToggle: () => setState(() => _isSidebarCollapsed = !_isSidebarCollapsed),
+              onToggle: () =>
+                  setState(() => _isSidebarCollapsed = !_isSidebarCollapsed),
               currentRoute: _currentRoute,
               onNavigate: (route) => setState(() => _currentRoute = route),
             ),
@@ -156,30 +160,31 @@ class _PremiumEnterpriseDashboardState extends State<PremiumEnterpriseDashboard>
                 delay: 0,
                 child: PremiumHeroSection(
                   greeting: 'Good afternoon, William 👋',
-                  subtitle: 'Your CV is looking great! Let\'s make it even better with AI-powered insights and optimizations.',
+                  subtitle:
+                      'Your CV is looking great! Let\'s make it even better with AI-powered insights and optimizations.',
                   completionProgress: 0.85,
                   onActionPressed: () {},
                 ),
               ),
-              
+
               SizedBox(height: PremiumSaaSTheme.space8),
-              
+
               // Analytics & AI Insights Section
               _buildAnimatedSection(
                 delay: 200,
                 child: _buildAnalyticsSection(),
               ),
-              
+
               SizedBox(height: PremiumSaaSTheme.space8),
-              
+
               // Quick Actions & Activity Section
               _buildAnimatedSection(
                 delay: 400,
                 child: _buildQuickActionsAndActivity(),
               ),
-              
+
               SizedBox(height: PremiumSaaSTheme.space8),
-              
+
               // Recent Downloads Table
               _buildAnimatedSection(
                 delay: 600,
@@ -330,7 +335,7 @@ class _PremiumEnterpriseDashboardState extends State<PremiumEnterpriseDashboard>
             ],
           );
         }
-        
+
         return Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -371,7 +376,8 @@ class _PremiumEnterpriseDashboardState extends State<PremiumEnterpriseDashboard>
               children: [
                 PremiumActionCard(
                   title: 'Complete Your Profile',
-                  description: 'Add missing sections to boost your CV strength by 15%',
+                  description:
+                      'Add missing sections to boost your CV strength by 15%',
                   icon: LucideIcons.userPlus,
                   color: PremiumSaaSTheme.primaryPurple,
                   onTap: () {},
@@ -432,7 +438,8 @@ class _PremiumEnterpriseDashboardState extends State<PremiumEnterpriseDashboard>
                 padding: EdgeInsets.all(PremiumSaaSTheme.space2),
                 decoration: BoxDecoration(
                   gradient: PremiumSaaSTheme.heroGradient,
-                  borderRadius: BorderRadius.circular(PremiumSaaSTheme.radiusMd),
+                  borderRadius:
+                      BorderRadius.circular(PremiumSaaSTheme.radiusMd),
                 ),
                 child: Icon(
                   LucideIcons.brain,
@@ -479,7 +486,8 @@ class _PremiumEnterpriseDashboardState extends State<PremiumEnterpriseDashboard>
     );
   }
 
-  Widget _buildInsightItem(String title, String description, IconData icon, Color color) {
+  Widget _buildInsightItem(
+      String title, String description, IconData icon, Color color) {
     return Container(
       margin: EdgeInsets.only(bottom: PremiumSaaSTheme.space4),
       padding: EdgeInsets.all(PremiumSaaSTheme.space4),
@@ -539,25 +547,29 @@ class _PremiumEnterpriseDashboardState extends State<PremiumEnterpriseDashboard>
       onViewAll: () {},
       rows: [
         [
-          _buildTemplateCell('Academic CV', LucideIcons.graduationCap, PremiumSaaSTheme.primaryPurple),
+          _buildTemplateCell('Academic CV', LucideIcons.graduationCap,
+              PremiumSaaSTheme.primaryPurple),
           Text('16 hours ago', style: PremiumSaaSTheme.bodyMedium),
           _buildStatusBadge('Ready', PremiumSaaSTheme.accentGreen),
           _buildActionButtons(),
         ],
         [
-          _buildTemplateCell('Modern CV', LucideIcons.layout, PremiumSaaSTheme.accentBlue),
+          _buildTemplateCell(
+              'Modern CV', LucideIcons.layout, PremiumSaaSTheme.accentBlue),
           Text('16 hours ago', style: PremiumSaaSTheme.bodyMedium),
           _buildStatusBadge('Ready', PremiumSaaSTheme.accentGreen),
           _buildActionButtons(),
         ],
         [
-          _buildTemplateCell('Classic CV', LucideIcons.fileText, PremiumSaaSTheme.accentTeal),
+          _buildTemplateCell(
+              'Classic CV', LucideIcons.fileText, PremiumSaaSTheme.accentTeal),
           Text('16 hours ago', style: PremiumSaaSTheme.bodyMedium),
           _buildStatusBadge('Ready', PremiumSaaSTheme.accentGreen),
           _buildActionButtons(),
         ],
         [
-          _buildTemplateCell('Academic CV', LucideIcons.graduationCap, PremiumSaaSTheme.primaryPurple),
+          _buildTemplateCell('Academic CV', LucideIcons.graduationCap,
+              PremiumSaaSTheme.primaryPurple),
           Text('19 hours ago', style: PremiumSaaSTheme.bodyMedium),
           _buildStatusBadge('Ready', PremiumSaaSTheme.accentGreen),
           _buildActionButtons(),

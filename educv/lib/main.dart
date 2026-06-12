@@ -9,10 +9,10 @@ import 'app.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Initialize Hive for offline storage
   await Hive.initFlutter();
-  
+
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -30,8 +30,10 @@ Future<void> main() async {
   await SentryFlutter.init(
     (options) {
       // TODO: Add your actual Sentry DSN here
-      options.dsn = const String.fromEnvironment('SENTRY_DSN', defaultValue: '');
-      options.tracesSampleRate = 1.0; // Capture 100% of transactions for performance monitoring
+      options.dsn =
+          const String.fromEnvironment('SENTRY_DSN', defaultValue: '');
+      options.tracesSampleRate =
+          1.0; // Capture 100% of transactions for performance monitoring
     },
     appRunner: () => runApp(
       const ProviderScope(

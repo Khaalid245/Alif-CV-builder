@@ -6,7 +6,8 @@ import '../../../../router/app_router.dart';
 import '../../../notifications/presentation/providers/notification_provider.dart';
 import '../../../notifications/presentation/widgets/notification_badge.dart';
 
-class AppHeaderWithNotifications extends StatelessWidget implements PreferredSizeWidget {
+class AppHeaderWithNotifications extends StatelessWidget
+    implements PreferredSizeWidget {
   final String title;
   final List<Widget>? actions;
   final bool showNotificationBadge;

@@ -65,7 +65,9 @@ class PremiumDarkFeaturesGrid extends StatelessWidget {
                     LayoutBuilder(
                       builder: (context, constraints) {
                         final isDesktop = constraints.maxWidth >= 900;
-                        return isDesktop ? _buildDesktopGrid() : _buildMobileGrid();
+                        return isDesktop
+                            ? _buildDesktopGrid()
+                            : _buildMobileGrid();
                       },
                     ),
                   ],
@@ -272,7 +274,8 @@ class PremiumDarkFeaturesGrid extends StatelessWidget {
     );
   }
 
-  Widget _buildFeatureCard(IconData icon, String title, String description, Color accentColor, int index) {
+  Widget _buildFeatureCard(IconData icon, String title, String description,
+      Color accentColor, int index) {
     return _FeatureCard(
       icon: icon,
       title: title,
@@ -313,15 +316,14 @@ class _FeatureCardState extends State<_FeatureCard> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeOut,
-        transform: Matrix4.identity()
-          ..translate(0.0, _isHovered ? -12.0 : 0.0),
+        transform: Matrix4.identity()..translate(0.0, _isHovered ? -12.0 : 0.0),
         padding: const EdgeInsets.all(32),
         decoration: BoxDecoration(
-          color: _isHovered 
+          color: _isHovered
               ? Colors.white.withValues(alpha: 0.04)
               : Colors.white.withValues(alpha: 0.02),
           border: Border.all(
-            color: _isHovered 
+            color: _isHovered
                 ? widget.accentColor.withValues(alpha: 0.3)
                 : Colors.white.withValues(alpha: 0.08),
             width: _isHovered ? 2 : 1,
@@ -329,7 +331,7 @@ class _FeatureCardState extends State<_FeatureCard> {
           borderRadius: BorderRadius.circular(28),
           boxShadow: [
             BoxShadow(
-              color: _isHovered 
+              color: _isHovered
                   ? widget.accentColor.withValues(alpha: 0.2)
                   : Colors.black.withValues(alpha: 0.1),
               blurRadius: _isHovered ? 32 : 20,
@@ -349,39 +351,44 @@ class _FeatureCardState extends State<_FeatureCard> {
                   width: 64,
                   height: 64,
                   decoration: BoxDecoration(
-                    gradient: _isHovered ? LinearGradient(
-                      colors: [
-                        widget.accentColor,
-                        widget.accentColor.withValues(alpha: 0.8),
-                      ],
-                    ) : LinearGradient(
-                      colors: [
-                        widget.accentColor.withValues(alpha: 0.1),
-                        widget.accentColor.withValues(alpha: 0.05),
-                      ],
-                    ),
+                    gradient: _isHovered
+                        ? LinearGradient(
+                            colors: [
+                              widget.accentColor,
+                              widget.accentColor.withValues(alpha: 0.8),
+                            ],
+                          )
+                        : LinearGradient(
+                            colors: [
+                              widget.accentColor.withValues(alpha: 0.1),
+                              widget.accentColor.withValues(alpha: 0.05),
+                            ],
+                          ),
                     borderRadius: BorderRadius.circular(20),
-                    boxShadow: _isHovered ? [
-                      BoxShadow(
-                        color: widget.accentColor.withValues(alpha: 0.4),
-                        blurRadius: 20,
-                        offset: const Offset(0, 8),
-                      ),
-                    ] : null,
+                    boxShadow: _isHovered
+                        ? [
+                            BoxShadow(
+                              color: widget.accentColor.withValues(alpha: 0.4),
+                              blurRadius: 20,
+                              offset: const Offset(0, 8),
+                            ),
+                          ]
+                        : null,
                   ),
                   child: Icon(
                     widget.icon,
                     size: 28,
-                    color: _isHovered 
-                        ? Colors.white 
-                        : widget.accentColor,
+                    color: _isHovered ? Colors.white : widget.accentColor,
                   ),
-                ).animate(delay: (200 + widget.index * 100).ms)
+                )
+                    .animate(delay: (200 + widget.index * 100).ms)
                     .fadeIn(duration: 600.ms)
-                    .scale(begin: const Offset(0.8, 0.8), end: const Offset(1.0, 1.0)),
-                
+                    .scale(
+                        begin: const Offset(0.8, 0.8),
+                        end: const Offset(1.0, 1.0)),
+
                 const SizedBox(height: 24),
-                
+
                 // Title
                 Text(
                   widget.title,
@@ -391,12 +398,13 @@ class _FeatureCardState extends State<_FeatureCard> {
                     color: Colors.white,
                     height: 1.3,
                   ),
-                ).animate(delay: (300 + widget.index * 100).ms)
+                )
+                    .animate(delay: (300 + widget.index * 100).ms)
                     .fadeIn(duration: 600.ms)
                     .slideY(begin: 0.3, end: 0),
-                
+
                 const SizedBox(height: 12),
-                
+
                 // Description
                 Text(
                   widget.description,
@@ -406,7 +414,8 @@ class _FeatureCardState extends State<_FeatureCard> {
                     color: Colors.white.withValues(alpha: 0.7),
                     height: 1.6,
                   ),
-                ).animate(delay: (400 + widget.index * 100).ms)
+                )
+                    .animate(delay: (400 + widget.index * 100).ms)
                     .fadeIn(duration: 600.ms)
                     .slideY(begin: 0.3, end: 0),
               ],
@@ -414,7 +423,8 @@ class _FeatureCardState extends State<_FeatureCard> {
           ),
         ),
       ),
-    ).animate(delay: (100 + widget.index * 150).ms)
+    )
+        .animate(delay: (100 + widget.index * 150).ms)
         .fadeIn(duration: 800.ms)
         .slideY(begin: 0.3, end: 0);
   }

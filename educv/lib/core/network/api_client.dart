@@ -41,13 +41,13 @@ final dioProvider = Provider<Dio>((ref) {
 
         // TODO: Replace with your actual server's SHA-256 certificate fingerprint
         const validFingerprint = 'YOUR_SHA256_FINGERPRINT_HERE';
-        
+
         if (cert == null) return false;
-        
+
         // Uncomment the following lines when you have your fingerprint:
         // final String actualFingerprint = sha256.convert(cert.der).toString();
         // return actualFingerprint == validFingerprint;
-        
+
         return true; // Temporarily allow all until a fingerprint is provided
       },
     );

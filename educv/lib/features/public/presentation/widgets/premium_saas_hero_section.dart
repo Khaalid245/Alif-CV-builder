@@ -23,14 +23,17 @@ class PremiumSaaSHeroSection extends StatelessWidget {
             _buildAnimatedOrbs(),
             // Main content
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 120),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 24, vertical: 120),
               child: Center(
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 1200),
                   child: LayoutBuilder(
                     builder: (context, constraints) {
                       final isDesktop = constraints.maxWidth >= 900;
-                      return isDesktop ? _buildDesktopLayout() : _buildMobileLayout();
+                      return isDesktop
+                          ? _buildDesktopLayout()
+                          : _buildMobileLayout();
                     },
                   ),
                 ),
@@ -61,14 +64,16 @@ class PremiumSaaSHeroSection extends StatelessWidget {
                 ],
               ),
             ),
-          ).animate(
-            onPlay: (controller) => controller.repeat(reverse: true),
-          ).moveX(
-            begin: 0,
-            end: 50,
-            duration: 8000.ms,
-            curve: Curves.easeInOut,
-          ),
+          )
+              .animate(
+                onPlay: (controller) => controller.repeat(reverse: true),
+              )
+              .moveX(
+                begin: 0,
+                end: 50,
+                duration: 8000.ms,
+                curve: Curves.easeInOut,
+              ),
         ),
         // Bottom-right orb
         Positioned(
@@ -86,14 +91,16 @@ class PremiumSaaSHeroSection extends StatelessWidget {
                 ],
               ),
             ),
-          ).animate(
-            onPlay: (controller) => controller.repeat(reverse: true),
-          ).moveY(
-            begin: 0,
-            end: -30,
-            duration: 6000.ms,
-            curve: Curves.easeInOut,
-          ),
+          )
+              .animate(
+                onPlay: (controller) => controller.repeat(reverse: true),
+              )
+              .moveY(
+                begin: 0,
+                end: -30,
+                duration: 6000.ms,
+                curve: Curves.easeInOut,
+              ),
         ),
       ],
     );
@@ -129,7 +136,8 @@ class PremiumSaaSHeroSection extends StatelessWidget {
 
   Widget _buildLeftContent({required bool isDesktop}) {
     return Column(
-      crossAxisAlignment: isDesktop ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+      crossAxisAlignment:
+          isDesktop ? CrossAxisAlignment.start : CrossAxisAlignment.center,
       children: [
         _buildTrustBadge()
             .animate()
@@ -180,12 +188,14 @@ class PremiumSaaSHeroSection extends StatelessWidget {
               color: Color(0xFF4F46E5),
               shape: BoxShape.circle,
             ),
-          ).animate(
-            onPlay: (controller) => controller.repeat(),
-          ).shimmer(
-            duration: 2000.ms,
-            color: const Color(0xFF4F46E5).withValues(alpha: 0.5),
-          ),
+          )
+              .animate(
+                onPlay: (controller) => controller.repeat(),
+              )
+              .shimmer(
+                duration: 2000.ms,
+                color: const Color(0xFF4F46E5).withValues(alpha: 0.5),
+              ),
           const SizedBox(width: 12),
           Text(
             'OFFICIAL UNIVERSITY PLATFORM',
@@ -321,12 +331,14 @@ class PremiumSaaSHeroSection extends StatelessWidget {
           ),
         ),
       ),
-    ).animate(
-      onPlay: (controller) => controller.repeat(reverse: true),
-    ).shimmer(
-      duration: 3000.ms,
-      color: Colors.white.withValues(alpha: 0.1),
-    );
+    )
+        .animate(
+          onPlay: (controller) => controller.repeat(reverse: true),
+        )
+        .shimmer(
+          duration: 3000.ms,
+          color: Colors.white.withValues(alpha: 0.1),
+        );
   }
 
   Widget _buildSecondaryButton({
@@ -447,9 +459,9 @@ class PremiumSaaSHeroSection extends StatelessWidget {
                 ),
               ),
             ).animate(delay: (index * 100).ms).fadeIn(duration: 600.ms).scale(
-              begin: const Offset(0.8, 0.8),
-              end: const Offset(1.0, 1.0),
-            ),
+                  begin: const Offset(0.8, 0.8),
+                  end: const Offset(1.0, 1.0),
+                ),
           );
         }).toList(),
       ),
@@ -490,14 +502,20 @@ class PremiumSaaSHeroSection extends StatelessWidget {
           _buildDownloadSection(),
         ],
       ),
-    ).animate().fadeIn(duration: 1000.ms, delay: 400.ms).slideX(begin: 0.3, end: 0).then().animate(
-      onPlay: (controller) => controller.repeat(reverse: true),
-    ).moveY(
-      begin: 0,
-      end: -8,
-      duration: 4000.ms,
-      curve: Curves.easeInOut,
-    );
+    )
+        .animate()
+        .fadeIn(duration: 1000.ms, delay: 400.ms)
+        .slideX(begin: 0.3, end: 0)
+        .then()
+        .animate(
+          onPlay: (controller) => controller.repeat(reverse: true),
+        )
+        .moveY(
+          begin: 0,
+          end: -8,
+          duration: 4000.ms,
+          curve: Curves.easeInOut,
+        );
   }
 
   Widget _buildDashboardHeader() {
@@ -635,12 +653,12 @@ class PremiumSaaSHeroSection extends StatelessWidget {
                   borderRadius: BorderRadius.circular(4),
                 ),
               ).animate().scaleX(
-                begin: 0,
-                end: 1,
-                duration: 1000.ms,
-                delay: 800.ms,
-                curve: Curves.easeOutCubic,
-              ),
+                    begin: 0,
+                    end: 1,
+                    duration: 1000.ms,
+                    delay: 800.ms,
+                    curve: Curves.easeOutCubic,
+                  ),
             ),
           ),
         ),

@@ -3,24 +3,43 @@ import '../data/models/cv_intelligence_models.dart';
 
 class LocalHeuristicsEngine {
   static const List<String> _actionVerbs = [
-    'architected', 'spearheaded', 'optimized', 'developed', 'managed',
-    'led', 'created', 'designed', 'implemented', 'improved', 'increased',
-    'reduced', 'delivered', 'launched', 'negotiated', 'resolved', 'transformed',
-    'mentored', 'orchestrated', 'pioneered', 'streamlined', 'integrated'
+    'architected',
+    'spearheaded',
+    'optimized',
+    'developed',
+    'managed',
+    'led',
+    'created',
+    'designed',
+    'implemented',
+    'improved',
+    'increased',
+    'reduced',
+    'delivered',
+    'launched',
+    'negotiated',
+    'resolved',
+    'transformed',
+    'mentored',
+    'orchestrated',
+    'pioneered',
+    'streamlined',
+    'integrated'
   ];
 
   /// Performs a fast, local analysis of the CV profile.
   CVAnalysisModel analyzeCompleteness(CVProfileModel profile) {
     List<RecommendationModel> recommendations = [];
     double totalScore = 100.0;
-    
+
     // 1. Profile Summary Check
     if (profile.summary == null || profile.summary!.length < 50) {
       totalScore -= 10;
       recommendations.add(RecommendationModel(
         id: 'local_summary_short',
         title: 'Expand your Summary',
-        description: 'Your summary is too short. Add at least 3-4 sentences highlighting your core value proposition.',
+        description:
+            'Your summary is too short. Add at least 3-4 sentences highlighting your core value proposition.',
         category: 'critical',
         priority: 'high',
         actionText: 'Edit Summary',
@@ -40,13 +59,14 @@ class LocalHeuristicsEngine {
         }
       }
     }
-    
+
     if (profile.experiences.isNotEmpty && !hasActionVerbs) {
       totalScore -= 15;
       recommendations.add(RecommendationModel(
         id: 'local_action_verbs',
         title: 'Use Action Verbs',
-        description: 'Your experience descriptions are passive. Use strong action verbs like "Spearheaded", "Optimized", or "Delivered".',
+        description:
+            'Your experience descriptions are passive. Use strong action verbs like "Spearheaded", "Optimized", or "Delivered".',
         category: 'important',
         priority: 'high',
         actionText: 'Edit Experience',
@@ -61,7 +81,8 @@ class LocalHeuristicsEngine {
       recommendations.add(RecommendationModel(
         id: 'local_skills_count',
         title: 'Add More Skills',
-        description: 'You have fewer than 5 skills listed. Aim for 8-12 relevant skills to pass ATS filters.',
+        description:
+            'You have fewer than 5 skills listed. Aim for 8-12 relevant skills to pass ATS filters.',
         category: 'suggestions',
         priority: 'medium',
         actionText: 'Add Skills',
@@ -76,7 +97,8 @@ class LocalHeuristicsEngine {
       recommendations.add(RecommendationModel(
         id: 'local_contact_phone',
         title: 'Missing Phone Number',
-        description: 'Recruiters often prefer calling. Make sure your phone number is included.',
+        description:
+            'Recruiters often prefer calling. Make sure your phone number is included.',
         category: 'critical',
         priority: 'high',
         actionText: 'Edit Contact Info',
@@ -92,12 +114,14 @@ class LocalHeuristicsEngine {
       overallScore: totalScore.clamp(0.0, 100.0),
       sectionScores: {
         'profile': SectionScoreModel(
-          score: (profile.summary?.isNotEmpty ?? false) ? 100.0 : 0.0,
-          maxScore: 100.0,
-          weight: 1.0,
-          status: 'good',
-          strengths: [], weaknesses: [], suggestions: [], details: {}
-        ),
+            score: (profile.summary?.isNotEmpty ?? false) ? 100.0 : 0.0,
+            maxScore: 100.0,
+            weight: 1.0,
+            status: 'good',
+            strengths: [],
+            weaknesses: [],
+            suggestions: [],
+            details: {}),
       },
       recommendations: recommendations,
       submissionReadiness: SubmissionReadinessModel(

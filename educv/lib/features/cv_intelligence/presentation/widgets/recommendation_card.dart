@@ -62,8 +62,7 @@ class RecommendationCard extends StatelessWidget {
                 children: [
                   _buildCategoryChip(),
                   const SizedBox(width: AppSpacing.sm),
-                  if (recommendation.isImplemented)
-                    _buildImplementedBadge(),
+                  if (recommendation.isImplemented) _buildImplementedBadge(),
                 ],
               ),
             ],
@@ -76,7 +75,7 @@ class RecommendationCard extends StatelessWidget {
   Widget _buildPriorityIndicator() {
     final color = _getPriorityColor();
     final icon = _getPriorityIcon();
-    
+
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
@@ -211,9 +210,10 @@ class RecommendationCard extends StatelessWidget {
   }
 
   String _formatCategory(String category) {
-    return category.split('_').map((word) => 
-      word[0].toUpperCase() + word.substring(1).toLowerCase()
-    ).join(' ');
+    return category
+        .split('_')
+        .map((word) => word[0].toUpperCase() + word.substring(1).toLowerCase())
+        .join(' ');
   }
 }
 
@@ -290,8 +290,10 @@ class RecommendationsList extends StatelessWidget {
   }
 
   Widget _buildFilters() {
-    final categories = recommendations.map((r) => r.category).toSet().toList()..sort();
-    final priorities = recommendations.map((r) => r.priority).toSet().toList()..sort();
+    final categories = recommendations.map((r) => r.category).toSet().toList()
+      ..sort();
+    final priorities = recommendations.map((r) => r.priority).toSet().toList()
+      ..sort();
 
     return Row(
       children: [
@@ -309,9 +311,9 @@ class RecommendationsList extends StatelessWidget {
                 child: Text('All Categories'),
               ),
               ...categories.map((category) => DropdownMenuItem<String>(
-                value: category,
-                child: Text(_formatCategory(category)),
-              )),
+                    value: category,
+                    child: Text(_formatCategory(category)),
+                  )),
             ],
             onChanged: onCategoryChanged,
           ),
@@ -331,9 +333,9 @@ class RecommendationsList extends StatelessWidget {
                 child: Text('All Priorities'),
               ),
               ...priorities.map((priority) => DropdownMenuItem<String>(
-                value: priority,
-                child: Text(_formatCategory(priority)),
-              )),
+                    value: priority,
+                    child: Text(_formatCategory(priority)),
+                  )),
             ],
             onChanged: onPriorityChanged,
           ),
@@ -363,8 +365,9 @@ class RecommendationsList extends StatelessWidget {
   }
 
   String _formatCategory(String category) {
-    return category.split('_').map((word) => 
-      word[0].toUpperCase() + word.substring(1).toLowerCase()
-    ).join(' ');
+    return category
+        .split('_')
+        .map((word) => word[0].toUpperCase() + word.substring(1).toLowerCase())
+        .join(' ');
   }
 }

@@ -30,11 +30,13 @@ class ScoreProgressionWidget extends ConsumerWidget {
         final hasData = data['has_data'] as bool? ?? false;
         if (!hasData) return _buildNoHistoryState();
 
-        final snapshots = (data['snapshots'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+        final snapshots =
+            (data['snapshots'] as List?)?.cast<Map<String, dynamic>>() ?? [];
         if (snapshots.isEmpty) return _buildNoHistoryState();
 
         final trend = data['trend'] as String? ?? 'stable';
-        final totalImprovement = (data['total_improvement'] as num?)?.toDouble() ?? 0;
+        final totalImprovement =
+            (data['total_improvement'] as num?)?.toDouble() ?? 0;
         final firstScore = (data['first_score'] as num?)?.toDouble() ?? 0;
         final latestScore = (data['latest_score'] as num?)?.toDouble() ?? 0;
         final totalAnalyses = data['total_analyses'] as int? ?? 0;
@@ -126,8 +128,8 @@ class ScoreProgressionWidget extends ConsumerWidget {
                   decoration: BoxDecoration(
                     color: trendColor.withOpacity(0.12),
                     borderRadius: BorderRadius.circular(20),
-                    border:
-                        Border.all(color: trendColor.withOpacity(0.3), width: 1),
+                    border: Border.all(
+                        color: trendColor.withOpacity(0.3), width: 1),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -226,8 +228,7 @@ class ScoreProgressionWidget extends ConsumerWidget {
                         color: AppColors.textPrimary),
                   ),
                   TextSpan(
-                    text:
-                        ' ($sign${totalImprovement.toStringAsFixed(1)} pts)',
+                    text: ' ($sign${totalImprovement.toStringAsFixed(1)} pts)',
                     style: TextStyle(
                       color: color,
                       fontWeight: FontWeight.bold,
@@ -253,8 +254,8 @@ class ScoreProgressionWidget extends ConsumerWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final barWidth =
-            (constraints.maxWidth - (snapshots.length - 1) * 8) / snapshots.length;
+        final barWidth = (constraints.maxWidth - (snapshots.length - 1) * 8) /
+            snapshots.length;
 
         return Row(
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -281,7 +282,8 @@ class ScoreProgressionWidget extends ConsumerWidget {
 
             return Expanded(
               child: Padding(
-                padding: EdgeInsets.only(right: i < snapshots.length - 1 ? 8 : 0),
+                padding:
+                    EdgeInsets.only(right: i < snapshots.length - 1 ? 8 : 0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -435,8 +437,18 @@ class ScoreProgressionWidget extends ConsumerWidget {
     try {
       final dt = DateTime.parse(iso).toLocal();
       const months = [
-        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec'
       ];
       return '${months[dt.month - 1]} ${dt.day}';
     } catch (_) {

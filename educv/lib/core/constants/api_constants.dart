@@ -4,9 +4,8 @@ class ApiConstants {
   static String get baseUrl {
     try {
       const buildTimeUrl = String.fromEnvironment('API_BASE_URL');
-      final url =
-          buildTimeUrl.isNotEmpty ? buildTimeUrl : Env.apiBaseUrl;
-      
+      final url = buildTimeUrl.isNotEmpty ? buildTimeUrl : Env.apiBaseUrl;
+
       // CRITICAL: Fail fast if API URL is not configured
       if (url == null || url.isEmpty) {
         throw Exception(
@@ -16,15 +15,14 @@ class ApiConstants {
           'Production: https://api.yourdomain.com/api/v1',
         );
       }
-      
+
       // Validate that URL is not localhost in production
       if (_isProductionEnvironment && url.contains('localhost')) {
         throw Exception(
-          'FATAL: localhost URL detected in production environment. '
-          'Please update API_BASE_URL to your production server URL.'
-        );
+            'FATAL: localhost URL detected in production environment. '
+            'Please update API_BASE_URL to your production server URL.');
       }
-      
+
       return url;
     } catch (e) {
       // Fallback for development
@@ -36,9 +34,7 @@ class ApiConstants {
   // Helper to check if running in production
   static bool get _isProductionEnvironment {
     const buildTimeEnv = String.fromEnvironment('ENVIRONMENT');
-    final env = buildTimeEnv.isNotEmpty
-        ? buildTimeEnv
-        : Env.environment;
+    final env = buildTimeEnv.isNotEmpty ? buildTimeEnv : Env.environment;
     return env.toLowerCase() == 'production';
   }
 
@@ -75,7 +71,8 @@ class ApiConstants {
   static const String cvScore = '/cv/score/';
   static const String cvDashboard = '/cv/dashboard/';
   static const String cvAnalysisHistory = '/cv/analysis/history/';
-  static String cvAnalysisHistoryDetail(String historyId) => '/cv/analysis/history/$historyId/';
+  static String cvAnalysisHistoryDetail(String historyId) =>
+      '/cv/analysis/history/$historyId/';
   static const String cvBenchmarking = '/cv/benchmarking/';
   static const String cvExportAnalysis = '/cv/export-analysis/';
   static const String cvRoles = '/cv/roles/';
@@ -83,18 +80,21 @@ class ApiConstants {
 
   // CV Intelligence - Legacy endpoints for backward compatibility
   static const String cvIntelligenceAnalysisHistory = '/cv/analysis/history/';
-  static String cvIntelligenceAnalysisHistoryDetail(String historyId) => '/cv/analysis/history/$historyId/';
+  static String cvIntelligenceAnalysisHistoryDetail(String historyId) =>
+      '/cv/analysis/history/$historyId/';
 
   // Workflow Control System
   static const String workflowInstances = '/workflow/instances/';
   static const String workflowConfigurations = '/workflow/configurations/';
-  static String workflowTransition(String instanceId) => '/workflow/instances/$instanceId/transition/';
+  static String workflowTransition(String instanceId) =>
+      '/workflow/instances/$instanceId/transition/';
   static String workflowCV(String cvId) => '/workflow/cv/$cvId/';
   static const String workflowDashboard = '/workflow/dashboard/';
 
   // Version History
   static const String versionHistory = '/version-history/versions/';
-  static String versionDetail(String versionId) => '/version-history/versions/$versionId/';
+  static String versionDetail(String versionId) =>
+      '/version-history/versions/$versionId/';
   static const String versionCompare = '/version-history/compare/';
   static const String versionRestore = '/version-history/restore/';
   static const String versionStats = '/version-history/stats/';
@@ -121,33 +121,42 @@ class ApiConstants {
   static const String createSnapshot = '/analytics/snapshots/create/';
   static const String trendAnalysis = '/analytics/trend-analysis/';
   static const String benchmarking = '/analytics/benchmarking/';
-  static const String completionStatistics = '/analytics/completion-statistics/';
+  static const String completionStatistics =
+      '/analytics/completion-statistics/';
 
   // Notifications
   static const String notifications = '/notifications/';
   static const String notificationStats = '/notifications/stats/';
   static const String notificationPreferences = '/notifications/preferences/';
-  static String markNotificationRead(String id) => '/notifications/$id/mark_read/';
-  static const String markMultipleNotificationsRead = '/notifications/mark_multiple_read/';
+  static String markNotificationRead(String id) =>
+      '/notifications/$id/mark_read/';
+  static const String markMultipleNotificationsRead =
+      '/notifications/mark_multiple_read/';
 
   // Template Engine
   static const String templateIndustries = '/templates/industries/';
   static const String templateRoles = '/templates/roles/';
   static const String templateCategories = '/templates/categories/';
   static const String templates = '/templates/templates/';
-  static const String templateRecommendations = '/templates/templates/recommendations/';
+  static const String templateRecommendations =
+      '/templates/templates/recommendations/';
   static const String templatePopular = '/templates/templates/popular/';
   static const String templatePreferences = '/templates/preferences/';
   static String templateDetail(String slug) => '/templates/templates/$slug/';
-  static String templatePreview(String slug) => '/templates/templates/$slug/preview/';
-  static String templateRender(String slug) => '/templates/templates/$slug/render/';
-  static String templateFavorite(String slug) => '/templates/templates/$slug/favorite/';
-  static String templateUnfavorite(String slug) => '/templates/templates/$slug/unfavorite/';
+  static String templatePreview(String slug) =>
+      '/templates/templates/$slug/preview/';
+  static String templateRender(String slug) =>
+      '/templates/templates/$slug/render/';
+  static String templateFavorite(String slug) =>
+      '/templates/templates/$slug/favorite/';
+  static String templateUnfavorite(String slug) =>
+      '/templates/templates/$slug/unfavorite/';
 
   // Template Engine - Additional constants
   static const String industries = '/templates/industries/';
   static const String roles = '/templates/roles/';
   static const String categories = '/templates/categories/';
-  static const String recommendedTemplates = '/templates/templates/recommendations/';
+  static const String recommendedTemplates =
+      '/templates/templates/recommendations/';
   static const String popularTemplates = '/templates/templates/popular/';
 }

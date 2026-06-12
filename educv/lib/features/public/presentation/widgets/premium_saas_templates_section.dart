@@ -14,11 +14,12 @@ class PremiumSaaSTemplatesSection extends StatefulWidget {
   const PremiumSaaSTemplatesSection({super.key});
 
   @override
-  State<PremiumSaaSTemplatesSection> createState() => _PremiumSaaSTemplatesSectionState();
+  State<PremiumSaaSTemplatesSection> createState() =>
+      _PremiumSaaSTemplatesSectionState();
 }
 
-class _PremiumSaaSTemplatesSectionState extends State<PremiumSaaSTemplatesSection>
-    with TickerProviderStateMixin {
+class _PremiumSaaSTemplatesSectionState
+    extends State<PremiumSaaSTemplatesSection> with TickerProviderStateMixin {
   int _selectedIndex = 0;
   late AnimationController _infoController;
   late AnimationController _previewController;
@@ -255,25 +256,27 @@ class _TemplateTabState extends State<_TemplateTab> {
           curve: Curves.easeOut,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           decoration: BoxDecoration(
-            color: widget.isSelected 
+            color: widget.isSelected
                 ? Colors.white.withValues(alpha: 0.05)
-                : _isHovered 
+                : _isHovered
                     ? Colors.white.withValues(alpha: 0.02)
                     : Colors.transparent,
             border: Border.all(
-              color: widget.isSelected 
+              color: widget.isSelected
                   ? const Color(0xFF4F46E5)
                   : Colors.white.withValues(alpha: 0.1),
               width: widget.isSelected ? 2 : 1,
             ),
             borderRadius: BorderRadius.circular(20),
-            boxShadow: widget.isSelected ? [
-              BoxShadow(
-                color: const Color(0xFF4F46E5).withValues(alpha: 0.3),
-                blurRadius: 20,
-                offset: const Offset(0, 8),
-              ),
-            ] : null,
+            boxShadow: widget.isSelected
+                ? [
+                    BoxShadow(
+                      color: const Color(0xFF4F46E5).withValues(alpha: 0.3),
+                      blurRadius: 20,
+                      offset: const Offset(0, 8),
+                    ),
+                  ]
+                : null,
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(20),
@@ -303,7 +306,8 @@ class _TemplateTabState extends State<_TemplateTab> {
                   if (widget.template.isPopular) ...[
                     const SizedBox(width: 12),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
                           colors: [Color(0xFF4F46E5), Color(0xFF7C3AED)],
@@ -407,9 +411,11 @@ class _InfoPanel extends StatelessWidget {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 16, vertical: 8),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFF4F46E5).withValues(alpha: 0.1),
+                                  color: const Color(0xFF4F46E5)
+                                      .withValues(alpha: 0.1),
                                   border: Border.all(
-                                    color: const Color(0xFF4F46E5).withValues(alpha: 0.2),
+                                    color: const Color(0xFF4F46E5)
+                                        .withValues(alpha: 0.2),
                                   ),
                                   borderRadius: BorderRadius.circular(16),
                                 ),
@@ -449,7 +455,8 @@ class _InfoPanel extends StatelessWidget {
                                       width: 24,
                                       height: 24,
                                       decoration: BoxDecoration(
-                                        color: const Color(0xFF10B981).withValues(alpha: 0.1),
+                                        color: const Color(0xFF10B981)
+                                            .withValues(alpha: 0.1),
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: const Icon(
@@ -465,7 +472,8 @@ class _InfoPanel extends StatelessWidget {
                                         style: TextStyle(
                                           fontSize: 15,
                                           fontWeight: FontWeight.w400,
-                                          color: Colors.white.withValues(alpha: 0.8),
+                                          color: Colors.white
+                                              .withValues(alpha: 0.8),
                                           height: 1.5,
                                         ),
                                       ),
@@ -532,12 +540,14 @@ class _InfoPanel extends StatelessWidget {
           ),
         ),
       ),
-    ).animate(
-      onPlay: (controller) => controller.repeat(reverse: true),
-    ).shimmer(
-      duration: 3000.ms,
-      color: Colors.white.withValues(alpha: 0.1),
-    );
+    )
+        .animate(
+          onPlay: (controller) => controller.repeat(reverse: true),
+        )
+        .shimmer(
+          duration: 3000.ms,
+          color: Colors.white.withValues(alpha: 0.1),
+        );
   }
 }
 
@@ -582,7 +592,8 @@ class _PreviewPanel extends StatelessWidget {
                 top: 0,
                 left: 0,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: const Color(0xFF4F46E5).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),

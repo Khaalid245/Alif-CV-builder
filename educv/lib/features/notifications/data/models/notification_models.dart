@@ -42,9 +42,12 @@ class NotificationModel {
       channel: json['channel'] ?? '',
       priority: json['priority'] ?? 'normal',
       status: json['status'] ?? 'pending',
-      createdAt: DateTime.parse(json['created_at'] ?? DateTime.now().toIso8601String()),
+      createdAt: DateTime.parse(
+          json['created_at'] ?? DateTime.now().toIso8601String()),
       sentAt: json['sent_at'] != null ? DateTime.parse(json['sent_at']) : null,
-      deliveredAt: json['delivered_at'] != null ? DateTime.parse(json['delivered_at']) : null,
+      deliveredAt: json['delivered_at'] != null
+          ? DateTime.parse(json['delivered_at'])
+          : null,
       readAt: json['read_at'] != null ? DateTime.parse(json['read_at']) : null,
       contextData: json['context_data'] ?? {},
       emailSubject: json['email_subject'],
@@ -80,12 +83,16 @@ class NotificationStatsModel {
     return NotificationStatsModel(
       totalNotifications: json['total_notifications'] ?? 0,
       unreadNotifications: json['unread_notifications'] ?? 0,
-      notificationsByType: Map<String, int>.from(json['notifications_by_type'] ?? {}),
-      notificationsByChannel: Map<String, int>.from(json['notifications_by_channel'] ?? {}),
-      notificationsByStatus: Map<String, int>.from(json['notifications_by_status'] ?? {}),
+      notificationsByType:
+          Map<String, int>.from(json['notifications_by_type'] ?? {}),
+      notificationsByChannel:
+          Map<String, int>.from(json['notifications_by_channel'] ?? {}),
+      notificationsByStatus:
+          Map<String, int>.from(json['notifications_by_status'] ?? {}),
       recentNotifications: (json['recent_notifications'] as List<dynamic>?)
-          ?.map((n) => NotificationModel.fromJson(n))
-          .toList() ?? [],
+              ?.map((n) => NotificationModel.fromJson(n))
+              .toList() ??
+          [],
     );
   }
 }
@@ -182,14 +189,18 @@ class NotificationPreferencesModel {
   }) {
     return NotificationPreferencesModel(
       id: id,
-      emailNotificationsEnabled: emailNotificationsEnabled ?? this.emailNotificationsEnabled,
-      inAppNotificationsEnabled: inAppNotificationsEnabled ?? this.inAppNotificationsEnabled,
+      emailNotificationsEnabled:
+          emailNotificationsEnabled ?? this.emailNotificationsEnabled,
+      inAppNotificationsEnabled:
+          inAppNotificationsEnabled ?? this.inAppNotificationsEnabled,
       cvUpdatesEmail: cvUpdatesEmail ?? this.cvUpdatesEmail,
       cvUpdatesInApp: cvUpdatesInApp ?? this.cvUpdatesInApp,
       workflowChangesEmail: workflowChangesEmail ?? this.workflowChangesEmail,
       workflowChangesInApp: workflowChangesInApp ?? this.workflowChangesInApp,
-      systemNotificationsEmail: systemNotificationsEmail ?? this.systemNotificationsEmail,
-      systemNotificationsInApp: systemNotificationsInApp ?? this.systemNotificationsInApp,
+      systemNotificationsEmail:
+          systemNotificationsEmail ?? this.systemNotificationsEmail,
+      systemNotificationsInApp:
+          systemNotificationsInApp ?? this.systemNotificationsInApp,
       securityAlertsEmail: securityAlertsEmail ?? this.securityAlertsEmail,
       securityAlertsInApp: securityAlertsInApp ?? this.securityAlertsInApp,
       digestFrequency: digestFrequency ?? this.digestFrequency,

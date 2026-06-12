@@ -21,19 +21,19 @@ class TemplateFeaturesWidget extends StatelessWidget {
           // Template overview
           _buildOverviewCard(),
           const SizedBox(height: 16),
-          
+
           // Key features
           _buildFeaturesCard(),
           const SizedBox(height: 16),
-          
+
           // Layout details
           _buildLayoutCard(),
           const SizedBox(height: 16),
-          
+
           // Compatibility
           _buildCompatibilityCard(),
           const SizedBox(height: 16),
-          
+
           // Industries and roles
           if (template.industries.isNotEmpty || template.roles.isNotEmpty)
             _buildTargetingCard(),
@@ -63,7 +63,7 @@ class TemplateFeaturesWidget extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            
+
             if (template.description?.isNotEmpty == true) ...[
               Text(
                 template.description!,
@@ -75,7 +75,7 @@ class TemplateFeaturesWidget extends StatelessWidget {
               ),
               const SizedBox(height: 16),
             ],
-            
+
             // Template metadata
             Row(
               children: [
@@ -100,7 +100,7 @@ class TemplateFeaturesWidget extends StatelessWidget {
 
   Widget _buildFeaturesCard() {
     final features = _getTemplateFeatures();
-    
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -121,30 +121,29 @@ class TemplateFeaturesWidget extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            
             ...features.map((feature) => Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Icon(
-                    LucideIcons.check,
-                    size: 16,
-                    color: Colors.green[600],
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      feature,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[700],
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(
+                        LucideIcons.check,
+                        size: 16,
+                        color: Colors.green[600],
                       ),
-                    ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          feature,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            )),
+                )),
           ],
         ),
       ),
@@ -172,7 +171,6 @@ class TemplateFeaturesWidget extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            
             Row(
               children: [
                 Expanded(
@@ -193,7 +191,6 @@ class TemplateFeaturesWidget extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            
             Row(
               children: [
                 Expanded(
@@ -240,7 +237,6 @@ class TemplateFeaturesWidget extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            
             Wrap(
               spacing: 12,
               runSpacing: 8,
@@ -294,7 +290,6 @@ class TemplateFeaturesWidget extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            
             if (template.industries.isNotEmpty) ...[
               Text(
                 'Industries',
@@ -308,18 +303,19 @@ class TemplateFeaturesWidget extends StatelessWidget {
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
-                children: template.industries.map((industry) => Chip(
-                  label: Text(
-                    industry.name,
-                    style: const TextStyle(fontSize: 12),
-                  ),
-                  backgroundColor: Colors.blue[50],
-                  side: BorderSide(color: Colors.blue[200]!),
-                )).toList(),
+                children: template.industries
+                    .map((industry) => Chip(
+                          label: Text(
+                            industry.name,
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                          backgroundColor: Colors.blue[50],
+                          side: BorderSide(color: Colors.blue[200]!),
+                        ))
+                    .toList(),
               ),
               const SizedBox(height: 16),
             ],
-            
             if (template.roles.isNotEmpty) ...[
               Text(
                 'Job Roles',
@@ -333,14 +329,16 @@ class TemplateFeaturesWidget extends StatelessWidget {
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
-                children: template.roles.map((role) => Chip(
-                  label: Text(
-                    role.name,
-                    style: const TextStyle(fontSize: 12),
-                  ),
-                  backgroundColor: Colors.green[50],
-                  side: BorderSide(color: Colors.green[200]!),
-                )).toList(),
+                children: template.roles
+                    .map((role) => Chip(
+                          label: Text(
+                            role.name,
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                          backgroundColor: Colors.green[50],
+                          side: BorderSide(color: Colors.green[200]!),
+                        ))
+                    .toList(),
               ),
             ],
           ],

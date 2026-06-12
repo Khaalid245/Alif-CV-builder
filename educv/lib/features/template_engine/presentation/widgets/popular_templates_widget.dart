@@ -67,7 +67,7 @@ class _PopularTemplatesWidgetState extends State<PopularTemplatesWidget> {
               ],
             ),
             const SizedBox(height: 8),
-            
+
             Text(
               'Most used templates in the last 30 days',
               style: TextStyle(
@@ -76,7 +76,7 @@ class _PopularTemplatesWidgetState extends State<PopularTemplatesWidget> {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Templates grid
             GridView.builder(
               shrinkWrap: true,
@@ -98,7 +98,7 @@ class _PopularTemplatesWidgetState extends State<PopularTemplatesWidget> {
                       onFavorite: () => provider.toggleFavorite(template),
                       onPreview: () => _previewTemplate(template),
                     ),
-                    
+
                     // Popularity rank badge
                     if (index < 3)
                       Positioned(
@@ -128,7 +128,7 @@ class _PopularTemplatesWidgetState extends State<PopularTemplatesWidget> {
                 );
               },
             ),
-            
+
             if (provider.isLoading)
               const Padding(
                 padding: EdgeInsets.all(16),

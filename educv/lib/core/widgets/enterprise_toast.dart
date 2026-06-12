@@ -24,7 +24,7 @@ class EnterpriseToast {
 
     _isShowing = true;
     final overlay = Overlay.of(context);
-    
+
     _currentToast = OverlayEntry(
       builder: (context) => _ToastWidget(
         message: message,
@@ -232,7 +232,8 @@ class _ToastWidgetState extends State<_ToastWidget>
                             height: 16,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
                             ),
                           )
                         : Icon(
@@ -241,9 +242,9 @@ class _ToastWidgetState extends State<_ToastWidget>
                             size: 18,
                           ),
                   ),
-                  
+
                   const SizedBox(width: AppSpacing.md),
-                  
+
                   // Message
                   Expanded(
                     child: Text(
@@ -254,9 +255,10 @@ class _ToastWidgetState extends State<_ToastWidget>
                       ),
                     ),
                   ),
-                  
+
                   // Action Button
-                  if (widget.actionLabel != null && widget.onAction != null) ...[
+                  if (widget.actionLabel != null &&
+                      widget.onAction != null) ...[
                     const SizedBox(width: AppSpacing.sm),
                     TextButton(
                       onPressed: () {
@@ -271,7 +273,8 @@ class _ToastWidgetState extends State<_ToastWidget>
                           vertical: AppSpacing.sm,
                         ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusBtn),
+                          borderRadius:
+                              BorderRadius.circular(AppSpacing.radiusBtn),
                         ),
                       ),
                       child: Text(
@@ -283,7 +286,7 @@ class _ToastWidgetState extends State<_ToastWidget>
                       ),
                     ),
                   ],
-                  
+
                   // Close Button
                   if (widget.type != ToastType.loading) ...[
                     const SizedBox(width: AppSpacing.sm),
@@ -346,20 +349,28 @@ class _ToastWidgetState extends State<_ToastWidget>
 
 // Convenience extension for easy access
 extension ToastExtension on BuildContext {
-  void showSuccessToast(String message, {String? actionLabel, VoidCallback? onAction}) {
-    EnterpriseToast.success(this, message, actionLabel: actionLabel, onAction: onAction);
+  void showSuccessToast(String message,
+      {String? actionLabel, VoidCallback? onAction}) {
+    EnterpriseToast.success(this, message,
+        actionLabel: actionLabel, onAction: onAction);
   }
 
-  void showErrorToast(String message, {String? actionLabel, VoidCallback? onAction}) {
-    EnterpriseToast.error(this, message, actionLabel: actionLabel, onAction: onAction);
+  void showErrorToast(String message,
+      {String? actionLabel, VoidCallback? onAction}) {
+    EnterpriseToast.error(this, message,
+        actionLabel: actionLabel, onAction: onAction);
   }
 
-  void showWarningToast(String message, {String? actionLabel, VoidCallback? onAction}) {
-    EnterpriseToast.warning(this, message, actionLabel: actionLabel, onAction: onAction);
+  void showWarningToast(String message,
+      {String? actionLabel, VoidCallback? onAction}) {
+    EnterpriseToast.warning(this, message,
+        actionLabel: actionLabel, onAction: onAction);
   }
 
-  void showInfoToast(String message, {String? actionLabel, VoidCallback? onAction}) {
-    EnterpriseToast.info(this, message, actionLabel: actionLabel, onAction: onAction);
+  void showInfoToast(String message,
+      {String? actionLabel, VoidCallback? onAction}) {
+    EnterpriseToast.info(this, message,
+        actionLabel: actionLabel, onAction: onAction);
   }
 
   void showLoadingToast(String message) {

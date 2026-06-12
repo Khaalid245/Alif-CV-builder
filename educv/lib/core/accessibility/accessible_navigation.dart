@@ -38,7 +38,8 @@ class AccessibleAppBar extends StatelessWidget implements PreferredSizeWidget {
                   color: AccessibleColors.textPrimaryAccessible,
                 ),
                 onPressed: onBackPressed ?? () => Navigator.of(context).pop(),
-                focusColor: AccessibleColors.focusIndicatorHigh.withValues(alpha: 0.1),
+                focusColor:
+                    AccessibleColors.focusIndicatorHigh.withValues(alpha: 0.1),
                 hoverColor: AccessibleColors.hoverAccessible,
               ),
             )
@@ -169,7 +170,7 @@ class _AccessibleListItemState extends State<AccessibleListItem> {
                         // Leading widget
                         widget.leading,
                         const SizedBox(width: AppSpacing.md),
-                        
+
                         // Content
                         Expanded(
                           child: Column(
@@ -190,7 +191,8 @@ class _AccessibleListItemState extends State<AccessibleListItem> {
                                   widget.subtitle!,
                                   style: AppTypography.bodySmall.copyWith(
                                     color: widget.enabled
-                                        ? AccessibleColors.textSecondaryAccessible
+                                        ? AccessibleColors
+                                            .textSecondaryAccessible
                                         : AccessibleColors.disabledAccessible,
                                   ),
                                 ),
@@ -198,7 +200,7 @@ class _AccessibleListItemState extends State<AccessibleListItem> {
                             ],
                           ),
                         ),
-                        
+
                         // Trailing widget
                         if (widget.trailing != null) ...[
                           const SizedBox(width: AppSpacing.sm),
@@ -211,7 +213,7 @@ class _AccessibleListItemState extends State<AccessibleListItem> {
               ),
             ),
           ),
-          
+
           // Divider
           if (widget.showDivider)
             Container(
@@ -391,7 +393,9 @@ class AccessibleNavigationRail extends StatelessWidget {
           onDestinationSelected?.call(index);
           AccessibilityAnnouncements.announceNavigation(
             context,
-            destinations[index].label is Widget ? (destinations[index].label as Widget).toString() : destinations[index].label.toString(),
+            destinations[index].label is Widget
+                ? (destinations[index].label as Widget).toString()
+                : destinations[index].label.toString(),
           );
         },
         destinations: destinations.map((dest) {
@@ -405,7 +409,9 @@ class AccessibleNavigationRail extends StatelessWidget {
               child: dest.selectedIcon ?? dest.icon,
             ),
             label: Text(
-              dest.label is Widget ? (dest.label as Widget).toString() : dest.label.toString(),
+              dest.label is Widget
+                  ? (dest.label as Widget).toString()
+                  : dest.label.toString(),
               style: TextStyle(
                 color: AccessibleColors.textPrimaryAccessible,
               ),

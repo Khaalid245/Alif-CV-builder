@@ -25,15 +25,15 @@ class RoleBasedWorkflowWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
-    
+
     if (!authState.isAuthenticated) {
       return fallback ?? _buildUnauthorizedWidget();
     }
 
     final userRole = authState.user?.role ?? 'student';
-    final hasPermission = requiredRoles.isEmpty || 
-                         requiredRoles.contains(userRole) ||
-                         userRole == 'admin'; // Admin has all permissions
+    final hasPermission = requiredRoles.isEmpty ||
+        requiredRoles.contains(userRole) ||
+        userRole == 'admin'; // Admin has all permissions
 
     return hasPermission ? child : (fallback ?? _buildUnauthorizedWidget());
   }
@@ -81,15 +81,15 @@ class WorkflowPermissionChecker extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
-    
+
     if (!authState.isAuthenticated) {
       return builder(false);
     }
 
     final userRole = authState.user?.role ?? 'student';
-    final hasPermission = transition.allowedRoles.isEmpty || 
-                         transition.allowedRoles.contains(userRole) ||
-                         userRole == 'admin';
+    final hasPermission = transition.allowedRoles.isEmpty ||
+        transition.allowedRoles.contains(userRole) ||
+        userRole == 'admin';
 
     return builder(hasPermission);
   }
@@ -97,7 +97,9 @@ class WorkflowPermissionChecker extends ConsumerWidget {
 
 class ConditionalWorkflowActions extends ConsumerWidget {
   final List<WorkflowTransitionModel> transitions;
-  final Function(String transitionId, String? comment, Map<String, dynamic>? metadata)? onTransition;
+  final Function(
+          String transitionId, String? comment, Map<String, dynamic>? metadata)?
+      onTransition;
   final bool isLoading;
 
   const ConditionalWorkflowActions({
@@ -110,17 +112,18 @@ class ConditionalWorkflowActions extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
-    
+
     if (!authState.isAuthenticated) {
       return _buildLoginPrompt();
     }
 
     final userRole = authState.user?.role ?? 'student';
-    final allowedTransitions = transitions.where((transition) =>
-      transition.allowedRoles.isEmpty || 
-      transition.allowedRoles.contains(userRole) ||
-      userRole == 'admin'
-    ).toList();
+    final allowedTransitions = transitions
+        .where((transition) =>
+            transition.allowedRoles.isEmpty ||
+            transition.allowedRoles.contains(userRole) ||
+            userRole == 'admin')
+        .toList();
 
     if (allowedTransitions.isEmpty) {
       return _buildNoPermissionsWidget();
@@ -137,11 +140,12 @@ class ConditionalWorkflowActions extends ConsumerWidget {
         ),
         const SizedBox(height: AppSpacing.md),
         ...allowedTransitions.map((transition) => Padding(
-          padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-          child: _buildTransitionButton(context, transition),
-        )),
+              padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+              child: _buildTransitionButton(context, transition),
+            )),
         if (transitions.length > allowedTransitions.length)
-          _buildRestrictedActionsInfo(transitions.length - allowedTransitions.length),
+          _buildRestrictedActionsInfo(
+              transitions.length - allowedTransitions.length),
       ],
     );
   }
@@ -218,16 +222,16 @@ class ConditionalWorkflowActions extends ConsumerWidget {
     );
   }
 
-  Widget _buildTransitionButton(BuildContext context, WorkflowTransitionModel transition) {
+  Widget _buildTransitionButton(
+      BuildContext context, WorkflowTransitionModel transition) {
     final color = _getTransitionColor(transition);
     final icon = _getTransitionIcon(transition);
 
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton.icon(
-        onPressed: isLoading 
-            ? null 
-            : () => _showTransitionDialog(context, transition),
+        onPressed:
+            isLoading ? null : () => _showTransitionDialog(context, transition),
         icon: Icon(icon, size: 18),
         label: Text(transition.name),
         style: ElevatedButton.styleFrom(
@@ -275,7 +279,8 @@ class ConditionalWorkflowActions extends ConsumerWidget {
     );
   }
 
-  void _showTransitionDialog(BuildContext context, WorkflowTransitionModel transition) {
+  void _showTransitionDialog(
+      BuildContext context, WorkflowTransitionModel transition) {
     showDialog(
       context: context,
       builder: (context) => TransitionConfirmationDialog(
@@ -332,9 +337,9 @@ class WorkflowRoleIndicator extends ConsumerWidget {
     return Wrap(
       spacing: 4,
       runSpacing: 4,
-      children: transition.allowedRoles.map((role) => 
-        _buildRoleChip(_formatRole(role), _getRoleColor(role))
-      ).toList(),
+      children: transition.allowedRoles
+          .map((role) => _buildRoleChip(_formatRole(role), _getRoleColor(role)))
+          .toList(),
     );
   }
 
@@ -361,9 +366,10 @@ class WorkflowRoleIndicator extends ConsumerWidget {
   }
 
   String _formatRole(String role) {
-    return role.split('_').map((word) => 
-      word[0].toUpperCase() + word.substring(1).toLowerCase()
-    ).join(' ');
+    return role
+        .split('_')
+        .map((word) => word[0].toUpperCase() + word.substring(1).toLowerCase())
+        .join(' ');
   }
 
   Color _getRoleColor(String role) {
@@ -393,10 +399,12 @@ class TransitionConfirmationDialog extends StatefulWidget {
   });
 
   @override
-  State<TransitionConfirmationDialog> createState() => _TransitionConfirmationDialogState();
+  State<TransitionConfirmationDialog> createState() =>
+      _TransitionConfirmationDialogState();
 }
 
-class _TransitionConfirmationDialogState extends State<TransitionConfirmationDialog> {
+class _TransitionConfirmationDialogState
+    extends State<TransitionConfirmationDialog> {
   final _commentController = TextEditingController();
   bool _isConfirming = false;
 
@@ -630,7 +638,8 @@ class _TransitionConfirmationDialogState extends State<TransitionConfirmationDia
   }
 
   void _handleConfirm() {
-    if (widget.transition.requiresComment && _commentController.text.trim().isEmpty) {
+    if (widget.transition.requiresComment &&
+        _commentController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Comment is required for this transition'),
@@ -644,10 +653,10 @@ class _TransitionConfirmationDialogState extends State<TransitionConfirmationDia
       _isConfirming = true;
     });
 
-    final comment = _commentController.text.trim().isEmpty 
-        ? null 
+    final comment = _commentController.text.trim().isEmpty
+        ? null
         : _commentController.text.trim();
-    
+
     widget.onConfirm(comment, null);
   }
 

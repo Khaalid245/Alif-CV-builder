@@ -9,7 +9,9 @@ import '../../data/models/workflow_models.dart';
 
 class WorkflowTransitionActionsWidget extends StatelessWidget {
   final List<WorkflowTransitionModel> transitions;
-  final Function(String transitionId, String? comment, Map<String, dynamic>? metadata)? onTransition;
+  final Function(
+          String transitionId, String? comment, Map<String, dynamic>? metadata)?
+      onTransition;
   final bool isLoading;
 
   const WorkflowTransitionActionsWidget({
@@ -36,9 +38,9 @@ class WorkflowTransitionActionsWidget extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.md),
         ...transitions.map((transition) => Padding(
-          padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-          child: _buildTransitionButton(context, transition),
-        )),
+              padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+              child: _buildTransitionButton(context, transition),
+            )),
       ],
     );
   }
@@ -79,16 +81,16 @@ class WorkflowTransitionActionsWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildTransitionButton(BuildContext context, WorkflowTransitionModel transition) {
+  Widget _buildTransitionButton(
+      BuildContext context, WorkflowTransitionModel transition) {
     final color = _getTransitionColor(transition);
     final icon = _getTransitionIcon(transition);
 
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton.icon(
-        onPressed: isLoading 
-            ? null 
-            : () => _showTransitionDialog(context, transition),
+        onPressed:
+            isLoading ? null : () => _showTransitionDialog(context, transition),
         icon: Icon(icon, size: 18),
         label: Text(transition.name),
         style: ElevatedButton.styleFrom(
@@ -106,7 +108,8 @@ class WorkflowTransitionActionsWidget extends StatelessWidget {
     );
   }
 
-  void _showTransitionDialog(BuildContext context, WorkflowTransitionModel transition) {
+  void _showTransitionDialog(
+      BuildContext context, WorkflowTransitionModel transition) {
     showDialog(
       context: context,
       builder: (context) => TransitionConfirmationDialog(
@@ -159,10 +162,12 @@ class TransitionConfirmationDialog extends StatefulWidget {
   });
 
   @override
-  State<TransitionConfirmationDialog> createState() => _TransitionConfirmationDialogState();
+  State<TransitionConfirmationDialog> createState() =>
+      _TransitionConfirmationDialogState();
 }
 
-class _TransitionConfirmationDialogState extends State<TransitionConfirmationDialog> {
+class _TransitionConfirmationDialogState
+    extends State<TransitionConfirmationDialog> {
   final _commentController = TextEditingController();
   bool _isConfirming = false;
 
@@ -362,7 +367,8 @@ class _TransitionConfirmationDialogState extends State<TransitionConfirmationDia
   }
 
   void _handleConfirm() {
-    if (widget.transition.requiresComment && _commentController.text.trim().isEmpty) {
+    if (widget.transition.requiresComment &&
+        _commentController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Comment is required for this transition'),
@@ -376,10 +382,10 @@ class _TransitionConfirmationDialogState extends State<TransitionConfirmationDia
       _isConfirming = true;
     });
 
-    final comment = _commentController.text.trim().isEmpty 
-        ? null 
+    final comment = _commentController.text.trim().isEmpty
+        ? null
         : _commentController.text.trim();
-    
+
     widget.onConfirm(comment, null);
   }
 
@@ -441,9 +447,9 @@ class TransitionHistoryWidget extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.md),
         ...history.map((log) => Padding(
-          padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-          child: _buildHistoryItem(log),
-        )),
+              padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+              child: _buildHistoryItem(log),
+            )),
         if (hasMore && onLoadMore != null)
           Center(
             child: TextButton(

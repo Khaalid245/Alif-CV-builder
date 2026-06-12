@@ -13,7 +13,7 @@ class TemplateSearchWidget extends StatefulWidget {
 
 class _TemplateSearchWidgetState extends State<TemplateSearchWidget> {
   final TextEditingController _controller = TextEditingController();
-  
+
   @override
   void initState() {
     super.initState();
@@ -58,7 +58,8 @@ class _TemplateSearchWidgetState extends State<TemplateSearchWidget> {
             ),
             filled: true,
             fillColor: Colors.grey[50],
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           ),
           onChanged: (value) {
             // Debounce search to avoid too many API calls

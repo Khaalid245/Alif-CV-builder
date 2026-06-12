@@ -83,7 +83,8 @@ void main() {
       expect(tapCalled, true);
     });
 
-    testWidgets('should call onRestore when restore button is tapped', (tester) async {
+    testWidgets('should call onRestore when restore button is tapped',
+        (tester) async {
       bool restoreCalled = false;
 
       await tester.pumpWidget(
@@ -122,7 +123,8 @@ void main() {
       expect(find.text('Phone'), findsOneWidget);
     });
 
-    testWidgets('should show "more" indicator when many fields changed', (tester) async {
+    testWidgets('should show "more" indicator when many fields changed',
+        (tester) async {
       final versionWithManyChanges = CVVersionModel(
         id: 'test-id',
         versionNumber: 5,

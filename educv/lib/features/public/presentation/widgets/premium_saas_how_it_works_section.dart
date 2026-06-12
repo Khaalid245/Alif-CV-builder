@@ -29,7 +29,9 @@ class PremiumSaaSHowItWorksSection extends StatelessWidget {
                 LayoutBuilder(
                   builder: (context, constraints) {
                     final isDesktop = constraints.maxWidth >= 900;
-                    return isDesktop ? _buildDesktopLayout() : _buildMobileLayout();
+                    return isDesktop
+                        ? _buildDesktopLayout()
+                        : _buildMobileLayout();
                   },
                 ),
               ],
@@ -155,7 +157,8 @@ class PremiumSaaSHowItWorksSection extends StatelessWidget {
     );
   }
 
-  Widget _buildStepCard(int stepNumber, IconData icon, String title, String description, Color accentColor) {
+  Widget _buildStepCard(int stepNumber, IconData icon, String title,
+      String description, Color accentColor) {
     return Container(
       padding: const EdgeInsets.all(40),
       decoration: BoxDecoration(
@@ -230,7 +233,7 @@ class PremiumSaaSHowItWorksSection extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 32),
-              
+
               // Title
               Text(
                 title,
@@ -242,7 +245,7 @@ class PremiumSaaSHowItWorksSection extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              
+
               // Description
               Text(
                 description,
@@ -257,7 +260,8 @@ class PremiumSaaSHowItWorksSection extends StatelessWidget {
           ),
         ),
       ),
-    ).animate(delay: (stepNumber * 200).ms)
+    )
+        .animate(delay: (stepNumber * 200).ms)
         .fadeIn(duration: 800.ms)
         .slideY(begin: 0.3, end: 0)
         .then()
@@ -323,7 +327,8 @@ class PremiumSaaSHowItWorksSection extends StatelessWidget {
           ),
         ],
       ),
-    ).animate(delay: 800.ms)
+    )
+        .animate(delay: 800.ms)
         .fadeIn(duration: 1000.ms)
         .then()
         .animate(

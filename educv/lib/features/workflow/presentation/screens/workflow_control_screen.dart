@@ -21,7 +21,7 @@ class WorkflowControlScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final tabController = useTabController(initialLength: 3);
     final cvProfile = ref.watch(cvProfileProvider);
-    
+
     // Get CV ID from profile
     final cvId = cvProfile.when(
       data: (profile) => profile?.id,
@@ -102,7 +102,11 @@ class WorkflowControlScreen extends HookConsumerWidget {
     if (state.error != null) {
       return AppErrorState(
         message: state.error!,
-        onRetry: () => ref.read(cvWorkflowProvider(ref.read(cvProfileProvider).value?.id ?? '').notifier).refreshWorkflow(),
+        onRetry: () => ref
+            .read(
+                cvWorkflowProvider(ref.read(cvProfileProvider).value?.id ?? '')
+                    .notifier)
+            .refreshWorkflow(),
       );
     }
 
@@ -144,7 +148,8 @@ class WorkflowControlScreen extends HookConsumerWidget {
     if (state.error != null) {
       return AppErrorState(
         message: state.error!,
-        onRetry: () => ref.read(cvWorkflowProvider(cvId).notifier).refreshWorkflow(),
+        onRetry: () =>
+            ref.read(cvWorkflowProvider(cvId).notifier).refreshWorkflow(),
       );
     }
 
@@ -164,8 +169,9 @@ class WorkflowControlScreen extends HookConsumerWidget {
           const SizedBox(height: AppSpacing.lg),
           WorkflowTransitionActionsWidget(
             transitions: state.availableTransitions,
-            onTransition: (transitionId, comment, metadata) => 
-                _performTransition(context, ref, cvId, transitionId, comment, metadata),
+            onTransition: (transitionId, comment, metadata) =>
+                _performTransition(
+                    context, ref, cvId, transitionId, comment, metadata),
             isLoading: state.isTransitioning,
           ),
         ],
@@ -185,7 +191,11 @@ class WorkflowControlScreen extends HookConsumerWidget {
     if (state.error != null) {
       return AppErrorState(
         message: state.error!,
-        onRetry: () => ref.read(cvWorkflowProvider(ref.read(cvProfileProvider).value?.id ?? '').notifier).refreshWorkflow(),
+        onRetry: () => ref
+            .read(
+                cvWorkflowProvider(ref.read(cvProfileProvider).value?.id ?? '')
+                    .notifier)
+            .refreshWorkflow(),
       );
     }
 
@@ -195,14 +205,18 @@ class WorkflowControlScreen extends HookConsumerWidget {
 
     return Consumer(
       builder: (context, ref, child) {
-        final historyState = ref.watch(transitionHistoryProvider(state.workflow!.id));
-        
+        final historyState =
+            ref.watch(transitionHistoryProvider(state.workflow!.id));
+
         return historyState.isLoading
             ? const Center(child: AppLoader())
             : historyState.error != null
                 ? AppErrorState(
                     message: historyState.error!,
-                    onRetry: () => ref.read(transitionHistoryProvider(state.workflow!.id).notifier).loadHistory(refresh: true),
+                    onRetry: () => ref
+                        .read(transitionHistoryProvider(state.workflow!.id)
+                            .notifier)
+                        .loadHistory(refresh: true),
                   )
                 : SingleChildScrollView(
                     padding: const EdgeInsets.all(AppSpacing.md),
@@ -210,7 +224,10 @@ class WorkflowControlScreen extends HookConsumerWidget {
                       history: historyState.history,
                       isLoading: historyState.isLoadingMore,
                       hasMore: historyState.hasMore,
-                      onLoadMore: () => ref.read(transitionHistoryProvider(state.workflow!.id).notifier).loadMoreHistory(),
+                      onLoadMore: () => ref
+                          .read(transitionHistoryProvider(state.workflow!.id)
+                              .notifier)
+                          .loadMoreHistory(),
                     ),
                   );
       },
@@ -329,11 +346,11 @@ class WorkflowControlScreen extends HookConsumerWidget {
   ) async {
     try {
       await ref.read(cvWorkflowProvider(cvId).notifier).performTransition(
-        transitionId,
-        comment: comment,
-        metadata: metadata,
-      );
-      
+            transitionId,
+            comment: comment,
+            metadata: metadata,
+          );
+
       if (context.mounted) {
         SnackbarHelper.showSuccess(
           context,
@@ -521,7 +538,8 @@ class WorkflowDashboardScreen extends HookConsumerWidget {
     );
   }
 
-  Widget _buildStatCard(String title, String value, IconData icon, Color color) {
+  Widget _buildStatCard(
+      String title, String value, IconData icon, Color color) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
@@ -577,7 +595,9 @@ class WorkflowDashboardScreen extends HookConsumerWidget {
               ),
             ),
             TextButton.icon(
-              onPressed: () => ref.read(workflowInstancesProvider.notifier).loadInstances(refresh: true),
+              onPressed: () => ref
+                  .read(workflowInstancesProvider.notifier)
+                  .loadInstances(refresh: true),
               icon: const Icon(LucideIcons.refreshCw, size: 16),
               label: const Text('Refresh'),
             ),
@@ -589,7 +609,9 @@ class WorkflowDashboardScreen extends HookConsumerWidget {
         else if (state.error != null)
           AppErrorState(
             message: state.error!,
-            onRetry: () => ref.read(workflowInstancesProvider.notifier).loadInstances(refresh: true),
+            onRetry: () => ref
+                .read(workflowInstancesProvider.notifier)
+                .loadInstances(refresh: true),
           )
         else if (state.instances.isEmpty)
           const Center(
@@ -600,12 +622,12 @@ class WorkflowDashboardScreen extends HookConsumerWidget {
           )
         else
           ...state.instances.take(5).map((instance) => Padding(
-            padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-            child: WorkflowStateWidget(
-              workflow: instance,
-              showDetails: false,
-            ),
-          )),
+                padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                child: WorkflowStateWidget(
+                  workflow: instance,
+                  showDetails: false,
+                ),
+              )),
       ],
     );
   }

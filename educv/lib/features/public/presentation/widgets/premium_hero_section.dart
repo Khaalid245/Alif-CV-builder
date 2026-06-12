@@ -69,7 +69,8 @@ class PremiumHeroSection extends StatelessWidget {
 
   Widget _buildLeftContent({required bool isDesktop}) {
     return Column(
-      crossAxisAlignment: isDesktop ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+      crossAxisAlignment:
+          isDesktop ? CrossAxisAlignment.start : CrossAxisAlignment.center,
       children: [
         _buildTrustBadge()
             .animate()
@@ -378,9 +379,9 @@ class PremiumHeroSection extends StatelessWidget {
                 ),
               ),
             ).animate(delay: (index * 100).ms).fadeIn(duration: 600.ms).scale(
-              begin: const Offset(0.8, 0.8),
-              end: const Offset(1.0, 1.0),
-            ),
+                  begin: const Offset(0.8, 0.8),
+                  end: const Offset(1.0, 1.0),
+                ),
           );
         }).toList(),
       ),
@@ -421,7 +422,10 @@ class PremiumHeroSection extends StatelessWidget {
           _buildDownloadSection(),
         ],
       ),
-    ).animate().fadeIn(duration: 1000.ms, delay: 400.ms).slideX(begin: 0.3, end: 0);
+    )
+        .animate()
+        .fadeIn(duration: 1000.ms, delay: 400.ms)
+        .slideX(begin: 0.3, end: 0);
   }
 
   Widget _buildDashboardHeader() {
@@ -559,12 +563,12 @@ class PremiumHeroSection extends StatelessWidget {
                   borderRadius: BorderRadius.circular(4),
                 ),
               ).animate().scaleX(
-                begin: 0,
-                end: 1,
-                duration: 1000.ms,
-                delay: 800.ms,
-                curve: Curves.easeOutCubic,
-              ),
+                    begin: 0,
+                    end: 1,
+                    duration: 1000.ms,
+                    delay: 800.ms,
+                    curve: Curves.easeOutCubic,
+                  ),
             ),
           ),
         ),

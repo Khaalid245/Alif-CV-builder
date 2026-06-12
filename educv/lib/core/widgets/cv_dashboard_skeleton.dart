@@ -13,9 +13,9 @@ class DashboardSkeleton extends StatelessWidget {
         children: [
           // Header skeleton
           _buildSkeletonCard(height: 80),
-          
+
           const SizedBox(height: 24),
-          
+
           // Stats row skeleton
           Row(
             children: [
@@ -28,9 +28,9 @@ class DashboardSkeleton extends StatelessWidget {
               Expanded(child: _buildSkeletonCard(height: 120)),
             ],
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Downloads section skeleton
           _buildSkeletonCard(height: 300),
         ],

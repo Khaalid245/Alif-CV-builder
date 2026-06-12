@@ -30,7 +30,8 @@ void main() {
       expect(provider.unreadCount, 0);
     });
 
-    test('loadNotifications should update state correctly on success', () async {
+    test('loadNotifications should update state correctly on success',
+        () async {
       final mockNotifications = [
         NotificationModel(
           id: '1',
@@ -96,7 +97,8 @@ void main() {
         recentNotifications: [],
       );
 
-      when(mockRepository.getNotificationStats()).thenAnswer((_) async => mockStats);
+      when(mockRepository.getNotificationStats())
+          .thenAnswer((_) async => mockStats);
 
       await provider.loadStats();
 
@@ -157,7 +159,8 @@ void main() {
       ];
 
       provider.notifications.addAll(notifications);
-      when(mockRepository.markMultipleAsRead(['1', '2'])).thenAnswer((_) async => 2);
+      when(mockRepository.markMultipleAsRead(['1', '2']))
+          .thenAnswer((_) async => 2);
 
       final result = await provider.markMultipleAsRead(['1', '2']);
 
@@ -166,7 +169,8 @@ void main() {
       expect(provider.notifications[1].status, 'read');
     });
 
-    test('setTypeFilter should update filter and reload notifications', () async {
+    test('setTypeFilter should update filter and reload notifications',
+        () async {
       when(mockRepository.getNotifications(
         type: 'cv_updated',
         status: null,
@@ -183,7 +187,8 @@ void main() {
       )).called(1);
     });
 
-    test('setStatusFilter should update filter and reload notifications', () async {
+    test('setStatusFilter should update filter and reload notifications',
+        () async {
       when(mockRepository.getNotifications(
         type: null,
         status: 'read',
@@ -200,7 +205,8 @@ void main() {
       )).called(1);
     });
 
-    test('setUnreadOnlyFilter should update filter and reload notifications', () async {
+    test('setUnreadOnlyFilter should update filter and reload notifications',
+        () async {
       when(mockRepository.getNotifications(
         type: null,
         status: null,
@@ -217,7 +223,8 @@ void main() {
       )).called(1);
     });
 
-    test('clearFilters should reset all filters and reload notifications', () async {
+    test('clearFilters should reset all filters and reload notifications',
+        () async {
       // Set some filters first
       provider.setTypeFilter('cv_updated');
       provider.setStatusFilter('read');
@@ -269,7 +276,8 @@ void main() {
       // Test type filter
       provider.setTypeFilter('cv_updated');
       expect(provider.filteredNotifications.length, 1);
-      expect(provider.filteredNotifications.first.notificationType, 'cv_updated');
+      expect(
+          provider.filteredNotifications.first.notificationType, 'cv_updated');
 
       // Test status filter
       provider.clearFilters();
@@ -301,7 +309,8 @@ void main() {
         quietHoursEnabled: false,
       );
 
-      when(mockRepository.updatePreferences(preferences)).thenAnswer((_) async => preferences);
+      when(mockRepository.updatePreferences(preferences))
+          .thenAnswer((_) async => preferences);
 
       final result = await provider.updatePreferences(preferences);
 

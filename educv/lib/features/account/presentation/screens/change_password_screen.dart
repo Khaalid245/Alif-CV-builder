@@ -13,7 +13,8 @@ class ChangePasswordScreen extends ConsumerStatefulWidget {
   const ChangePasswordScreen({super.key});
 
   @override
-  ConsumerState<ChangePasswordScreen> createState() => _ChangePasswordScreenState();
+  ConsumerState<ChangePasswordScreen> createState() =>
+      _ChangePasswordScreenState();
 }
 
 class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
@@ -21,7 +22,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
   final _currentPasswordController = TextEditingController();
   final _newPasswordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  
+
   bool _isLoading = false;
   bool _obscureCurrentPassword = true;
   bool _obscureNewPassword = true;
@@ -71,9 +72,9 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                   color: const Color(0xFF6B7280),
                 ),
               ),
-              
+
               const SizedBox(height: 24),
-              
+
               // Current Password
               AppInput(
                 label: 'Current Password',
@@ -82,7 +83,9 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                 obscureText: _obscureCurrentPassword,
                 suffixIcon: IconButton(
                   icon: Icon(
-                    _obscureCurrentPassword ? LucideIcons.eyeOff : LucideIcons.eye,
+                    _obscureCurrentPassword
+                        ? LucideIcons.eyeOff
+                        : LucideIcons.eye,
                     size: 20,
                     color: const Color(0xFF6B7280),
                   ),
@@ -99,9 +102,9 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                   return null;
                 },
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // New Password
               AppInput(
                 label: 'New Password',
@@ -130,9 +133,9 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                   return null;
                 },
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Confirm Password
               AppInput(
                 label: 'Confirm New Password',
@@ -141,7 +144,9 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                 obscureText: _obscureConfirmPassword,
                 suffixIcon: IconButton(
                   icon: Icon(
-                    _obscureConfirmPassword ? LucideIcons.eyeOff : LucideIcons.eye,
+                    _obscureConfirmPassword
+                        ? LucideIcons.eyeOff
+                        : LucideIcons.eye,
                     size: 20,
                     color: const Color(0xFF6B7280),
                   ),
@@ -161,9 +166,9 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                   return null;
                 },
               ),
-              
+
               const SizedBox(height: 24),
-              
+
               // Password Requirements
               Container(
                 padding: const EdgeInsets.all(16),
@@ -184,14 +189,15 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                     ),
                     const SizedBox(height: 8),
                     _buildRequirement('At least 8 characters long'),
-                    _buildRequirement('Contains uppercase and lowercase letters'),
+                    _buildRequirement(
+                        'Contains uppercase and lowercase letters'),
                     _buildRequirement('Contains at least one number'),
                   ],
                 ),
               ),
-              
+
               const Spacer(),
-              
+
               // Change Password Button
               AppButton(
                 text: 'Change Password',
@@ -239,7 +245,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
     try {
       // TODO: Implement password change API call
       await Future.delayed(const Duration(seconds: 2)); // Simulate API call
-      
+
       if (mounted) {
         SnackbarHelper.showSuccess(
           context,

@@ -40,7 +40,8 @@ class CVAnalysisModel {
         sectionScores: _parseSectionScores(json['section_scores'] ?? json),
         recommendations: _parseRecommendations(json['recommendations']),
         submissionReadiness: SubmissionReadinessModel.fromJson(
-          json['submission_readiness'] ?? _buildSubmissionReadinessFromScore(json),
+          json['submission_readiness'] ??
+              _buildSubmissionReadinessFromScore(json),
         ),
         benchmarkingData: json['benchmarking_data'] != null
             ? BenchmarkingDataModel.fromJson(json['benchmarking_data'])
@@ -61,7 +62,7 @@ class CVAnalysisModel {
       // Handle both nested object and flat score structure
       if (data is Map<String, dynamic>) {
         final Map<String, SectionScoreModel> sectionScores = {};
-        
+
         // Check if it's already in the expected format
         if (data.containsKey('profile') && data['profile'] is Map) {
           return data.map(
@@ -71,7 +72,7 @@ class CVAnalysisModel {
             ),
           );
         }
-        
+
         // Handle flat score structure from backend
         final scoreMapping = {
           'profile': data['profile_score'],
@@ -80,7 +81,7 @@ class CVAnalysisModel {
           'skills': data['skills_score'],
           'projects': data['projects_score'],
         };
-        
+
         scoreMapping.forEach((section, score) {
           if (score != null) {
             final scoreValue = _parseDouble(score) ?? 0.0;
@@ -96,7 +97,7 @@ class CVAnalysisModel {
             );
           }
         });
-        
+
         return sectionScores;
       }
     } catch (e) {
@@ -139,7 +140,8 @@ class CVAnalysisModel {
     return null;
   }
 
-  static Map<String, dynamic> _buildSubmissionReadinessFromScore(Map<String, dynamic> json) {
+  static Map<String, dynamic> _buildSubmissionReadinessFromScore(
+      Map<String, dynamic> json) {
     final overallScore = _parseDouble(json['overall_score']) ?? 0.0;
     return {
       'is_ready': json['is_submission_ready'] ?? overallScore >= 70,
@@ -329,7 +331,8 @@ class RecommendationModel {
         actionUrl: json['action_url']?.toString(),
         metadata: Map<String, dynamic>.from(json['metadata'] ?? {}),
         isImplemented: json['is_implemented'] == true,
-        createdAt: CVAnalysisModel._parseDateTime(json['created_at']) ?? DateTime.now(),
+        createdAt: CVAnalysisModel._parseDateTime(json['created_at']) ??
+            DateTime.now(),
       );
     } catch (e) {
       throw FormatException('Failed to parse RecommendationModel: $e');
@@ -405,10 +408,13 @@ class SubmissionReadinessModel {
     try {
       return SubmissionReadinessModel(
         isReady: json['is_ready'] == true,
-        readinessScore: CVAnalysisModel._parseDouble(json['readiness_score']) ?? 0.0,
+        readinessScore:
+            CVAnalysisModel._parseDouble(json['readiness_score']) ?? 0.0,
         readyAspects: SectionScoreModel._parseStringList(json['ready_aspects']),
-        missingAspects: SectionScoreModel._parseStringList(json['missing_aspects']),
-        improvementAreas: SectionScoreModel._parseStringList(json['improvement_areas']),
+        missingAspects:
+            SectionScoreModel._parseStringList(json['missing_aspects']),
+        improvementAreas:
+            SectionScoreModel._parseStringList(json['improvement_areas']),
         overallAssessment: json['overall_assessment']?.toString() ?? '',
         details: Map<String, dynamic>.from(json['details'] ?? {}),
       );
@@ -488,14 +494,18 @@ class BenchmarkingDataModel {
     try {
       return BenchmarkingDataModel(
         userId: json['user_id']?.toString() ?? '',
-        currentScore: CVAnalysisModel._parseDouble(json['current_score']) ?? 0.0,
-        percentileRank: CVAnalysisModel._parseDouble(json['percentile_rank']) ?? 0.0,
+        currentScore:
+            CVAnalysisModel._parseDouble(json['current_score']) ?? 0.0,
+        percentileRank:
+            CVAnalysisModel._parseDouble(json['percentile_rank']) ?? 0.0,
         totalPeers: json['total_peers'] ?? 0,
         groups: SectionScoreModel._parseStringList(json['groups']),
         summary: json['summary']?.toString() ?? '',
-        peerComparisons: SectionScoreModel._parseStringList(json['peer_comparisons']),
+        peerComparisons:
+            SectionScoreModel._parseStringList(json['peer_comparisons']),
         comparisonGroup: json['comparison_group']?.toString() ?? '',
-        sectionPercentiles: _parseSectionPercentiles(json['section_percentiles']),
+        sectionPercentiles:
+            _parseSectionPercentiles(json['section_percentiles']),
         insights: _parseInsights(json['insights']),
         statistics: Map<String, dynamic>.from(json['statistics'] ?? {}),
       );
@@ -507,9 +517,11 @@ class BenchmarkingDataModel {
   static Map<String, double> _parseSectionPercentiles(dynamic data) {
     if (data == null) return {};
     try {
-      final Map<String, dynamic> percentilesMap = Map<String, dynamic>.from(data);
+      final Map<String, dynamic> percentilesMap =
+          Map<String, dynamic>.from(data);
       return percentilesMap.map(
-        (key, value) => MapEntry(key, CVAnalysisModel._parseDouble(value) ?? 0.0),
+        (key, value) =>
+            MapEntry(key, CVAnalysisModel._parseDouble(value) ?? 0.0),
       );
     } catch (e) {
       return {};

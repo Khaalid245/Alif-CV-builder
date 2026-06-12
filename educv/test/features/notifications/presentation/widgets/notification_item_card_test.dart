@@ -11,7 +11,8 @@ void main() {
       testNotification = NotificationModel(
         id: 'test-id',
         title: 'Test Notification',
-        message: 'This is a test notification message that might be quite long and should be truncated properly',
+        message:
+            'This is a test notification message that might be quite long and should be truncated properly',
         notificationType: 'cv_updated',
         channel: 'in_app',
         priority: 'high',
@@ -22,7 +23,8 @@ void main() {
       );
     });
 
-    testWidgets('should display notification information correctly', (tester) async {
+    testWidgets('should display notification information correctly',
+        (tester) async {
       bool tapCalled = false;
       bool selectionChanged = false;
       bool markAsReadCalled = false;
@@ -43,12 +45,16 @@ void main() {
       );
 
       expect(find.text('Test Notification'), findsOneWidget);
-      expect(find.text('This is a test notification message that might be quite long and should be truncated properly'), findsOneWidget);
+      expect(
+          find.text(
+              'This is a test notification message that might be quite long and should be truncated properly'),
+          findsOneWidget);
       expect(find.text('CV Updated'), findsOneWidget);
       expect(find.text('HIGH'), findsOneWidget);
     });
 
-    testWidgets('should show unread indicator for unread notifications', (tester) async {
+    testWidgets('should show unread indicator for unread notifications',
+        (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -70,7 +76,8 @@ void main() {
       expect(find.byIcon(Icons.mark_email_read), findsOneWidget);
     });
 
-    testWidgets('should not show mark as read button for read notifications', (tester) async {
+    testWidgets('should not show mark as read button for read notifications',
+        (tester) async {
       final readNotification = NotificationModel(
         id: 'read-id',
         title: 'Read Notification',
@@ -166,7 +173,8 @@ void main() {
       expect(tapCalled, true);
     });
 
-    testWidgets('should call onMarkAsRead when mark as read button is tapped', (tester) async {
+    testWidgets('should call onMarkAsRead when mark as read button is tapped',
+        (tester) async {
       bool markAsReadCalled = false;
 
       await tester.pumpWidget(
@@ -188,7 +196,8 @@ void main() {
       expect(markAsReadCalled, true);
     });
 
-    testWidgets('should call onSelectionChanged when checkbox is tapped', (tester) async {
+    testWidgets('should call onSelectionChanged when checkbox is tapped',
+        (tester) async {
       bool selectionChanged = false;
       bool selectedValue = false;
 
@@ -215,7 +224,8 @@ void main() {
       expect(selectedValue, true);
     });
 
-    testWidgets('should show error state for failed notifications', (tester) async {
+    testWidgets('should show error state for failed notifications',
+        (tester) async {
       final failedNotification = NotificationModel(
         id: 'failed-id',
         title: 'Failed Notification',

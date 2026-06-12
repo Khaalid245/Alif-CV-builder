@@ -60,10 +60,13 @@ void main() {
           ),
         ];
 
-        when(mockRepository.getIndustries()).thenAnswer((_) async => industries);
-        when(mockRepository.getCategories()).thenAnswer((_) async => categories);
+        when(mockRepository.getIndustries())
+            .thenAnswer((_) async => industries);
+        when(mockRepository.getCategories())
+            .thenAnswer((_) async => categories);
         when(mockRepository.getRoles()).thenAnswer((_) async => []);
-        when(mockRepository.getUserPreferences()).thenThrow(Exception('Not found'));
+        when(mockRepository.getUserPreferences())
+            .thenThrow(Exception('Not found'));
         when(mockRepository.getTemplates()).thenAnswer((_) async => []);
 
         await provider.initialize();
@@ -87,7 +90,8 @@ void main() {
         verify(mockRepository.getTemplates(category: 'professional')).called(1);
       });
 
-      test('should update industry filter and reload roles and templates', () async {
+      test('should update industry filter and reload roles and templates',
+          () async {
         when(mockRepository.getRoles(industrySlug: 'technology'))
             .thenAnswer((_) async => []);
         when(mockRepository.getTemplates(industry: 'technology'))
@@ -205,14 +209,18 @@ void main() {
         };
         final customBranding = {'primary_color': '#ff0000'};
 
-        when(mockRepository.renderTemplate('test-template', customBranding: customBranding))
+        when(mockRepository.renderTemplate('test-template',
+                customBranding: customBranding))
             .thenAnswer((_) async => renderResult);
 
-        final result = await provider.renderTemplate('test-template', customBranding: customBranding);
+        final result = await provider.renderTemplate('test-template',
+            customBranding: customBranding);
 
         expect(result, renderResult);
         expect(provider.error, null);
-        verify(mockRepository.renderTemplate('test-template', customBranding: customBranding)).called(1);
+        verify(mockRepository.renderTemplate('test-template',
+                customBranding: customBranding))
+            .called(1);
       });
     });
 
@@ -260,7 +268,7 @@ void main() {
       test('should remove template from favorites', () async {
         // Set up user preferences with the template as favorite
         provider.userPreferences?.favoriteTemplates.add(mockTemplate);
-        
+
         when(mockRepository.unfavoriteTemplate('test-template'))
             .thenAnswer((_) async => {});
 
@@ -392,8 +400,7 @@ void main() {
         expect(provider.error, isNotNull);
 
         // Then, succeed
-        when(mockRepository.getTemplates())
-            .thenAnswer((_) async => []);
+        when(mockRepository.getTemplates()).thenAnswer((_) async => []);
         await provider.loadTemplates();
 
         expect(provider.error, null);
@@ -410,8 +417,7 @@ void main() {
 
     group('loading states', () {
       test('should set loading state during template operations', () async {
-        when(mockRepository.getTemplates())
-            .thenAnswer((_) async {
+        when(mockRepository.getTemplates()).thenAnswer((_) async {
           // Simulate delay
           await Future.delayed(const Duration(milliseconds: 100));
           return [];

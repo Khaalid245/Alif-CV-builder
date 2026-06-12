@@ -125,7 +125,8 @@ class _PersonalInfoStepState extends ConsumerState<PersonalInfoStep>
               controller: _phoneController,
               keyboardType: TextInputType.phone,
               validator: EnterpriseValidators.phone,
-              onValidationChanged: (result) => updateValidation('phone', result),
+              onValidationChanged: (result) =>
+                  updateValidation('phone', result),
             ),
 
             const SizedBox(height: AppSpacing.md),
@@ -135,7 +136,8 @@ class _PersonalInfoStepState extends ConsumerState<PersonalInfoStep>
               label: 'City',
               hint: 'e.g. New York',
               controller: _cityController,
-              validator: (value) => EnterpriseValidators.required(value, 'City'),
+              validator: (value) =>
+                  EnterpriseValidators.required(value, 'City'),
               onValidationChanged: (result) => updateValidation('city', result),
             ),
 
@@ -146,8 +148,10 @@ class _PersonalInfoStepState extends ConsumerState<PersonalInfoStep>
               label: 'Country',
               hint: 'e.g. United States',
               controller: _countryController,
-              validator: (value) => EnterpriseValidators.required(value, 'Country'),
-              onValidationChanged: (result) => updateValidation('country', result),
+              validator: (value) =>
+                  EnterpriseValidators.required(value, 'Country'),
+              onValidationChanged: (result) =>
+                  updateValidation('country', result),
             ),
 
             const SizedBox(height: AppSpacing.xl),
@@ -163,7 +167,8 @@ class _PersonalInfoStepState extends ConsumerState<PersonalInfoStep>
               keyboardType: TextInputType.url,
               prefixIcon: LucideIcons.linkedin,
               validator: (value) => EnterpriseValidators.url(value),
-              onValidationChanged: (result) => updateValidation('linkedin', result),
+              onValidationChanged: (result) =>
+                  updateValidation('linkedin', result),
             ),
 
             const SizedBox(height: AppSpacing.md),
@@ -176,7 +181,8 @@ class _PersonalInfoStepState extends ConsumerState<PersonalInfoStep>
               keyboardType: TextInputType.url,
               prefixIcon: LucideIcons.github,
               validator: (value) => EnterpriseValidators.url(value),
-              onValidationChanged: (result) => updateValidation('github', result),
+              onValidationChanged: (result) =>
+                  updateValidation('github', result),
             ),
 
             const SizedBox(height: AppSpacing.md),
@@ -189,7 +195,8 @@ class _PersonalInfoStepState extends ConsumerState<PersonalInfoStep>
               keyboardType: TextInputType.url,
               prefixIcon: LucideIcons.link,
               validator: (value) => EnterpriseValidators.url(value),
-              onValidationChanged: (result) => updateValidation('portfolio', result),
+              onValidationChanged: (result) =>
+                  updateValidation('portfolio', result),
             ),
 
             const SizedBox(height: AppSpacing.xl),
@@ -209,11 +216,14 @@ class _PersonalInfoStepState extends ConsumerState<PersonalInfoStep>
             // Summary with character count validation
             EnterpriseValidatedInput(
               label: 'About You',
-              hint: 'Write 2-3 sentences about your background, skills and career goals...',
+              hint:
+                  'Write 2-3 sentences about your background, skills and career goals...',
               controller: _summaryController,
               maxLines: 5,
-              validator: (value) => EnterpriseValidators.maxLength(value, 500, 'Summary'),
-              onValidationChanged: (result) => updateValidation('summary', result),
+              validator: (value) =>
+                  EnterpriseValidators.maxLength(value, 500, 'Summary'),
+              onValidationChanged: (result) =>
+                  updateValidation('summary', result),
             ),
 
             const SizedBox(height: AppSpacing.xl),
@@ -303,31 +313,34 @@ class _PersonalInfoStepState extends ConsumerState<PersonalInfoStep>
     }
 
     return await EnterpriseAsyncOperation.execute<bool>(
-      context,
-      operation: () async {
-        // Upload photo if selected
-        if (_selectedPhoto != null) {
-          await ref.read(cvProfileProvider.notifier).uploadPhoto(_selectedPhoto!);
-        }
-        
-        // Update profile data
-        final data = {
-          'phone': _phoneController.text.trim(),
-          'city': _cityController.text.trim(),
-          'country': _countryController.text.trim(),
-          'linkedin': _linkedinController.text.trim(),
-          'github': _githubController.text.trim(),
-          'portfolio': _portfolioController.text.trim(),
-          'summary': _summaryController.text.trim(),
-        };
-        
-        await ref.read(cvProfileProvider.notifier).updateProfile(data);
-        return true;
-      },
-      loadingMessage: 'Saving your information...',
-      successMessage: 'Personal information saved successfully!',
-      errorMessage: 'Failed to save personal information',
-      showLoadingToast: false, // We'll use the form loading state instead
-    ) ?? false;
+          context,
+          operation: () async {
+            // Upload photo if selected
+            if (_selectedPhoto != null) {
+              await ref
+                  .read(cvProfileProvider.notifier)
+                  .uploadPhoto(_selectedPhoto!);
+            }
+
+            // Update profile data
+            final data = {
+              'phone': _phoneController.text.trim(),
+              'city': _cityController.text.trim(),
+              'country': _countryController.text.trim(),
+              'linkedin': _linkedinController.text.trim(),
+              'github': _githubController.text.trim(),
+              'portfolio': _portfolioController.text.trim(),
+              'summary': _summaryController.text.trim(),
+            };
+
+            await ref.read(cvProfileProvider.notifier).updateProfile(data);
+            return true;
+          },
+          loadingMessage: 'Saving your information...',
+          successMessage: 'Personal information saved successfully!',
+          errorMessage: 'Failed to save personal information',
+          showLoadingToast: false, // We'll use the form loading state instead
+        ) ??
+        false;
   }
 }

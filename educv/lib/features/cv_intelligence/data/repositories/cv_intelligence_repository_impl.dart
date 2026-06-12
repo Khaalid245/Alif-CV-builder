@@ -26,10 +26,8 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
       );
 
       final apiResponse = ApiResponse<Map<String, dynamic>>.fromJson(
-        response.data!, 
-        (data) => data as Map<String, dynamic>
-      );
-      
+          response.data!, (data) => data as Map<String, dynamic>);
+
       if (!apiResponse.success) {
         throw AppException(
           message: apiResponse.message ?? 'Analysis failed',
@@ -37,7 +35,7 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
       }
 
       final analysisData = apiResponse.data ?? {};
-      
+
       // Transform backend response to match model expectations
       final transformedData = {
         'id': analysisData['id'] ?? '',
@@ -45,7 +43,8 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
         'user': analysisData['user'] ?? '',
         'overall_score': analysisData['overall_score'] ?? 0.0,
         'section_scores': _transformSectionScores(analysisData),
-        'recommendations': _transformRecommendations(analysisData['recommendations']),
+        'recommendations':
+            _transformRecommendations(analysisData['recommendations']),
         'submission_readiness': _transformSubmissionReadiness(analysisData),
         'benchmarking_data': null, // Will be loaded separately
         // Carry diff so Overview can show "You improved +X pts" immediately
@@ -53,9 +52,12 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
           'diff_from_previous': analysisData['diff_from_previous'] ?? {},
           'ml_scored': analysisData['metadata']?['ml_scored'] ?? false,
         },
-        'analyzed_at': analysisData['analyzed_at'] ?? DateTime.now().toIso8601String(),
-        'created_at': analysisData['analyzed_at'] ?? DateTime.now().toIso8601String(),
-        'updated_at': analysisData['last_updated'] ?? DateTime.now().toIso8601String(),
+        'analyzed_at':
+            analysisData['analyzed_at'] ?? DateTime.now().toIso8601String(),
+        'created_at':
+            analysisData['analyzed_at'] ?? DateTime.now().toIso8601String(),
+        'updated_at':
+            analysisData['last_updated'] ?? DateTime.now().toIso8601String(),
       };
 
       return CVAnalysisModel.fromJson(transformedData);
@@ -64,7 +66,8 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
       if (appException is AppException) {
         throw appException;
       }
-      throw AppException(message: 'Network error: ${e.message ?? "Connection failed"}');
+      throw AppException(
+          message: 'Network error: ${e.message ?? "Connection failed"}');
     } catch (e) {
       throw AppException(
         message: 'Failed to analyze CV: ${e.toString()}',
@@ -87,10 +90,8 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
       );
 
       final apiResponse = ApiResponse<Map<String, dynamic>>.fromJson(
-        response.data!, 
-        (data) => data as Map<String, dynamic>
-      );
-      
+          response.data!, (data) => data as Map<String, dynamic>);
+
       if (!apiResponse.success) {
         throw AppException(
           message: apiResponse.message ?? 'Failed to get analysis history',
@@ -102,37 +103,45 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
       final totalCount = data['total'] as int? ?? data['count'] as int? ?? 0;
       final hasNext = data['has_next'] as bool? ?? false;
       final hasPrevious = data['has_previous'] as bool? ?? false;
-      
+
       final analyses = results.map((item) {
         final historyItem = item as Map<String, dynamic>;
         // Rec 3: carry diff_from_previous into metadata so _buildHistoryItem can render it
-        final diff = historyItem['diff_from_previous'] as Map<String, dynamic>? ?? {};
+        final diff =
+            historyItem['diff_from_previous'] as Map<String, dynamic>? ?? {};
         return CVAnalysisModel(
           id: historyItem['id']?.toString() ?? '',
           cvProfileId: '',
           userId: '',
           overallScore: _parseDouble(historyItem['overall_score']) ?? 0.0,
-          sectionScores: _parseSectionScoresFromHistory(historyItem['section_scores']),
-          recommendations: _parseRecommendationsFromHistory(historyItem['recommendations']),
+          sectionScores:
+              _parseSectionScoresFromHistory(historyItem['section_scores']),
+          recommendations:
+              _parseRecommendationsFromHistory(historyItem['recommendations']),
           submissionReadiness: SubmissionReadinessModel(
-            isReady: (_parseDouble(historyItem['readiness_score']) ?? 0.0) >= 70,
+            isReady:
+                (_parseDouble(historyItem['readiness_score']) ?? 0.0) >= 70,
             readinessScore: _parseDouble(historyItem['readiness_score']) ?? 0.0,
             readyAspects: [],
             missingAspects: [],
             improvementAreas: [],
-            overallAssessment: historyItem['readiness_grade']?.toString() ?? 'F',
+            overallAssessment:
+                historyItem['readiness_grade']?.toString() ?? 'F',
             details: {},
           ),
           benchmarkingData: null,
           metadata: {'diff_from_previous': diff},
-          analyzedAt: _parseDateTime(historyItem['created_at']) ?? DateTime.now(),
-          createdAt: _parseDateTime(historyItem['created_at']) ?? DateTime.now(),
-          updatedAt: _parseDateTime(historyItem['created_at']) ?? DateTime.now(),
+          analyzedAt:
+              _parseDateTime(historyItem['created_at']) ?? DateTime.now(),
+          createdAt:
+              _parseDateTime(historyItem['created_at']) ?? DateTime.now(),
+          updatedAt:
+              _parseDateTime(historyItem['created_at']) ?? DateTime.now(),
         );
       }).toList();
-      
+
       final totalPages = totalCount > 0 ? (totalCount / pageSize).ceil() : 1;
-      
+
       return AnalysisHistoryModel(
         analyses: analyses,
         totalCount: totalCount,
@@ -146,7 +155,8 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
       if (appException is AppException) {
         throw appException;
       }
-      throw AppException(message: 'Network error: ${e.message ?? "Connection failed"}');
+      throw AppException(
+          message: 'Network error: ${e.message ?? "Connection failed"}');
     } catch (e) {
       throw AppException(
         message: 'Failed to get analysis history: ${e.toString()}',
@@ -158,14 +168,13 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
   Future<CVAnalysisModel> getAnalysisById(String analysisId) async {
     try {
       final response = await _apiClient.get<Map<String, dynamic>>(
-        ApiConstants.cvAnalysisHistoryDetail(analysisId), // This maps to /cv/analysis/history/{id}/
+        ApiConstants.cvAnalysisHistoryDetail(
+            analysisId), // This maps to /cv/analysis/history/{id}/
       );
 
       final apiResponse = ApiResponse<Map<String, dynamic>>.fromJson(
-        response.data!, 
-        (data) => data as Map<String, dynamic>
-      );
-      
+          response.data!, (data) => data as Map<String, dynamic>);
+
       if (!apiResponse.success) {
         throw AppException(
           message: apiResponse.message ?? 'Analysis not found',
@@ -178,8 +187,10 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
         cvProfileId: '',
         userId: '',
         overallScore: (historyItem['overall_score'] ?? 0).toDouble(),
-        sectionScores: _parseSectionScoresFromHistory(historyItem['section_scores']),
-        recommendations: _parseRecommendationsFromHistory(historyItem['recommendations']),
+        sectionScores:
+            _parseSectionScoresFromHistory(historyItem['section_scores']),
+        recommendations:
+            _parseRecommendationsFromHistory(historyItem['recommendations']),
         submissionReadiness: SubmissionReadinessModel(
           isReady: (historyItem['readiness_score'] ?? 0) >= 70,
           readinessScore: (historyItem['readiness_score'] ?? 0).toDouble(),
@@ -191,9 +202,12 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
         ),
         benchmarkingData: null,
         metadata: {},
-        analyzedAt: DateTime.tryParse(historyItem['created_at'] ?? '') ?? DateTime.now(),
-        createdAt: DateTime.tryParse(historyItem['created_at'] ?? '') ?? DateTime.now(),
-        updatedAt: DateTime.tryParse(historyItem['created_at'] ?? '') ?? DateTime.now(),
+        analyzedAt: DateTime.tryParse(historyItem['created_at'] ?? '') ??
+            DateTime.now(),
+        createdAt: DateTime.tryParse(historyItem['created_at'] ?? '') ??
+            DateTime.now(),
+        updatedAt: DateTime.tryParse(historyItem['created_at'] ?? '') ??
+            DateTime.now(),
       );
     } on DioException catch (e) {
       throw AppException(message: 'Network error: ${e.message}');
@@ -213,34 +227,35 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
       );
 
       final apiResponse = ApiResponse<Map<String, dynamic>>.fromJson(
-        response.data!, 
-        (data) => data as Map<String, dynamic>
-      );
-      
+          response.data!, (data) => data as Map<String, dynamic>);
+
       if (!apiResponse.success) {
         // Check if it's a "no analysis found" case
         final message = apiResponse.message?.toLowerCase() ?? '';
         if (message.contains('not found') || message.contains('no analysis')) {
           return null; // Return null instead of throwing error
         }
-        throw AppException(message: apiResponse.message ?? 'Failed to get analysis');
+        throw AppException(
+            message: apiResponse.message ?? 'Failed to get analysis');
       }
 
       final analysisData = apiResponse.data ?? {};
-      
+
       // Check if analysis is available
       if (analysisData['analysis_available'] == false) {
         return null; // No analysis data available
       }
-      
+
       // Transform backend response to match model expectations
       final transformedData = {
         'id': analysisData['analysis_id'] ?? '',
         'cv_profile': '',
         'user': '',
         'overall_score': analysisData['overall_score'] ?? 0.0,
-        'section_scores': _transformSectionScoresFromScore(analysisData['score_breakdown']),
-        'recommendations': _transformRecommendations(analysisData['recommendations']),
+        'section_scores':
+            _transformSectionScoresFromScore(analysisData['score_breakdown']),
+        'recommendations':
+            _transformRecommendations(analysisData['recommendations']),
         'submission_readiness': {
           'is_ready': analysisData['is_submission_ready'] ?? false,
           'readiness_score': analysisData['overall_score'] ?? 0.0,
@@ -252,9 +267,12 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
         },
         'benchmarking_data': null, // Will be loaded separately
         'metadata': {},
-        'analyzed_at': analysisData['analysis_date'] ?? DateTime.now().toIso8601String(),
-        'created_at': analysisData['analysis_date'] ?? DateTime.now().toIso8601String(),
-        'updated_at': analysisData['last_updated'] ?? DateTime.now().toIso8601String(),
+        'analyzed_at':
+            analysisData['analysis_date'] ?? DateTime.now().toIso8601String(),
+        'created_at':
+            analysisData['analysis_date'] ?? DateTime.now().toIso8601String(),
+        'updated_at':
+            analysisData['last_updated'] ?? DateTime.now().toIso8601String(),
       };
 
       return CVAnalysisModel.fromJson(transformedData);
@@ -263,15 +281,17 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
       if (e.response?.statusCode == 404) {
         return null;
       }
-      
+
       final appException = e.error;
       if (appException is AppException) {
         throw appException;
       }
-      throw AppException(message: 'Network error: ${e.message ?? "Connection failed"}');
+      throw AppException(
+          message: 'Network error: ${e.message ?? "Connection failed"}');
     } catch (e) {
       // Don't throw for parsing errors, return null
-      if (e.toString().contains('FormatException') || e.toString().contains('parsing')) {
+      if (e.toString().contains('FormatException') ||
+          e.toString().contains('parsing')) {
         return null;
       }
       throw AppException(
@@ -292,10 +312,8 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
       );
 
       final apiResponse = ApiResponse<Map<String, dynamic>>.fromJson(
-        response.data!, 
-        (data) => data as Map<String, dynamic>
-      );
-      
+          response.data!, (data) => data as Map<String, dynamic>);
+
       if (!apiResponse.success) {
         // If no analysis exists, return empty recommendations instead of error
         final message = apiResponse.message?.toLowerCase() ?? '';
@@ -309,14 +327,14 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
 
       final data = apiResponse.data ?? {};
       final recommendationsData = data['recommendations'] ?? {};
-      
+
       // If no recommendations data, return empty list
       if (recommendationsData.isEmpty) {
         return [];
       }
-      
+
       final List<RecommendationModel> recommendations = [];
-      
+
       // Extract recommendations from different categories
       final categories = {
         'critical': recommendationsData['critical'] ?? [],
@@ -324,7 +342,7 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
         'suggestions': recommendationsData['suggestions'] ?? [],
         'strengths': recommendationsData['strengths'] ?? [],
       };
-      
+
       // Convert to RecommendationModel objects with proper error handling
       categories.forEach((categoryName, items) {
         if (items is List) {
@@ -333,18 +351,19 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
               final item = items[i];
               String title = 'Recommendation ${i + 1}';
               String description = 'No description available';
-              
+
               // Safe extraction of title and description
               if (item is Map<String, dynamic>) {
                 title = item['title']?.toString() ?? title;
-                description = item['description']?.toString() ?? 
-                             item['message']?.toString() ?? 
-                             description;
+                description = item['description']?.toString() ??
+                    item['message']?.toString() ??
+                    description;
               } else if (item is String) {
                 description = item;
-                title = 'Improve ${categoryName.substring(0, 1).toUpperCase()}${categoryName.substring(1)}';
+                title =
+                    'Improve ${categoryName.substring(0, 1).toUpperCase()}${categoryName.substring(1)}';
               }
-              
+
               final recommendationData = {
                 'id': '${categoryName}_$i',
                 'title': title,
@@ -357,8 +376,9 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
                 'is_implemented': false,
                 'created_at': DateTime.now().toIso8601String(),
               };
-              
-              recommendations.add(RecommendationModel.fromJson(recommendationData));
+
+              recommendations
+                  .add(RecommendationModel.fromJson(recommendationData));
             } catch (e) {
               // Skip malformed recommendation but continue processing
               continue;
@@ -366,22 +386,24 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
           }
         }
       });
-      
+
       return recommendations;
     } on DioException catch (e) {
       // Handle 404 as "no recommendations found"
       if (e.response?.statusCode == 404) {
         return [];
       }
-      
+
       final appException = e.error;
       if (appException is AppException) {
         throw appException;
       }
-      throw AppException(message: 'Network error: ${e.message ?? "Connection failed"}');
+      throw AppException(
+          message: 'Network error: ${e.message ?? "Connection failed"}');
     } catch (e) {
       // Return empty list for parsing errors instead of throwing
-      if (e.toString().contains('FormatException') || e.toString().contains('parsing')) {
+      if (e.toString().contains('FormatException') ||
+          e.toString().contains('parsing')) {
         return [];
       }
       throw AppException(
@@ -410,7 +432,8 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
         ApiConstants.cvScore,
       );
 
-      final apiResponse = ApiResponse<Map<String, dynamic>>.fromJson(response.data!, (data) => data as Map<String, dynamic>);
+      final apiResponse = ApiResponse<Map<String, dynamic>>.fromJson(
+          response.data!, (data) => data as Map<String, dynamic>);
       if (!apiResponse.success) {
         throw AppException(
           message: apiResponse.message ?? 'Failed to get submission readiness',
@@ -445,17 +468,15 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
       if (comparisonGroup != null && comparisonGroup != 'all') {
         queryParams['group'] = comparisonGroup;
       }
-      
+
       final response = await _apiClient.get<Map<String, dynamic>>(
         ApiConstants.cvBenchmarking,
         queryParameters: queryParams.isNotEmpty ? queryParams : null,
       );
 
       final apiResponse = ApiResponse<Map<String, dynamic>>.fromJson(
-        response.data!, 
-        (data) => data as Map<String, dynamic>
-      );
-      
+          response.data!, (data) => data as Map<String, dynamic>);
+
       if (!apiResponse.success) {
         throw AppException(
           message: apiResponse.message ?? 'Failed to get benchmarking data',
@@ -463,7 +484,7 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
       }
 
       final data = apiResponse.data ?? {};
-      
+
       return BenchmarkingDataModel(
         userId: data['user_id']?.toString() ?? 'current_user',
         currentScore: _parseDouble(data['current_score']) ?? 0.0,
@@ -473,7 +494,8 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
         summary: _generateSummary(data),
         peerComparisons: _parsePeerComparisons(data),
         comparisonGroup: comparisonGroup ?? 'all_students',
-        sectionPercentiles: _parseSectionPercentiles(data['section_percentiles']),
+        sectionPercentiles:
+            _parseSectionPercentiles(data['section_percentiles']),
         insights: _parseInsights(data['benchmark_insights']),
         statistics: _parseStatistics(data['statistics']),
       );
@@ -482,7 +504,8 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
       if (appException is AppException) {
         throw appException;
       }
-      throw AppException(message: 'Network error: ${e.message ?? "Connection failed"}');
+      throw AppException(
+          message: 'Network error: ${e.message ?? "Connection failed"}');
     } catch (e) {
       throw AppException(
         message: 'Failed to get benchmarking data: ${e.toString()}',
@@ -519,19 +542,19 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
       );
 
       final apiResponse = ApiResponse<Map<String, dynamic>>.fromJson(
-        response.data!, 
-        (data) => data as Map<String, dynamic>
-      );
-      
+          response.data!, (data) => data as Map<String, dynamic>);
+
       if (apiResponse.success && apiResponse.data != null) {
         final profileData = apiResponse.data!;
         // Check if profile has minimum required data
-        final hasBasicInfo = profileData['first_name'] != null && profileData['last_name'] != null;
-        final hasContact = profileData['email'] != null || profileData['phone'] != null;
-        
+        final hasBasicInfo = profileData['first_name'] != null &&
+            profileData['last_name'] != null;
+        final hasContact =
+            profileData['email'] != null || profileData['phone'] != null;
+
         return hasBasicInfo && hasContact;
       }
-      
+
       return false;
     } catch (e) {
       return false; // Assume no CV if we can't check
@@ -550,11 +573,13 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
 
       if (response.statusCode == 200 && response.data != null) {
         // Get filename from Content-Disposition header
-        final contentDisposition = response.headers.value('content-disposition');
+        final contentDisposition =
+            response.headers.value('content-disposition');
         String filename = 'cv_analysis_report.pdf';
-        
+
         if (contentDisposition != null) {
-          final filenameMatch = RegExp(r'filename="([^"]+)"').firstMatch(contentDisposition);
+          final filenameMatch =
+              RegExp(r'filename="([^"]+)"').firstMatch(contentDisposition);
           if (filenameMatch != null) {
             filename = filenameMatch.group(1) ?? filename;
           }
@@ -564,14 +589,15 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
         final directory = await getApplicationDocumentsDirectory();
         final file = File('${directory.path}/$filename');
         await file.writeAsBytes(response.data!);
-        
+
         return file.path;
       }
-      
+
       throw AppException(message: 'Failed to download analysis report');
     } on DioException catch (e) {
       if (e.response?.statusCode == 400) {
-        throw AppException(message: 'No analysis found. Please run an analysis first.');
+        throw AppException(
+            message: 'No analysis found. Please run an analysis first.');
       }
       throw AppException(message: 'Network error: ${e.message}');
     } catch (e) {
@@ -582,7 +608,8 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
   }
 
   // Helper methods for parsing history data
-  List<RecommendationModel> _parseRecommendationsFromHistory(dynamic recommendations) {
+  List<RecommendationModel> _parseRecommendationsFromHistory(
+      dynamic recommendations) {
     if (recommendations is List) {
       return recommendations.map((r) {
         final rec = r as Map<String, dynamic>;
@@ -603,7 +630,8 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
     return [];
   }
 
-  Map<String, SectionScoreModel> _parseSectionScoresFromHistory(dynamic sectionScores) {
+  Map<String, SectionScoreModel> _parseSectionScoresFromHistory(
+      dynamic sectionScores) {
     if (sectionScores is Map<String, dynamic>) {
       return sectionScores.map((key, value) {
         final score = _parseDouble(value) ?? 0.0;
@@ -628,7 +656,7 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
   // Helper methods for data transformation
   Map<String, dynamic> _transformSectionScores(Map<String, dynamic> data) {
     final sectionScores = <String, dynamic>{};
-    
+
     // Map backend fields to section scores
     final scoreMapping = {
       'profile': data['profile_score'],
@@ -637,7 +665,7 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
       'skills': data['skills_score'],
       'projects': data['projects_score'],
     };
-    
+
     scoreMapping.forEach((section, score) {
       if (score != null) {
         final scoreValue = _parseDouble(score) ?? 0.0;
@@ -653,13 +681,14 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
         };
       }
     });
-    
+
     return sectionScores;
   }
 
-  Map<String, dynamic> _transformSectionScoresFromScore(dynamic scoreBreakdown) {
+  Map<String, dynamic> _transformSectionScoresFromScore(
+      dynamic scoreBreakdown) {
     final sectionScores = <String, dynamic>{};
-    
+
     if (scoreBreakdown is Map<String, dynamic>) {
       scoreBreakdown.forEach((section, score) {
         if (score != null) {
@@ -677,15 +706,15 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
         }
       });
     }
-    
+
     return sectionScores;
   }
 
   List<dynamic> _transformRecommendations(dynamic recommendations) {
     if (recommendations == null) return [];
-    
+
     final List<dynamic> transformedRecs = [];
-    
+
     if (recommendations is Map<String, dynamic>) {
       // Handle nested recommendation structure
       recommendations.forEach((category, items) {
@@ -694,18 +723,19 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
             final item = items[i];
             String title = 'Recommendation ${i + 1}';
             String description = 'No description available';
-            
+
             // Safe extraction of title and description
             if (item is Map<String, dynamic>) {
               title = item['title']?.toString() ?? title;
-              description = item['description']?.toString() ?? 
-                           item['message']?.toString() ?? 
-                           description;
+              description = item['description']?.toString() ??
+                  item['message']?.toString() ??
+                  description;
             } else if (item is String) {
               description = item;
-              title = 'Improve ${category.substring(0, 1).toUpperCase()}${category.substring(1)}';
+              title =
+                  'Improve ${category.substring(0, 1).toUpperCase()}${category.substring(1)}';
             }
-            
+
             transformedRecs.add({
               'id': '${category}_$i',
               'title': title,
@@ -725,11 +755,12 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
       // Handle flat list structure
       transformedRecs.addAll(recommendations);
     }
-    
+
     return transformedRecs;
   }
 
-  Map<String, dynamic> _transformSubmissionReadiness(Map<String, dynamic> data) {
+  Map<String, dynamic> _transformSubmissionReadiness(
+      Map<String, dynamic> data) {
     return {
       'is_ready': data['is_submission_ready'] ?? false,
       'readiness_score': _parseDouble(data['overall_score']) ?? 0.0,
@@ -788,35 +819,34 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
     final percentile = (data['percentile_rank'] ?? 0).toDouble();
     final performanceLevel = data['performance_level'] ?? 'average';
     final totalParticipants = data['total_participants'] ?? 0;
-    
+
     return 'You rank in the ${percentile.toStringAsFixed(0)}th percentile '
-           'among $totalParticipants students with $performanceLevel performance.';
+        'among $totalParticipants students with $performanceLevel performance.';
   }
-  
+
   List<String> _parsePeerComparisons(Map<String, dynamic> data) {
     final comparisons = <String>[];
-    
+
     final averageScore = (data['average_score'] ?? 0).toDouble();
     final topScore = (data['top_score'] ?? 0).toDouble();
     final userRank = data['user_rank'] ?? 0;
     final totalParticipants = data['total_participants'] ?? 0;
-    
+
     comparisons.add('Average score: ${averageScore.toStringAsFixed(1)}');
     comparisons.add('Top score: ${topScore.toStringAsFixed(1)}');
     comparisons.add('Your rank: #$userRank out of $totalParticipants');
-    
+
     return comparisons;
   }
-  
+
   Map<String, double> _parseSectionPercentiles(dynamic sectionPercentiles) {
     if (sectionPercentiles is Map<String, dynamic>) {
-      return sectionPercentiles.map(
-        (key, value) => MapEntry(key, (value ?? 0).toDouble())
-      );
+      return sectionPercentiles
+          .map((key, value) => MapEntry(key, (value ?? 0).toDouble()));
     }
     return {};
   }
-  
+
   List<BenchmarkInsightModel> _parseInsights(dynamic insights) {
     if (insights is List) {
       return insights.map((insight) {
@@ -830,7 +860,7 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
     }
     return [];
   }
-  
+
   Map<String, dynamic> _parseStatistics(dynamic statistics) {
     if (statistics is Map<String, dynamic>) {
       return Map<String, dynamic>.from(statistics);
@@ -863,9 +893,11 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
     } on DioException catch (e) {
       final appException = e.error;
       if (appException is AppException) throw appException;
-      throw AppException(message: 'Network error: ${e.message ?? "Connection failed"}');
+      throw AppException(
+          message: 'Network error: ${e.message ?? "Connection failed"}');
     } catch (e) {
-      throw AppException(message: 'Failed to get score progression: ${e.toString()}');
+      throw AppException(
+          message: 'Failed to get score progression: ${e.toString()}');
     }
   }
 }

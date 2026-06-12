@@ -156,7 +156,7 @@ class CVDashboardSkeleton extends StatelessWidget {
           const SizedBox(height: AppSpacing.sm),
           const SkeletonLoader(width: 300, height: 16),
           const SizedBox(height: AppSpacing.xl),
-          
+
           // Stats grid skeleton
           GridView.count(
             shrinkWrap: true,
@@ -167,15 +167,17 @@ class CVDashboardSkeleton extends StatelessWidget {
             childAspectRatio: 1.5,
             children: List.generate(4, (index) => const SkeletonStats()),
           ),
-          
+
           const SizedBox(height: AppSpacing.xl),
-          
+
           // Action buttons skeleton
           Row(
             children: [
-              Expanded(child: SkeletonLoader(width: double.infinity, height: 48)),
+              Expanded(
+                  child: SkeletonLoader(width: double.infinity, height: 48)),
               const SizedBox(width: AppSpacing.md),
-              Expanded(child: SkeletonLoader(width: double.infinity, height: 48)),
+              Expanded(
+                  child: SkeletonLoader(width: double.infinity, height: 48)),
             ],
           ),
         ],
@@ -202,7 +204,7 @@ class CVSectionsSkeleton extends StatelessWidget {
             ],
           ),
         ),
-        
+
         // List items skeleton
         Expanded(
           child: ListView.builder(
@@ -244,7 +246,8 @@ class FormLoadingOverlay extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(AppColors.primary),
                       ),
                       if (message != null) ...[
                         const SizedBox(height: AppSpacing.md),

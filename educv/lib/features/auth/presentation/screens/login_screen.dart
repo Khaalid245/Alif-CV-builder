@@ -139,8 +139,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
             color: PremiumPortfolioColors.accentPurple.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color:
-                  PremiumPortfolioColors.accentPurple.withValues(alpha: 0.2),
+              color: PremiumPortfolioColors.accentPurple.withValues(alpha: 0.2),
             ),
           ),
           child: const Text(
@@ -234,8 +233,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                 child: TextButton(
                   onPressed: () => context.go('/forgot-password'),
                   style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   ),
                   child: const Text(
                     'Forgot password?',
@@ -369,19 +368,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
     return InputDecoration(
       hintText: hint,
       hintStyle: const TextStyle(color: PremiumPortfolioColors.secondaryText),
-      prefixIcon: Icon(icon,
-          color: PremiumPortfolioColors.secondaryText, size: 20),
+      prefixIcon:
+          Icon(icon, color: PremiumPortfolioColors.secondaryText, size: 20),
       filled: true,
       fillColor: PremiumPortfolioColors.background,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide:
-            const BorderSide(color: PremiumPortfolioColors.borderLight),
+        borderSide: const BorderSide(color: PremiumPortfolioColors.borderLight),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide:
-            const BorderSide(color: PremiumPortfolioColors.borderLight),
+        borderSide: const BorderSide(color: PremiumPortfolioColors.borderLight),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
@@ -390,13 +387,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(
-            color: PremiumPortfolioColors.error, width: 2),
+        borderSide:
+            const BorderSide(color: PremiumPortfolioColors.error, width: 2),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(
-            color: PremiumPortfolioColors.error, width: 2),
+        borderSide:
+            const BorderSide(color: PremiumPortfolioColors.error, width: 2),
       ),
       contentPadding: const EdgeInsets.all(16),
     );
@@ -447,8 +444,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                     height: 24,
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
-                      valueColor:
-                          AlwaysStoppedAnimation<Color>(Colors.white),
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                     ),
                   )
                 : const Text(
@@ -545,5 +541,3 @@ class _HoverCardState extends State<_HoverCard>
     );
   }
 }
-
-

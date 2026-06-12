@@ -43,7 +43,7 @@ class _CVSectionsScreenState extends ConsumerState<CVSectionsScreen>
       CurvedAnimation(parent: _fadeController, curve: Curves.easeOut),
     );
     _fadeController.forward();
-    
+
     // Fetch CV data when screen loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(cvProfileProvider.notifier).fetch();
@@ -81,7 +81,8 @@ class _CVSectionsScreenState extends ConsumerState<CVSectionsScreen>
             state: cvAsync.when(
               loading: () => LoadingState.loading,
               error: (_, __) => LoadingState.error,
-              data: (profile) => profile == null ? LoadingState.empty : LoadingState.loaded,
+              data: (profile) =>
+                  profile == null ? LoadingState.empty : LoadingState.loaded,
             ),
             loadingWidget: const CVSectionsSkeleton(),
             errorMessage: cvAsync.hasError ? cvAsync.error.toString() : null,
@@ -113,7 +114,8 @@ class _CVSectionsScreenState extends ConsumerState<CVSectionsScreen>
   Widget _buildCVContent(CVProfileModel cvProfile) {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 100), // Bottom padding for nav bar
+        padding: const EdgeInsets.fromLTRB(
+            16, 8, 16, 100), // Bottom padding for nav bar
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -122,23 +124,23 @@ class _CVSectionsScreenState extends ConsumerState<CVSectionsScreen>
               width: double.infinity,
               child: _buildSimpleHeader(cvProfile),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Clean Sections List
             SizedBox(
               width: double.infinity,
               child: _buildCleanSectionsList(cvProfile),
             ),
-            
+
             const SizedBox(height: 20),
-            
+
             // Simple Generate Button
             SizedBox(
               width: double.infinity,
               child: _buildSimpleGenerateButton(),
             ),
-            
+
             const SizedBox(height: 16),
           ],
         ),
@@ -189,12 +191,15 @@ class _CVSectionsScreenState extends ConsumerState<CVSectionsScreen>
               label: AccessibilityLabels.cvProgress,
               value: '${cvProfile.completionPercentage} percent complete',
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4), // Further reduced padding
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 10, vertical: 4), // Further reduced padding
                 decoration: BoxDecoration(
                   color: cvProfile.completionPercentage >= 80
                       ? PremiumPortfolioColors.success.withValues(alpha: 0.1)
-                      : PremiumPortfolioColors.accentPurple.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12), // Further reduced radius
+                      : PremiumPortfolioColors.accentPurple
+                          .withValues(alpha: 0.1),
+                  borderRadius:
+                      BorderRadius.circular(12), // Further reduced radius
                   border: Border.all(
                     color: cvProfile.completionPercentage >= 80
                         ? PremiumPortfolioColors.success
@@ -221,16 +226,17 @@ class _CVSectionsScreenState extends ConsumerState<CVSectionsScreen>
 
   Widget _buildCleanSectionsList(CVProfileModel cvProfile) {
     final sections = _getSections(cvProfile);
-    
+
     return OptimizedEnterpriseCard(
       child: Column(
         children: [
           // Header
           OptimizedSectionHeader(
             title: 'CV Sections',
-            subtitle: '${_getCompletedSectionsCount(cvProfile)} of ${sections.length} completed',
+            subtitle:
+                '${_getCompletedSectionsCount(cvProfile)} of ${sections.length} completed',
           ),
-          
+
           // Sections List
           ListView.builder(
             shrinkWrap: true,
@@ -248,8 +254,10 @@ class _CVSectionsScreenState extends ConsumerState<CVSectionsScreen>
                     height: 40,
                     decoration: BoxDecoration(
                       color: section.hasData
-                          ? PremiumPortfolioColors.success.withValues(alpha: 0.1)
-                          : PremiumPortfolioColors.accentPurple.withValues(alpha: 0.1),
+                          ? PremiumPortfolioColors.success
+                              .withValues(alpha: 0.1)
+                          : PremiumPortfolioColors.accentPurple
+                              .withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(
@@ -261,7 +269,8 @@ class _CVSectionsScreenState extends ConsumerState<CVSectionsScreen>
                     ),
                   ),
                   title: section.name,
-                  subtitle: section.hasData ? section.countLabel : 'Not added yet',
+                  subtitle:
+                      section.hasData ? section.countLabel : 'Not added yet',
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -277,7 +286,8 @@ class _CVSectionsScreenState extends ConsumerState<CVSectionsScreen>
                       ),
                     ],
                   ),
-                  onTap: () => context.go('/cv/form', extra: {'initialStep': section.stepIndex}),
+                  onTap: () => context.go('/cv/form',
+                      extra: {'initialStep': section.stepIndex}),
                   showDivider: index < sections.length - 1,
                 ),
               );
@@ -287,8 +297,6 @@ class _CVSectionsScreenState extends ConsumerState<CVSectionsScreen>
       ),
     );
   }
-
-
 
   Widget _buildSimpleGenerateButton() {
     return ResponsiveBuilder(
@@ -335,13 +343,11 @@ class _CVSectionsScreenState extends ConsumerState<CVSectionsScreen>
   }
 
   String _buildSectionSemanticLabel(CVSectionData section) {
-    final status = section.hasData 
-        ? AccessibilityLabels.cvSectionComplete 
+    final status = section.hasData
+        ? AccessibilityLabels.cvSectionComplete
         : AccessibilityLabels.cvSectionIncomplete;
     return '${section.name} section, $status, ${section.countLabel}';
   }
-
-
 
   int _getCompletedSectionsCount(CVProfileModel cvProfile) {
     final sections = _getSections(cvProfile);
@@ -362,42 +368,48 @@ class _CVSectionsScreenState extends ConsumerState<CVSectionsScreen>
         icon: LucideIcons.graduationCap,
         stepIndex: 1,
         hasData: cvProfile.education.isNotEmpty,
-        countLabel: '${cvProfile.education.length} ${cvProfile.education.length == 1 ? 'entry' : 'entries'}',
+        countLabel:
+            '${cvProfile.education.length} ${cvProfile.education.length == 1 ? 'entry' : 'entries'}',
       ),
       CVSectionData(
         name: 'Experience',
         icon: LucideIcons.briefcase,
         stepIndex: 2,
         hasData: cvProfile.experiences.isNotEmpty,
-        countLabel: '${cvProfile.experiences.length} ${cvProfile.experiences.length == 1 ? 'position' : 'positions'}',
+        countLabel:
+            '${cvProfile.experiences.length} ${cvProfile.experiences.length == 1 ? 'position' : 'positions'}',
       ),
       CVSectionData(
         name: 'Skills',
         icon: LucideIcons.zap,
         stepIndex: 3,
         hasData: cvProfile.skills.isNotEmpty,
-        countLabel: '${cvProfile.skills.length} ${cvProfile.skills.length == 1 ? 'skill' : 'skills'}',
+        countLabel:
+            '${cvProfile.skills.length} ${cvProfile.skills.length == 1 ? 'skill' : 'skills'}',
       ),
       CVSectionData(
         name: 'Languages',
         icon: LucideIcons.globe,
         stepIndex: 4,
         hasData: cvProfile.languages.isNotEmpty,
-        countLabel: '${cvProfile.languages.length} ${cvProfile.languages.length == 1 ? 'language' : 'languages'}',
+        countLabel:
+            '${cvProfile.languages.length} ${cvProfile.languages.length == 1 ? 'language' : 'languages'}',
       ),
       CVSectionData(
         name: 'Projects',
         icon: LucideIcons.code2,
         stepIndex: 5,
         hasData: cvProfile.projects.isNotEmpty,
-        countLabel: '${cvProfile.projects.length} ${cvProfile.projects.length == 1 ? 'project' : 'projects'}',
+        countLabel:
+            '${cvProfile.projects.length} ${cvProfile.projects.length == 1 ? 'project' : 'projects'}',
       ),
       CVSectionData(
         name: 'Certifications',
         icon: LucideIcons.award,
         stepIndex: 6,
         hasData: cvProfile.certifications.isNotEmpty,
-        countLabel: '${cvProfile.certifications.length} ${cvProfile.certifications.length == 1 ? 'certificate' : 'certificates'}',
+        countLabel:
+            '${cvProfile.certifications.length} ${cvProfile.certifications.length == 1 ? 'certificate' : 'certificates'}',
       ),
     ];
   }

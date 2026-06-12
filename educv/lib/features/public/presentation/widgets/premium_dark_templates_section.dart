@@ -15,11 +15,12 @@ class PremiumDarkTemplatesSection extends StatefulWidget {
   const PremiumDarkTemplatesSection({super.key});
 
   @override
-  State<PremiumDarkTemplatesSection> createState() => _PremiumDarkTemplatesSectionState();
+  State<PremiumDarkTemplatesSection> createState() =>
+      _PremiumDarkTemplatesSectionState();
 }
 
-class _PremiumDarkTemplatesSectionState extends State<PremiumDarkTemplatesSection>
-    with TickerProviderStateMixin {
+class _PremiumDarkTemplatesSectionState
+    extends State<PremiumDarkTemplatesSection> with TickerProviderStateMixin {
   int _selectedIndex = 0;
   late AnimationController _infoController;
   late AnimationController _previewController;
@@ -224,23 +225,25 @@ class _TemplateTab extends StatelessWidget {
         curve: Curves.easeOut,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         decoration: BoxDecoration(
-          color: isSelected 
-              ? PremiumDarkColors.glassBackground 
+          color: isSelected
+              ? PremiumDarkColors.glassBackground
               : Colors.transparent,
           border: Border.all(
-            color: isSelected 
-                ? PremiumDarkColors.primary 
+            color: isSelected
+                ? PremiumDarkColors.primary
                 : PremiumDarkColors.glassBorder,
             width: isSelected ? 2 : 1,
           ),
           borderRadius: BorderRadius.circular(16),
-          boxShadow: isSelected ? [
-            BoxShadow(
-              color: PremiumDarkColors.glow,
-              blurRadius: 20,
-              offset: const Offset(0, 4),
-            ),
-          ] : null,
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: PremiumDarkColors.glow,
+                    blurRadius: 20,
+                    offset: const Offset(0, 4),
+                  ),
+                ]
+              : null,
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(16),
@@ -266,10 +269,11 @@ class _TemplateTab extends StatelessWidget {
                         : PremiumDarkColors.textSecondary,
                   ),
                 ),
-                if (template.isPopular) ...[ 
+                if (template.isPopular) ...[
                   const SizedBox(width: 10),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
                         colors: [
@@ -366,15 +370,18 @@ class _InfoPanel extends StatelessWidget {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 12, vertical: 6),
                                 decoration: BoxDecoration(
-                                  color: PremiumDarkColors.primary.withValues(alpha: 0.1),
+                                  color: PremiumDarkColors.primary
+                                      .withValues(alpha: 0.1),
                                   border: Border.all(
-                                    color: PremiumDarkColors.primary.withValues(alpha: 0.2),
+                                    color: PremiumDarkColors.primary
+                                        .withValues(alpha: 0.2),
                                   ),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Text(
                                   tag,
-                                  style: PremiumDarkTypography.captionBold.copyWith(
+                                  style: PremiumDarkTypography.captionBold
+                                      .copyWith(
                                     color: PremiumDarkColors.primary,
                                   ),
                                 ),
@@ -406,7 +413,8 @@ class _InfoPanel extends StatelessWidget {
                                       width: 20,
                                       height: 20,
                                       decoration: BoxDecoration(
-                                        color: PremiumDarkColors.accent.withValues(alpha: 0.1),
+                                        color: PremiumDarkColors.accent
+                                            .withValues(alpha: 0.1),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       child: const Icon(
@@ -419,8 +427,10 @@ class _InfoPanel extends StatelessWidget {
                                     Expanded(
                                       child: Text(
                                         feature,
-                                        style: PremiumDarkTypography.bodyMedium.copyWith(
-                                          color: PremiumDarkColors.textSecondary,
+                                        style: PremiumDarkTypography.bodyMedium
+                                            .copyWith(
+                                          color:
+                                              PremiumDarkColors.textSecondary,
                                         ),
                                       ),
                                     ),

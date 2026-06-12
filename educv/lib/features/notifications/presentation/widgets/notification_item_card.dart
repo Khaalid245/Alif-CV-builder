@@ -27,7 +27,9 @@ class NotificationItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.only(bottom: AppSpacing.sm),
-      color: notification.isUnread ? AppColors.primaryLight.withOpacity(0.3) : AppColors.background,
+      color: notification.isUnread
+          ? AppColors.primaryLight.withOpacity(0.3)
+          : AppColors.background,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(AppSpacing.radiusCard),
@@ -53,7 +55,9 @@ class NotificationItemCard extends StatelessWidget {
                           child: Text(
                             notification.title,
                             style: AppTypography.body1.copyWith(
-                              fontWeight: notification.isUnread ? FontWeight.w600 : FontWeight.w500,
+                              fontWeight: notification.isUnread
+                                  ? FontWeight.w600
+                                  : FontWeight.w500,
                             ),
                           ),
                         ),
@@ -90,7 +94,8 @@ class NotificationItemCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(
-                            _formatNotificationType(notification.notificationType),
+                            _formatNotificationType(
+                                notification.notificationType),
                             style: AppTypography.caption.copyWith(
                               color: AppColors.white,
                               fontWeight: FontWeight.w500,
@@ -123,7 +128,8 @@ class NotificationItemCard extends StatelessWidget {
                         ),
                         const SizedBox(width: AppSpacing.xs),
                         Text(
-                          DateFormatter.formatRelativeTime(notification.createdAt),
+                          DateFormatter.formatRelativeTime(
+                              notification.createdAt),
                           style: AppTypography.caption.copyWith(
                             color: AppColors.textHint,
                           ),
@@ -136,7 +142,8 @@ class NotificationItemCard extends StatelessWidget {
                         padding: const EdgeInsets.all(AppSpacing.sm),
                         decoration: BoxDecoration(
                           color: AppColors.error.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusBtn),
+                          borderRadius:
+                              BorderRadius.circular(AppSpacing.radiusBtn),
                           border: Border.all(
                             color: AppColors.error.withOpacity(0.3),
                           ),

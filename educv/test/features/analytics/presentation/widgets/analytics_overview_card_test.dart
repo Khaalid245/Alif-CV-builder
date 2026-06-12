@@ -18,7 +18,8 @@ void main() {
       );
     });
 
-    testWidgets('should display user summary information correctly', (tester) async {
+    testWidgets('should display user summary information correctly',
+        (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -71,7 +72,8 @@ void main() {
       expect(find.text('percentile'), findsNothing);
     });
 
-    testWidgets('should show correct submission readiness status', (tester) async {
+    testWidgets('should show correct submission readiness status',
+        (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -84,7 +86,8 @@ void main() {
       expect(find.text('Yes'), findsOneWidget);
     });
 
-    testWidgets('should show not ready status when submission not ready', (tester) async {
+    testWidgets('should show not ready status when submission not ready',
+        (tester) async {
       final notReadySummary = UserSummaryModel(
         latestScore: 45,
         latestCompletion: 60,
@@ -127,7 +130,8 @@ void main() {
       expect(find.text('Not Graded'), findsOneWidget);
     });
 
-    testWidgets('should display correct score colors based on performance', (tester) async {
+    testWidgets('should display correct score colors based on performance',
+        (tester) async {
       // Test high score (should be success color)
       await tester.pumpWidget(
         MaterialApp(
@@ -141,7 +145,8 @@ void main() {
       expect(find.byType(AnalyticsOverviewCard), findsOneWidget);
     });
 
-    testWidgets('should show different percentile descriptions based on rank', (tester) async {
+    testWidgets('should show different percentile descriptions based on rank',
+        (tester) async {
       // Test excellent performance (90th+ percentile)
       final excellentSummary = UserSummaryModel(
         latestScore: 95,
@@ -181,7 +186,8 @@ void main() {
         ),
       );
 
-      expect(find.textContaining('Needs significant improvement'), findsOneWidget);
+      expect(
+          find.textContaining('Needs significant improvement'), findsOneWidget);
       expect(find.text('No'), findsOneWidget);
       expect(find.text('Needs Improvement'), findsOneWidget);
     });
@@ -201,7 +207,8 @@ void main() {
       expect(find.text('Grade'), findsOneWidget);
     });
 
-    testWidgets('should show correct icons for different sections', (tester) async {
+    testWidgets('should show correct icons for different sections',
+        (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(

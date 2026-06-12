@@ -206,35 +206,35 @@ class SubmissionReadinessWidget extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.sm),
         ...items.map((item) => Padding(
-          padding: const EdgeInsets.only(
-            left: AppSpacing.lg,
-            bottom: AppSpacing.xs,
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 4,
-                height: 4,
-                margin: const EdgeInsets.only(top: 8),
-                decoration: BoxDecoration(
-                  color: color.withOpacity(0.6),
-                  shape: BoxShape.circle,
-                ),
+              padding: const EdgeInsets.only(
+                left: AppSpacing.lg,
+                bottom: AppSpacing.xs,
               ),
-              const SizedBox(width: AppSpacing.sm),
-              Expanded(
-                child: Text(
-                  item,
-                  style: AppTypography.bodyMedium.copyWith(
-                    color: AppColors.textSecondary,
-                    height: 1.4,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 4,
+                    height: 4,
+                    margin: const EdgeInsets.only(top: 8),
+                    decoration: BoxDecoration(
+                      color: color.withOpacity(0.6),
+                      shape: BoxShape.circle,
+                    ),
                   ),
-                ),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Text(
+                      item,
+                      style: AppTypography.bodyMedium.copyWith(
+                        color: AppColors.textSecondary,
+                        height: 1.4,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        )),
+            )),
       ],
     );
   }
@@ -318,7 +318,9 @@ class ReadinessStatusBadge extends StatelessWidget {
           const SizedBox(width: 4),
           Text(
             text,
-            style: (compact ? AppTypography.bodySmall : AppTypography.bodyMedium).copyWith(
+            style:
+                (compact ? AppTypography.bodySmall : AppTypography.bodyMedium)
+                    .copyWith(
               color: color,
               fontWeight: FontWeight.w600,
             ),

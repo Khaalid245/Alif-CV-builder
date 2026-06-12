@@ -144,7 +144,9 @@ class _ModernSidebarState extends State<ModernSidebar>
           IconButton(
             onPressed: widget.onToggle,
             icon: Icon(
-              widget.isCollapsed ? LucideIcons.chevronRight : LucideIcons.chevronLeft,
+              widget.isCollapsed
+                  ? LucideIcons.chevronRight
+                  : LucideIcons.chevronLeft,
               color: EnterpriseTheme.textSecondary,
               size: 20,
             ),
@@ -199,7 +201,7 @@ class _ModernSidebarState extends State<ModernSidebar>
       itemBuilder: (context, index) {
         final item = navItems[index];
         final isActive = widget.currentRoute == item.route;
-        
+
         return _buildNavItem(item, isActive);
       },
     );
@@ -253,7 +255,8 @@ class _ModernSidebarState extends State<ModernSidebar>
                           color: isActive
                               ? EnterpriseTheme.primaryPurple
                               : EnterpriseTheme.textPrimary,
-                          fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
+                          fontWeight:
+                              isActive ? FontWeight.w600 : FontWeight.w500,
                         ),
                       ),
                     ),

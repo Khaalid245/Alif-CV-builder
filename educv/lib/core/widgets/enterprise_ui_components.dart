@@ -66,18 +66,23 @@ class _EnterpriseCardState extends State<EnterpriseCard>
             return Transform.scale(
               scale: _scaleAnimation.value,
               child: Container(
-                padding: widget.padding ?? const EdgeInsets.all(EnterpriseTheme.spacing24),
+                padding: widget.padding ??
+                    const EdgeInsets.all(EnterpriseTheme.spacing24),
                 decoration: BoxDecoration(
-                  color: widget.backgroundColor ?? EnterpriseTheme.cardBackground,
+                  color:
+                      widget.backgroundColor ?? EnterpriseTheme.cardBackground,
                   borderRadius: BorderRadius.circular(EnterpriseTheme.radiusLg),
                   border: Border.all(color: EnterpriseTheme.cardBorder),
-                  boxShadow: widget.boxShadow ?? [
-                    BoxShadow(
-                      color: EnterpriseTheme.gray900.withOpacity(0.05 + (_elevationAnimation.value * 0.05)),
-                      blurRadius: 6 + (_elevationAnimation.value * 10),
-                      offset: Offset(0, 1 + (_elevationAnimation.value * 4)),
-                    ),
-                  ],
+                  boxShadow: widget.boxShadow ??
+                      [
+                        BoxShadow(
+                          color: EnterpriseTheme.gray900.withOpacity(
+                              0.05 + (_elevationAnimation.value * 0.05)),
+                          blurRadius: 6 + (_elevationAnimation.value * 10),
+                          offset:
+                              Offset(0, 1 + (_elevationAnimation.value * 4)),
+                        ),
+                      ],
                 ),
                 child: widget.child,
               ),
@@ -168,7 +173,7 @@ class ActionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = accentColor ?? EnterpriseTheme.primaryPurple;
-    
+
     return EnterpriseCard(
       onTap: onTap,
       child: Column(
@@ -213,7 +218,7 @@ class StatusBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     Color backgroundColor;
     Color textColor;
-    
+
     switch (type) {
       case StatusType.success:
         backgroundColor = EnterpriseTheme.success.withOpacity(0.1);
@@ -269,7 +274,7 @@ class ProgressIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final progressColor = color ?? EnterpriseTheme.primaryPurple;
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: EnterpriseTheme.spacing16,
@@ -385,7 +390,8 @@ class _EnterpriseButtonState extends State<EnterpriseButton>
                       color: widget.type.textColor,
                       size: widget.size.iconSize,
                     ),
-                  if ((widget.icon != null || widget.isLoading) && widget.text.isNotEmpty)
+                  if ((widget.icon != null || widget.isLoading) &&
+                      widget.text.isNotEmpty)
                     const SizedBox(width: EnterpriseTheme.spacing8),
                   if (widget.text.isNotEmpty)
                     Text(

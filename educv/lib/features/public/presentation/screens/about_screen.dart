@@ -88,7 +88,10 @@ class AboutScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-              ).animate(delay: 200.ms).fadeIn(duration: 800.ms).slideY(begin: 0.3, end: 0),
+              )
+                  .animate(delay: 200.ms)
+                  .fadeIn(duration: 800.ms)
+                  .slideY(begin: 0.3, end: 0),
               const SizedBox(height: 24),
               Text(
                 'Born from a real problem — thousands of students graduating without knowing how to present themselves professionally. EduCV bridges that gap.',
@@ -98,7 +101,10 @@ class AboutScreen extends StatelessWidget {
                   color: PremiumPortfolioColors.secondaryText,
                   height: 1.6,
                 ),
-              ).animate(delay: 400.ms).fadeIn(duration: 800.ms).slideY(begin: 0.3, end: 0),
+              )
+                  .animate(delay: 400.ms)
+                  .fadeIn(duration: 800.ms)
+                  .slideY(begin: 0.3, end: 0),
               const SizedBox(height: 32),
               Wrap(
                 spacing: 12,
@@ -109,14 +115,20 @@ class AboutScreen extends StatelessWidget {
                   _buildTag('Career Ready'),
                   _buildTag('Professional Templates'),
                 ],
-              ).animate(delay: 600.ms).fadeIn(duration: 800.ms).slideY(begin: 0.3, end: 0),
+              )
+                  .animate(delay: 600.ms)
+                  .fadeIn(duration: 800.ms)
+                  .slideY(begin: 0.3, end: 0),
             ],
           ),
         ),
         const SizedBox(width: 60),
         Expanded(
           flex: 2,
-          child: _buildHeroCard().animate(delay: 800.ms).fadeIn(duration: 1000.ms).slideX(begin: 0.3, end: 0),
+          child: _buildHeroCard()
+              .animate(delay: 800.ms)
+              .fadeIn(duration: 1000.ms)
+              .slideX(begin: 0.3, end: 0),
         ),
       ],
     );
@@ -158,7 +170,10 @@ class AboutScreen extends StatelessWidget {
               ),
             ],
           ),
-        ).animate(delay: 200.ms).fadeIn(duration: 800.ms).slideY(begin: 0.3, end: 0),
+        )
+            .animate(delay: 200.ms)
+            .fadeIn(duration: 800.ms)
+            .slideY(begin: 0.3, end: 0),
         const SizedBox(height: 20),
         Text(
           'Born from a real problem — thousands of students graduating without knowing how to present themselves professionally.',
@@ -168,7 +183,10 @@ class AboutScreen extends StatelessWidget {
             color: PremiumPortfolioColors.secondaryText,
             height: 1.6,
           ),
-        ).animate(delay: 400.ms).fadeIn(duration: 800.ms).slideY(begin: 0.3, end: 0),
+        )
+            .animate(delay: 400.ms)
+            .fadeIn(duration: 800.ms)
+            .slideY(begin: 0.3, end: 0),
         const SizedBox(height: 24),
         Wrap(
           spacing: 8,
@@ -178,9 +196,15 @@ class AboutScreen extends StatelessWidget {
             _buildTag('Student Platform'),
             _buildTag('Career Ready'),
           ],
-        ).animate(delay: 600.ms).fadeIn(duration: 800.ms).slideY(begin: 0.3, end: 0),
+        )
+            .animate(delay: 600.ms)
+            .fadeIn(duration: 800.ms)
+            .slideY(begin: 0.3, end: 0),
         const SizedBox(height: 40),
-        _buildHeroCard().animate(delay: 800.ms).fadeIn(duration: 1000.ms).slideY(begin: 0.3, end: 0),
+        _buildHeroCard()
+            .animate(delay: 800.ms)
+            .fadeIn(duration: 1000.ms)
+            .slideY(begin: 0.3, end: 0),
       ],
     );
   }
@@ -217,7 +241,8 @@ class AboutScreen extends StatelessWidget {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: PremiumPortfolioColors.accentPurple.withValues(alpha: 0.1),
+                  color: PremiumPortfolioColors.accentPurple
+                      .withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
@@ -296,14 +321,16 @@ class AboutScreen extends StatelessWidget {
           ),
         ],
       ),
-    ).animate(
-      onPlay: (controller) => controller.repeat(reverse: true),
-    ).moveY(
-      begin: 0,
-      end: -8,
-      duration: 4000.ms,
-      curve: Curves.easeInOut,
-    );
+    )
+        .animate(
+          onPlay: (controller) => controller.repeat(reverse: true),
+        )
+        .moveY(
+          begin: 0,
+          end: -8,
+          duration: 4000.ms,
+          curve: Curves.easeInOut,
+        );
   }
 
   Widget _buildMissionSection() {
@@ -321,7 +348,10 @@ class AboutScreen extends StatelessWidget {
           ),
         ),
       ),
-    ).animate().fadeIn(duration: 800.ms, delay: 400.ms).slideY(begin: 0.3, end: 0);
+    )
+        .animate()
+        .fadeIn(duration: 800.ms, delay: 400.ms)
+        .slideY(begin: 0.3, end: 0);
   }
 
   Widget _buildMissionDesktop() {
@@ -329,11 +359,17 @@ class AboutScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
-          child: _buildTestimonialCard().animate(delay: 600.ms).fadeIn(duration: 1000.ms).slideX(begin: -0.3, end: 0),
+          child: _buildTestimonialCard()
+              .animate(delay: 600.ms)
+              .fadeIn(duration: 1000.ms)
+              .slideX(begin: -0.3, end: 0),
         ),
         const SizedBox(width: 60),
         Expanded(
-          child: _buildMissionPoints().animate(delay: 800.ms).fadeIn(duration: 1000.ms).slideX(begin: 0.3, end: 0),
+          child: _buildMissionPoints()
+              .animate(delay: 800.ms)
+              .fadeIn(duration: 1000.ms)
+              .slideX(begin: 0.3, end: 0),
         ),
       ],
     );
@@ -342,9 +378,15 @@ class AboutScreen extends StatelessWidget {
   Widget _buildMissionMobile() {
     return Column(
       children: [
-        _buildTestimonialCard().animate(delay: 600.ms).fadeIn(duration: 1000.ms).slideY(begin: 0.3, end: 0),
+        _buildTestimonialCard()
+            .animate(delay: 600.ms)
+            .fadeIn(duration: 1000.ms)
+            .slideY(begin: 0.3, end: 0),
         const SizedBox(height: 40),
-        _buildMissionPoints().animate(delay: 800.ms).fadeIn(duration: 1000.ms).slideY(begin: 0.3, end: 0),
+        _buildMissionPoints()
+            .animate(delay: 800.ms)
+            .fadeIn(duration: 1000.ms)
+            .slideY(begin: 0.3, end: 0),
       ],
     );
   }
@@ -407,14 +449,16 @@ class AboutScreen extends StatelessWidget {
           ),
         ],
       ),
-    ).animate(
-      onPlay: (controller) => controller.repeat(reverse: true),
-    ).moveY(
-      begin: 0,
-      end: -6,
-      duration: 5000.ms,
-      curve: Curves.easeInOut,
-    );
+    )
+        .animate(
+          onPlay: (controller) => controller.repeat(reverse: true),
+        )
+        .moveY(
+          begin: 0,
+          end: -6,
+          duration: 5000.ms,
+          curve: Curves.easeInOut,
+        );
   }
 
   Widget _buildMissionPoints() {
@@ -422,7 +466,8 @@ class AboutScreen extends StatelessWidget {
       {
         'icon': LucideIcons.target,
         'title': 'Remove barriers',
-        'description': 'Eliminate obstacles to professional presentation for all students',
+        'description':
+            'Eliminate obstacles to professional presentation for all students',
       },
       {
         'icon': LucideIcons.award,
@@ -447,7 +492,10 @@ class AboutScreen extends StatelessWidget {
             color: PremiumPortfolioColors.primaryText,
             height: 1.2,
           ),
-        ).animate(delay: 1000.ms).fadeIn(duration: 800.ms).slideY(begin: 0.3, end: 0),
+        )
+            .animate(delay: 1000.ms)
+            .fadeIn(duration: 800.ms)
+            .slideY(begin: 0.3, end: 0),
         const SizedBox(height: 32),
         ...points.asMap().entries.map((entry) {
           final index = entry.key;
@@ -462,7 +510,8 @@ class AboutScreen extends StatelessWidget {
                     width: 48,
                     height: 48,
                     decoration: BoxDecoration(
-                      color: PremiumPortfolioColors.accentPurple.withValues(alpha: 0.1),
+                      color: PremiumPortfolioColors.accentPurple
+                          .withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
@@ -498,16 +547,22 @@ class AboutScreen extends StatelessWidget {
                   ),
                 ],
               ),
-            ).animate(
-              delay: (1200 + index * 200).ms,
-            ).fadeIn(duration: 800.ms).slideY(begin: 0.3, end: 0).then().animate(
-              onPlay: (controller) => controller.repeat(reverse: true),
-            ).moveY(
-              begin: 0,
-              end: -4,
-              duration: (4000 + index * 500).ms,
-              curve: Curves.easeInOut,
-            ),
+            )
+                .animate(
+                  delay: (1200 + index * 200).ms,
+                )
+                .fadeIn(duration: 800.ms)
+                .slideY(begin: 0.3, end: 0)
+                .then()
+                .animate(
+                  onPlay: (controller) => controller.repeat(reverse: true),
+                )
+                .moveY(
+                  begin: 0,
+                  end: -4,
+                  duration: (4000 + index * 500).ms,
+                  curve: Curves.easeInOut,
+                ),
           );
         }),
       ],
@@ -543,14 +598,22 @@ class AboutScreen extends StatelessWidget {
                     color: Colors.white,
                     size: 40,
                   ),
-                ).animate(delay: 1600.ms).fadeIn(duration: 800.ms).scale(begin: const Offset(0.8, 0.8), end: const Offset(1.0, 1.0)).then().animate(
-                  onPlay: (controller) => controller.repeat(reverse: true),
-                ).rotate(
-                  begin: -0.02,
-                  end: 0.02,
-                  duration: 3000.ms,
-                  curve: Curves.easeInOut,
-                ),
+                )
+                    .animate(delay: 1600.ms)
+                    .fadeIn(duration: 800.ms)
+                    .scale(
+                        begin: const Offset(0.8, 0.8),
+                        end: const Offset(1.0, 1.0))
+                    .then()
+                    .animate(
+                      onPlay: (controller) => controller.repeat(reverse: true),
+                    )
+                    .rotate(
+                      begin: -0.02,
+                      end: 0.02,
+                      duration: 3000.ms,
+                      curve: Curves.easeInOut,
+                    ),
                 const SizedBox(height: 24),
                 Text(
                   'Officially endorsed by University',
@@ -561,7 +624,10 @@ class AboutScreen extends StatelessWidget {
                     height: 1.2,
                   ),
                   textAlign: TextAlign.center,
-                ).animate(delay: 1800.ms).fadeIn(duration: 800.ms).slideY(begin: 0.3, end: 0),
+                )
+                    .animate(delay: 1800.ms)
+                    .fadeIn(duration: 800.ms)
+                    .slideY(begin: 0.3, end: 0),
                 const SizedBox(height: 16),
                 Text(
                   'EduCV was proposed by the university dean and implemented as the official CV building platform for all enrolled students. It meets the university\'s standards for student data privacy and professional development.',
@@ -571,20 +637,28 @@ class AboutScreen extends StatelessWidget {
                     height: 1.6,
                   ),
                   textAlign: TextAlign.center,
-                ).animate(delay: 2000.ms).fadeIn(duration: 800.ms).slideY(begin: 0.3, end: 0),
+                )
+                    .animate(delay: 2000.ms)
+                    .fadeIn(duration: 800.ms)
+                    .slideY(begin: 0.3, end: 0),
               ],
             ),
-          ).animate(
-            onPlay: (controller) => controller.repeat(reverse: true),
-          ).moveY(
-            begin: 0,
-            end: -10,
-            duration: 6000.ms,
-            curve: Curves.easeInOut,
-          ),
+          )
+              .animate(
+                onPlay: (controller) => controller.repeat(reverse: true),
+              )
+              .moveY(
+                begin: 0,
+                end: -10,
+                duration: 6000.ms,
+                curve: Curves.easeInOut,
+              ),
         ),
       ),
-    ).animate(delay: 1400.ms).fadeIn(duration: 1000.ms).slideY(begin: 0.3, end: 0);
+    )
+        .animate(delay: 1400.ms)
+        .fadeIn(duration: 1000.ms)
+        .slideY(begin: 0.3, end: 0);
   }
 
   Widget _buildStatisticsSection() {
@@ -632,7 +706,10 @@ class AboutScreen extends StatelessWidget {
                   height: 1.2,
                 ),
                 textAlign: TextAlign.center,
-              ).animate(delay: 2200.ms).fadeIn(duration: 800.ms).slideY(begin: 0.3, end: 0),
+              )
+                  .animate(delay: 2200.ms)
+                  .fadeIn(duration: 800.ms)
+                  .slideY(begin: 0.3, end: 0),
               const SizedBox(height: 48),
               LayoutBuilder(
                 builder: (context, constraints) {
@@ -669,7 +746,10 @@ class AboutScreen extends StatelessWidget {
           ),
         ),
       ),
-    ).animate(delay: 2000.ms).fadeIn(duration: 1000.ms).slideY(begin: 0.3, end: 0);
+    )
+        .animate(delay: 2000.ms)
+        .fadeIn(duration: 1000.ms)
+        .slideY(begin: 0.3, end: 0);
   }
 
   Widget _buildStatCard(Map<String, dynamic> stat, int index) {
@@ -688,7 +768,11 @@ class AboutScreen extends StatelessWidget {
               color: stat['color'] as Color,
               size: 28,
             ),
-          ).animate(delay: (2400 + index * 100).ms).fadeIn(duration: 600.ms).scale(begin: const Offset(0.8, 0.8), end: const Offset(1.0, 1.0)),
+          )
+              .animate(delay: (2400 + index * 100).ms)
+              .fadeIn(duration: 600.ms)
+              .scale(
+                  begin: const Offset(0.8, 0.8), end: const Offset(1.0, 1.0)),
           const SizedBox(height: 20),
           AnimatedCounter(
             value: stat['value'] as String,
@@ -709,19 +793,28 @@ class AboutScreen extends StatelessWidget {
               color: PremiumPortfolioColors.secondaryText,
             ),
             textAlign: TextAlign.center,
-          ).animate(delay: (2800 + index * 100).ms).fadeIn(duration: 600.ms).slideY(begin: 0.3, end: 0),
+          )
+              .animate(delay: (2800 + index * 100).ms)
+              .fadeIn(duration: 600.ms)
+              .slideY(begin: 0.3, end: 0),
         ],
       ),
-    ).animate(
-      delay: (2400 + index * 150).ms,
-    ).fadeIn(duration: 800.ms).slideY(begin: 0.3, end: 0).then().animate(
-      onPlay: (controller) => controller.repeat(reverse: true),
-    ).moveY(
-      begin: 0,
-      end: -6,
-      duration: (4000 + index * 400).ms,
-      curve: Curves.easeInOut,
-    );
+    )
+        .animate(
+          delay: (2400 + index * 150).ms,
+        )
+        .fadeIn(duration: 800.ms)
+        .slideY(begin: 0.3, end: 0)
+        .then()
+        .animate(
+          onPlay: (controller) => controller.repeat(reverse: true),
+        )
+        .moveY(
+          begin: 0,
+          end: -6,
+          duration: (4000 + index * 400).ms,
+          curve: Curves.easeInOut,
+        );
   }
 
   Widget _buildTechnologySection() {
@@ -751,7 +844,10 @@ class AboutScreen extends StatelessWidget {
                   height: 1.2,
                 ),
                 textAlign: TextAlign.center,
-              ).animate(delay: 3000.ms).fadeIn(duration: 800.ms).slideY(begin: 0.3, end: 0),
+              )
+                  .animate(delay: 3000.ms)
+                  .fadeIn(duration: 800.ms)
+                  .slideY(begin: 0.3, end: 0),
               const SizedBox(height: 16),
               Text(
                 'Built with enterprise-grade tools and frameworks for reliability, security, and performance.',
@@ -761,7 +857,10 @@ class AboutScreen extends StatelessWidget {
                   height: 1.6,
                 ),
                 textAlign: TextAlign.center,
-              ).animate(delay: 3200.ms).fadeIn(duration: 800.ms).slideY(begin: 0.3, end: 0),
+              )
+                  .animate(delay: 3200.ms)
+                  .fadeIn(duration: 800.ms)
+                  .slideY(begin: 0.3, end: 0),
               const SizedBox(height: 48),
               Wrap(
                 alignment: WrapAlignment.center,
@@ -781,7 +880,10 @@ class AboutScreen extends StatelessWidget {
           ),
         ),
       ),
-    ).animate(delay: 2800.ms).fadeIn(duration: 1000.ms).slideY(begin: 0.3, end: 0);
+    )
+        .animate(delay: 2800.ms)
+        .fadeIn(duration: 1000.ms)
+        .slideY(begin: 0.3, end: 0);
   }
 }
 
@@ -811,14 +913,13 @@ class _TechnologyChipState extends State<_TechnologyChip> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeOutCubic,
-        transform: Matrix4.identity()
-          ..translate(0.0, _isHovered ? -4.0 : 0.0),
+        transform: Matrix4.identity()..translate(0.0, _isHovered ? -4.0 : 0.0),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         decoration: BoxDecoration(
           color: PremiumPortfolioColors.cardBackground,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: _isHovered 
+            color: _isHovered
                 ? PremiumPortfolioColors.accentPurple.withValues(alpha: 0.3)
                 : PremiumPortfolioColors.borderLight,
             width: 1,
@@ -826,7 +927,8 @@ class _TechnologyChipState extends State<_TechnologyChip> {
           boxShadow: _isHovered
               ? [
                   BoxShadow(
-                    color: PremiumPortfolioColors.accentPurple.withValues(alpha: 0.2),
+                    color: PremiumPortfolioColors.accentPurple
+                        .withValues(alpha: 0.2),
                     blurRadius: 20,
                     offset: const Offset(0, 8),
                   ),
@@ -842,9 +944,10 @@ class _TechnologyChipState extends State<_TechnologyChip> {
               child: Icon(
                 widget.icon,
                 size: 20,
-                color: _isHovered 
+                color: _isHovered
                     ? PremiumPortfolioColors.accentPurple
-                    : PremiumPortfolioColors.accentPurple.withValues(alpha: 0.7),
+                    : PremiumPortfolioColors.accentPurple
+                        .withValues(alpha: 0.7),
               ),
             ),
             const SizedBox(width: 8),
@@ -859,8 +962,11 @@ class _TechnologyChipState extends State<_TechnologyChip> {
           ],
         ),
       ),
-    ).animate(
-      delay: (3400 + widget.index * 100).ms,
-    ).fadeIn(duration: 600.ms).slideY(begin: 0.3, end: 0);
+    )
+        .animate(
+          delay: (3400 + widget.index * 100).ms,
+        )
+        .fadeIn(duration: 600.ms)
+        .slideY(begin: 0.3, end: 0);
   }
 }

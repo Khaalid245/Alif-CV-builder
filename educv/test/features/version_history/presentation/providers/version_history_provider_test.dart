@@ -26,7 +26,8 @@ void main() {
       expect(provider.errorMessage, null);
     });
 
-    test('loadVersionHistory should update state correctly on success', () async {
+    test('loadVersionHistory should update state correctly on success',
+        () async {
       final mockVersions = [
         CVVersionModel(
           id: '1',
@@ -40,7 +41,8 @@ void main() {
         ),
       ];
 
-      when(mockRepository.getVersionHistory()).thenAnswer((_) async => mockVersions);
+      when(mockRepository.getVersionHistory())
+          .thenAnswer((_) async => mockVersions);
 
       await provider.loadVersionHistory();
 
@@ -50,7 +52,8 @@ void main() {
     });
 
     test('loadVersionHistory should handle errors correctly', () async {
-      when(mockRepository.getVersionHistory()).thenThrow(Exception('Network error'));
+      when(mockRepository.getVersionHistory())
+          .thenThrow(Exception('Network error'));
 
       await provider.loadVersionHistory();
 
@@ -85,7 +88,8 @@ void main() {
         summary: {},
       );
 
-      when(mockRepository.compareVersions(1, 2)).thenAnswer((_) async => mockComparison);
+      when(mockRepository.compareVersions(1, 2))
+          .thenAnswer((_) async => mockComparison);
 
       await provider.compareVersions(1, 2);
 
@@ -106,8 +110,10 @@ void main() {
         fieldsChanged: [],
       );
 
-      when(mockRepository.restoreVersion(1)).thenAnswer((_) async => mockVersion);
-      when(mockRepository.getVersionHistory()).thenAnswer((_) async => [mockVersion]);
+      when(mockRepository.restoreVersion(1))
+          .thenAnswer((_) async => mockVersion);
+      when(mockRepository.getVersionHistory())
+          .thenAnswer((_) async => [mockVersion]);
 
       final result = await provider.restoreVersion(1);
 
@@ -117,7 +123,8 @@ void main() {
     });
 
     test('restoreVersion should return false on error', () async {
-      when(mockRepository.restoreVersion(1)).thenThrow(Exception('Restore failed'));
+      when(mockRepository.restoreVersion(1))
+          .thenThrow(Exception('Restore failed'));
 
       final result = await provider.restoreVersion(1);
 

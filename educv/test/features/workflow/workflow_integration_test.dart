@@ -160,19 +160,22 @@ void main() {
       );
     }
 
-    testWidgets('Complete workflow lifecycle - from draft to approved', (tester) async {
+    testWidgets('Complete workflow lifecycle - from draft to approved',
+        (tester) async {
       // Setup initial workflow in draft state
       final draftWorkflow = createTestWorkflow();
-      
+
       when(mockRepository.getCVWorkflow('cv-123'))
           .thenAnswer((_) async => draftWorkflow);
-      
+
       when(mockRepository.getAvailableTransitions(draftWorkflow.id))
           .thenAnswer((_) async => draftWorkflow.workflowConfig.transitions);
 
       // Setup CV profile
       when(mockCVRepository.getCVProfile())
-          .thenAnswer((_) async => CVProfileModel(id: 'cv-123', /* other fields */));
+          .thenAnswer((_) async => CVProfileModel(
+                id: 'cv-123', /* other fields */
+              ));
 
       await tester.pumpWidget(createTestApp(
         WorkflowIntegrationWidget(cvId: 'cv-123'),
@@ -220,7 +223,7 @@ void main() {
 
     testWidgets('Workflow with required comment', (tester) async {
       final workflow = createTestWorkflow();
-      
+
       // Create transition that requires comment
       final transitionWithComment = WorkflowTransitionModel(
         id: 'transition-comment',
@@ -241,7 +244,7 @@ void main() {
 
       when(mockRepository.getCVWorkflow('cv-123'))
           .thenAnswer((_) async => workflow);
-      
+
       when(mockRepository.getAvailableTransitions(workflow.id))
           .thenAnswer((_) async => [transitionWithComment]);
 
@@ -264,7 +267,8 @@ void main() {
       await tester.pumpAndSettle();
 
       // Verify validation error
-      expect(find.text('Comment is required for this transition'), findsOneWidget);
+      expect(
+          find.text('Comment is required for this transition'), findsOneWidget);
 
       // Enter comment
       await tester.enterText(find.byType(TextField), 'CV needs more details');
@@ -273,9 +277,8 @@ void main() {
       // Mock successful transition
       when(mockRepository.performTransition(
         workflow.id,
-        argThat(predicate<WorkflowTransitionRequest>((req) => 
-          req.comment == 'CV needs more details'
-        )),
+        argThat(predicate<WorkflowTransitionRequest>(
+            (req) => req.comment == 'CV needs more details')),
       )).thenAnswer((_) async => workflow);
 
       // Confirm with comment
@@ -285,18 +288,18 @@ void main() {
       // Verify transition was called with comment
       verify(mockRepository.performTransition(
         workflow.id,
-        argThat(predicate<WorkflowTransitionRequest>((req) => 
-          req.comment == 'CV needs more details'
-        )),
+        argThat(predicate<WorkflowTransitionRequest>(
+            (req) => req.comment == 'CV needs more details')),
       )).called(1);
     });
 
     testWidgets('Workflow history display and pagination', (tester) async {
       final workflow = createTestWorkflow();
-      
+
       // Create test transition logs
-      final transitionLogs = List.generate(5, (index) => 
-        WorkflowTransitionLogModel(
+      final transitionLogs = List.generate(
+        5,
+        (index) => WorkflowTransitionLogModel(
           id: 'log-$index',
           workflowInstanceId: workflow.id,
           transition: workflow.workflowConfig.transitions.first,
@@ -313,7 +316,7 @@ void main() {
 
       when(mockRepository.getCVWorkflow('cv-123'))
           .thenAnswer((_) async => workflow);
-      
+
       when(mockRepository.getAvailableTransitions(workflow.id))
           .thenAnswer((_) async => []);
 
@@ -334,7 +337,7 @@ void main() {
 
       // Verify history section is displayed
       expect(find.text('Recent Activity'), findsOneWidget);
-      
+
       // Should show first 3 items
       expect(find.text('Transition 0 comment'), findsOneWidget);
       expect(find.text('Transition 1 comment'), findsOneWidget);
@@ -396,7 +399,9 @@ void main() {
 
       // Verify no workflow state
       expect(find.text('No Active Workflow'), findsOneWidget);
-      expect(find.text('This CV is not currently part of any workflow process.'), findsOneWidget);
+      expect(
+          find.text('This CV is not currently part of any workflow process.'),
+          findsOneWidget);
       expect(find.text('Start Workflow'), findsOneWidget);
 
       // Tap start workflow
@@ -405,19 +410,22 @@ void main() {
 
       // Verify confirmation dialog
       expect(find.text('Start Workflow'), findsNWidgets(2)); // Title and button
-      expect(find.text('Would you like to start a workflow process for this CV?'), findsOneWidget);
+      expect(
+          find.text('Would you like to start a workflow process for this CV?'),
+          findsOneWidget);
 
       // Confirm workflow creation
       await tester.tap(find.text('Start').last);
       await tester.pumpAndSettle();
 
       // Verify placeholder message (since creation is not implemented)
-      expect(find.text('Workflow creation feature coming soon!'), findsOneWidget);
+      expect(
+          find.text('Workflow creation feature coming soon!'), findsOneWidget);
     });
 
     testWidgets('Role-based permissions - restricted actions', (tester) async {
       final workflow = createTestWorkflow();
-      
+
       // Create transition with role restrictions
       final restrictedTransition = WorkflowTransitionModel(
         id: 'restricted-transition',
@@ -438,18 +446,18 @@ void main() {
 
       when(mockRepository.getCVWorkflow('cv-123'))
           .thenAnswer((_) async => workflow);
-      
+
       when(mockRepository.getAvailableTransitions(workflow.id))
           .thenAnswer((_) async => [restrictedTransition]);
 
       // Mock student user
       when(mockAuthRepository.getCurrentUser())
           .thenAnswer((_) async => UserModel(
-            id: 'user-123',
-            email: 'student@example.com',
-            role: 'student',
-            /* other fields */
-          ));
+                id: 'user-123',
+                email: 'student@example.com',
+                role: 'student',
+                /* other fields */
+              ));
 
       await tester.pumpWidget(createTestApp(
         WorkflowIntegrationWidget(cvId: 'cv-123'),
@@ -464,10 +472,10 @@ void main() {
 
     testWidgets('Workflow refresh functionality', (tester) async {
       final workflow = createTestWorkflow();
-      
+
       when(mockRepository.getCVWorkflow('cv-123'))
           .thenAnswer((_) async => workflow);
-      
+
       when(mockRepository.getAvailableTransitions(workflow.id))
           .thenAnswer((_) async => []);
 
@@ -498,12 +506,14 @@ void main() {
       expect(find.text('Draft'), findsNothing);
     });
 
-    testWidgets('Multiple transitions - show all actions dialog', (tester) async {
+    testWidgets('Multiple transitions - show all actions dialog',
+        (tester) async {
       final workflow = createTestWorkflow();
-      
+
       // Create multiple transitions
-      final transitions = List.generate(5, (index) => 
-        WorkflowTransitionModel(
+      final transitions = List.generate(
+        5,
+        (index) => WorkflowTransitionModel(
           id: 'transition-$index',
           workflowConfigId: 'config-123',
           name: 'Action $index',
@@ -523,7 +533,7 @@ void main() {
 
       when(mockRepository.getCVWorkflow('cv-123'))
           .thenAnswer((_) async => workflow);
-      
+
       when(mockRepository.getAvailableTransitions(workflow.id))
           .thenAnswer((_) async => transitions);
 
@@ -547,7 +557,7 @@ void main() {
 
       // Verify all actions dialog
       expect(find.text('All Available Actions'), findsOneWidget);
-      
+
       // Should show all 5 actions
       for (int i = 0; i < 5; i++) {
         expect(find.text('Action $i'), findsOneWidget);
@@ -556,11 +566,10 @@ void main() {
 
     testWidgets('Loading states and transitions', (tester) async {
       // Mock delayed response to test loading state
-      when(mockRepository.getCVWorkflow('cv-123'))
-          .thenAnswer((_) async {
-            await Future.delayed(Duration(milliseconds: 100));
-            return createTestWorkflow();
-          });
+      when(mockRepository.getCVWorkflow('cv-123')).thenAnswer((_) async {
+        await Future.delayed(Duration(milliseconds: 100));
+        return createTestWorkflow();
+      });
 
       await tester.pumpWidget(createTestApp(
         WorkflowIntegrationWidget(cvId: 'cv-123'),

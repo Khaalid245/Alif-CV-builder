@@ -17,7 +17,7 @@ class LocalAuthScreen extends HookConsumerWidget {
     useEffect(() {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!localAuthState.isVerified && !localAuthState.isAuthenticating) {
-           notifier.authenticate();
+          notifier.authenticate();
         }
       });
       return null;
@@ -63,12 +63,11 @@ class LocalAuthScreen extends HookConsumerWidget {
                   : () => notifier.authenticate(),
               icon: const Icon(LucideIcons.fingerprint),
               label: Text(
-                localAuthState.isAuthenticating
-                    ? 'Verifying...'
-                    : 'Unlock Now',
+                localAuthState.isAuthenticating ? 'Verifying...' : 'Unlock Now',
               ),
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               ),
             ),
           ],

@@ -60,12 +60,12 @@ class AuthNotifier extends StateNotifier<AuthState> {
     try {
       final secureStorage = ref.read(secureStorageProvider);
       final accessToken = await secureStorage.getAccessToken();
-      
+
       if (accessToken != null && accessToken.isNotEmpty) {
         final userId = await secureStorage.getUserId();
         final email = await secureStorage.getUserEmail();
         final role = await secureStorage.getUserRole();
-        
+
         if (userId != null && email != null) {
           state = state.copyWith(
             user: StudentModel(
@@ -134,7 +134,7 @@ class LoginNotifier extends AsyncNotifier<AuthResponse?> {
 
       // Set current user in provider
       ref.read(currentUserProvider.notifier).state = authResponse.student;
-      
+
       // Update auth state
       ref.read(authProvider.notifier).state = AuthState(
         user: authResponse.student,
@@ -196,13 +196,13 @@ class RegisterNotifier extends AsyncNotifier<AuthResponse?> {
         role: authResponse.student.role,
       );
       ref.read(currentUserProvider.notifier).state = authResponse.student;
-      
+
       // Update auth state
       ref.read(authProvider.notifier).state = AuthState(
         user: authResponse.student,
         isAuthenticated: true,
       );
-      
+
       state = AsyncData(authResponse);
     } catch (e, stackTrace) {
       state = AsyncError(e, stackTrace);

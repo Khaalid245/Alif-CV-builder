@@ -72,10 +72,10 @@ class _AccessibleInputState extends State<AccessibleInput> {
     setState(() {
       _isFocused = _focusNode.hasFocus;
     });
-    
+
     // Announce field focus to screen readers
     if (_isFocused) {
-      final announcement = widget.required 
+      final announcement = widget.required
           ? '${widget.label}, ${AccessibilityLabels.requiredField}'
           : '${widget.label}, ${AccessibilityLabels.optionalField}';
       AccessibilityAnnouncements.announce(context, announcement);
@@ -88,7 +88,7 @@ class _AccessibleInputState extends State<AccessibleInput> {
       setState(() {
         _errorMessage = error;
       });
-      
+
       // Announce validation result to screen readers
       if (error != null) {
         AccessibilityAnnouncements.announce(context, 'Error: $error');
@@ -99,7 +99,7 @@ class _AccessibleInputState extends State<AccessibleInput> {
   @override
   Widget build(BuildContext context) {
     final hasError = _errorMessage != null;
-    
+
     return Semantics(
       container: true,
       label: widget.semanticLabel ?? _buildSemanticLabel(),
@@ -112,16 +112,16 @@ class _AccessibleInputState extends State<AccessibleInput> {
           // Label with required indicator
           _buildLabel(),
           const SizedBox(height: AppSpacing.sm),
-          
+
           // Input field
           _buildInputField(hasError),
-          
+
           // Error message
           if (hasError) ...[
             const SizedBox(height: AppSpacing.xs),
             _buildErrorMessage(),
           ],
-          
+
           // Character count for limited fields
           if (widget.maxLength != null) ...[
             const SizedBox(height: AppSpacing.xs),
@@ -176,17 +176,17 @@ class _AccessibleInputState extends State<AccessibleInput> {
       },
       decoration: InputDecoration(
         hintText: widget.hint,
-        prefixIcon: widget.prefixIcon != null 
+        prefixIcon: widget.prefixIcon != null
             ? Icon(
                 widget.prefixIcon,
-                color: _isFocused 
-                    ? AccessibleColors.focusIndicator 
+                color: _isFocused
+                    ? AccessibleColors.focusIndicator
                     : AccessibleColors.textSecondaryAccessible,
                 semanticLabel: null, // Prevent duplicate announcements
               )
             : null,
         suffixIcon: _buildSuffixIcon(hasError),
-        
+
         // Accessible border styling
         border: _buildBorder(false, false),
         enabledBorder: _buildBorder(false, hasError),
@@ -194,17 +194,17 @@ class _AccessibleInputState extends State<AccessibleInput> {
         errorBorder: _buildBorder(false, true),
         focusedErrorBorder: _buildBorder(true, true),
         disabledBorder: _buildBorder(false, false, disabled: true),
-        
+
         filled: true,
-        fillColor: widget.enabled 
-            ? (_isFocused 
-                ? AccessibleColors.backgroundAccessible 
+        fillColor: widget.enabled
+            ? (_isFocused
+                ? AccessibleColors.backgroundAccessible
                 : AccessibleColors.surfaceAccessible)
             : AccessibleColors.disabledAccessible.withValues(alpha: 0.1),
-        
+
         // Remove default counter to use custom one
         counterText: '',
-        
+
         // Error styling
         errorStyle: TextStyle(
           color: AccessibleColors.errorAccessible,
@@ -213,18 +213,19 @@ class _AccessibleInputState extends State<AccessibleInput> {
         ),
       ),
       style: TextStyle(
-        color: widget.enabled 
-            ? AccessibleColors.textPrimaryAccessible 
+        color: widget.enabled
+            ? AccessibleColors.textPrimaryAccessible
             : AccessibleColors.disabledAccessible,
         fontSize: 16,
       ),
     );
   }
 
-  OutlineInputBorder _buildBorder(bool focused, bool hasError, {bool disabled = false}) {
+  OutlineInputBorder _buildBorder(bool focused, bool hasError,
+      {bool disabled = false}) {
     Color borderColor;
     double borderWidth;
-    
+
     if (disabled) {
       borderColor = AccessibleColors.disabledAccessible;
       borderWidth = 1.0;
@@ -238,7 +239,7 @@ class _AccessibleInputState extends State<AccessibleInput> {
       borderColor = AccessibleColors.borderAccessible;
       borderWidth = 1.0;
     }
-    
+
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(AppSpacing.radiusBtn),
       borderSide: BorderSide(
@@ -250,7 +251,7 @@ class _AccessibleInputState extends State<AccessibleInput> {
 
   Widget? _buildSuffixIcon(bool hasError) {
     if (widget.suffixIcon != null) return widget.suffixIcon;
-    
+
     if (hasError) {
       return Semantics(
         label: AccessibilityLabels.invalidInput,
@@ -261,7 +262,7 @@ class _AccessibleInputState extends State<AccessibleInput> {
         ),
       );
     }
-    
+
     return null;
   }
 
@@ -296,7 +297,7 @@ class _AccessibleInputState extends State<AccessibleInput> {
     final currentLength = widget.controller.text.length;
     final maxLength = widget.maxLength!;
     final isNearLimit = currentLength > (maxLength * 0.8);
-    
+
     return Semantics(
       liveRegion: true,
       label: 'Character count: $currentLength of $maxLength',
@@ -305,8 +306,8 @@ class _AccessibleInputState extends State<AccessibleInput> {
         child: Text(
           '$currentLength / $maxLength',
           style: TextStyle(
-            color: isNearLimit 
-                ? AccessibleColors.warningAccessible 
+            color: isNearLimit
+                ? AccessibleColors.warningAccessible
                 : AccessibleColors.textSecondaryAccessible,
             fontSize: 12,
             fontWeight: FontWeight.w500,
@@ -415,7 +416,7 @@ class _AccessibleDropdownState<T> extends State<AccessibleDropdown<T>> {
             ),
           ),
           const SizedBox(height: AppSpacing.sm),
-          
+
           // Dropdown
           DropdownButtonFormField<T>(
             value: widget.value,
@@ -424,9 +425,7 @@ class _AccessibleDropdownState<T> extends State<AccessibleDropdown<T>> {
               widget.onChanged?.call(value);
               if (value != null) {
                 AccessibilityAnnouncements.announce(
-                  context, 
-                  'Selected ${value.toString()}'
-                );
+                    context, 'Selected ${value.toString()}');
               }
             },
             focusNode: _focusNode,
@@ -436,8 +435,8 @@ class _AccessibleDropdownState<T> extends State<AccessibleDropdown<T>> {
               enabledBorder: _buildBorder(false),
               focusedBorder: _buildBorder(true),
               filled: true,
-              fillColor: _isFocused 
-                  ? AccessibleColors.backgroundAccessible 
+              fillColor: _isFocused
+                  ? AccessibleColors.backgroundAccessible
                   : AccessibleColors.surfaceAccessible,
             ),
             style: TextStyle(
@@ -447,8 +446,8 @@ class _AccessibleDropdownState<T> extends State<AccessibleDropdown<T>> {
             dropdownColor: AccessibleColors.cardAccessible,
             icon: Icon(
               LucideIcons.chevronDown,
-              color: _isFocused 
-                  ? AccessibleColors.focusIndicator 
+              color: _isFocused
+                  ? AccessibleColors.focusIndicator
                   : AccessibleColors.textSecondaryAccessible,
             ),
           ),
@@ -461,8 +460,8 @@ class _AccessibleDropdownState<T> extends State<AccessibleDropdown<T>> {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(AppSpacing.radiusBtn),
       borderSide: BorderSide(
-        color: focused 
-            ? AccessibleColors.focusIndicator 
+        color: focused
+            ? AccessibleColors.focusIndicator
             : AccessibleColors.borderAccessible,
         width: focused ? 3.0 : 1.0,
       ),

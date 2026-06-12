@@ -103,9 +103,9 @@ class _ModernDashboardHeaderState extends State<ModernDashboardHeader> {
                   ),
                 ),
               ),
-              
+
               const SizedBox(width: 12),
-              
+
               // Greeting and date
               Expanded(
                 child: Column(
@@ -127,12 +127,12 @@ class _ModernDashboardHeaderState extends State<ModernDashboardHeader> {
                   ],
                 ),
               ),
-              
+
               // Notification button
               _buildNotificationButton(compact: true),
-              
+
               const SizedBox(width: 8),
-              
+
               // User avatar
               _buildUserAvatar(size: 32),
             ],
@@ -172,9 +172,9 @@ class _ModernDashboardHeaderState extends State<ModernDashboardHeader> {
                 ),
               ),
             ),
-            
+
             const SizedBox(width: 20),
-            
+
             // Greeting and date
             Expanded(
               child: Column(
@@ -197,15 +197,15 @@ class _ModernDashboardHeaderState extends State<ModernDashboardHeader> {
                 ],
               ),
             ),
-            
+
             // Actions
             if (widget.additionalActions != null) ...widget.additionalActions!,
-            
+
             // Notification button
             _buildNotificationButton(),
-            
+
             const SizedBox(width: 12),
-            
+
             // User avatar
             _buildUserAvatar(size: 40),
           ],
@@ -272,26 +272,27 @@ class _ModernDashboardHeaderState extends State<ModernDashboardHeader> {
                 ],
               ),
             ),
-            
+
             // Search bar (desktop only)
             if (widget.showSearch)
               Expanded(
                 flex: 3,
                 child: _buildSearchBar(),
               ),
-            
+
             const SizedBox(width: 24),
-            
+
             // Actions section
             Row(
               children: [
-                if (widget.additionalActions != null) ...widget.additionalActions!,
-                
+                if (widget.additionalActions != null)
+                  ...widget.additionalActions!,
+
                 // Notification button
                 _buildNotificationButton(),
-                
+
                 const SizedBox(width: 16),
-                
+
                 // User profile section
                 _buildUserProfileSection(),
               ],
@@ -308,7 +309,7 @@ class _ModernDashboardHeaderState extends State<ModernDashboardHeader> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
-          color: _isSearchFocused 
+          color: _isSearchFocused
               ? ModernSaaSDashboardTheme.surfaceBackground
               : ModernSaaSDashboardTheme.hover,
           borderRadius: BorderRadius.circular(12),
@@ -321,7 +322,8 @@ class _ModernDashboardHeaderState extends State<ModernDashboardHeader> {
           boxShadow: _isSearchFocused
               ? [
                   BoxShadow(
-                    color: ModernSaaSDashboardTheme.accentPurple.withOpacity(0.1),
+                    color:
+                        ModernSaaSDashboardTheme.accentPurple.withOpacity(0.1),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -408,7 +410,9 @@ class _ModernDashboardHeaderState extends State<ModernDashboardHeader> {
               ),
               child: Center(
                 child: Text(
-                  widget.notificationCount > 99 ? '99+' : '${widget.notificationCount}',
+                  widget.notificationCount > 99
+                      ? '99+'
+                      : '${widget.notificationCount}',
                   style: ModernSaaSDashboardTheme.labelSmall.copyWith(
                     color: Colors.white,
                     fontSize: 10,
@@ -452,7 +456,8 @@ class _ModernDashboardHeaderState extends State<ModernDashboardHeader> {
                 child: Image.network(
                   widget.userAvatar!,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => _buildAvatarFallback(size),
+                  errorBuilder: (context, error, stackTrace) =>
+                      _buildAvatarFallback(size),
                 ),
               )
             : _buildAvatarFallback(size),
@@ -525,7 +530,7 @@ class _ModernDashboardHeaderState extends State<ModernDashboardHeader> {
   String _getGreeting() {
     final hour = DateTime.now().hour;
     final name = widget.userName?.split(' ').first ?? '';
-    
+
     if (hour < 12) {
       return 'Good morning${name.isNotEmpty ? ', $name' : ''}';
     } else if (hour < 17) {
@@ -547,8 +552,10 @@ class _ModernDashboardHeaderState extends State<ModernDashboardHeader> {
       return names[0][0].toUpperCase();
     }
 
-    final firstInitial = names.first.isNotEmpty ? names.first[0].toUpperCase() : '';
-    final lastInitial = names.last.isNotEmpty ? names.last[0].toUpperCase() : '';
+    final firstInitial =
+        names.first.isNotEmpty ? names.first[0].toUpperCase() : '';
+    final lastInitial =
+        names.last.isNotEmpty ? names.last[0].toUpperCase() : '';
 
     return '$firstInitial$lastInitial';
   }
@@ -644,7 +651,8 @@ class DashboardStatsHeader extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         itemCount: stats.length,
         separatorBuilder: (context, index) => const SizedBox(width: 16),
-        itemBuilder: (context, index) => _buildStatCard(stats[index], compact: true),
+        itemBuilder: (context, index) =>
+            _buildStatCard(stats[index], compact: true),
       ),
     );
   }
@@ -691,10 +699,12 @@ class DashboardStatsHeader extends StatelessWidget {
               const Spacer(),
               if (stat.trend != null)
                 Icon(
-                  stat.trend! > 0 ? LucideIcons.trendingUp : LucideIcons.trendingDown,
+                  stat.trend! > 0
+                      ? LucideIcons.trendingUp
+                      : LucideIcons.trendingDown,
                   size: compact ? 12 : 14,
-                  color: stat.trend! > 0 
-                      ? ModernSaaSDashboardTheme.success 
+                  color: stat.trend! > 0
+                      ? ModernSaaSDashboardTheme.success
                       : ModernSaaSDashboardTheme.error,
                 ),
             ],
@@ -702,18 +712,20 @@ class DashboardStatsHeader extends StatelessWidget {
           SizedBox(height: compact ? 4 : 8),
           Text(
             stat.value,
-            style: (compact 
-                ? ModernSaaSDashboardTheme.headlineSmall 
-                : ModernSaaSDashboardTheme.headlineLarge).copyWith(
+            style: (compact
+                    ? ModernSaaSDashboardTheme.headlineSmall
+                    : ModernSaaSDashboardTheme.headlineLarge)
+                .copyWith(
               color: stat.color,
               fontWeight: FontWeight.w700,
             ),
           ),
           Text(
             stat.label,
-            style: (compact 
-                ? ModernSaaSDashboardTheme.bodySmall 
-                : ModernSaaSDashboardTheme.bodyMedium).copyWith(
+            style: (compact
+                    ? ModernSaaSDashboardTheme.bodySmall
+                    : ModernSaaSDashboardTheme.bodyMedium)
+                .copyWith(
               color: ModernSaaSDashboardTheme.tertiaryText,
             ),
           ),

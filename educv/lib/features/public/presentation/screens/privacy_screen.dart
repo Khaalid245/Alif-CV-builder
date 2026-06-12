@@ -81,20 +81,18 @@ class PrivacyScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 20, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 decoration: BoxDecoration(
                   color: PremiumPortfolioColors.cardBackground,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                      color: PremiumPortfolioColors.borderLight),
+                  border: Border.all(color: PremiumPortfolioColors.borderLight),
                 ),
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(LucideIcons.calendar,
-                        size: 16,
-                        color: PremiumPortfolioColors.secondaryText),
+                        size: 16, color: PremiumPortfolioColors.secondaryText),
                     SizedBox(width: 8),
                     Text(
                       'Last updated: January 2025',
@@ -286,12 +284,24 @@ class PrivacyScreen extends StatelessWidget {
 
   Widget _buildSummaryCards() {
     final items = [
-      (LucideIcons.shieldCheck, 'Never sold',
-          'Your data is never sold to third parties', PremiumPortfolioColors.success),
-      (LucideIcons.eye, 'Minimal collection',
-          'Only data needed for your CV is collected', PremiumPortfolioColors.accentPurple),
-      (LucideIcons.trash2, 'Right to delete',
-          'Request full deletion of your data anytime', PremiumPortfolioColors.accentBlue),
+      (
+        LucideIcons.shieldCheck,
+        'Never sold',
+        'Your data is never sold to third parties',
+        PremiumPortfolioColors.success
+      ),
+      (
+        LucideIcons.eye,
+        'Minimal collection',
+        'Only data needed for your CV is collected',
+        PremiumPortfolioColors.accentPurple
+      ),
+      (
+        LucideIcons.trash2,
+        'Right to delete',
+        'Request full deletion of your data anytime',
+        PremiumPortfolioColors.accentBlue
+      ),
     ];
 
     return LayoutBuilder(
@@ -302,8 +312,7 @@ class PrivacyScreen extends StatelessWidget {
             children: items
                 .map((item) => Expanded(
                       child: Padding(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: 8),
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: _buildSummaryCard(
                             item.$1, item.$2, item.$3, item.$4),
                       ),
@@ -315,8 +324,8 @@ class PrivacyScreen extends StatelessWidget {
           children: items
               .map((item) => Padding(
                     padding: const EdgeInsets.only(bottom: 12),
-                    child: _buildSummaryCard(
-                        item.$1, item.$2, item.$3, item.$4),
+                    child:
+                        _buildSummaryCard(item.$1, item.$2, item.$3, item.$4),
                   ))
               .toList(),
         );
@@ -408,8 +417,7 @@ class PrivacyScreen extends StatelessWidget {
                     ),
                   ),
                   child: Icon(icon,
-                      size: 22,
-                      color: PremiumPortfolioColors.accentPurple),
+                      size: 22, color: PremiumPortfolioColors.accentPurple),
                 ),
                 const SizedBox(width: 16),
                 Text(
@@ -446,16 +454,14 @@ class PrivacyScreen extends StatelessWidget {
                             const SizedBox(width: 14),
                             Expanded(
                               child: Column(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     item.subtitle,
                                     style: const TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.w600,
-                                      color:
-                                          PremiumPortfolioColors.primaryText,
+                                      color: PremiumPortfolioColors.primaryText,
                                     ),
                                   ),
                                   const SizedBox(height: 4),
@@ -463,8 +469,8 @@ class PrivacyScreen extends StatelessWidget {
                                     item.body,
                                     style: const TextStyle(
                                       fontSize: 14,
-                                      color: PremiumPortfolioColors
-                                          .secondaryText,
+                                      color:
+                                          PremiumPortfolioColors.secondaryText,
                                       height: 1.6,
                                     ),
                                   ),
@@ -519,8 +525,7 @@ class PrivacyScreen extends StatelessWidget {
                 ),
               ],
             ),
-            child: const Icon(LucideIcons.mail,
-                color: Colors.white, size: 26),
+            child: const Icon(LucideIcons.mail, color: Colors.white, size: 26),
           ),
           const SizedBox(height: 20),
           const Text(

@@ -9,12 +9,14 @@ import '../../domain/local_heuristics_engine.dart';
 import '../../../cv/presentation/providers/cv_provider.dart';
 
 // Repository provider
-final cvIntelligenceRepositoryProvider = Provider<CVIntelligenceRepository>((ref) {
+final cvIntelligenceRepositoryProvider =
+    Provider<CVIntelligenceRepository>((ref) {
   final apiClient = ref.watch(apiClientProvider);
   return CVIntelligenceRepositoryImpl(apiClient);
 });
 
-final localHeuristicsEngineProvider = Provider((ref) => LocalHeuristicsEngine());
+final localHeuristicsEngineProvider =
+    Provider((ref) => LocalHeuristicsEngine());
 
 // Analysis state
 class AnalysisState {
@@ -58,7 +60,7 @@ class AnalysisNotifier extends StateNotifier<AnalysisState> {
     try {
       state = state.copyWith(isLoading: true, error: null);
       final analysis = await _repository.getLatestAnalysis();
-      
+
       state = state.copyWith(
         analysis: analysis,
         isLoading: false,
@@ -67,10 +69,11 @@ class AnalysisNotifier extends StateNotifier<AnalysisState> {
     } catch (e) {
       // Handle "no analysis found" gracefully
       final errorMessage = e is AppException ? e.message : e.toString();
-      final isNoAnalysisError = errorMessage.toLowerCase().contains('not found') ||
-                               errorMessage.toLowerCase().contains('no analysis') ||
-                               errorMessage.toLowerCase().contains('404');
-      
+      final isNoAnalysisError =
+          errorMessage.toLowerCase().contains('not found') ||
+              errorMessage.toLowerCase().contains('no analysis') ||
+              errorMessage.toLowerCase().contains('404');
+
       state = state.copyWith(
         isLoading: false,
         analysis: null,
@@ -82,7 +85,7 @@ class AnalysisNotifier extends StateNotifier<AnalysisState> {
   Future<void> analyzeCV({Map<String, dynamic>? options}) async {
     try {
       state = state.copyWith(isLoading: true, error: null);
-      
+
       // 1. Instant Local Heuristics
       final profile = _ref.read(cvProfileProvider).valueOrNull;
       if (profile != null) {
@@ -110,13 +113,13 @@ class AnalysisNotifier extends StateNotifier<AnalysisState> {
   Future<void> refreshAnalysis() async {
     // Cache current state to preserve on failure
     final previousAnalysis = state.analysis;
-    
+
     try {
       state = state.copyWith(isLoading: true, error: null);
-      
+
       // Try to get existing analysis first (safe read-only operation)
       final analysis = await _repository.getLatestAnalysis();
-      
+
       if (analysis != null) {
         // If analysis exists, update state with fresh data
         state = state.copyWith(
@@ -127,7 +130,7 @@ class AnalysisNotifier extends StateNotifier<AnalysisState> {
       } else {
         // No analysis exists - check if user has CV profile
         final hasCVProfile = await _repository.hasCVProfile();
-        
+
         if (hasCVProfile && previousAnalysis != null) {
           // User has CV and had previous analysis - try to re-analyze
           try {
@@ -147,8 +150,10 @@ class AnalysisNotifier extends StateNotifier<AnalysisState> {
             );
           } catch (analysisError) {
             // Re-analysis failed, restore previous state with error message
-            final errorMessage = analysisError is AppException ? analysisError.message : analysisError.toString();
-            
+            final errorMessage = analysisError is AppException
+                ? analysisError.message
+                : analysisError.toString();
+
             state = state.copyWith(
               analysis: previousAnalysis, // Preserve existing data
               isLoading: false,
@@ -174,7 +179,7 @@ class AnalysisNotifier extends StateNotifier<AnalysisState> {
     } catch (e) {
       // Network or other error - preserve existing data
       final errorMessage = e is AppException ? e.message : e.toString();
-      
+
       state = state.copyWith(
         analysis: previousAnalysis, // Preserve existing data
         isLoading: false,
@@ -188,7 +193,8 @@ class AnalysisNotifier extends StateNotifier<AnalysisState> {
   }
 }
 
-final analysisProvider = StateNotifierProvider<AnalysisNotifier, AnalysisState>((ref) {
+final analysisProvider =
+    StateNotifierProvider<AnalysisNotifier, AnalysisState>((ref) {
   final repository = ref.watch(cvIntelligenceRepositoryProvider);
   return AnalysisNotifier(repository, ref);
 });
@@ -230,7 +236,8 @@ class AnalysisHistoryState {
 class AnalysisHistoryNotifier extends StateNotifier<AnalysisHistoryState> {
   final CVIntelligenceRepository _repository;
 
-  AnalysisHistoryNotifier(this._repository) : super(const AnalysisHistoryState()) {
+  AnalysisHistoryNotifier(this._repository)
+      : super(const AnalysisHistoryState()) {
     loadHistory();
   }
 
@@ -264,10 +271,10 @@ class AnalysisHistoryNotifier extends StateNotifier<AnalysisHistoryState> {
 
     try {
       state = state.copyWith(isLoadingMore: true, error: null);
-      
+
       final nextPage = state.currentPage + 1;
       final newHistory = await _repository.getAnalysisHistory(page: nextPage);
-      
+
       final currentAnalyses = state.history?.analyses ?? [];
       final combinedHistory = state.history?.copyWith(
         analyses: [...currentAnalyses, ...newHistory.analyses],
@@ -293,7 +300,8 @@ class AnalysisHistoryNotifier extends StateNotifier<AnalysisHistoryState> {
   }
 }
 
-final analysisHistoryProvider = StateNotifierProvider<AnalysisHistoryNotifier, AnalysisHistoryState>((ref) {
+final analysisHistoryProvider =
+    StateNotifierProvider<AnalysisHistoryNotifier, AnalysisHistoryState>((ref) {
   final repository = ref.watch(cvIntelligenceRepositoryProvider);
   return AnalysisHistoryNotifier(repository);
 });
@@ -350,7 +358,9 @@ class RecommendationsState {
   }
 
   List<RecommendationModel> get highPriorityRecommendations {
-    return recommendations.where((rec) => rec.isHighPriority && !rec.isImplemented).toList();
+    return recommendations
+        .where((rec) => rec.isHighPriority && !rec.isImplemented)
+        .toList();
   }
 
   List<String> get availableCategories {
@@ -366,7 +376,8 @@ class RecommendationsState {
 class RecommendationsNotifier extends StateNotifier<RecommendationsState> {
   final CVIntelligenceRepository _repository;
 
-  RecommendationsNotifier(this._repository) : super(const RecommendationsState()) {
+  RecommendationsNotifier(this._repository)
+      : super(const RecommendationsState()) {
     loadRecommendations();
   }
 
@@ -393,7 +404,7 @@ class RecommendationsNotifier extends StateNotifier<RecommendationsState> {
   Future<void> markRecommendationImplemented(String recommendationId) async {
     try {
       await _repository.markRecommendationImplemented(recommendationId);
-      
+
       // Update local state
       final updatedRecommendations = state.recommendations.map((rec) {
         if (rec.id == recommendationId) {
@@ -438,31 +449,37 @@ class RecommendationsNotifier extends StateNotifier<RecommendationsState> {
   }
 }
 
-final recommendationsProvider = StateNotifierProvider<RecommendationsNotifier, RecommendationsState>((ref) {
+final recommendationsProvider =
+    StateNotifierProvider<RecommendationsNotifier, RecommendationsState>((ref) {
   final repository = ref.watch(cvIntelligenceRepositoryProvider);
   return RecommendationsNotifier(repository);
 });
 
 // Submission readiness provider
-final submissionReadinessProvider = FutureProvider<SubmissionReadinessModel>((ref) async {
+final submissionReadinessProvider =
+    FutureProvider<SubmissionReadinessModel>((ref) async {
   final repository = ref.watch(cvIntelligenceRepositoryProvider);
   return repository.getSubmissionReadiness();
 });
 
 // Benchmarking data provider
-final benchmarkingDataProvider = FutureProvider.family<BenchmarkingDataModel, String?>((ref, comparisonGroup) async {
+final benchmarkingDataProvider =
+    FutureProvider.family<BenchmarkingDataModel, String?>(
+        (ref, comparisonGroup) async {
   final repository = ref.watch(cvIntelligenceRepositoryProvider);
   return repository.getBenchmarkingData(comparisonGroup: comparisonGroup);
 });
 
 // Analysis config provider
-final analysisConfigProvider = FutureProvider<Map<String, dynamic>>((ref) async {
+final analysisConfigProvider =
+    FutureProvider<Map<String, dynamic>>((ref) async {
   final repository = ref.watch(cvIntelligenceRepositoryProvider);
   return repository.getAnalysisConfig();
 });
 
 // Specific analysis provider
-final specificAnalysisProvider = FutureProvider.family<CVAnalysisModel, String>((ref, analysisId) async {
+final specificAnalysisProvider =
+    FutureProvider.family<CVAnalysisModel, String>((ref, analysisId) async {
   final repository = ref.watch(cvIntelligenceRepositoryProvider);
   return repository.getAnalysisById(analysisId);
 });
@@ -470,7 +487,8 @@ final specificAnalysisProvider = FutureProvider.family<CVAnalysisModel, String>(
 // Score progression provider
 // Powers the "You improved from 62 → 78" timeline chart in the History tab.
 // Automatically invalidated when a new analysis is run (via analysisProvider).
-final scoreProgressionProvider = FutureProvider<Map<String, dynamic>>((ref) async {
+final scoreProgressionProvider =
+    FutureProvider<Map<String, dynamic>>((ref) async {
   final repository = ref.watch(cvIntelligenceRepositoryProvider);
   return repository.getScoreProgression();
 });

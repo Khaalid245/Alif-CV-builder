@@ -70,7 +70,7 @@ class _ImprovedSidebarState extends State<ImprovedSidebar>
           children: [
             // Header with Logo
             _buildHeader(),
-            
+
             // Main Navigation
             Expanded(
               child: SingleChildScrollView(
@@ -94,9 +94,9 @@ class _ImprovedSidebarState extends State<ImprovedSidebar>
                         ),
                       ],
                     ),
-                    
+
                     const SizedBox(height: 32),
-                    
+
                     // CV Management Section
                     _buildSection(
                       title: 'MY CV',
@@ -120,9 +120,9 @@ class _ImprovedSidebarState extends State<ImprovedSidebar>
                         ),
                       ],
                     ),
-                    
+
                     const SizedBox(height: 32),
-                    
+
                     // Tools Section
                     _buildSection(
                       title: 'TOOLS & RESOURCES',
@@ -148,7 +148,7 @@ class _ImprovedSidebarState extends State<ImprovedSidebar>
                 ),
               ),
             ),
-            
+
             // User Profile Footer
             _buildUserProfile(),
           ],
@@ -207,11 +207,14 @@ class _ImprovedSidebarState extends State<ImprovedSidebar>
             IconButton(
               onPressed: widget.onToggleCollapse,
               icon: Icon(
-                widget.isCollapsed ? LucideIcons.panelLeftOpen : LucideIcons.panelLeftClose,
+                widget.isCollapsed
+                    ? LucideIcons.panelLeftOpen
+                    : LucideIcons.panelLeftClose,
                 size: 18,
                 color: PremiumSaaSTheme.textTertiary,
               ),
-              tooltip: widget.isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar',
+              tooltip:
+                  widget.isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar',
               splashRadius: 20,
             ),
         ],
@@ -252,7 +255,7 @@ class _ImprovedSidebarState extends State<ImprovedSidebar>
 
   Widget _buildNavItem(NavigationItem item) {
     final isActive = widget.currentIndex == item.index;
-    
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
       child: Material(
@@ -266,11 +269,12 @@ class _ImprovedSidebarState extends State<ImprovedSidebar>
           child: Stack(
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
-                  color: isActive 
-                    ? PremiumSaaSTheme.accentGreen.withValues(alpha: 0.1)
-                    : Colors.transparent,
+                  color: isActive
+                      ? PremiumSaaSTheme.accentGreen.withValues(alpha: 0.1)
+                      : Colors.transparent,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -278,31 +282,31 @@ class _ImprovedSidebarState extends State<ImprovedSidebar>
                     Icon(
                       item.icon,
                       size: 20,
-                      color: isActive 
-                        ? PremiumSaaSTheme.accentGreen 
-                        : PremiumSaaSTheme.textSecondary,
+                      color: isActive
+                          ? PremiumSaaSTheme.accentGreen
+                          : PremiumSaaSTheme.textSecondary,
                     ),
-                    
                     const SizedBox(width: 14),
-                    
                     Expanded(
                       child: Text(
                         item.label,
                         style: TextStyle(
                           fontSize: 14,
-                          fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
-                          color: isActive 
-                            ? PremiumSaaSTheme.textPrimary
-                            : PremiumSaaSTheme.textSecondary,
+                          fontWeight:
+                              isActive ? FontWeight.w600 : FontWeight.w500,
+                          color: isActive
+                              ? PremiumSaaSTheme.textPrimary
+                              : PremiumSaaSTheme.textSecondary,
                         ),
                       ),
                     ),
-                    
                     if (item.badge != null)
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 3),
                         decoration: BoxDecoration(
-                          color: item.badgeColor ?? PremiumSaaSTheme.accentGreen,
+                          color:
+                              item.badgeColor ?? PremiumSaaSTheme.accentGreen,
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
@@ -342,7 +346,7 @@ class _ImprovedSidebarState extends State<ImprovedSidebar>
 
   Widget _buildCollapsedNavItem(NavigationItem item) {
     final isActive = widget.currentIndex == item.index;
-    
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       child: Tooltip(
@@ -359,9 +363,9 @@ class _ImprovedSidebarState extends State<ImprovedSidebar>
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: isActive 
-                  ? PremiumSaaSTheme.accentGreen.withValues(alpha: 0.1)
-                  : Colors.transparent,
+                color: isActive
+                    ? PremiumSaaSTheme.accentGreen.withValues(alpha: 0.1)
+                    : Colors.transparent,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Stack(
@@ -370,9 +374,9 @@ class _ImprovedSidebarState extends State<ImprovedSidebar>
                     child: Icon(
                       item.icon,
                       size: 20,
-                      color: isActive 
-                        ? PremiumSaaSTheme.accentGreen
-                        : PremiumSaaSTheme.textSecondary,
+                      color: isActive
+                          ? PremiumSaaSTheme.accentGreen
+                          : PremiumSaaSTheme.textSecondary,
                     ),
                   ),
                   if (item.badge != null)
@@ -383,7 +387,8 @@ class _ImprovedSidebarState extends State<ImprovedSidebar>
                         width: 6,
                         height: 6,
                         decoration: BoxDecoration(
-                          color: item.badgeColor ?? PremiumSaaSTheme.accentGreen,
+                          color:
+                              item.badgeColor ?? PremiumSaaSTheme.accentGreen,
                           borderRadius: BorderRadius.circular(3),
                         ),
                       ),
@@ -428,59 +433,59 @@ class _ImprovedSidebarState extends State<ImprovedSidebar>
           ),
         ),
       ),
-      child: widget.isCollapsed 
-        ? Center(
-            child: _buildAvatar(initials),
-          )
-        : Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: widget.onProfileTap,
-              borderRadius: BorderRadius.circular(8),
-              hoverColor: PremiumSaaSTheme.lightSurfaceVariant,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    _buildAvatar(initials),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            name,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: PremiumSaaSTheme.textPrimary,
+      child: widget.isCollapsed
+          ? Center(
+              child: _buildAvatar(initials),
+            )
+          : Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: widget.onProfileTap,
+                borderRadius: BorderRadius.circular(8),
+                hoverColor: PremiumSaaSTheme.lightSurfaceVariant,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      _buildAvatar(initials),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              name,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: PremiumSaaSTheme.textPrimary,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            email,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: PremiumSaaSTheme.textSecondary,
+                            const SizedBox(height: 2),
+                            Text(
+                              email,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: PremiumSaaSTheme.textSecondary,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    Icon(
-                      LucideIcons.settings,
-                      size: 16,
-                      color: PremiumSaaSTheme.textTertiary,
-                    ),
-                  ],
+                      Icon(
+                        LucideIcons.settings,
+                        size: 16,
+                        color: PremiumSaaSTheme.textTertiary,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
     );
   }
 

@@ -35,10 +35,10 @@ void main() {
           any,
           data: anyNamed('data'),
         )).thenAnswer((_) async => Response(
-          data: responseData,
-          statusCode: 200,
-          requestOptions: RequestOptions(path: ''),
-        ));
+              data: responseData,
+              statusCode: 200,
+              requestOptions: RequestOptions(path: ''),
+            ));
 
         // Act
         final result = await repository.analyzeCV();
@@ -64,10 +64,10 @@ void main() {
           any,
           data: anyNamed('data'),
         )).thenAnswer((_) async => Response(
-          data: responseData,
-          statusCode: 400,
-          requestOptions: RequestOptions(path: ''),
-        ));
+              data: responseData,
+              statusCode: 400,
+              requestOptions: RequestOptions(path: ''),
+            ));
 
         // Act & Assert
         expect(
@@ -98,7 +98,10 @@ void main() {
 
       test('should pass options to API call', () async {
         // Arrange
-        final options = {'detailed': true, 'sections': ['education', 'skills']};
+        final options = {
+          'detailed': true,
+          'sections': ['education', 'skills']
+        };
         final responseData = {
           'success': true,
           'message': 'Analysis completed',
@@ -109,10 +112,10 @@ void main() {
           any,
           data: anyNamed('data'),
         )).thenAnswer((_) async => Response(
-          data: responseData,
-          statusCode: 200,
-          requestOptions: RequestOptions(path: ''),
-        ));
+              data: responseData,
+              statusCode: 200,
+              requestOptions: RequestOptions(path: ''),
+            ));
 
         // Act
         await repository.analyzeCV(options: options);
@@ -145,13 +148,14 @@ void main() {
           any,
           queryParameters: anyNamed('queryParameters'),
         )).thenAnswer((_) async => Response(
-          data: responseData,
-          statusCode: 200,
-          requestOptions: RequestOptions(path: ''),
-        ));
+              data: responseData,
+              statusCode: 200,
+              requestOptions: RequestOptions(path: ''),
+            ));
 
         // Act
-        final result = await repository.getAnalysisHistory(page: 2, pageSize: 5);
+        final result =
+            await repository.getAnalysisHistory(page: 2, pageSize: 5);
 
         // Assert
         expect(result, isA<AnalysisHistoryModel>());
@@ -174,10 +178,10 @@ void main() {
 
         when(mockApiClient.get<Map<String, dynamic>>(any))
             .thenAnswer((_) async => Response(
-          data: responseData,
-          statusCode: 200,
-          requestOptions: RequestOptions(path: ''),
-        ));
+                  data: responseData,
+                  statusCode: 200,
+                  requestOptions: RequestOptions(path: ''),
+                ));
 
         // Act
         final result = await repository.getAnalysisById('analysis-123');
@@ -211,10 +215,10 @@ void main() {
           any,
           queryParameters: anyNamed('queryParameters'),
         )).thenAnswer((_) async => Response(
-          data: responseData,
-          statusCode: 200,
-          requestOptions: RequestOptions(path: ''),
-        ));
+              data: responseData,
+              statusCode: 200,
+              requestOptions: RequestOptions(path: ''),
+            ));
 
         // Act
         final result = await repository.getLatestAnalysis();
@@ -247,10 +251,10 @@ void main() {
           any,
           queryParameters: anyNamed('queryParameters'),
         )).thenAnswer((_) async => Response(
-          data: responseData,
-          statusCode: 200,
-          requestOptions: RequestOptions(path: ''),
-        ));
+              data: responseData,
+              statusCode: 200,
+              requestOptions: RequestOptions(path: ''),
+            ));
 
         // Act
         final result = await repository.getLatestAnalysis();
@@ -291,10 +295,10 @@ void main() {
           any,
           queryParameters: anyNamed('queryParameters'),
         )).thenAnswer((_) async => Response(
-          data: responseData,
-          statusCode: 200,
-          requestOptions: RequestOptions(path: ''),
-        ));
+              data: responseData,
+              statusCode: 200,
+              requestOptions: RequestOptions(path: ''),
+            ));
 
         // Act
         final result = await repository.getRecommendations(
@@ -328,10 +332,10 @@ void main() {
           any,
           queryParameters: anyNamed('queryParameters'),
         )).thenAnswer((_) async => Response(
-          data: responseData,
-          statusCode: 200,
-          requestOptions: RequestOptions(path: ''),
-        ));
+              data: responseData,
+              statusCode: 200,
+              requestOptions: RequestOptions(path: ''),
+            ));
 
         // Act
         final result = await repository.getRecommendations();
@@ -359,10 +363,10 @@ void main() {
           any,
           data: anyNamed('data'),
         )).thenAnswer((_) async => Response(
-          data: responseData,
-          statusCode: 200,
-          requestOptions: RequestOptions(path: ''),
-        ));
+              data: responseData,
+              statusCode: 200,
+              requestOptions: RequestOptions(path: ''),
+            ));
 
         // Act
         await repository.markRecommendationImplemented('rec-123');
@@ -386,10 +390,10 @@ void main() {
 
         when(mockApiClient.get<Map<String, dynamic>>(any))
             .thenAnswer((_) async => Response(
-          data: responseData,
-          statusCode: 200,
-          requestOptions: RequestOptions(path: ''),
-        ));
+                  data: responseData,
+                  statusCode: 200,
+                  requestOptions: RequestOptions(path: ''),
+                ));
 
         // Act
         final result = await repository.getSubmissionReadiness();
@@ -417,10 +421,10 @@ void main() {
           any,
           queryParameters: anyNamed('queryParameters'),
         )).thenAnswer((_) async => Response(
-          data: responseData,
-          statusCode: 200,
-          requestOptions: RequestOptions(path: ''),
-        ));
+              data: responseData,
+              statusCode: 200,
+              requestOptions: RequestOptions(path: ''),
+            ));
 
         // Act
         final result = await repository.getBenchmarkingData(
@@ -453,10 +457,10 @@ void main() {
 
         when(mockApiClient.get<Map<String, dynamic>>(any))
             .thenAnswer((_) async => Response(
-          data: responseData,
-          statusCode: 200,
-          requestOptions: RequestOptions(path: ''),
-        ));
+                  data: responseData,
+                  statusCode: 200,
+                  requestOptions: RequestOptions(path: ''),
+                ));
 
         // Act
         final result = await repository.getAnalysisConfig();
@@ -488,10 +492,10 @@ void main() {
           any,
           data: anyNamed('data'),
         )).thenAnswer((_) async => Response(
-          data: responseData,
-          statusCode: 200,
-          requestOptions: RequestOptions(path: ''),
-        ));
+              data: responseData,
+              statusCode: 200,
+              requestOptions: RequestOptions(path: ''),
+            ));
 
         // Act
         await repository.updateAnalysisConfig(config);

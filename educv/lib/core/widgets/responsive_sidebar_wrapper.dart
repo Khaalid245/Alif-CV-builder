@@ -29,7 +29,8 @@ class ResponsiveSidebarWrapper extends StatefulWidget {
   });
 
   @override
-  State<ResponsiveSidebarWrapper> createState() => ResponsiveSidebarWrapperState();
+  State<ResponsiveSidebarWrapper> createState() =>
+      ResponsiveSidebarWrapperState();
 }
 
 class ResponsiveSidebarWrapperState extends State<ResponsiveSidebarWrapper>
@@ -94,7 +95,7 @@ class ResponsiveSidebarWrapperState extends State<ResponsiveSidebarWrapper>
               Expanded(child: widget.child),
             ],
           ),
-          
+
           // Overlay
           if (_isTabletSidebarOpen)
             AnimatedBuilder(
@@ -108,12 +109,14 @@ class ResponsiveSidebarWrapperState extends State<ResponsiveSidebarWrapper>
                 );
               },
             ),
-          
+
           // Collapsible sidebar
           AnimatedPositioned(
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeInOut,
-            left: _isTabletSidebarOpen ? 0 : -ModernSaaSDashboardTheme.sidebarWidth,
+            left: _isTabletSidebarOpen
+                ? 0
+                : -ModernSaaSDashboardTheme.sidebarWidth,
             top: 0,
             bottom: 0,
             width: ModernSaaSDashboardTheme.sidebarWidth,
@@ -154,7 +157,7 @@ class ResponsiveSidebarWrapperState extends State<ResponsiveSidebarWrapper>
             onUpgradeTap: widget.onUpgradeTap,
             showPremiumCard: widget.showPremiumCard,
           ),
-          
+
           // Main content
           Expanded(child: widget.child),
         ],
@@ -185,7 +188,8 @@ class ResponsiveSidebarWrapperState extends State<ResponsiveSidebarWrapper>
   }
 }
 
-class ResponsiveAppBarWithSidebar extends StatelessWidget implements PreferredSizeWidget {
+class ResponsiveAppBarWithSidebar extends StatelessWidget
+    implements PreferredSizeWidget {
   final String title;
   final List<Widget>? actions;
   final VoidCallback? onMenuPressed;
@@ -234,10 +238,10 @@ class ResponsiveAppBarWithSidebar extends StatelessWidget implements PreferredSi
                         ),
                       ),
                     ),
-                  
+
                   if (deviceType.isMobile || deviceType.isTablet)
                     const SizedBox(width: 16),
-                  
+
                   // Title
                   Text(
                     title,
@@ -247,9 +251,9 @@ class ResponsiveAppBarWithSidebar extends StatelessWidget implements PreferredSi
                             ? ModernSaaSDashboardTheme.headlineLarge
                             : ModernSaaSDashboardTheme.headlineMedium,
                   ),
-                  
+
                   const Spacer(),
-                  
+
                   // Actions
                   if (actions != null) ...actions!,
                 ],
@@ -345,7 +349,8 @@ class SidebarItem extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               border: isSelected
                   ? Border.all(
-                      color: ModernSaaSDashboardTheme.accentPurple.withOpacity(0.2),
+                      color: ModernSaaSDashboardTheme.accentPurple
+                          .withOpacity(0.2),
                       width: 1,
                     )
                   : null,
@@ -367,15 +372,18 @@ class SidebarItem extends StatelessWidget {
                       color: isSelected
                           ? ModernSaaSDashboardTheme.accentPurple
                           : ModernSaaSDashboardTheme.primaryText,
-                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                      fontWeight:
+                          isSelected ? FontWeight.w600 : FontWeight.w500,
                     ),
                   ),
                 ),
                 if (badge != null)
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
-                      color: badgeColor ?? ModernSaaSDashboardTheme.accentPurple,
+                      color:
+                          badgeColor ?? ModernSaaSDashboardTheme.accentPurple,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(

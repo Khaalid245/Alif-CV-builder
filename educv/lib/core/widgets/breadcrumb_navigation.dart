@@ -57,9 +57,9 @@ class BreadcrumbNavigation extends StatelessWidget {
               ],
             ),
           ),
-          
+
           const SizedBox(width: 16),
-          
+
           // Breadcrumb items
           Expanded(
             child: SingleChildScrollView(
@@ -76,12 +76,12 @@ class BreadcrumbNavigation extends StatelessWidget {
 
   List<Widget> _buildBreadcrumbItems() {
     final List<Widget> widgets = [];
-    
+
     for (int i = 0; i < items.length; i++) {
       final item = items[i];
       final isLast = i == items.length - 1;
       final isClickable = item.route != null && onNavigate != null && !isLast;
-      
+
       // Add breadcrumb item
       widgets.add(
         GestureDetector(
@@ -89,9 +89,9 @@ class BreadcrumbNavigation extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
-              color: isLast 
-                ? PremiumPortfolioColors.accentBlue.withOpacity(0.1)
-                : Colors.transparent,
+              color: isLast
+                  ? PremiumPortfolioColors.accentBlue.withOpacity(0.1)
+                  : Colors.transparent,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
@@ -101,11 +101,11 @@ class BreadcrumbNavigation extends StatelessWidget {
                   Icon(
                     item.icon,
                     size: 16,
-                    color: isLast 
-                      ? PremiumPortfolioColors.accentBlue
-                      : isClickable
-                        ? PremiumPortfolioColors.accentPurple
-                        : PremiumPortfolioColors.secondaryText,
+                    color: isLast
+                        ? PremiumPortfolioColors.accentBlue
+                        : isClickable
+                            ? PremiumPortfolioColors.accentPurple
+                            : PremiumPortfolioColors.secondaryText,
                   ),
                   const SizedBox(width: 6),
                 ],
@@ -114,11 +114,11 @@ class BreadcrumbNavigation extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: isLast ? FontWeight.w600 : FontWeight.w500,
-                    color: isLast 
-                      ? PremiumPortfolioColors.accentBlue
-                      : isClickable
-                        ? PremiumPortfolioColors.accentPurple
-                        : PremiumPortfolioColors.secondaryText,
+                    color: isLast
+                        ? PremiumPortfolioColors.accentBlue
+                        : isClickable
+                            ? PremiumPortfolioColors.accentPurple
+                            : PremiumPortfolioColors.secondaryText,
                   ),
                 ),
               ],
@@ -126,7 +126,7 @@ class BreadcrumbNavigation extends StatelessWidget {
           ),
         ),
       );
-      
+
       // Add separator (except for last item)
       if (!isLast) {
         widgets.add(
@@ -141,7 +141,7 @@ class BreadcrumbNavigation extends StatelessWidget {
         );
       }
     }
-    
+
     return widgets;
   }
 }
@@ -161,12 +161,12 @@ class BreadcrumbItem {
 // Predefined breadcrumb configurations for common pages
 class AppBreadcrumbs {
   static List<BreadcrumbItem> dashboard() => [
-    BreadcrumbItem(
-      label: 'Dashboard',
-      icon: LucideIcons.home,
-      route: '/cv/dashboard',
-    ),
-  ];
+        BreadcrumbItem(
+          label: 'Dashboard',
+          icon: LucideIcons.home,
+          route: '/cv/dashboard',
+        ),
+      ];
 
   static List<BreadcrumbItem> cvForm(int step) {
     final stepNames = [
@@ -178,7 +178,7 @@ class AppBreadcrumbs {
       'Projects',
       'Certifications',
     ];
-    
+
     return [
       BreadcrumbItem(
         label: 'Dashboard',
@@ -198,79 +198,79 @@ class AppBreadcrumbs {
   }
 
   static List<BreadcrumbItem> cvPreview() => [
-    BreadcrumbItem(
-      label: 'Dashboard',
-      icon: LucideIcons.home,
-      route: '/cv/dashboard',
-    ),
-    BreadcrumbItem(
-      label: 'Build CV',
-      icon: LucideIcons.edit3,
-      route: '/cv/form',
-    ),
-    BreadcrumbItem(
-      label: 'Preview',
-      icon: LucideIcons.eye,
-    ),
-  ];
+        BreadcrumbItem(
+          label: 'Dashboard',
+          icon: LucideIcons.home,
+          route: '/cv/dashboard',
+        ),
+        BreadcrumbItem(
+          label: 'Build CV',
+          icon: LucideIcons.edit3,
+          route: '/cv/form',
+        ),
+        BreadcrumbItem(
+          label: 'Preview',
+          icon: LucideIcons.eye,
+        ),
+      ];
 
   static List<BreadcrumbItem> downloads() => [
-    BreadcrumbItem(
-      label: 'Dashboard',
-      icon: LucideIcons.home,
-      route: '/cv/dashboard',
-    ),
-    BreadcrumbItem(
-      label: 'Downloads',
-      icon: LucideIcons.download,
-    ),
-  ];
+        BreadcrumbItem(
+          label: 'Dashboard',
+          icon: LucideIcons.home,
+          route: '/cv/dashboard',
+        ),
+        BreadcrumbItem(
+          label: 'Downloads',
+          icon: LucideIcons.download,
+        ),
+      ];
 
   static List<BreadcrumbItem> intelligence() => [
-    BreadcrumbItem(
-      label: 'Dashboard',
-      icon: LucideIcons.home,
-      route: '/cv/dashboard',
-    ),
-    BreadcrumbItem(
-      label: 'AI Suggestions',
-      icon: LucideIcons.brain,
-    ),
-  ];
+        BreadcrumbItem(
+          label: 'Dashboard',
+          icon: LucideIcons.home,
+          route: '/cv/dashboard',
+        ),
+        BreadcrumbItem(
+          label: 'AI Suggestions',
+          icon: LucideIcons.brain,
+        ),
+      ];
 
   static List<BreadcrumbItem> templates() => [
-    BreadcrumbItem(
-      label: 'Dashboard',
-      icon: LucideIcons.home,
-      route: '/cv/dashboard',
-    ),
-    BreadcrumbItem(
-      label: 'Templates',
-      icon: LucideIcons.layout,
-    ),
-  ];
+        BreadcrumbItem(
+          label: 'Dashboard',
+          icon: LucideIcons.home,
+          route: '/cv/dashboard',
+        ),
+        BreadcrumbItem(
+          label: 'Templates',
+          icon: LucideIcons.layout,
+        ),
+      ];
 
   static List<BreadcrumbItem> analytics() => [
-    BreadcrumbItem(
-      label: 'Dashboard',
-      icon: LucideIcons.home,
-      route: '/cv/dashboard',
-    ),
-    BreadcrumbItem(
-      label: 'Analytics',
-      icon: LucideIcons.barChart3,
-    ),
-  ];
+        BreadcrumbItem(
+          label: 'Dashboard',
+          icon: LucideIcons.home,
+          route: '/cv/dashboard',
+        ),
+        BreadcrumbItem(
+          label: 'Analytics',
+          icon: LucideIcons.barChart3,
+        ),
+      ];
 
   static List<BreadcrumbItem> account() => [
-    BreadcrumbItem(
-      label: 'Dashboard',
-      icon: LucideIcons.home,
-      route: '/cv/dashboard',
-    ),
-    BreadcrumbItem(
-      label: 'Account Settings',
-      icon: LucideIcons.settings,
-    ),
-  ];
+        BreadcrumbItem(
+          label: 'Dashboard',
+          icon: LucideIcons.home,
+          route: '/cv/dashboard',
+        ),
+        BreadcrumbItem(
+          label: 'Account Settings',
+          icon: LucideIcons.settings,
+        ),
+      ];
 }

@@ -38,7 +38,7 @@ void main() {
 
         // Act
         final notifier = container.read(analysisProvider.notifier);
-        
+
         // Wait for initialization
         await Future.delayed(Duration.zero);
 
@@ -52,12 +52,11 @@ void main() {
 
       test('should handle no analysis available', () async {
         // Arrange
-        when(mockRepository.getLatestAnalysis())
-            .thenAnswer((_) async => null);
+        when(mockRepository.getLatestAnalysis()).thenAnswer((_) async => null);
 
         // Act
         final notifier = container.read(analysisProvider.notifier);
-        
+
         // Wait for initialization
         await Future.delayed(Duration.zero);
 
@@ -75,7 +74,7 @@ void main() {
 
         // Act
         final notifier = container.read(analysisProvider.notifier);
-        
+
         // Wait for initialization
         await Future.delayed(Duration.zero);
 
@@ -89,8 +88,7 @@ void main() {
       test('should analyze CV successfully', () async {
         // Arrange
         final mockAnalysis = _createMockAnalysis();
-        when(mockRepository.getLatestAnalysis())
-            .thenAnswer((_) async => null);
+        when(mockRepository.getLatestAnalysis()).thenAnswer((_) async => null);
         when(mockRepository.analyzeCV(options: anyNamed('options')))
             .thenAnswer((_) async => mockAnalysis);
 
@@ -110,10 +108,9 @@ void main() {
 
       test('should handle analyze CV error', () async {
         // Arrange
-        when(mockRepository.getLatestAnalysis())
-            .thenAnswer((_) async => null);
-        when(mockRepository.analyzeCV(options: anyNamed('options')))
-            .thenThrow(AppException(message: 'Analysis failed', statusCode: 400));
+        when(mockRepository.getLatestAnalysis()).thenAnswer((_) async => null);
+        when(mockRepository.analyzeCV(options: anyNamed('options'))).thenThrow(
+            AppException(message: 'Analysis failed', statusCode: 400));
 
         final notifier = container.read(analysisProvider.notifier);
         await Future.delayed(Duration.zero); // Wait for initialization
@@ -142,7 +139,8 @@ void main() {
         await notifier.refreshAnalysis();
 
         // Assert
-        verify(mockRepository.getLatestAnalysis()).called(2); // Once for init, once for refresh
+        verify(mockRepository.getLatestAnalysis())
+            .called(2); // Once for init, once for refresh
       });
 
       test('should clear error', () async {
@@ -173,7 +171,7 @@ void main() {
 
         // Act
         final notifier = container.read(analysisHistoryProvider.notifier);
-        
+
         // Wait for initialization
         await Future.delayed(Duration.zero);
 
@@ -182,7 +180,8 @@ void main() {
         expect(state.history, equals(mockHistory));
         expect(state.isLoading, isFalse);
         expect(state.error, isNull);
-        verify(mockRepository.getAnalysisHistory(page: 1, pageSize: 10)).called(1);
+        verify(mockRepository.getAnalysisHistory(page: 1, pageSize: 10))
+            .called(1);
       });
 
       test('should load more history', () async {
@@ -238,7 +237,8 @@ void main() {
         await Future.wait([future1, future2]);
 
         // Assert - Should only call API once for load more
-        verify(mockRepository.getAnalysisHistory(page: 2, pageSize: 10)).called(1);
+        verify(mockRepository.getAnalysisHistory(page: 2, pageSize: 10))
+            .called(1);
       });
 
       test('should refresh history', () async {
@@ -256,7 +256,8 @@ void main() {
         await notifier.loadHistory(refresh: true);
 
         // Assert
-        verify(mockRepository.getAnalysisHistory(page: 1, pageSize: 10)).called(2);
+        verify(mockRepository.getAnalysisHistory(page: 1, pageSize: 10))
+            .called(2);
       });
     });
 
@@ -272,7 +273,7 @@ void main() {
 
         // Act
         final notifier = container.read(recommendationsProvider.notifier);
-        
+
         // Wait for initialization
         await Future.delayed(Duration.zero);
 
@@ -289,7 +290,7 @@ void main() {
           _createMockRecommendation(id: 'rec-1', isImplemented: false),
           _createMockRecommendation(id: 'rec-2', isImplemented: false),
         ];
-        
+
         when(mockRepository.getRecommendations(
           category: anyNamed('category'),
           priority: anyNamed('priority'),
@@ -307,10 +308,12 @@ void main() {
 
         // Assert
         final state = container.read(recommendationsProvider);
-        final updatedRec = state.recommendations.firstWhere((r) => r.id == 'rec-1');
+        final updatedRec =
+            state.recommendations.firstWhere((r) => r.id == 'rec-1');
         expect(updatedRec.isImplemented, isTrue);
-        
-        final unchangedRec = state.recommendations.firstWhere((r) => r.id == 'rec-2');
+
+        final unchangedRec =
+            state.recommendations.firstWhere((r) => r.id == 'rec-2');
         expect(unchangedRec.isImplemented, isFalse);
 
         verify(mockRepository.markRecommendationImplemented('rec-1')).called(1);
@@ -319,11 +322,14 @@ void main() {
       test('should filter recommendations correctly', () async {
         // Arrange
         final mockRecommendations = [
-          _createMockRecommendation(category: 'skills', priority: 'high', isImplemented: false),
-          _createMockRecommendation(category: 'education', priority: 'medium', isImplemented: false),
-          _createMockRecommendation(category: 'skills', priority: 'low', isImplemented: true),
+          _createMockRecommendation(
+              category: 'skills', priority: 'high', isImplemented: false),
+          _createMockRecommendation(
+              category: 'education', priority: 'medium', isImplemented: false),
+          _createMockRecommendation(
+              category: 'skills', priority: 'low', isImplemented: true),
         ];
-        
+
         when(mockRepository.getRecommendations(
           category: anyNamed('category'),
           priority: anyNamed('priority'),
@@ -341,9 +347,10 @@ void main() {
         final state = container.read(recommendationsProvider);
         expect(state.selectedCategory, equals('skills'));
         expect(state.includeImplemented, isFalse);
-        
+
         final filtered = state.filteredRecommendations;
-        expect(filtered.length, equals(1)); // Only non-implemented skills recommendations
+        expect(filtered.length,
+            equals(1)); // Only non-implemented skills recommendations
         expect(filtered.first.category, equals('skills'));
         expect(filtered.first.isImplemented, isFalse);
       });
@@ -355,7 +362,7 @@ void main() {
           _createMockRecommendation(priority: 'medium', isImplemented: false),
           _createMockRecommendation(priority: 'high', isImplemented: true),
         ];
-        
+
         when(mockRepository.getRecommendations(
           category: anyNamed('category'),
           priority: anyNamed('priority'),
@@ -370,7 +377,8 @@ void main() {
 
         // Assert
         final highPriority = state.highPriorityRecommendations;
-        expect(highPriority.length, equals(1)); // Only non-implemented high priority
+        expect(highPriority.length,
+            equals(1)); // Only non-implemented high priority
         expect(highPriority.first.priority, equals('high'));
         expect(highPriority.first.isImplemented, isFalse);
       });
@@ -382,7 +390,7 @@ void main() {
           _createMockRecommendation(category: 'education', priority: 'medium'),
           _createMockRecommendation(category: 'skills', priority: 'low'),
         ];
-        
+
         when(mockRepository.getRecommendations(
           category: anyNamed('category'),
           priority: anyNamed('priority'),
@@ -397,7 +405,8 @@ void main() {
 
         // Assert
         expect(state.availableCategories, containsAll(['education', 'skills']));
-        expect(state.availablePriorities, containsAll(['high', 'low', 'medium']));
+        expect(
+            state.availablePriorities, containsAll(['high', 'low', 'medium']));
       });
 
       test('should clear filters', () async {
@@ -429,7 +438,8 @@ void main() {
     });
 
     group('FutureProviders', () {
-      test('submissionReadinessProvider should return readiness data', () async {
+      test('submissionReadinessProvider should return readiness data',
+          () async {
         // Arrange
         final mockReadiness = _createMockSubmissionReadiness();
         when(mockRepository.getSubmissionReadiness())
@@ -443,10 +453,12 @@ void main() {
         verify(mockRepository.getSubmissionReadiness()).called(1);
       });
 
-      test('benchmarkingDataProvider should return benchmarking data', () async {
+      test('benchmarkingDataProvider should return benchmarking data',
+          () async {
         // Arrange
         final mockBenchmarking = _createMockBenchmarkingData();
-        when(mockRepository.getBenchmarkingData(comparisonGroup: 'computer_science'))
+        when(mockRepository.getBenchmarkingData(
+                comparisonGroup: 'computer_science'))
             .thenAnswer((_) async => mockBenchmarking);
 
         // Act
@@ -455,8 +467,11 @@ void main() {
         );
 
         // Assert
-        await expectLater(benchmarkingAsync, completion(equals(mockBenchmarking)));
-        verify(mockRepository.getBenchmarkingData(comparisonGroup: 'computer_science')).called(1);
+        await expectLater(
+            benchmarkingAsync, completion(equals(mockBenchmarking)));
+        verify(mockRepository.getBenchmarkingData(
+                comparisonGroup: 'computer_science'))
+            .called(1);
       });
 
       test('analysisConfigProvider should return config data', () async {
@@ -473,7 +488,8 @@ void main() {
         verify(mockRepository.getAnalysisConfig()).called(1);
       });
 
-      test('specificAnalysisProvider should return specific analysis', () async {
+      test('specificAnalysisProvider should return specific analysis',
+          () async {
         // Arrange
         final mockAnalysis = _createMockAnalysis();
         when(mockRepository.getAnalysisById('analysis-123'))

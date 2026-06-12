@@ -17,7 +17,7 @@ class TemplateEngineProvider extends ChangeNotifier {
   // State variables
   bool _isLoading = false;
   String? _error;
-  
+
   // Data
   List<IndustryModel> _industries = [];
   List<RoleModel> _roles = [];
@@ -27,7 +27,7 @@ class TemplateEngineProvider extends ChangeNotifier {
   List<TemplateModel> _popularTemplates = [];
   List<TemplateModel> _recentTemplates = [];
   UserTemplatePreferenceModel? _userPreferences;
-  
+
   // Filters
   String? _selectedCategory;
   String? _selectedIndustry;
@@ -35,7 +35,7 @@ class TemplateEngineProvider extends ChangeNotifier {
   String? _selectedLayout;
   bool? _isPremiumFilter;
   String _searchQuery = '';
-  
+
   // Template details
   TemplateModel? _selectedTemplate;
   String? _templatePreview;
@@ -43,7 +43,7 @@ class TemplateEngineProvider extends ChangeNotifier {
   // Getters
   bool get isLoading => _isLoading;
   String? get error => _error;
-  
+
   List<IndustryModel> get industries => _industries;
   List<RoleModel> get roles => _roles;
   List<TemplateCategoryModel> get categories => _categories;
@@ -52,14 +52,14 @@ class TemplateEngineProvider extends ChangeNotifier {
   List<TemplateModel> get popularTemplates => _popularTemplates;
   List<TemplateModel> get recentTemplates => _recentTemplates;
   UserTemplatePreferenceModel? get userPreferences => _userPreferences;
-  
+
   String? get selectedCategory => _selectedCategory;
   String? get selectedIndustry => _selectedIndustry;
   String? get selectedRole => _selectedRole;
   String? get selectedLayout => _selectedLayout;
   bool? get isPremiumFilter => _isPremiumFilter;
   String get searchQuery => _searchQuery;
-  
+
   TemplateModel? get selectedTemplate => _selectedTemplate;
   String? get templatePreview => _templatePreview;
 
@@ -135,7 +135,8 @@ class TemplateEngineProvider extends ChangeNotifier {
   // Load recommended templates
   Future<void> loadRecommendedTemplates({int limit = 6}) async {
     try {
-      _recommendedTemplates = await _repository.getRecommendedTemplates(limit: limit);
+      _recommendedTemplates =
+          await _repository.getRecommendedTemplates(limit: limit);
       notifyListeners();
     } catch (e) {
       _setError('Failed to load recommendations: ${e.toString()}');
@@ -145,7 +146,8 @@ class TemplateEngineProvider extends ChangeNotifier {
   // Load popular templates
   Future<void> loadPopularTemplates({int limit = 6, int days = 30}) async {
     try {
-      _popularTemplates = await _repository.getPopularTemplates(limit: limit, days: days);
+      _popularTemplates =
+          await _repository.getPopularTemplates(limit: limit, days: days);
       notifyListeners();
     } catch (e) {
       _setError('Failed to load popular templates: ${e.toString()}');
@@ -242,10 +244,12 @@ class TemplateEngineProvider extends ChangeNotifier {
     }
   }
 
-  Future<Map<String, dynamic>?> renderTemplate(String slug, {Map<String, dynamic>? customBranding}) async {
+  Future<Map<String, dynamic>?> renderTemplate(String slug,
+      {Map<String, dynamic>? customBranding}) async {
     _setLoading(true);
     try {
-      final result = await _repository.renderTemplate(slug, customBranding: customBranding);
+      final result = await _repository.renderTemplate(slug,
+          customBranding: customBranding);
       _clearError();
       return result;
     } catch (e) {
@@ -264,7 +268,7 @@ class TemplateEngineProvider extends ChangeNotifier {
       } else {
         await _repository.favoriteTemplate(template.slug);
       }
-      
+
       // Refresh template data
       await selectTemplate(template.slug);
     } catch (e) {

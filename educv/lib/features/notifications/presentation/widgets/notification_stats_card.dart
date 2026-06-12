@@ -110,7 +110,8 @@ class NotificationStatsCard extends StatelessWidget {
     );
   }
 
-  Widget _buildStatItem(String label, String value, IconData icon, Color color) {
+  Widget _buildStatItem(
+      String label, String value, IconData icon, Color color) {
     return Column(
       children: [
         Container(
@@ -147,7 +148,7 @@ class NotificationStatsCard extends StatelessWidget {
   Widget _buildChannelStat(String channel, int count) {
     final color = _getChannelColor(channel);
     final icon = _getChannelIcon(channel);
-    
+
     return Column(
       children: [
         Icon(

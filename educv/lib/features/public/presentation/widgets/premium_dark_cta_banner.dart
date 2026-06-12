@@ -46,11 +46,14 @@ class PremiumDarkCTABanner extends StatelessWidget {
                     return Column(
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF4F46E5).withValues(alpha: 0.1),
+                            color:
+                                const Color(0xFF4F46E5).withValues(alpha: 0.1),
                             border: Border.all(
-                              color: const Color(0xFF4F46E5).withValues(alpha: 0.2),
+                              color: const Color(0xFF4F46E5)
+                                  .withValues(alpha: 0.2),
                             ),
                             borderRadius: BorderRadius.circular(20),
                           ),
@@ -63,12 +66,11 @@ class PremiumDarkCTABanner extends StatelessWidget {
                               letterSpacing: 0.5,
                             ),
                           ),
-                        ).animate()
+                        )
+                            .animate()
                             .fadeIn(duration: 800.ms)
                             .slideY(begin: 0.3, end: 0),
-                        
                         const SizedBox(height: 32),
-                        
                         ShaderMask(
                           shaderCallback: (bounds) => const LinearGradient(
                             colors: [
@@ -86,12 +88,11 @@ class PremiumDarkCTABanner extends StatelessWidget {
                             ),
                             textAlign: TextAlign.center,
                           ),
-                        ).animate(delay: 200.ms)
+                        )
+                            .animate(delay: 200.ms)
                             .fadeIn(duration: 800.ms)
                             .slideY(begin: 0.3, end: 0),
-                        
                         const SizedBox(height: 24),
-                        
                         Text(
                           'Join 2,400+ students who already built their career with EduCV',
                           style: TextStyle(
@@ -101,19 +102,18 @@ class PremiumDarkCTABanner extends StatelessWidget {
                             height: 1.6,
                           ),
                           textAlign: TextAlign.center,
-                        ).animate(delay: 400.ms)
+                        )
+                            .animate(delay: 400.ms)
                             .fadeIn(duration: 800.ms)
                             .slideY(begin: 0.3, end: 0),
-                        
                         const SizedBox(height: 48),
-                        
                         _buildCTAButton(context)
                             .animate(delay: 600.ms)
                             .fadeIn(duration: 800.ms)
-                            .scale(begin: const Offset(0.8, 0.8), end: const Offset(1.0, 1.0)),
-                        
+                            .scale(
+                                begin: const Offset(0.8, 0.8),
+                                end: const Offset(1.0, 1.0)),
                         const SizedBox(height: 40),
-                        
                         _buildTrustIndicators()
                             .animate(delay: 800.ms)
                             .fadeIn(duration: 800.ms)

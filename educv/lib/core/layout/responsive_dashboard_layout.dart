@@ -22,7 +22,8 @@ class ResponsiveDashboardLayout extends StatefulWidget {
   });
 
   @override
-  State<ResponsiveDashboardLayout> createState() => _ResponsiveDashboardLayoutState();
+  State<ResponsiveDashboardLayout> createState() =>
+      _ResponsiveDashboardLayoutState();
 }
 
 class _ResponsiveDashboardLayoutState extends State<ResponsiveDashboardLayout> {
@@ -91,8 +92,6 @@ class _ResponsiveDashboardLayoutState extends State<ResponsiveDashboardLayout> {
       floatingActionButton: widget.floatingActionButton,
     );
   }
-
-
 
   Widget _buildTabletTopBar() {
     return Container(
@@ -169,8 +168,6 @@ class _ResponsiveDashboardLayoutState extends State<ResponsiveDashboardLayout> {
       ),
     );
   }
-
-
 
   Widget _buildCollapsibleSidebar() {
     return AnimatedContainer(

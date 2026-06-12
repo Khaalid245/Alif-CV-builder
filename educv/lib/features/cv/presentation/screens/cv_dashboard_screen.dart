@@ -47,7 +47,7 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen>
       CurvedAnimation(parent: _fadeController, curve: Curves.easeOut),
     );
     _fadeController.forward();
-    
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final state = ref.read(cvProfileProvider);
       if (state is AsyncData && state.value == null) {
@@ -76,10 +76,13 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen>
             state: cvProfileAsync.when(
               loading: () => LoadingState.loading,
               error: (_, __) => LoadingState.error,
-              data: (profile) => profile == null ? LoadingState.loading : LoadingState.loaded,
+              data: (profile) =>
+                  profile == null ? LoadingState.loading : LoadingState.loaded,
             ),
             loadingWidget: const DashboardSkeleton(),
-            errorMessage: cvProfileAsync.hasError ? cvProfileAsync.error.toString() : null,
+            errorMessage: cvProfileAsync.hasError
+                ? cvProfileAsync.error.toString()
+                : null,
             onRetry: () => ref.invalidate(cvProfileProvider),
             child: cvProfileAsync.hasValue && cvProfileAsync.value != null
                 ? FadeTransition(
@@ -95,10 +98,6 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen>
       ),
     );
   }
-
-
-
-
 
   Widget _buildGridBackground() {
     return Positioned.fill(
@@ -117,76 +116,76 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen>
             items: AppBreadcrumbs.dashboard(),
             onNavigate: (route) => context.go(route),
           ),
-          
+
           // Main Dashboard Content
           Padding(
             padding: const EdgeInsets.all(24),
             child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(child: _buildWelcomeSection(profile)),
-                      const SizedBox(width: 16),
-                      const QuickHelpButton(),
-                    ],
-                  ),
-            const SizedBox(height: 32),
-            _buildProfileCompletionCard(profile),
-            const SizedBox(height: 32),
-            _buildQuickStatsRow(profile),
-            const SizedBox(height: 32),
-            ResponsiveBuilder(
-              builder: (context, deviceType) {
-                if (deviceType.isMobile) {
-                  return Column(
-                    children: [
-                      _buildRecentDownloadsSection(),
-                      const SizedBox(height: 24),
-                      _buildDownloadStatsSection(),
-                      const SizedBox(height: 24),
-                      _buildAIInsightsSection(),
-                      const SizedBox(height: 24),
-                      _buildQuickActionsSection(),
-                      const SizedBox(height: 24),
-                      _buildRecentActivitySection(),
-                    ],
-                  );
-                }
-                
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
                   children: [
-                    Expanded(
-                      flex: 2,
-                      child: Column(
+                    Expanded(child: _buildWelcomeSection(profile)),
+                    const SizedBox(width: 16),
+                    const QuickHelpButton(),
+                  ],
+                ),
+                const SizedBox(height: 32),
+                _buildProfileCompletionCard(profile),
+                const SizedBox(height: 32),
+                _buildQuickStatsRow(profile),
+                const SizedBox(height: 32),
+                ResponsiveBuilder(
+                  builder: (context, deviceType) {
+                    if (deviceType.isMobile) {
+                      return Column(
                         children: [
                           _buildRecentDownloadsSection(),
                           const SizedBox(height: 24),
                           _buildDownloadStatsSection(),
                           const SizedBox(height: 24),
                           _buildAIInsightsSection(),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 24),
-                    Expanded(
-                      flex: 1,
-                      child: Column(
-                        children: [
+                          const SizedBox(height: 24),
                           _buildQuickActionsSection(),
                           const SizedBox(height: 24),
                           _buildRecentActivitySection(),
                         ],
-                      ),
-                    ),
-                  ],
-                );
-              },
+                      );
+                    }
+
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Column(
+                            children: [
+                              _buildRecentDownloadsSection(),
+                              const SizedBox(height: 24),
+                              _buildDownloadStatsSection(),
+                              const SizedBox(height: 24),
+                              _buildAIInsightsSection(),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 24),
+                        Expanded(
+                          flex: 1,
+                          child: Column(
+                            children: [
+                              _buildQuickActionsSection(),
+                              const SizedBox(height: 24),
+                              _buildRecentActivitySection(),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
         ],
       ),
     );
@@ -194,7 +193,11 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen>
 
   Widget _buildWelcomeSection(CVProfileModel profile) {
     final hour = DateTime.now().hour;
-    final greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+    final greeting = hour < 12
+        ? 'Good morning'
+        : hour < 17
+            ? 'Good afternoon'
+            : 'Good evening';
     final user = ref.watch(currentUserProvider);
     final displayName = _firstName(user?.fullName ?? profile.fullName);
 
@@ -320,7 +323,7 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen>
             ],
           );
         }
-        
+
         return Row(
           children: [
             Expanded(
@@ -372,7 +375,8 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen>
     );
   }
 
-  Widget _buildStatCard(String title, String value, String subtitle, IconData icon, Color color, String percentage) {
+  Widget _buildStatCard(String title, String value, String subtitle,
+      IconData icon, Color color, String percentage) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -602,7 +606,8 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen>
     );
   }
 
-  Widget _buildQuickActionItem(IconData icon, String title, Color color, VoidCallback onTap) {
+  Widget _buildQuickActionItem(
+      IconData icon, String title, Color color, VoidCallback onTap) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
@@ -697,7 +702,8 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen>
     );
   }
 
-  Widget _buildStatItem(IconData icon, String label, String value, Color color) {
+  Widget _buildStatItem(
+      IconData icon, String label, String value, Color color) {
     return Column(
       children: [
         Icon(
@@ -775,7 +781,8 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen>
                       style: ElevatedButton.styleFrom(
                         backgroundColor: PremiumSaaSTheme.primaryPurple,
                         foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -851,7 +858,8 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen>
     );
   }
 
-  Widget _buildActivityItem(IconData icon, String title, String time, Color color) {
+  Widget _buildActivityItem(
+      IconData icon, String title, String time, Color color) {
     return Row(
       children: [
         Container(
@@ -1005,7 +1013,7 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen>
           Consumer(
             builder: (context, ref, child) {
               final historyAsync = ref.watch(pdfHistoryProvider);
-              
+
               return historyAsync.when(
                 loading: () => const Padding(
                   padding: EdgeInsets.all(40),
@@ -1016,10 +1024,12 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen>
                   if (history.isEmpty) {
                     return _buildEmptyDownloadsState();
                   }
-                  
+
                   final recentDownloads = history.take(3).toList();
                   return Column(
-                    children: recentDownloads.map((cv) => _buildDownloadTableRow(cv)).toList(),
+                    children: recentDownloads
+                        .map((cv) => _buildDownloadTableRow(cv))
+                        .toList(),
                   );
                 },
               );
@@ -1137,7 +1147,8 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen>
                     size: 16,
                   ),
                   style: IconButton.styleFrom(
-                    backgroundColor: PremiumSaaSTheme.primaryPurple.withOpacity(0.1),
+                    backgroundColor:
+                        PremiumSaaSTheme.primaryPurple.withOpacity(0.1),
                     foregroundColor: PremiumSaaSTheme.primaryPurple,
                     minimumSize: const Size(32, 32),
                     shape: RoundedRectangleBorder(

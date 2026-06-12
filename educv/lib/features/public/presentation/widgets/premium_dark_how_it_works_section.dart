@@ -57,7 +57,9 @@ class PremiumDarkHowItWorksSection extends StatelessWidget {
                     LayoutBuilder(
                       builder: (context, constraints) {
                         final isDesktop = constraints.maxWidth >= 900;
-                        return isDesktop ? _buildDesktopLayout() : _buildMobileLayout();
+                        return isDesktop
+                            ? _buildDesktopLayout()
+                            : _buildMobileLayout();
                       },
                     ),
                   ],
@@ -185,7 +187,8 @@ class PremiumDarkHowItWorksSection extends StatelessWidget {
     );
   }
 
-  Widget _buildStepCard(int stepNumber, IconData icon, String title, String description, Color accentColor) {
+  Widget _buildStepCard(int stepNumber, IconData icon, String title,
+      String description, Color accentColor) {
     return _StepCard(
       stepNumber: stepNumber,
       icon: icon,
@@ -246,8 +249,7 @@ class PremiumDarkHowItWorksSection extends StatelessWidget {
           ),
         ],
       ),
-    ).animate(delay: 800.ms)
-        .fadeIn(duration: 1000.ms);
+    ).animate(delay: 800.ms).fadeIn(duration: 1000.ms);
   }
 }
 
@@ -281,13 +283,12 @@ class _StepCardState extends State<_StepCard> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeOut,
-        transform: Matrix4.identity()
-          ..translate(0.0, _isHovered ? -8.0 : 0.0),
+        transform: Matrix4.identity()..translate(0.0, _isHovered ? -8.0 : 0.0),
         padding: const EdgeInsets.all(40),
         decoration: BoxDecoration(
           color: Colors.white.withValues(alpha: 0.02),
           border: Border.all(
-            color: _isHovered 
+            color: _isHovered
                 ? widget.accentColor.withValues(alpha: 0.3)
                 : Colors.white.withValues(alpha: 0.08),
             width: 1,
@@ -295,7 +296,7 @@ class _StepCardState extends State<_StepCard> {
           borderRadius: BorderRadius.circular(28),
           boxShadow: [
             BoxShadow(
-              color: _isHovered 
+              color: _isHovered
                   ? widget.accentColor.withValues(alpha: 0.2)
                   : Colors.black.withValues(alpha: 0.1),
               blurRadius: _isHovered ? 32 : 20,
@@ -360,7 +361,7 @@ class _StepCardState extends State<_StepCard> {
                   ],
                 ),
                 const SizedBox(height: 32),
-                
+
                 // Title
                 Text(
                   widget.title,
@@ -372,7 +373,7 @@ class _StepCardState extends State<_StepCard> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Description
                 Text(
                   widget.description,
@@ -388,7 +389,8 @@ class _StepCardState extends State<_StepCard> {
           ),
         ),
       ),
-    ).animate(delay: (widget.stepNumber * 200).ms)
+    )
+        .animate(delay: (widget.stepNumber * 200).ms)
         .fadeIn(duration: 800.ms)
         .slideY(begin: 0.3, end: 0);
   }

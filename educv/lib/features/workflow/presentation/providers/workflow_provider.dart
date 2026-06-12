@@ -57,18 +57,20 @@ class CVWorkflowNotifier extends StateNotifier<CVWorkflowState> {
   final WorkflowRepository _repository;
   final String _cvId;
 
-  CVWorkflowNotifier(this._repository, this._cvId) : super(const CVWorkflowState()) {
+  CVWorkflowNotifier(this._repository, this._cvId)
+      : super(const CVWorkflowState()) {
     _loadWorkflow();
   }
 
   Future<void> _loadWorkflow() async {
     try {
       state = state.copyWith(isLoading: true, error: null);
-      
+
       final workflow = await _repository.getCVWorkflow(_cvId);
-      
+
       if (workflow != null) {
-        final transitions = await _repository.getAvailableTransitions(workflow.id);
+        final transitions =
+            await _repository.getAvailableTransitions(workflow.id);
         state = state.copyWith(
           workflow: workflow,
           availableTransitions: transitions,
@@ -100,20 +102,21 @@ class CVWorkflowNotifier extends StateNotifier<CVWorkflowState> {
 
     try {
       state = state.copyWith(isTransitioning: true, error: null);
-      
+
       final request = WorkflowTransitionRequest(
         transitionId: transitionId,
         comment: comment,
         metadata: metadata,
       );
-      
+
       final updatedWorkflow = await _repository.performTransition(
         state.workflow!.id,
         request,
       );
-      
-      final transitions = await _repository.getAvailableTransitions(updatedWorkflow.id);
-      
+
+      final transitions =
+          await _repository.getAvailableTransitions(updatedWorkflow.id);
+
       state = state.copyWith(
         workflow: updatedWorkflow,
         availableTransitions: transitions,
@@ -138,7 +141,9 @@ class CVWorkflowNotifier extends StateNotifier<CVWorkflowState> {
   }
 }
 
-final cvWorkflowProvider = StateNotifierProvider.family<CVWorkflowNotifier, CVWorkflowState, String>((ref, cvId) {
+final cvWorkflowProvider =
+    StateNotifierProvider.family<CVWorkflowNotifier, CVWorkflowState, String>(
+        (ref, cvId) {
   final repository = ref.watch(workflowRepositoryProvider);
   return CVWorkflowNotifier(repository, cvId);
 });
@@ -192,7 +197,8 @@ class WorkflowInstancesState {
 class WorkflowInstancesNotifier extends StateNotifier<WorkflowInstancesState> {
   final WorkflowRepository _repository;
 
-  WorkflowInstancesNotifier(this._repository) : super(const WorkflowInstancesState()) {
+  WorkflowInstancesNotifier(this._repository)
+      : super(const WorkflowInstancesState()) {
     loadInstances();
   }
 
@@ -234,14 +240,14 @@ class WorkflowInstancesNotifier extends StateNotifier<WorkflowInstancesState> {
 
     try {
       state = state.copyWith(isLoadingMore: true, error: null);
-      
+
       final nextPage = state.currentPage + 1;
       final instances = await _repository.getWorkflowInstances(
         page: nextPage,
         status: state.statusFilter,
         workflowConfigId: state.configFilter,
       );
-      
+
       state = state.copyWith(
         instances: [...state.instances, ...instances],
         isLoadingMore: false,
@@ -283,7 +289,9 @@ class WorkflowInstancesNotifier extends StateNotifier<WorkflowInstancesState> {
   }
 }
 
-final workflowInstancesProvider = StateNotifierProvider<WorkflowInstancesNotifier, WorkflowInstancesState>((ref) {
+final workflowInstancesProvider =
+    StateNotifierProvider<WorkflowInstancesNotifier, WorkflowInstancesState>(
+        (ref) {
   final repository = ref.watch(workflowRepositoryProvider);
   return WorkflowInstancesNotifier(repository);
 });
@@ -330,7 +338,7 @@ class TransitionHistoryNotifier extends StateNotifier<TransitionHistoryState> {
   final WorkflowRepository _repository;
   final String _instanceId;
 
-  TransitionHistoryNotifier(this._repository, this._instanceId) 
+  TransitionHistoryNotifier(this._repository, this._instanceId)
       : super(const TransitionHistoryState()) {
     loadHistory();
   }
@@ -372,13 +380,13 @@ class TransitionHistoryNotifier extends StateNotifier<TransitionHistoryState> {
 
     try {
       state = state.copyWith(isLoadingMore: true, error: null);
-      
+
       final nextPage = state.currentPage + 1;
       final history = await _repository.getTransitionHistory(
         _instanceId,
         page: nextPage,
       );
-      
+
       state = state.copyWith(
         history: [...state.history, ...history],
         isLoadingMore: false,
@@ -398,13 +406,18 @@ class TransitionHistoryNotifier extends StateNotifier<TransitionHistoryState> {
   }
 }
 
-final transitionHistoryProvider = StateNotifierProvider.family<TransitionHistoryNotifier, TransitionHistoryState, String>((ref, instanceId) {
+final transitionHistoryProvider = StateNotifierProvider.family<
+    TransitionHistoryNotifier,
+    TransitionHistoryState,
+    String>((ref, instanceId) {
   final repository = ref.watch(workflowRepositoryProvider);
   return TransitionHistoryNotifier(repository, instanceId);
 });
 
 // Workflow configurations provider
-final workflowConfigurationsProvider = FutureProvider.family<List<WorkflowConfigurationModel>, String?>((ref, entityType) async {
+final workflowConfigurationsProvider =
+    FutureProvider.family<List<WorkflowConfigurationModel>, String?>(
+        (ref, entityType) async {
   final repository = ref.watch(workflowRepositoryProvider);
   return repository.getWorkflowConfigurations(
     entityType: entityType,
@@ -413,13 +426,17 @@ final workflowConfigurationsProvider = FutureProvider.family<List<WorkflowConfig
 });
 
 // Specific workflow instance provider
-final workflowInstanceProvider = FutureProvider.family<WorkflowInstanceModel, String>((ref, instanceId) async {
+final workflowInstanceProvider =
+    FutureProvider.family<WorkflowInstanceModel, String>(
+        (ref, instanceId) async {
   final repository = ref.watch(workflowRepositoryProvider);
   return repository.getWorkflowInstance(instanceId);
 });
 
 // Workflow dashboard provider
-final workflowDashboardProvider = FutureProvider.family<WorkflowDashboardModel, Map<String, dynamic>?>((ref, params) async {
+final workflowDashboardProvider =
+    FutureProvider.family<WorkflowDashboardModel, Map<String, dynamic>?>(
+        (ref, params) async {
   final repository = ref.watch(workflowRepositoryProvider);
   return repository.getWorkflowDashboard(
     workflowConfigId: params?['workflowConfigId'],
@@ -429,7 +446,9 @@ final workflowDashboardProvider = FutureProvider.family<WorkflowDashboardModel, 
 });
 
 // Available transitions provider
-final availableTransitionsProvider = FutureProvider.family<List<WorkflowTransitionModel>, String>((ref, instanceId) async {
+final availableTransitionsProvider =
+    FutureProvider.family<List<WorkflowTransitionModel>, String>(
+        (ref, instanceId) async {
   final repository = ref.watch(workflowRepositoryProvider);
   return repository.getAvailableTransitions(instanceId);
 });

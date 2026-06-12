@@ -5,12 +5,14 @@ import '../../data/models/version_models.dart';
 import '../../domain/version_history_repository.dart';
 import '../../data/repositories/version_history_repository_impl.dart';
 
-final versionHistoryRepositoryProvider = Provider<VersionHistoryRepository>((ref) {
+final versionHistoryRepositoryProvider =
+    Provider<VersionHistoryRepository>((ref) {
   final apiClient = ref.watch(apiClientProvider);
   return VersionHistoryRepositoryImpl(apiClient);
 });
 
-final versionHistoryNotifierProvider = ChangeNotifierProvider<VersionHistoryProvider>((ref) {
+final versionHistoryNotifierProvider =
+    ChangeNotifierProvider<VersionHistoryProvider>((ref) {
   return VersionHistoryProvider(ref.watch(versionHistoryRepositoryProvider));
 });
 
@@ -35,7 +37,7 @@ class VersionHistoryProvider extends ChangeNotifier {
 
   Future<void> loadVersionHistory() async {
     _setState(VersionHistoryState.loading);
-    
+
     try {
       _versions = await _repository.getVersionHistory();
       _setState(VersionHistoryState.loaded);
@@ -57,7 +59,7 @@ class VersionHistoryProvider extends ChangeNotifier {
 
   Future<void> compareVersions(int fromVersion, int toVersion) async {
     _setState(VersionHistoryState.loading);
-    
+
     try {
       _comparison = await _repository.compareVersions(fromVersion, toVersion);
       _setState(VersionHistoryState.loaded);

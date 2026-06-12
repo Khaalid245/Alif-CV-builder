@@ -11,13 +11,14 @@ class AuthInterceptor extends Interceptor {
   }
 
   @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+  void onRequest(
+      RequestOptions options, RequestInterceptorHandler handler) async {
     final token = await _storage.getAccessToken();
-    
+
     if (token != null) {
       options.headers['Authorization'] = 'Bearer $token';
     }
-    
+
     handler.next(options);
   }
 
@@ -25,7 +26,7 @@ class AuthInterceptor extends Interceptor {
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     if (err.response?.statusCode == 401) {
       final refreshToken = await _storage.getRefreshToken();
-      
+
       if (refreshToken != null) {
         try {
           final dio = Dio();
@@ -33,17 +34,17 @@ class AuthInterceptor extends Interceptor {
             '${err.requestOptions.baseUrl}/auth/token/refresh/',
             data: {'refresh': refreshToken},
           );
-          
+
           if (response.statusCode == 200) {
             final newToken = response.data['access'];
             await _storage.saveTokens(
               accessToken: newToken,
               refreshToken: refreshToken,
             );
-            
+
             final opts = err.requestOptions;
             opts.headers['Authorization'] = 'Bearer $newToken';
-            
+
             final cloneReq = await dio.fetch(opts);
             handler.resolve(cloneReq);
             return;
@@ -53,7 +54,7 @@ class AuthInterceptor extends Interceptor {
         }
       }
     }
-    
+
     handler.next(err);
   }
 }

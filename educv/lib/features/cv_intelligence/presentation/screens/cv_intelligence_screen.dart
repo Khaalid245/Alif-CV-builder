@@ -56,7 +56,8 @@ class CVIntelligenceScreen extends HookConsumerWidget {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 8.0),
                   child: Row(
                     children: [
                       const Icon(LucideIcons.brainCircuit, color: Colors.white),
@@ -68,12 +69,14 @@ class CVIntelligenceScreen extends HookConsumerWidget {
                       const Spacer(),
                       IconButton(
                         onPressed: () => _showAnalysisOptions(context, ref),
-                        icon: const Icon(LucideIcons.settings, color: Colors.white),
+                        icon: const Icon(LucideIcons.settings,
+                            color: Colors.white),
                         tooltip: 'Analysis Settings',
                       ),
                       IconButton(
                         onPressed: () => _refreshAnalysis(ref, context),
-                        icon: const Icon(LucideIcons.refreshCw, color: Colors.white),
+                        icon: const Icon(LucideIcons.refreshCw,
+                            color: Colors.white),
                         tooltip: 'Refresh Analysis',
                       ),
                     ],
@@ -114,19 +117,21 @@ class CVIntelligenceScreen extends HookConsumerWidget {
           _buildHistoryTab(context, ref),
         ],
       ),
-      floatingActionButton: analysisState.analysis == null && !analysisState.isLoading
-          ? FloatingActionButton.extended(
-              onPressed: () => _analyzeCV(context, ref),
-              icon: const Icon(LucideIcons.brain),
-              label: const Text('Analyze CV'),
-              backgroundColor: AppColors.primary,
-              foregroundColor: Colors.white,
-            )
-          : null,
+      floatingActionButton:
+          analysisState.analysis == null && !analysisState.isLoading
+              ? FloatingActionButton.extended(
+                  onPressed: () => _analyzeCV(context, ref),
+                  icon: const Icon(LucideIcons.brain),
+                  label: const Text('Analyze CV'),
+                  backgroundColor: AppColors.primary,
+                  foregroundColor: Colors.white,
+                )
+              : null,
     );
   }
 
-  Widget _buildOverviewTab(BuildContext context, WidgetRef ref, AnalysisState state) {
+  Widget _buildOverviewTab(
+      BuildContext context, WidgetRef ref, AnalysisState state) {
     if (state.isLoading && state.analysis == null) {
       return const Center(child: AppLoader());
     }
@@ -182,7 +187,8 @@ class CVIntelligenceScreen extends HookConsumerWidget {
     );
   }
 
-  Widget _buildSectionsTab(BuildContext context, WidgetRef ref, AnalysisState state) {
+  Widget _buildSectionsTab(
+      BuildContext context, WidgetRef ref, AnalysisState state) {
     if (state.isLoading) {
       return const Center(child: AppLoader());
     }
@@ -210,8 +216,8 @@ class CVIntelligenceScreen extends HookConsumerWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.md),
-          ...state.analysis!.sectionScores.entries.map((entry) =>
-            SectionScoreCard(
+          ...state.analysis!.sectionScores.entries.map(
+            (entry) => SectionScoreCard(
               sectionName: entry.key,
               sectionScore: entry.value,
               onTap: () => _showSectionDetails(context, entry.key, entry.value),
@@ -222,7 +228,8 @@ class CVIntelligenceScreen extends HookConsumerWidget {
     );
   }
 
-  Widget _buildRecommendationsTab(BuildContext context, WidgetRef ref, RecommendationsState state) {
+  Widget _buildRecommendationsTab(
+      BuildContext context, WidgetRef ref, RecommendationsState state) {
     if (state.isLoading) {
       return const Center(child: AppLoader());
     }
@@ -230,7 +237,8 @@ class CVIntelligenceScreen extends HookConsumerWidget {
     if (state.error != null) {
       return AppErrorState(
         message: state.error!,
-        onRetry: () => ref.read(recommendationsProvider.notifier).loadRecommendations(),
+        onRetry: () =>
+            ref.read(recommendationsProvider.notifier).loadRecommendations(),
       );
     }
 
@@ -243,13 +251,19 @@ class CVIntelligenceScreen extends HookConsumerWidget {
           const SizedBox(height: AppSpacing.md),
           RecommendationsList(
             recommendations: state.filteredRecommendations,
-            onRecommendationImplemented: (id) => _markRecommendationImplemented(context, ref, id),
-            onRecommendationAction: (recommendation) => _handleRecommendationAction(recommendation),
+            onRecommendationImplemented: (id) =>
+                _markRecommendationImplemented(context, ref, id),
+            onRecommendationAction: (recommendation) =>
+                _handleRecommendationAction(recommendation),
             showFilters: true,
             selectedCategory: state.selectedCategory,
             selectedPriority: state.selectedPriority,
-            onCategoryChanged: (category) => ref.read(recommendationsProvider.notifier).setFilters(category: category),
-            onPriorityChanged: (priority) => ref.read(recommendationsProvider.notifier).setFilters(priority: priority),
+            onCategoryChanged: (category) => ref
+                .read(recommendationsProvider.notifier)
+                .setFilters(category: category),
+            onPriorityChanged: (priority) => ref
+                .read(recommendationsProvider.notifier)
+                .setFilters(priority: priority),
           ),
         ],
       ),
@@ -266,7 +280,9 @@ class CVIntelligenceScreen extends HookConsumerWidget {
     if (historyState.error != null) {
       return AppErrorState(
         message: historyState.error!,
-        onRetry: () => ref.read(analysisHistoryProvider.notifier).loadHistory(refresh: true),
+        onRetry: () => ref
+            .read(analysisHistoryProvider.notifier)
+            .loadHistory(refresh: true),
       );
     }
 
@@ -275,7 +291,8 @@ class CVIntelligenceScreen extends HookConsumerWidget {
     }
 
     return RefreshIndicator(
-      onRefresh: () => ref.read(analysisHistoryProvider.notifier).loadHistory(refresh: true),
+      onRefresh: () =>
+          ref.read(analysisHistoryProvider.notifier).loadHistory(refresh: true),
       child: ListView.builder(
         padding: const EdgeInsets.all(AppSpacing.md),
         // +1 for the progression chart header, +1 for the load-more button
@@ -302,7 +319,6 @@ class CVIntelligenceScreen extends HookConsumerWidget {
       ),
     );
   }
-
 
   Widget _buildEmptyAnalysisState(BuildContext context, WidgetRef ref) {
     return Center(
@@ -395,7 +411,7 @@ class CVIntelligenceScreen extends HookConsumerWidget {
     return Consumer(
       builder: (context, ref, child) {
         final readinessAsync = ref.watch(submissionReadinessProvider);
-        
+
         return readinessAsync.when(
           data: (readiness) => SubmissionReadinessWidget(
             readiness: readiness,
@@ -457,8 +473,7 @@ class CVIntelligenceScreen extends HookConsumerWidget {
               'comparison_group': benchmarking.comparisonGroup,
               // Surface role name so the card can show "vs Software Engineers"
               'role_name': roleName,
-              'insights':
-                  benchmarking.insights.map((i) => i.message).toList(),
+              'insights': benchmarking.insights.map((i) => i.message).toList(),
             };
 
             return BenchmarkingCard(
@@ -466,7 +481,6 @@ class CVIntelligenceScreen extends HookConsumerWidget {
               isCompact: false,
             );
           },
-
           loading: () => Card(
             child: Padding(
               padding: const EdgeInsets.all(AppSpacing.lg),
@@ -565,7 +579,8 @@ class CVIntelligenceScreen extends HookConsumerWidget {
                 ),
                 const Spacer(),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: AppColors.primary.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
@@ -618,7 +633,8 @@ class CVIntelligenceScreen extends HookConsumerWidget {
     return AppColors.error;
   }
 
-  Widget _buildEnterpriseMetricCard(String title, String score, IconData icon, Color color) {
+  Widget _buildEnterpriseMetricCard(
+      String title, String score, IconData icon, Color color) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
@@ -695,7 +711,8 @@ class CVIntelligenceScreen extends HookConsumerWidget {
                       backgroundColor: AppColors.primary,
                       foregroundColor: Colors.white,
                       elevation: 0,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
                     ),
                   ),
                 ),
@@ -708,7 +725,8 @@ class CVIntelligenceScreen extends HookConsumerWidget {
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.primary,
                       side: const BorderSide(color: AppColors.primary),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
                     ),
                   ),
                 ),
@@ -720,9 +738,10 @@ class CVIntelligenceScreen extends HookConsumerWidget {
     );
   }
 
-  Widget _buildRecommendationsHeader(BuildContext context, WidgetRef ref, RecommendationsState state) {
+  Widget _buildRecommendationsHeader(
+      BuildContext context, WidgetRef ref, RecommendationsState state) {
     final highPriorityCount = state.highPriorityRecommendations.length;
-    
+
     return Row(
       children: [
         Expanded(
@@ -748,7 +767,8 @@ class CVIntelligenceScreen extends HookConsumerWidget {
         ),
         if (state.recommendations.isNotEmpty)
           TextButton.icon(
-            onPressed: () => ref.read(recommendationsProvider.notifier).clearFilters(),
+            onPressed: () =>
+                ref.read(recommendationsProvider.notifier).clearFilters(),
             icon: const Icon(LucideIcons.x, size: 16),
             label: const Text('Clear Filters'),
           ),
@@ -799,7 +819,8 @@ class CVIntelligenceScreen extends HookConsumerWidget {
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.md),
       child: OutlinedButton(
-        onPressed: () => ref.read(analysisHistoryProvider.notifier).loadMoreHistory(),
+        onPressed: () =>
+            ref.read(analysisHistoryProvider.notifier).loadMoreHistory(),
         child: const Text('Load More'),
       ),
     );
@@ -807,13 +828,17 @@ class CVIntelligenceScreen extends HookConsumerWidget {
 
   Widget _buildHistoryItem(BuildContext context, analysis) {
     // ── Read diff_from_previous from metadata (populated by Rec 3) ───────────
-    final diff = (analysis.metadata['diff_from_previous'] as Map<String, dynamic>?) ?? {};
+    final diff =
+        (analysis.metadata['diff_from_previous'] as Map<String, dynamic>?) ??
+            {};
     final isFirst = diff['is_first_analysis'] as bool? ?? diff.isEmpty;
     final scoreDelta = (diff['score_delta'] as num?)?.toDouble() ?? 0;
     final resolvedCount = (diff['resolved_issues'] as List?)?.length ?? 0;
     final newCount = (diff['new_issues'] as List?)?.length ?? 0;
-    final improvedSections = (diff['improved_sections'] as Map?)?.keys.toList() ?? [];
-    final regressedSections = (diff['regressed_sections'] as Map?)?.keys.toList() ?? [];
+    final improvedSections =
+        (diff['improved_sections'] as Map?)?.keys.toList() ?? [];
+    final regressedSections =
+        (diff['regressed_sections'] as Map?)?.keys.toList() ?? [];
 
     // Grade colour
     final score = analysis.overallScore;
@@ -897,21 +922,30 @@ class CVIntelligenceScreen extends HookConsumerWidget {
 
                   // Score delta / baseline badge
                   if (isFirst)
-                    _diffChip('Baseline', const Color(0xFF6366F1), const Color(0xFFEEF2FF))
+                    _diffChip('Baseline', const Color(0xFF6366F1),
+                        const Color(0xFFEEF2FF))
                   else if (scoreDelta > 0)
-                    _diffChip('+${scoreDelta.toStringAsFixed(0)} pts', AppColors.success, AppColors.success.withOpacity(0.1))
+                    _diffChip('+${scoreDelta.toStringAsFixed(0)} pts',
+                        AppColors.success, AppColors.success.withOpacity(0.1))
                   else if (scoreDelta < 0)
-                    _diffChip('${scoreDelta.toStringAsFixed(0)} pts', AppColors.error, AppColors.error.withOpacity(0.1))
+                    _diffChip('${scoreDelta.toStringAsFixed(0)} pts',
+                        AppColors.error, AppColors.error.withOpacity(0.1))
                   else
-                    _diffChip('No change', AppColors.textSecondary, AppColors.textSecondary.withOpacity(0.08)),
+                    _diffChip('No change', AppColors.textSecondary,
+                        AppColors.textSecondary.withOpacity(0.08)),
 
                   const SizedBox(width: 4),
-                  Icon(LucideIcons.chevronRight, size: 16, color: AppColors.textSecondary),
+                  Icon(LucideIcons.chevronRight,
+                      size: 16, color: AppColors.textSecondary),
                 ],
               ),
 
               // ── Diff narrative (hidden for first analysis) ──────────
-              if (!isFirst && (resolvedCount > 0 || newCount > 0 || improvedSections.isNotEmpty || regressedSections.isNotEmpty)) ...[
+              if (!isFirst &&
+                  (resolvedCount > 0 ||
+                      newCount > 0 ||
+                      improvedSections.isNotEmpty ||
+                      regressedSections.isNotEmpty)) ...[
                 const SizedBox(height: AppSpacing.sm),
                 const Divider(height: 1),
                 const SizedBox(height: AppSpacing.sm),
@@ -920,13 +954,17 @@ class CVIntelligenceScreen extends HookConsumerWidget {
                   runSpacing: 6,
                   children: [
                     if (resolvedCount > 0)
-                      _narrativeTag('✓ $resolvedCount fixed', AppColors.success),
+                      _narrativeTag(
+                          '✓ $resolvedCount fixed', AppColors.success),
                     if (newCount > 0)
-                      _narrativeTag('⚠ $newCount new issue${newCount == 1 ? '' : 's'}', AppColors.error),
+                      _narrativeTag(
+                          '⚠ $newCount new issue${newCount == 1 ? '' : 's'}',
+                          AppColors.error),
                     for (final s in improvedSections.take(2))
                       _narrativeTag('↑ ${_sectionLabel(s)}', AppColors.primary),
                     for (final s in regressedSections.take(2))
-                      _narrativeTag('↓ ${_sectionLabel(s)}', const Color(0xFFF59E0B)),
+                      _narrativeTag(
+                          '↓ ${_sectionLabel(s)}', const Color(0xFFF59E0B)),
                   ],
                 ),
               ],
@@ -1017,19 +1055,19 @@ class CVIntelligenceScreen extends HookConsumerWidget {
       // Clear any existing errors first
       ref.read(analysisProvider.notifier).clearError();
       ref.read(recommendationsProvider.notifier).clearError();
-      
+
       // Show loading feedback
       SnackbarHelper.showInfo(
         context,
         'Refreshing analysis data...',
       );
-      
+
       // Refresh analysis data
       await ref.read(analysisProvider.notifier).refreshAnalysis();
-      
+
       // Check if refresh was successful
       final analysisState = ref.read(analysisProvider);
-      
+
       if (analysisState.error != null) {
         // Show error but don't clear existing data
         if (context.mounted) {
@@ -1044,8 +1082,9 @@ class CVIntelligenceScreen extends HookConsumerWidget {
         ref.invalidate(submissionReadinessProvider);
         ref.invalidate(benchmarkingDataProvider(null));
         ref.read(analysisHistoryProvider.notifier).loadHistory(refresh: true);
-        ref.invalidate(scoreProgressionProvider); // Refresh score timeline chart
-        
+        ref.invalidate(
+            scoreProgressionProvider); // Refresh score timeline chart
+
         if (context.mounted) {
           SnackbarHelper.showSuccess(
             context,
@@ -1061,7 +1100,6 @@ class CVIntelligenceScreen extends HookConsumerWidget {
           );
         }
       }
-      
     } catch (e) {
       // Additional error handling
       if (context.mounted) {
@@ -1073,9 +1111,12 @@ class CVIntelligenceScreen extends HookConsumerWidget {
     }
   }
 
-  Future<void> _markRecommendationImplemented(BuildContext context, WidgetRef ref, String id) async {
+  Future<void> _markRecommendationImplemented(
+      BuildContext context, WidgetRef ref, String id) async {
     try {
-      await ref.read(recommendationsProvider.notifier).markRecommendationImplemented(id);
+      await ref
+          .read(recommendationsProvider.notifier)
+          .markRecommendationImplemented(id);
       if (context.mounted) {
         SnackbarHelper.showSuccess(
           context,
@@ -1101,7 +1142,8 @@ class CVIntelligenceScreen extends HookConsumerWidget {
     }
   }
 
-  void _showSectionDetails(BuildContext context, String sectionName, sectionScore) {
+  void _showSectionDetails(
+      BuildContext context, String sectionName, sectionScore) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -1115,9 +1157,11 @@ class CVIntelligenceScreen extends HookConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                sectionName.split('_').map((word) => 
-                  word[0].toUpperCase() + word.substring(1).toLowerCase()
-                ).join(' '),
+                sectionName
+                    .split('_')
+                    .map((word) =>
+                        word[0].toUpperCase() + word.substring(1).toLowerCase())
+                    .join(' '),
                 style: AppTypography.headingMedium.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -1135,15 +1179,18 @@ class CVIntelligenceScreen extends HookConsumerWidget {
                     ),
                     const SizedBox(height: AppSpacing.lg),
                     if (sectionScore.strengths.isNotEmpty) ...[
-                      _buildDetailSection('Strengths', sectionScore.strengths, AppColors.success),
+                      _buildDetailSection('Strengths', sectionScore.strengths,
+                          AppColors.success),
                       const SizedBox(height: AppSpacing.md),
                     ],
                     if (sectionScore.weaknesses.isNotEmpty) ...[
-                      _buildDetailSection('Weaknesses', sectionScore.weaknesses, AppColors.error),
+                      _buildDetailSection('Weaknesses', sectionScore.weaknesses,
+                          AppColors.error),
                       const SizedBox(height: AppSpacing.md),
                     ],
                     if (sectionScore.suggestions.isNotEmpty)
-                      _buildDetailSection('Suggestions', sectionScore.suggestions, AppColors.primary),
+                      _buildDetailSection('Suggestions',
+                          sectionScore.suggestions, AppColors.primary),
                   ],
                 ),
               ),
@@ -1167,31 +1214,31 @@ class CVIntelligenceScreen extends HookConsumerWidget {
         ),
         const SizedBox(height: AppSpacing.sm),
         ...items.map((item) => Padding(
-          padding: const EdgeInsets.only(bottom: AppSpacing.xs),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 4,
-                height: 4,
-                margin: const EdgeInsets.only(top: 8),
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
-                ),
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              Expanded(
-                child: Text(
-                  item,
-                  style: AppTypography.bodyMedium.copyWith(
-                    height: 1.4,
+              padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 4,
+                    height: 4,
+                    margin: const EdgeInsets.only(top: 8),
+                    decoration: BoxDecoration(
+                      color: color,
+                      shape: BoxShape.circle,
+                    ),
                   ),
-                ),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Text(
+                      item,
+                      style: AppTypography.bodyMedium.copyWith(
+                        height: 1.4,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        )),
+            )),
       ],
     );
   }
@@ -1383,9 +1430,10 @@ class SectionScoreCard extends StatelessWidget {
   }
 
   String _formatSectionName(String name) {
-    return name.split('_').map((word) => 
-      word[0].toUpperCase() + word.substring(1).toLowerCase()
-    ).join(' ');
+    return name
+        .split('_')
+        .map((word) => word[0].toUpperCase() + word.substring(1).toLowerCase())
+        .join(' ');
   }
 
   String _getScoreDescription() {

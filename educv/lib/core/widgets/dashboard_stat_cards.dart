@@ -44,18 +44,18 @@ class _DashboardStatCardState extends State<DashboardStatCard>
   late Animation<double> _hoverAnimation;
   late Animation<double> _progressAnimation;
   late Animation<double> _scaleAnimation;
-  
+
   bool _isHovered = false;
 
   @override
   void initState() {
     super.initState();
-    
+
     _hoverController = AnimationController(
       duration: const Duration(milliseconds: 200),
       vsync: this,
     );
-    
+
     _progressController = AnimationController(
       duration: const Duration(milliseconds: 1200),
       vsync: this,
@@ -177,22 +177,22 @@ class _DashboardStatCardState extends State<DashboardStatCard>
       children: [
         // Header row with icon and status
         _buildHeaderRow(deviceType),
-        
+
         SizedBox(height: _getSpacing(deviceType)),
-        
+
         // Value and title
         _buildValueSection(deviceType),
-        
+
         if (widget.subtitle != null) ...[
           const SizedBox(height: 4),
           _buildSubtitle(deviceType),
         ],
-        
+
         SizedBox(height: _getSpacing(deviceType)),
-        
+
         // Progress bar or accent line
         _buildProgressSection(),
-        
+
         // Status indicator
         if (widget.statusText != null) ...[
           const SizedBox(height: 8),
@@ -219,9 +219,9 @@ class _DashboardStatCardState extends State<DashboardStatCard>
             color: widget.color,
           ),
         ),
-        
+
         const Spacer(),
-        
+
         // Trend indicator
         if (widget.showTrend && widget.trendValue != null)
           _buildTrendIndicator(),
@@ -231,10 +231,10 @@ class _DashboardStatCardState extends State<DashboardStatCard>
 
   Widget _buildTrendIndicator() {
     final isPositive = widget.trendValue! > 0;
-    final color = isPositive 
-        ? ModernSaaSDashboardTheme.success 
+    final color = isPositive
+        ? ModernSaaSDashboardTheme.success
         : ModernSaaSDashboardTheme.error;
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
@@ -275,9 +275,9 @@ class _DashboardStatCardState extends State<DashboardStatCard>
             fontWeight: FontWeight.w700,
           ),
         ),
-        
+
         const SizedBox(height: 2),
-        
+
         // Title
         Text(
           widget.title,
@@ -438,9 +438,9 @@ class _DashboardStatCardState extends State<DashboardStatCard>
             ),
           ],
         ),
-        
+
         SizedBox(height: _getSpacing(deviceType)),
-        
+
         // Value skeleton
         Container(
           width: 60,
@@ -450,9 +450,9 @@ class _DashboardStatCardState extends State<DashboardStatCard>
             borderRadius: BorderRadius.circular(4),
           ),
         ),
-        
+
         const SizedBox(height: 4),
-        
+
         // Title skeleton
         Container(
           width: 100,
@@ -462,9 +462,9 @@ class _DashboardStatCardState extends State<DashboardStatCard>
             borderRadius: BorderRadius.circular(4),
           ),
         ),
-        
+
         SizedBox(height: _getSpacing(deviceType)),
-        
+
         // Progress skeleton
         Container(
           height: 4,
@@ -644,9 +644,10 @@ class ProfileSectionStatCard extends DashboardStatCard {
           color: ModernSaaSDashboardTheme.accentPurple,
           subtitle: 'Completed',
           progress: completedSections / totalSections,
-          statusText: completedSections == totalSections ? 'Complete' : 'In Progress',
-          statusColor: completedSections == totalSections 
-              ? ModernSaaSDashboardTheme.success 
+          statusText:
+              completedSections == totalSections ? 'Complete' : 'In Progress',
+          statusColor: completedSections == totalSections
+              ? ModernSaaSDashboardTheme.success
               : ModernSaaSDashboardTheme.warning,
           showTrend: true,
           trendValue: completedSections > 0 ? 12.5 : 0,
@@ -665,8 +666,8 @@ class ExperienceStatCard extends DashboardStatCard {
           color: ModernSaaSDashboardTheme.info,
           subtitle: 'Positions',
           statusText: experienceCount > 0 ? 'Added' : 'Empty',
-          statusColor: experienceCount > 0 
-              ? ModernSaaSDashboardTheme.success 
+          statusColor: experienceCount > 0
+              ? ModernSaaSDashboardTheme.success
               : ModernSaaSDashboardTheme.error,
         );
 }
@@ -683,11 +684,15 @@ class SkillsStatCard extends DashboardStatCard {
           color: ModernSaaSDashboardTheme.success,
           subtitle: 'Listed',
           progress: (skillsCount / 15).clamp(0.0, 1.0), // Assuming 15 is ideal
-          statusText: skillsCount >= 10 ? 'Excellent' : skillsCount >= 5 ? 'Good' : 'Add More',
-          statusColor: skillsCount >= 10 
-              ? ModernSaaSDashboardTheme.success 
-              : skillsCount >= 5 
-                  ? ModernSaaSDashboardTheme.warning 
+          statusText: skillsCount >= 10
+              ? 'Excellent'
+              : skillsCount >= 5
+                  ? 'Good'
+                  : 'Add More',
+          statusColor: skillsCount >= 10
+              ? ModernSaaSDashboardTheme.success
+              : skillsCount >= 5
+                  ? ModernSaaSDashboardTheme.warning
                   : ModernSaaSDashboardTheme.error,
           showTrend: true,
           trendValue: skillsCount > 0 ? 8.3 : 0,
@@ -706,11 +711,15 @@ class ProjectsStatCard extends DashboardStatCard {
           color: ModernSaaSDashboardTheme.warning,
           subtitle: 'Showcased',
           progress: (projectsCount / 5).clamp(0.0, 1.0), // Assuming 5 is ideal
-          statusText: projectsCount >= 3 ? 'Great' : projectsCount >= 1 ? 'Good' : 'Add Projects',
-          statusColor: projectsCount >= 3 
-              ? ModernSaaSDashboardTheme.success 
-              : projectsCount >= 1 
-                  ? ModernSaaSDashboardTheme.warning 
+          statusText: projectsCount >= 3
+              ? 'Great'
+              : projectsCount >= 1
+                  ? 'Good'
+                  : 'Add Projects',
+          statusColor: projectsCount >= 3
+              ? ModernSaaSDashboardTheme.success
+              : projectsCount >= 1
+                  ? ModernSaaSDashboardTheme.warning
                   : ModernSaaSDashboardTheme.error,
         );
 }

@@ -15,10 +15,14 @@ class PremiumDarkStatsSection extends StatelessWidget {
   const PremiumDarkStatsSection({super.key});
 
   static const List<StatItem> _stats = [
-    StatItem('2,400+', 'Students registered', Icons.people_outline, Color(0xFF4F46E5)),
-    StatItem('8,900+', 'CVs generated', Icons.description_outlined, Color(0xFF7C3AED)),
-    StatItem('3', 'Professional templates', Icons.design_services_outlined, Color(0xFF10B981)),
-    StatItem('5 min', 'Average time to CV', Icons.schedule_outlined, Color(0xFFF59E0B)),
+    StatItem('2,400+', 'Students registered', Icons.people_outline,
+        Color(0xFF4F46E5)),
+    StatItem('8,900+', 'CVs generated', Icons.description_outlined,
+        Color(0xFF7C3AED)),
+    StatItem('3', 'Professional templates', Icons.design_services_outlined,
+        Color(0xFF10B981)),
+    StatItem('5 min', 'Average time to CV', Icons.schedule_outlined,
+        Color(0xFFF59E0B)),
   ];
 
   @override
@@ -56,7 +60,9 @@ class PremiumDarkStatsSection extends StatelessWidget {
                 child: LayoutBuilder(
                   builder: (context, constraints) {
                     final isDesktop = constraints.maxWidth >= 900;
-                    return isDesktop ? _buildDesktopLayout() : _buildMobileLayout();
+                    return isDesktop
+                        ? _buildDesktopLayout()
+                        : _buildMobileLayout();
                   },
                 ),
               ),
@@ -138,13 +144,12 @@ class _StatCardState extends State<_StatCard> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeOut,
-        transform: Matrix4.identity()
-          ..translate(0.0, _isHovered ? -8.0 : 0.0),
+        transform: Matrix4.identity()..translate(0.0, _isHovered ? -8.0 : 0.0),
         padding: const EdgeInsets.all(32),
         decoration: BoxDecoration(
           color: Colors.white.withValues(alpha: 0.02),
           border: Border.all(
-            color: _isHovered 
+            color: _isHovered
                 ? widget.stat.color.withValues(alpha: 0.3)
                 : Colors.white.withValues(alpha: 0.08),
             width: 1,
@@ -152,7 +157,7 @@ class _StatCardState extends State<_StatCard> {
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: _isHovered 
+              color: _isHovered
                   ? widget.stat.color.withValues(alpha: 0.2)
                   : Colors.black.withValues(alpha: 0.1),
               blurRadius: _isHovered ? 32 : 20,
@@ -180,12 +185,15 @@ class _StatCardState extends State<_StatCard> {
                     size: 32,
                     color: widget.stat.color,
                   ),
-                ).animate(delay: (200 + widget.index * 100).ms)
+                )
+                    .animate(delay: (200 + widget.index * 100).ms)
                     .fadeIn(duration: 600.ms)
-                    .scale(begin: const Offset(0.8, 0.8), end: const Offset(1.0, 1.0)),
-                
+                    .scale(
+                        begin: const Offset(0.8, 0.8),
+                        end: const Offset(1.0, 1.0)),
+
                 const SizedBox(height: 24),
-                
+
                 // Value with gradient
                 ShaderMask(
                   shaderCallback: (bounds) => LinearGradient(
@@ -203,12 +211,13 @@ class _StatCardState extends State<_StatCard> {
                       height: 1.0,
                     ),
                   ),
-                ).animate(delay: (300 + widget.index * 100).ms)
+                )
+                    .animate(delay: (300 + widget.index * 100).ms)
                     .fadeIn(duration: 800.ms)
                     .slideY(begin: 0.3, end: 0),
-                
+
                 const SizedBox(height: 12),
-                
+
                 // Label
                 Text(
                   widget.stat.label,
@@ -219,7 +228,8 @@ class _StatCardState extends State<_StatCard> {
                     height: 1.4,
                   ),
                   textAlign: TextAlign.center,
-                ).animate(delay: (400 + widget.index * 100).ms)
+                )
+                    .animate(delay: (400 + widget.index * 100).ms)
                     .fadeIn(duration: 800.ms)
                     .slideY(begin: 0.3, end: 0),
               ],
@@ -227,7 +237,8 @@ class _StatCardState extends State<_StatCard> {
           ),
         ),
       ),
-    ).animate(delay: (100 + widget.index * 150).ms)
+    )
+        .animate(delay: (100 + widget.index * 150).ms)
         .fadeIn(duration: 1000.ms)
         .scale(begin: const Offset(0.8, 0.8), end: const Offset(1.0, 1.0));
   }

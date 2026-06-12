@@ -32,7 +32,8 @@ class WorkflowProgressWidget extends StatelessWidget {
     return _buildFullProgress(states, currentStateIndex);
   }
 
-  Widget _buildCompactProgress(List<WorkflowStateModel> states, int currentIndex) {
+  Widget _buildCompactProgress(
+      List<WorkflowStateModel> states, int currentIndex) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.sm),
       decoration: BoxDecoration(

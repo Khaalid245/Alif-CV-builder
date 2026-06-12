@@ -18,10 +18,14 @@ class PremiumSaaSStatsSection extends StatelessWidget {
   const PremiumSaaSStatsSection({super.key});
 
   static const List<StatItem> _stats = [
-    StatItem('2,400+', 'Students registered', Icons.people_outline, Color(0xFF4F46E5)),
-    StatItem('8,900+', 'CVs generated', Icons.description_outlined, Color(0xFF7C3AED)),
-    StatItem('3', 'Professional templates', Icons.design_services_outlined, Color(0xFF10B981)),
-    StatItem('5 min', 'Average time to CV', Icons.schedule_outlined, Color(0xFFF59E0B)),
+    StatItem('2,400+', 'Students registered', Icons.people_outline,
+        Color(0xFF4F46E5)),
+    StatItem('8,900+', 'CVs generated', Icons.description_outlined,
+        Color(0xFF7C3AED)),
+    StatItem('3', 'Professional templates', Icons.design_services_outlined,
+        Color(0xFF10B981)),
+    StatItem('5 min', 'Average time to CV', Icons.schedule_outlined,
+        Color(0xFFF59E0B)),
   ];
 
   @override
@@ -118,12 +122,15 @@ class PremiumSaaSStatsSection extends StatelessWidget {
                   size: 32,
                   color: stat.color,
                 ),
-              ).animate(delay: (200 + index * 100).ms)
+              )
+                  .animate(delay: (200 + index * 100).ms)
                   .fadeIn(duration: 600.ms)
-                  .scale(begin: const Offset(0.8, 0.8), end: const Offset(1.0, 1.0)),
-              
+                  .scale(
+                      begin: const Offset(0.8, 0.8),
+                      end: const Offset(1.0, 1.0)),
+
               const SizedBox(height: 24),
-              
+
               // Value with gradient
               ShaderMask(
                 shaderCallback: (bounds) => LinearGradient(
@@ -141,7 +148,8 @@ class PremiumSaaSStatsSection extends StatelessWidget {
                     height: 1.0,
                   ),
                 ),
-              ).animate(delay: (300 + index * 100).ms)
+              )
+                  .animate(delay: (300 + index * 100).ms)
                   .fadeIn(duration: 800.ms)
                   .slideY(begin: 0.3, end: 0)
                   .then()
@@ -152,9 +160,9 @@ class PremiumSaaSStatsSection extends StatelessWidget {
                     duration: 3000.ms,
                     color: stat.color.withValues(alpha: 0.3),
                   ),
-              
+
               const SizedBox(height: 12),
-              
+
               // Label
               Text(
                 stat.label,
@@ -165,14 +173,16 @@ class PremiumSaaSStatsSection extends StatelessWidget {
                   height: 1.4,
                 ),
                 textAlign: TextAlign.center,
-              ).animate(delay: (400 + index * 100).ms)
+              )
+                  .animate(delay: (400 + index * 100).ms)
                   .fadeIn(duration: 800.ms)
                   .slideY(begin: 0.3, end: 0),
             ],
           ),
         ),
       ),
-    ).animate(delay: (100 + index * 150).ms)
+    )
+        .animate(delay: (100 + index * 150).ms)
         .fadeIn(duration: 1000.ms)
         .scale(begin: const Offset(0.8, 0.8), end: const Offset(1.0, 1.0))
         .then()

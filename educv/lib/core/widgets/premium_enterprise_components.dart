@@ -43,8 +43,10 @@ class _PremiumHeroSectionState extends State<PremiumHeroSection>
     _gradientAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _gradientController, curve: Curves.easeInOut),
     );
-    _progressAnimation = Tween<double>(begin: 0.0, end: widget.completionProgress).animate(
-      CurvedAnimation(parent: _progressController, curve: PremiumSaaSTheme.curveEmphasized),
+    _progressAnimation =
+        Tween<double>(begin: 0.0, end: widget.completionProgress).animate(
+      CurvedAnimation(
+          parent: _progressController, curve: PremiumSaaSTheme.curveEmphasized),
     );
 
     _gradientController.repeat(reverse: true);
@@ -71,9 +73,12 @@ class _PremiumHeroSectionState extends State<PremiumHeroSection>
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                PremiumSaaSTheme.primaryPurple.withOpacity(0.1 + (_gradientAnimation.value * 0.05)),
-                PremiumSaaSTheme.accentBlue.withOpacity(0.08 + (_gradientAnimation.value * 0.04)),
-                PremiumSaaSTheme.accentTeal.withOpacity(0.06 + (_gradientAnimation.value * 0.03)),
+                PremiumSaaSTheme.primaryPurple
+                    .withOpacity(0.1 + (_gradientAnimation.value * 0.05)),
+                PremiumSaaSTheme.accentBlue
+                    .withOpacity(0.08 + (_gradientAnimation.value * 0.04)),
+                PremiumSaaSTheme.accentTeal
+                    .withOpacity(0.06 + (_gradientAnimation.value * 0.03)),
               ],
             ),
             borderRadius: BorderRadius.circular(PremiumSaaSTheme.radius2xl),
@@ -134,7 +139,8 @@ class _PremiumHeroSectionState extends State<PremiumHeroSection>
     );
   }
 
-  Widget _buildActionButton(String text, IconData icon, Color color, VoidCallback? onPressed) {
+  Widget _buildActionButton(
+      String text, IconData icon, Color color, VoidCallback? onPressed) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -272,10 +278,12 @@ class _PremiumAnalyticsWidgetState extends State<PremiumAnalyticsWidget>
       vsync: this,
     );
     _elevationAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _hoverController, curve: PremiumSaaSTheme.curveDefault),
+      CurvedAnimation(
+          parent: _hoverController, curve: PremiumSaaSTheme.curveDefault),
     );
     _scaleAnimation = Tween<double>(begin: 1.0, end: 1.02).animate(
-      CurvedAnimation(parent: _hoverController, curve: PremiumSaaSTheme.curveDefault),
+      CurvedAnimation(
+          parent: _hoverController, curve: PremiumSaaSTheme.curveDefault),
     );
   }
 
@@ -301,16 +309,19 @@ class _PremiumAnalyticsWidgetState extends State<PremiumAnalyticsWidget>
                 color: PremiumSaaSTheme.lightSurface,
                 borderRadius: BorderRadius.circular(PremiumSaaSTheme.radiusXl),
                 border: Border.all(
-                  color: widget.color.withOpacity(0.1 + (_elevationAnimation.value * 0.1)),
+                  color: widget.color
+                      .withOpacity(0.1 + (_elevationAnimation.value * 0.1)),
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: PremiumSaaSTheme.textPrimary.withOpacity(0.04 + (_elevationAnimation.value * 0.04)),
+                    color: PremiumSaaSTheme.textPrimary
+                        .withOpacity(0.04 + (_elevationAnimation.value * 0.04)),
                     blurRadius: 8 + (_elevationAnimation.value * 8),
                     offset: Offset(0, 2 + (_elevationAnimation.value * 4)),
                   ),
                   BoxShadow(
-                    color: widget.color.withOpacity(0.05 + (_elevationAnimation.value * 0.1)),
+                    color: widget.color
+                        .withOpacity(0.05 + (_elevationAnimation.value * 0.1)),
                     blurRadius: 16 + (_elevationAnimation.value * 8),
                     offset: const Offset(0, 4),
                   ),
@@ -325,7 +336,8 @@ class _PremiumAnalyticsWidgetState extends State<PremiumAnalyticsWidget>
                         padding: EdgeInsets.all(PremiumSaaSTheme.space3),
                         decoration: BoxDecoration(
                           color: widget.color.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(PremiumSaaSTheme.radiusLg),
+                          borderRadius:
+                              BorderRadius.circular(PremiumSaaSTheme.radiusLg),
                         ),
                         child: Icon(
                           widget.icon,
@@ -341,7 +353,8 @@ class _PremiumAnalyticsWidgetState extends State<PremiumAnalyticsWidget>
                         ),
                         decoration: BoxDecoration(
                           color: PremiumSaaSTheme.accentGreen.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(PremiumSaaSTheme.radiusSm),
+                          borderRadius:
+                              BorderRadius.circular(PremiumSaaSTheme.radiusSm),
                         ),
                         child: Text(
                           widget.change,
@@ -459,10 +472,12 @@ class _PremiumActionCardState extends State<PremiumActionCard>
       vsync: this,
     );
     _glowAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _hoverController, curve: PremiumSaaSTheme.curveDefault),
+      CurvedAnimation(
+          parent: _hoverController, curve: PremiumSaaSTheme.curveDefault),
     );
     _scaleAnimation = Tween<double>(begin: 1.0, end: 1.03).animate(
-      CurvedAnimation(parent: _hoverController, curve: PremiumSaaSTheme.curveDefault),
+      CurvedAnimation(
+          parent: _hoverController, curve: PremiumSaaSTheme.curveDefault),
     );
   }
 
@@ -495,9 +510,11 @@ class _PremiumActionCardState extends State<PremiumActionCard>
                       PremiumSaaSTheme.lightSurfaceVariant,
                     ],
                   ),
-                  borderRadius: BorderRadius.circular(PremiumSaaSTheme.radiusXl),
+                  borderRadius:
+                      BorderRadius.circular(PremiumSaaSTheme.radiusXl),
                   border: Border.all(
-                    color: widget.color.withOpacity(0.1 + (_glowAnimation.value * 0.2)),
+                    color: widget.color
+                        .withOpacity(0.1 + (_glowAnimation.value * 0.2)),
                     width: 1 + (_glowAnimation.value * 1),
                   ),
                   boxShadow: [
@@ -507,7 +524,8 @@ class _PremiumActionCardState extends State<PremiumActionCard>
                       offset: Offset(0, 2 + (_glowAnimation.value * 4)),
                     ),
                     BoxShadow(
-                      color: widget.color.withOpacity(0.1 + (_glowAnimation.value * 0.2)),
+                      color: widget.color
+                          .withOpacity(0.1 + (_glowAnimation.value * 0.2)),
                       blurRadius: 16 + (_glowAnimation.value * 16),
                       offset: const Offset(0, 8),
                     ),
@@ -522,13 +540,17 @@ class _PremiumActionCardState extends State<PremiumActionCard>
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            widget.color.withOpacity(0.1 + (_glowAnimation.value * 0.1)),
-                            widget.color.withOpacity(0.05 + (_glowAnimation.value * 0.05)),
+                            widget.color.withOpacity(
+                                0.1 + (_glowAnimation.value * 0.1)),
+                            widget.color.withOpacity(
+                                0.05 + (_glowAnimation.value * 0.05)),
                           ],
                         ),
-                        borderRadius: BorderRadius.circular(PremiumSaaSTheme.radiusXl),
+                        borderRadius:
+                            BorderRadius.circular(PremiumSaaSTheme.radiusXl),
                         border: Border.all(
-                          color: widget.color.withOpacity(0.2 + (_glowAnimation.value * 0.1)),
+                          color: widget.color
+                              .withOpacity(0.2 + (_glowAnimation.value * 0.1)),
                         ),
                       ),
                       child: Icon(
@@ -669,7 +691,8 @@ class PremiumDataTable extends StatelessWidget {
               decoration: BoxDecoration(
                 border: Border(
                   bottom: index < rows.length - 1
-                      ? BorderSide(color: PremiumSaaSTheme.lightBorder.withOpacity(0.5))
+                      ? BorderSide(
+                          color: PremiumSaaSTheme.lightBorder.withOpacity(0.5))
                       : BorderSide.none,
                 ),
               ),

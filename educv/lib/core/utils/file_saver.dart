@@ -8,7 +8,7 @@ class FileSaver {
   }) async {
     final timestamp = DateFormatter.fileDate(DateTime.now());
     final finalFileName = '${timestamp}_$fileName';
-    
+
     // In a real implementation, this would save to device storage
     // For now, return a mock path
     return '/downloads/$finalFileName';
@@ -22,7 +22,8 @@ class FileSaver {
   }) async {
     // Use templateName if provided, otherwise use fileName
     final finalFileName = templateName ?? fileName;
-    return saveFile(bytes: bytes, fileName: finalFileName, directory: directory);
+    return saveFile(
+        bytes: bytes, fileName: finalFileName, directory: directory);
   }
 
   static Future<bool> openFile(String filePath) async {

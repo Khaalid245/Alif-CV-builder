@@ -18,10 +18,12 @@ class AnalyticsDashboardScreen extends ConsumerStatefulWidget {
   const AnalyticsDashboardScreen({super.key});
 
   @override
-  ConsumerState<AnalyticsDashboardScreen> createState() => _AnalyticsDashboardScreenState();
+  ConsumerState<AnalyticsDashboardScreen> createState() =>
+      _AnalyticsDashboardScreenState();
 }
 
-class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScreen> {
+class _AnalyticsDashboardScreenState
+    extends ConsumerState<AnalyticsDashboardScreen> {
   @override
   void initState() {
     super.initState();
@@ -60,17 +62,23 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
         slivers: [
           _buildAppBar(),
           SliverToBoxAdapter(
-            child: _buildBody(analysisState, recommendationsState, benchmarkingAsyncValue),
+            child: _buildBody(
+                analysisState, recommendationsState, benchmarkingAsyncValue),
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: analysisState.isLoading ? null : _analyzeCV,
         backgroundColor: AppColors.primary,
-        icon: analysisState.isLoading 
-          ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-          : const Icon(LucideIcons.brain, color: Colors.white),
-        label: const Text('Analyze CV', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        icon: analysisState.isLoading
+            ? const SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(
+                    color: Colors.white, strokeWidth: 2))
+            : const Icon(LucideIcons.brain, color: Colors.white),
+        label: const Text('Analyze CV',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
       ),
     );
   }
@@ -87,7 +95,8 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
         titlePadding: const EdgeInsets.only(left: 16.0, bottom: 16.0),
         title: Row(
           children: [
-            const Icon(LucideIcons.brainCircuit, color: AppColors.primary, size: 24),
+            const Icon(LucideIcons.brainCircuit,
+                color: AppColors.primary, size: 24),
             const SizedBox(width: 8),
             Text(
               'CV Intelligence',
@@ -110,14 +119,15 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
     );
   }
 
-  Widget _buildBody(AnalysisState state, RecommendationsState recsState, AsyncValue<BenchmarkingDataModel> benchAsync) {
+  Widget _buildBody(AnalysisState state, RecommendationsState recsState,
+      AsyncValue<BenchmarkingDataModel> benchAsync) {
     if (state.isLoading && state.analysis == null) {
       return const SizedBox(
         height: 400,
         child: Center(child: AppLoader()),
       );
     }
-    
+
     if (state.error != null && state.analysis == null) {
       return SizedBox(
         height: 400,
@@ -133,14 +143,15 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
         padding: EdgeInsets.only(top: 100),
         child: EmptyState(
           title: 'No CV Analysis Found',
-          message: 'Click "Analyze CV" below to generate your first score and get recommendations.',
+          message:
+              'Click "Analyze CV" below to generate your first score and get recommendations.',
           icon: LucideIcons.fileSearch,
         ),
       );
     }
 
     final analysis = state.analysis!;
-    
+
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.xl),
       child: Column(
@@ -149,22 +160,28 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
           // 1. Overall Score / Hero
           _buildHeroScoreSection(analysis),
           const SizedBox(height: AppSpacing.xxl),
-          
+
           // 2. Actionable Recommendations
-          _buildSectionHeader('Actionable Recommendations', LucideIcons.listTodo),
+          _buildSectionHeader(
+              'Actionable Recommendations', LucideIcons.listTodo),
           if (recsState.isLoading)
-            const Center(child: Padding(padding: EdgeInsets.all(20), child: CircularProgressIndicator()))
+            const Center(
+                child: Padding(
+                    padding: EdgeInsets.all(20),
+                    child: CircularProgressIndicator()))
           else if (recsState.recommendations.isEmpty)
             _buildGlassContainer(
               padding: const EdgeInsets.all(AppSpacing.lg),
-              child: const Text('Great job! No critical issues found.', style: TextStyle(color: AppColors.success)),
+              child: const Text('Great job! No critical issues found.',
+                  style: TextStyle(color: AppColors.success)),
             )
           else
             _buildGlassContainer(
               padding: const EdgeInsets.all(AppSpacing.md),
-              child: _buildRecommendationsList(recsState.highPriorityRecommendations.isNotEmpty 
-                ? recsState.highPriorityRecommendations 
-                : recsState.recommendations),
+              child: _buildRecommendationsList(
+                  recsState.highPriorityRecommendations.isNotEmpty
+                      ? recsState.highPriorityRecommendations
+                      : recsState.recommendations),
             ),
           const SizedBox(height: AppSpacing.xxl),
 
@@ -186,19 +203,23 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
                 'performance_level': benchData.performanceLevel,
                 'percentile_rank': benchData.percentileRank,
                 'total_participants': benchData.totalPeers,
-                'average_score': 0.0, // Backend might not provide this directly in flat benchmap
+                'average_score':
+                    0.0, // Backend might not provide this directly in flat benchmap
                 'top_score': 0.0,
                 'user_rank': 0,
               }, isCompact: false),
             ),
-            loading: () => const Center(child: Padding(padding: EdgeInsets.all(20), child: CircularProgressIndicator())),
+            loading: () => const Center(
+                child: Padding(
+                    padding: EdgeInsets.all(20),
+                    child: CircularProgressIndicator())),
             error: (err, _) => Container(
               padding: const EdgeInsets.all(AppSpacing.md),
               color: AppColors.error.withOpacity(0.1),
               child: const Text('Could not load benchmarking data.'),
             ),
           ),
-          
+
           const SizedBox(height: 80), // FAB padding
         ],
       ),
@@ -258,21 +279,24 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
                 children: [
                   Text(
                     'CV Readiness Score',
-                    style: AppTypography.h4.copyWith(fontWeight: FontWeight.bold),
+                    style:
+                        AppTypography.h4.copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
                     analysis.submissionReadiness.isReady
                         ? 'Your CV is ready for applications!'
                         : 'Needs improvement before applying.',
-                    style: AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary),
+                    style: AppTypography.bodyMedium
+                        .copyWith(color: AppColors.textSecondary),
                   ),
                   const SizedBox(height: AppSpacing.md),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: analysis.submissionReadiness.isReady 
-                          ? AppColors.success.withOpacity(0.1) 
+                      color: analysis.submissionReadiness.isReady
+                          ? AppColors.success.withOpacity(0.1)
                           : AppColors.warning.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(20),
                     ),
@@ -280,15 +304,22 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
-                          analysis.submissionReadiness.isReady ? LucideIcons.checkCircle : LucideIcons.alertTriangle,
+                          analysis.submissionReadiness.isReady
+                              ? LucideIcons.checkCircle
+                              : LucideIcons.alertTriangle,
                           size: 16,
-                          color: analysis.submissionReadiness.isReady ? AppColors.success : AppColors.warning,
+                          color: analysis.submissionReadiness.isReady
+                              ? AppColors.success
+                              : AppColors.warning,
                         ),
                         const SizedBox(width: 6),
                         Text(
-                          analysis.submissionReadiness.overallAssessment.toUpperCase(),
+                          analysis.submissionReadiness.overallAssessment
+                              .toUpperCase(),
                           style: AppTypography.caption.copyWith(
-                            color: analysis.submissionReadiness.isReady ? AppColors.success : AppColors.warning,
+                            color: analysis.submissionReadiness.isReady
+                                ? AppColors.success
+                                : AppColors.warning,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -318,7 +349,9 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
           leading: Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: isHighPriority ? AppColors.error.withOpacity(0.1) : AppColors.primary.withOpacity(0.1),
+              color: isHighPriority
+                  ? AppColors.error.withOpacity(0.1)
+                  : AppColors.primary.withOpacity(0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -327,14 +360,17 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
               size: 20,
             ),
           ),
-          title: Text(rec.title, style: const TextStyle(fontWeight: FontWeight.bold)),
+          title: Text(rec.title,
+              style: const TextStyle(fontWeight: FontWeight.bold)),
           subtitle: Text(rec.description),
-          trailing: rec.actionText.isNotEmpty ? TextButton(
-            onPressed: () {
-              // Implementation action
-            },
-            child: Text(rec.actionText),
-          ) : null,
+          trailing: rec.actionText.isNotEmpty
+              ? TextButton(
+                  onPressed: () {
+                    // Implementation action
+                  },
+                  child: Text(rec.actionText),
+                )
+              : null,
         );
       },
     );
@@ -348,9 +384,13 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
       children: sectionScores.entries.map((entry) {
         final section = entry.key;
         final score = entry.value;
-        final color = score.isExcellent ? AppColors.success :
-                      score.isGood ? AppColors.primary :
-                      score.isAverage ? AppColors.warning : AppColors.error;
+        final color = score.isExcellent
+            ? AppColors.success
+            : score.isGood
+                ? AppColors.primary
+                : score.isAverage
+                    ? AppColors.warning
+                    : AppColors.error;
 
         return Padding(
           padding: const EdgeInsets.only(bottom: AppSpacing.md),
@@ -360,8 +400,11 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(section.toUpperCase(), style: const TextStyle(fontWeight: FontWeight.bold)),
-                  Text('${score.score.toInt()}/100', style: TextStyle(color: color, fontWeight: FontWeight.bold)),
+                  Text(section.toUpperCase(),
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Text('${score.score.toInt()}/100',
+                      style:
+                          TextStyle(color: color, fontWeight: FontWeight.bold)),
                 ],
               ),
               const SizedBox(height: 8),
@@ -398,7 +441,8 @@ class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScr
     );
   }
 
-  Widget _buildGlassContainer({required Widget child, required EdgeInsets padding}) {
+  Widget _buildGlassContainer(
+      {required Widget child, required EdgeInsets padding}) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,

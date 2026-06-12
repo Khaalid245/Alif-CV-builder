@@ -14,10 +14,12 @@ class NotificationPreferencesScreen extends StatefulWidget {
   const NotificationPreferencesScreen({super.key});
 
   @override
-  State<NotificationPreferencesScreen> createState() => _NotificationPreferencesScreenState();
+  State<NotificationPreferencesScreen> createState() =>
+      _NotificationPreferencesScreenState();
 }
 
-class _NotificationPreferencesScreenState extends State<NotificationPreferencesScreen> {
+class _NotificationPreferencesScreenState
+    extends State<NotificationPreferencesScreen> {
   NotificationPreferencesModel? _preferences;
   bool _isLoading = false;
   bool _hasChanges = false;
@@ -266,7 +268,8 @@ class _NotificationPreferencesScreenState extends State<NotificationPreferencesS
             ),
           ),
           const SizedBox(height: AppSpacing.md),
-          ...['immediate', 'hourly', 'daily', 'weekly', 'never'].map((frequency) {
+          ...['immediate', 'hourly', 'daily', 'weekly', 'never']
+              .map((frequency) {
             return RadioListTile<String>(
               title: Text(_formatDigestFrequency(frequency)),
               value: frequency,
@@ -327,7 +330,8 @@ class _NotificationPreferencesScreenState extends State<NotificationPreferencesS
     );
   }
 
-  Widget _buildTimeSelector(String label, String? time, Function(String) onChanged) {
+  Widget _buildTimeSelector(
+      String label, String? time, Function(String) onChanged) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -355,7 +359,9 @@ class _NotificationPreferencesScreenState extends State<NotificationPreferencesS
                   child: Text(
                     time ?? 'Select time',
                     style: AppTypography.body2.copyWith(
-                      color: time != null ? AppColors.textPrimary : AppColors.textHint,
+                      color: time != null
+                          ? AppColors.textPrimary
+                          : AppColors.textHint,
                     ),
                   ),
                 ),
@@ -370,7 +376,7 @@ class _NotificationPreferencesScreenState extends State<NotificationPreferencesS
 
   void _selectTime(String? currentTime, Function(String) onChanged) async {
     TimeOfDay? initialTime;
-    
+
     if (currentTime != null) {
       final parts = currentTime.split(':');
       if (parts.length == 2) {
@@ -380,14 +386,15 @@ class _NotificationPreferencesScreenState extends State<NotificationPreferencesS
         );
       }
     }
-    
+
     final time = await showTimePicker(
       context: context,
       initialTime: initialTime ?? TimeOfDay.now(),
     );
-    
+
     if (time != null) {
-      final timeString = '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+      final timeString =
+          '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
       onChanged(timeString);
     }
   }
@@ -409,25 +416,27 @@ class _NotificationPreferencesScreenState extends State<NotificationPreferencesS
 
   void _savePreferences() async {
     if (_preferences == null) return;
-    
+
     setState(() {
       _isLoading = true;
     });
-    
+
     final provider = context.read<NotificationProvider>();
     final success = await provider.updatePreferences(_preferences!);
-    
+
     setState(() {
       _isLoading = false;
       if (success) {
         _hasChanges = false;
       }
     });
-    
+
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(success ? 'Preferences saved successfully' : 'Failed to save preferences'),
+          content: Text(success
+              ? 'Preferences saved successfully'
+              : 'Failed to save preferences'),
           backgroundColor: success ? AppColors.success : AppColors.error,
         ),
       );

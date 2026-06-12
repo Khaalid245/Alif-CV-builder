@@ -38,14 +38,15 @@ void main() {
 
     testWidgets('should display empty state when no versions', (tester) async {
       when(mockRepository.getVersionHistory()).thenAnswer((_) async => []);
-      when(mockRepository.getVersionStats()).thenAnswer((_) async => VersionStatsModel(
-        totalVersions: 0,
-        oldestVersion: 0,
-        newestVersion: 0,
-        totalSizeMb: 0.0,
-        changeTypes: {},
-        recentActivity: [],
-      ));
+      when(mockRepository.getVersionStats())
+          .thenAnswer((_) async => VersionStatsModel(
+                totalVersions: 0,
+                oldestVersion: 0,
+                newestVersion: 0,
+                totalSizeMb: 0.0,
+                changeTypes: {},
+                recentActivity: [],
+              ));
 
       await tester.pumpWidget(
         MaterialApp(
@@ -62,7 +63,8 @@ void main() {
       expect(find.text('No versions found for your CV.'), findsOneWidget);
     });
 
-    testWidgets('should display version list when data is loaded', (tester) async {
+    testWidgets('should display version list when data is loaded',
+        (tester) async {
       final mockVersions = [
         CVVersionModel(
           id: '1',
@@ -97,7 +99,8 @@ void main() {
         recentActivity: mockVersions,
       );
 
-      when(mockRepository.getVersionHistory()).thenAnswer((_) async => mockVersions);
+      when(mockRepository.getVersionHistory())
+          .thenAnswer((_) async => mockVersions);
       when(mockRepository.getVersionStats()).thenAnswer((_) async => mockStats);
 
       await tester.pumpWidget(
@@ -118,7 +121,8 @@ void main() {
       expect(find.text('Version Statistics'), findsOneWidget);
     });
 
-    testWidgets('should handle version selection for comparison', (tester) async {
+    testWidgets('should handle version selection for comparison',
+        (tester) async {
       final mockVersions = [
         CVVersionModel(
           id: '1',
@@ -142,15 +146,17 @@ void main() {
         ),
       ];
 
-      when(mockRepository.getVersionHistory()).thenAnswer((_) async => mockVersions);
-      when(mockRepository.getVersionStats()).thenAnswer((_) async => VersionStatsModel(
-        totalVersions: 2,
-        oldestVersion: 1,
-        newestVersion: 2,
-        totalSizeMb: 1.5,
-        changeTypes: {},
-        recentActivity: [],
-      ));
+      when(mockRepository.getVersionHistory())
+          .thenAnswer((_) async => mockVersions);
+      when(mockRepository.getVersionStats())
+          .thenAnswer((_) async => VersionStatsModel(
+                totalVersions: 2,
+                oldestVersion: 1,
+                newestVersion: 2,
+                totalSizeMb: 1.5,
+                changeTypes: {},
+                recentActivity: [],
+              ));
 
       await tester.pumpWidget(
         MaterialApp(
@@ -178,7 +184,8 @@ void main() {
     });
 
     testWidgets('should show error state when loading fails', (tester) async {
-      when(mockRepository.getVersionHistory()).thenThrow(Exception('Network error'));
+      when(mockRepository.getVersionHistory())
+          .thenThrow(Exception('Network error'));
 
       await tester.pumpWidget(
         MaterialApp(
@@ -209,15 +216,17 @@ void main() {
         ),
       ];
 
-      when(mockRepository.getVersionHistory()).thenAnswer((_) async => mockVersions);
-      when(mockRepository.getVersionStats()).thenAnswer((_) async => VersionStatsModel(
-        totalVersions: 1,
-        oldestVersion: 1,
-        newestVersion: 1,
-        totalSizeMb: 0.5,
-        changeTypes: {},
-        recentActivity: [],
-      ));
+      when(mockRepository.getVersionHistory())
+          .thenAnswer((_) async => mockVersions);
+      when(mockRepository.getVersionStats())
+          .thenAnswer((_) async => VersionStatsModel(
+                totalVersions: 1,
+                oldestVersion: 1,
+                newestVersion: 1,
+                totalSizeMb: 0.5,
+                changeTypes: {},
+                recentActivity: [],
+              ));
 
       await tester.pumpWidget(
         MaterialApp(
@@ -231,7 +240,8 @@ void main() {
       await tester.pumpAndSettle();
 
       // Perform pull to refresh
-      await tester.fling(find.byType(RefreshIndicator), const Offset(0, 300), 1000);
+      await tester.fling(
+          find.byType(RefreshIndicator), const Offset(0, 300), 1000);
       await tester.pump();
 
       verify(mockRepository.getVersionHistory()).called(2); // Initial + refresh

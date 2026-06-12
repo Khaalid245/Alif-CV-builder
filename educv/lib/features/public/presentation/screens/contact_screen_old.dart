@@ -115,10 +115,12 @@ class _ContactScreenState extends State<ContactScreen>
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: PremiumPortfolioColors.accentPurple.withValues(alpha: 0.1),
+                color:
+                    PremiumPortfolioColors.accentPurple.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                  color: PremiumPortfolioColors.accentPurple.withValues(alpha: 0.2),
+                  color: PremiumPortfolioColors.accentPurple
+                      .withValues(alpha: 0.2),
                 ),
               ),
               child: Text(
@@ -254,10 +256,12 @@ class _ContactScreenState extends State<ContactScreen>
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: PremiumPortfolioColors.accentPurple.withValues(alpha: 0.1),
+                color:
+                    PremiumPortfolioColors.accentPurple.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: PremiumPortfolioColors.accentPurple.withValues(alpha: 0.2),
+                  color: PremiumPortfolioColors.accentPurple
+                      .withValues(alpha: 0.2),
                 ),
               ),
               child: Icon(

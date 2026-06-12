@@ -14,10 +14,12 @@ class RecommendedTemplatesWidget extends StatefulWidget {
   });
 
   @override
-  State<RecommendedTemplatesWidget> createState() => _RecommendedTemplatesWidgetState();
+  State<RecommendedTemplatesWidget> createState() =>
+      _RecommendedTemplatesWidgetState();
 }
 
-class _RecommendedTemplatesWidgetState extends State<RecommendedTemplatesWidget> {
+class _RecommendedTemplatesWidgetState
+    extends State<RecommendedTemplatesWidget> {
   @override
   void initState() {
     super.initState();
@@ -67,7 +69,7 @@ class _RecommendedTemplatesWidgetState extends State<RecommendedTemplatesWidget>
               ],
             ),
             const SizedBox(height: 8),
-            
+
             Text(
               'Based on your profile and preferences',
               style: TextStyle(
@@ -76,7 +78,7 @@ class _RecommendedTemplatesWidgetState extends State<RecommendedTemplatesWidget>
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Templates grid
             GridView.builder(
               shrinkWrap: true,
@@ -98,7 +100,7 @@ class _RecommendedTemplatesWidgetState extends State<RecommendedTemplatesWidget>
                 );
               },
             ),
-            
+
             if (provider.isLoading)
               const Padding(
                 padding: EdgeInsets.all(16),

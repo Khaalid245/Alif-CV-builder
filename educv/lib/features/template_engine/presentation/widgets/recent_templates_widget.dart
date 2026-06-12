@@ -39,7 +39,7 @@ class RecentTemplatesWidget extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 8),
-            
+
             Text(
               'Templates you\'ve recently viewed or previewed',
               style: TextStyle(
@@ -48,7 +48,7 @@ class RecentTemplatesWidget extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Templates grid
             GridView.builder(
               shrinkWrap: true,
@@ -70,7 +70,7 @@ class RecentTemplatesWidget extends StatelessWidget {
                       onFavorite: () => provider.toggleFavorite(template),
                       onPreview: () => _previewTemplate(template, provider),
                     ),
-                    
+
                     // Recent indicator
                     Positioned(
                       bottom: 8,

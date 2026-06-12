@@ -29,7 +29,9 @@ class PremiumDarkFooter extends StatelessWidget {
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   final isWeb = constraints.maxWidth >= 800;
-                  return isWeb ? _buildWebFooter(context) : _buildMobileFooter(context);
+                  return isWeb
+                      ? _buildWebFooter(context)
+                      : _buildMobileFooter(context);
                 },
               ),
             ),

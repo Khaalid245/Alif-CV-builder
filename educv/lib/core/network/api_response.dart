@@ -27,12 +27,13 @@ class ApiResponse<T> {
     );
   }
 
-  factory ApiResponse.fromResponse(Response response, T Function(dynamic)? fromJsonT) {
+  factory ApiResponse.fromResponse(
+      Response response, T Function(dynamic)? fromJsonT) {
     final data = response.data;
     if (data is Map<String, dynamic>) {
       return ApiResponse.fromJson(data, fromJsonT);
     }
-    
+
     // Handle direct data responses
     return ApiResponse<T>(
       success: response.statusCode == 200,
@@ -61,8 +62,9 @@ class ApiError {
 
 // Extension to add success/error properties to Dio Response
 extension ResponseExtension on Response {
-  bool get success => statusCode != null && statusCode! >= 200 && statusCode! < 300;
-  
+  bool get success =>
+      statusCode != null && statusCode! >= 200 && statusCode! < 300;
+
   ApiError? get error {
     if (!success) {
       if (data is Map<String, dynamic>) {
@@ -82,14 +84,14 @@ extension ResponseExtension on Response {
     }
     return null;
   }
-  
+
   String get message {
     if (data is Map<String, dynamic>) {
       return data['message'] ?? statusMessage ?? '';
     }
     return statusMessage ?? '';
   }
-  
+
   dynamic get responseData {
     if (data is Map<String, dynamic>) {
       return data['data'];

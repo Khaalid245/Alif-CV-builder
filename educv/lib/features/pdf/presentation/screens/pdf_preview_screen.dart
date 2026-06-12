@@ -11,7 +11,6 @@ import '../../../../core/widgets/app_button.dart';
 import '../../../../core/utils/file_saver.dart';
 import '../providers/pdf_provider.dart';
 
-
 class PDFPreviewScreen extends ConsumerStatefulWidget {
   final String generatedCvId;
 
@@ -223,7 +222,8 @@ class _PDFPreviewScreenState extends ConsumerState<PDFPreviewScreen> {
             Text(
               'Preview is not available on this platform.\nDownload to view your CV.',
               textAlign: TextAlign.center,
-              style: AppTypography.body.copyWith(color: AppColors.textSecondary),
+              style:
+                  AppTypography.body.copyWith(color: AppColors.textSecondary),
             ),
             const SizedBox(height: AppSpacing.lg),
             AppButton(
@@ -330,13 +330,14 @@ class _WebPDFViewer extends StatelessWidget {
             Text(
               'Your CV has been generated successfully.\nClick download to save it to your device.',
               textAlign: TextAlign.center,
-              style: AppTypography.body.copyWith(color: AppColors.textSecondary),
+              style:
+                  AppTypography.body.copyWith(color: AppColors.textSecondary),
             ),
           ],
         ),
       );
     }
-    
+
     return Container(
       child: Center(
         child: Text(

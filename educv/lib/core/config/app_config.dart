@@ -10,11 +10,11 @@ class AppConfig {
     try {
       const buildTimeUrl = String.fromEnvironment('API_BASE_URL');
       final url = buildTimeUrl.isNotEmpty ? buildTimeUrl : Env.apiBaseUrl;
-      
+
       if (url == null || url.isEmpty) {
         return _getDefaultApiUrl();
       }
-      
+
       // Auto-detect platform and adjust URL if needed
       return _adjustUrlForPlatform(url);
     } catch (e) {
@@ -46,170 +46,131 @@ class AppConfig {
     if (url.contains('10.0.2.2') && !Platform.isAndroid) {
       return url.replaceAll('10.0.2.2', 'localhost');
     }
-    
+
     // If URL contains localhost but we're on Android, convert to 10.0.2.2
     if (url.contains('localhost') && Platform.isAndroid && !kIsWeb) {
       return url.replaceAll('localhost', '10.0.2.2');
     }
-    
+
     return url;
   }
 
   // ─── Environment Configuration ─────────────────────────────────────────────
   static bool get _isProductionEnvironment {
     const buildTimeEnv = String.fromEnvironment('ENVIRONMENT');
-    final env = buildTimeEnv.isNotEmpty
-        ? buildTimeEnv
-        : Env.environment;
+    final env = buildTimeEnv.isNotEmpty ? buildTimeEnv : Env.environment;
     return env.toLowerCase() == 'production';
   }
 
   static String get environment {
     const buildTimeEnv = String.fromEnvironment('ENVIRONMENT');
-    return buildTimeEnv.isNotEmpty
-        ? buildTimeEnv
-        : Env.environment;
+    return buildTimeEnv.isNotEmpty ? buildTimeEnv : Env.environment;
   }
 
   // ─── Configurable API URLs ─────────────────────────────────────────────────
-  static String get developmentApiUrl => 
-      'http://localhost:8000/api/v1';
-  
-  static String get productionApiUrl => 
-      'https://api.yourdomain.com/api/v1';
+  static String get developmentApiUrl => 'http://localhost:8000/api/v1';
+
+  static String get productionApiUrl => 'https://api.yourdomain.com/api/v1';
 
   // ─── App Information ───────────────────────────────────────────────────────
   static String get appName => Env.appName;
   static String get appVersion => Env.appVersion;
-  static String get appDescription => dotenv.env['APP_DESCRIPTION'] ?? 
+  static String get appDescription =>
+      dotenv.env['APP_DESCRIPTION'] ??
       'Enterprise University CV Builder Platform';
 
   // ─── UI Configuration ──────────────────────────────────────────────────────
-  static int get defaultPageSize => 
-      20;
-  
-  static int get maxPageSize => 
-      100;
-  
-  static int get adminPageSize => 
-      50;
+  static int get defaultPageSize => 20;
+
+  static int get maxPageSize => 100;
+
+  static int get adminPageSize => 50;
 
   // ─── File Upload Limits ────────────────────────────────────────────────────
-  static int get maxUploadSizeMB => 
-      5;
-  
-  static int get maxProfilePhotoSizeMB => 
-      2;
-  
-  static List<String> get allowedImageFormats => 
-      'jpg,jpeg,png,webp'.split(',');
+  static int get maxUploadSizeMB => 5;
+
+  static int get maxProfilePhotoSizeMB => 2;
+
+  static List<String> get allowedImageFormats => 'jpg,jpeg,png,webp'.split(',');
 
   // ─── Cache Configuration ───────────────────────────────────────────────────
-  static Duration get cacheTimeoutShort => Duration(
-    minutes: 5
-  );
-  
-  static Duration get cacheTimeoutMedium => Duration(
-    minutes: 30
-  );
-  
-  static Duration get cacheTimeoutLong => Duration(
-    hours: 1
-  );
+  static Duration get cacheTimeoutShort => Duration(minutes: 5);
+
+  static Duration get cacheTimeoutMedium => Duration(minutes: 30);
+
+  static Duration get cacheTimeoutLong => Duration(hours: 1);
 
   // ─── CV Intelligence Configuration ─────────────────────────────────────────
   static Map<String, int> get cvScoringWeights => {
-    'profile': 25,
-    'experience': 25,
-    'education': 20,
-    'skills': 15,
-    'projects': 15,
-  };
+        'profile': 25,
+        'experience': 25,
+        'education': 20,
+        'skills': 15,
+        'projects': 15,
+      };
 
   static Map<String, int> get submissionReadinessThresholds => {
-    'overall_score': 70,
-    'profile_score': 60,
-    'experience_score': 60,
-    'education_score': 60,
-    'skills_score': 60,
-    'projects_score': 50,
-  };
+        'overall_score': 70,
+        'profile_score': 60,
+        'experience_score': 60,
+        'education_score': 60,
+        'skills_score': 60,
+        'projects_score': 50,
+      };
 
   static Map<String, int> get gradeBoundaries => {
-    'A': 90,
-    'B': 80,
-    'C': 70,
-    'D': 60,
-  };
+        'A': 90,
+        'B': 80,
+        'C': 70,
+        'D': 60,
+      };
 
   // ─── Template Configuration ────────────────────────────────────────────────
-  static List<String> get templateTypes => 
-      'classic,modern,academic'.split(',');
-  
-  static String get defaultTemplate => 
-      'modern';
+  static List<String> get templateTypes => 'classic,modern,academic'.split(',');
+
+  static String get defaultTemplate => 'modern';
 
   // ─── Business Rules ────────────────────────────────────────────────────────
-  static int get maxExperienceEntries => 
-      10;
-  
-  static int get maxEducationEntries => 
-      5;
-  
-  static int get maxProjectEntries => 
-      10;
-  
-  static int get maxCertificationEntries => 
-      15;
+  static int get maxExperienceEntries => 10;
+
+  static int get maxEducationEntries => 5;
+
+  static int get maxProjectEntries => 10;
+
+  static int get maxCertificationEntries => 15;
 
   // ─── Notification Configuration ────────────────────────────────────────────
-  static int get notificationBatchSize => 
-      100;
-  
-  static int get notificationRetentionDays => 
-      90;
+  static int get notificationBatchSize => 100;
+
+  static int get notificationRetentionDays => 90;
 
   // ─── Analytics Configuration ───────────────────────────────────────────────
-  static int get analyticsRetentionDays => 
-      365;
-  
-  static int get snapshotIntervalHours => 
-      24;
+  static int get analyticsRetentionDays => 365;
+
+  static int get snapshotIntervalHours => 24;
 
   // ─── Network Configuration ─────────────────────────────────────────────────
-  static Duration get networkTimeout => Duration(
-    seconds: 30
-  );
-  
-  static Duration get connectionTimeout => Duration(
-    seconds: 10
-  );
-  
-  static int get maxRetryAttempts => 
-      3;
+  static Duration get networkTimeout => Duration(seconds: 30);
+
+  static Duration get connectionTimeout => Duration(seconds: 10);
+
+  static int get maxRetryAttempts => 3;
 
   // ─── Debug Configuration ───────────────────────────────────────────────────
-  static bool get enableDebugLogging => 
-      ('false').toLowerCase() == 'true';
-  
-  static bool get enablePerformanceLogging => 
-      ('false').toLowerCase() == 'true';
-  
-  static bool get enableNetworkLogging => 
-      ('false').toLowerCase() == 'true';
+  static bool get enableDebugLogging => ('false').toLowerCase() == 'true';
+
+  static bool get enablePerformanceLogging => ('false').toLowerCase() == 'true';
+
+  static bool get enableNetworkLogging => ('false').toLowerCase() == 'true';
 
   // ─── Feature Flags ─────────────────────────────────────────────────────────
-  static bool get enableAnalytics => 
-      ('true').toLowerCase() == 'true';
-  
-  static bool get enableNotifications => 
-      ('true').toLowerCase() == 'true';
-  
-  static bool get enableVersionHistory => 
-      ('true').toLowerCase() == 'true';
-  
-  static bool get enableTemplateEngine => 
-      ('true').toLowerCase() == 'true';
+  static bool get enableAnalytics => ('true').toLowerCase() == 'true';
+
+  static bool get enableNotifications => ('true').toLowerCase() == 'true';
+
+  static bool get enableVersionHistory => ('true').toLowerCase() == 'true';
+
+  static bool get enableTemplateEngine => ('true').toLowerCase() == 'true';
 
   // ─── Validation Methods ────────────────────────────────────────────────────
   static bool validateScoringWeights() {
@@ -247,7 +208,7 @@ class AppConfig {
   static Future<void> initialize() async {
     try {
       validateScoringWeights();
-      
+
       if (enableDebugLogging) {
         print('AppConfig initialized successfully');
         print('Configuration summary: ${getConfigSummary()}');

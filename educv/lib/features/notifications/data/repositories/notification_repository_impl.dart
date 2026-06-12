@@ -17,7 +17,7 @@ class NotificationRepositoryImpl implements NotificationRepository {
     int? offset,
   }) async {
     final queryParams = <String, String>{};
-    
+
     if (type != null) queryParams['notification_type'] = type;
     if (status != null) queryParams['status'] = status;
     if (unreadOnly == true) queryParams['unread_only'] = 'true';
@@ -28,30 +28,31 @@ class NotificationRepositoryImpl implements NotificationRepository {
       '/notifications/',
       queryParameters: queryParams,
     );
-    
+
     if (response.success && response.data != null) {
       final List<dynamic> results = response.data['results'] ?? [];
       return results.map((json) => NotificationModel.fromJson(json)).toList();
     }
-    
+
     throw Exception(response.error?.message ?? 'Failed to fetch notifications');
   }
 
   @override
   Future<NotificationModel> getNotification(String id) async {
     final response = await _apiClient.get('/notifications/$id/');
-    
+
     if (response.success && response.data != null) {
       return NotificationModel.fromJson(response.data);
     }
-    
+
     throw Exception(response.error?.message ?? 'Failed to fetch notification');
   }
 
   @override
   Future<bool> markAsRead(String id) async {
-    final response = await _apiClient.post('/notifications/$id/mark_read/', data: {});
-    
+    final response =
+        await _apiClient.post('/notifications/$id/mark_read/', data: {});
+
     return response.success;
   }
 
@@ -61,47 +62,52 @@ class NotificationRepositoryImpl implements NotificationRepository {
       '/notifications/mark_multiple_read/',
       data: {'notification_ids': ids},
     );
-    
+
     if (response.success && response.data != null) {
       return response.data['marked_count'] ?? 0;
     }
-    
-    throw Exception(response.error?.message ?? 'Failed to mark notifications as read');
+
+    throw Exception(
+        response.error?.message ?? 'Failed to mark notifications as read');
   }
 
   @override
   Future<NotificationStatsModel> getNotificationStats() async {
     final response = await _apiClient.get('/notifications/stats/');
-    
+
     if (response.success && response.data != null) {
       return NotificationStatsModel.fromJson(response.data);
     }
-    
-    throw Exception(response.error?.message ?? 'Failed to fetch notification statistics');
+
+    throw Exception(
+        response.error?.message ?? 'Failed to fetch notification statistics');
   }
 
   @override
   Future<NotificationPreferencesModel> getPreferences() async {
     final response = await _apiClient.get('/notifications/preferences/');
-    
+
     if (response.success && response.data != null) {
       return NotificationPreferencesModel.fromJson(response.data);
     }
-    
-    throw Exception(response.error?.message ?? 'Failed to fetch notification preferences');
+
+    throw Exception(
+        response.error?.message ?? 'Failed to fetch notification preferences');
   }
 
   @override
-  Future<NotificationPreferencesModel> updatePreferences(NotificationPreferencesModel preferences) async {
+  Future<NotificationPreferencesModel> updatePreferences(
+      NotificationPreferencesModel preferences) async {
     final response = await _apiClient.put(
       '/notifications/preferences/',
       data: preferences.toJson(),
     );
-    
+
     if (response.success && response.data != null) {
       return NotificationPreferencesModel.fromJson(response.data);
     }
-    
-    throw Exception(response.error?.message ?? 'Failed to update notification preferences');
+
+    throw Exception(
+        response.error?.message ?? 'Failed to update notification preferences');
   }
 }

@@ -79,7 +79,8 @@ void main() {
       expect(find.text('150 uses'), findsOneWidget);
     });
 
-    testWidgets('should show premium badge for premium templates', (tester) async {
+    testWidgets('should show premium badge for premium templates',
+        (tester) async {
       final premiumTemplate = TemplateModel(
         id: 'template-1',
         name: 'Premium Template',
@@ -121,7 +122,8 @@ void main() {
       expect(tapped, true);
     });
 
-    testWidgets('should call onFavorite when favorite button is tapped', (tester) async {
+    testWidgets('should call onFavorite when favorite button is tapped',
+        (tester) async {
       bool favorited = false;
       await tester.pumpWidget(createWidget(
         onFavorite: () => favorited = true,
@@ -131,7 +133,8 @@ void main() {
       expect(favorited, true);
     });
 
-    testWidgets('should call onPreview when preview button is tapped', (tester) async {
+    testWidgets('should call onPreview when preview button is tapped',
+        (tester) async {
       bool previewed = false;
       await tester.pumpWidget(createWidget(
         onPreview: () => previewed = true,
@@ -141,7 +144,8 @@ void main() {
       expect(previewed, true);
     });
 
-    testWidgets('should show filled heart for favorite templates', (tester) async {
+    testWidgets('should show filled heart for favorite templates',
+        (tester) async {
       when(mockProvider.isFavorite(mockTemplate)).thenReturn(true);
 
       await tester.pumpWidget(createWidget());
@@ -175,10 +179,12 @@ void main() {
       await tester.pumpWidget(createWidget());
 
       expect(find.byType(TextField), findsOneWidget);
-      expect(find.text('Search templates by name, category, or description...'), findsOneWidget);
+      expect(find.text('Search templates by name, category, or description...'),
+          findsOneWidget);
     });
 
-    testWidgets('should call setSearchQuery when text is submitted', (tester) async {
+    testWidgets('should call setSearchQuery when text is submitted',
+        (tester) async {
       await tester.pumpWidget(createWidget());
 
       await tester.enterText(find.byType(TextField), 'modern');
@@ -187,7 +193,8 @@ void main() {
       verify(mockProvider.setSearchQuery('modern')).called(1);
     });
 
-    testWidgets('should show clear button when text is entered', (tester) async {
+    testWidgets('should show clear button when text is entered',
+        (tester) async {
       when(mockProvider.searchQuery).thenReturn('test');
 
       await tester.pumpWidget(createWidget());
@@ -199,7 +206,8 @@ void main() {
       expect(find.byIcon(Icons.clear), findsOneWidget);
     });
 
-    testWidgets('should clear search when clear button is tapped', (tester) async {
+    testWidgets('should clear search when clear button is tapped',
+        (tester) async {
       await tester.pumpWidget(createWidget());
 
       // Enter text first
@@ -246,7 +254,8 @@ void main() {
       expect(find.text('Filters'), findsOneWidget);
     });
 
-    testWidgets('should show clear all button when filters are active', (tester) async {
+    testWidgets('should show clear all button when filters are active',
+        (tester) async {
       when(mockProvider.hasActiveFilters).thenReturn(true);
 
       await tester.pumpWidget(createWidget());
@@ -254,7 +263,8 @@ void main() {
       expect(find.text('Clear All'), findsOneWidget);
     });
 
-    testWidgets('should call clearFilters when clear all is tapped', (tester) async {
+    testWidgets('should call clearFilters when clear all is tapped',
+        (tester) async {
       when(mockProvider.hasActiveFilters).thenReturn(true);
 
       await tester.pumpWidget(createWidget());
@@ -273,7 +283,8 @@ void main() {
       expect(find.text('Premium'), findsOneWidget);
     });
 
-    testWidgets('should call setCategory when category is changed', (tester) async {
+    testWidgets('should call setCategory when category is changed',
+        (tester) async {
       final categories = [
         TemplateCategoryModel(
           id: '1',

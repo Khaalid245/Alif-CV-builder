@@ -28,7 +28,9 @@ class PublicNavBar extends StatelessWidget {
           child: LayoutBuilder(
             builder: (context, constraints) {
               final isDesktop = constraints.maxWidth >= 900;
-              return isDesktop ? _buildDesktopNavBar(context) : _buildMobileNavBar(context);
+              return isDesktop
+                  ? _buildDesktopNavBar(context)
+                  : _buildMobileNavBar(context);
             },
           ),
         ),
@@ -47,8 +49,10 @@ class PublicNavBar extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _buildNavLink(context, 'Home', '/', LucideIcons.home),
-                _buildNavLink(context, 'How it works', '/#how-it-works', LucideIcons.layoutList),
-                _buildNavLink(context, 'Templates', '/#templates', LucideIcons.fileText),
+                _buildNavLink(context, 'How it works', '/#how-it-works',
+                    LucideIcons.layoutList),
+                _buildNavLink(
+                    context, 'Templates', '/#templates', LucideIcons.fileText),
                 _buildNavLink(context, 'About', '/about', LucideIcons.info),
                 _buildNavLink(context, 'Contact', '/contact', LucideIcons.mail),
               ],
@@ -96,7 +100,8 @@ class PublicNavBar extends StatelessWidget {
     );
   }
 
-  Widget _buildNavLink(BuildContext context, String text, String route, IconData icon) {
+  Widget _buildNavLink(
+      BuildContext context, String text, String route, IconData icon) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: MouseRegion(
@@ -268,10 +273,13 @@ class PublicNavBar extends StatelessWidget {
             ),
             const SizedBox(height: 32),
             _buildMobileNavLink(context, 'Home', '/', LucideIcons.home),
-            _buildMobileNavLink(context, 'How it works', '/#how-it-works', LucideIcons.layoutList),
-            _buildMobileNavLink(context, 'Templates', '/#templates', LucideIcons.fileText),
+            _buildMobileNavLink(context, 'How it works', '/#how-it-works',
+                LucideIcons.layoutList),
+            _buildMobileNavLink(
+                context, 'Templates', '/#templates', LucideIcons.fileText),
             _buildMobileNavLink(context, 'About', '/about', LucideIcons.info),
-            _buildMobileNavLink(context, 'Contact', '/contact', LucideIcons.mail),
+            _buildMobileNavLink(
+                context, 'Contact', '/contact', LucideIcons.mail),
             const Spacer(),
             Column(
               children: [
@@ -310,7 +318,8 @@ class PublicNavBar extends StatelessWidget {
     );
   }
 
-  Widget _buildMobileNavLink(BuildContext context, String text, String route, IconData icon) {
+  Widget _buildMobileNavLink(
+      BuildContext context, String text, String route, IconData icon) {
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.only(bottom: 4),
@@ -334,7 +343,8 @@ class PublicNavBar extends StatelessWidget {
                   width: 36,
                   height: 36,
                   decoration: BoxDecoration(
-                    color: PremiumPortfolioColors.accentPurple.withValues(alpha: 0.08),
+                    color: PremiumPortfolioColors.accentPurple
+                        .withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(

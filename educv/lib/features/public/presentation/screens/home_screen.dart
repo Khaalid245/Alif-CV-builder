@@ -12,8 +12,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>
-    with TickerProviderStateMixin {
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
@@ -96,12 +95,15 @@ class _HomeScreenState extends State<HomeScreen>
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
-                  color: PremiumPortfolioColors.accentPurple.withValues(alpha: 0.1),
+                  color: PremiumPortfolioColors.accentPurple
+                      .withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: PremiumPortfolioColors.accentPurple.withValues(alpha: 0.2),
+                    color: PremiumPortfolioColors.accentPurple
+                        .withValues(alpha: 0.2),
                   ),
                 ),
                 child: Text(
@@ -225,9 +227,12 @@ class _HomeScreenState extends State<HomeScreen>
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Expanded(child: _buildStatCard('3', 'Professional\nTemplates')),
-                    Expanded(child: _buildStatCard('1000+', 'Students\nHelped')),
-                    Expanded(child: _buildStatCard('100%', 'Free for\nStudents')),
+                    Expanded(
+                        child: _buildStatCard('3', 'Professional\nTemplates')),
+                    Expanded(
+                        child: _buildStatCard('1000+', 'Students\nHelped')),
+                    Expanded(
+                        child: _buildStatCard('100%', 'Free for\nStudents')),
                     Expanded(child: _buildStatCard('24/7', 'Platform\nAccess')),
                   ],
                 );
@@ -309,11 +314,14 @@ class _HomeScreenState extends State<HomeScreen>
                     return Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        _buildStepCard('1', 'Fill Information', 'Add your education, skills, and experience once'),
+                        _buildStepCard('1', 'Fill Information',
+                            'Add your education, skills, and experience once'),
                         const SizedBox(height: 32),
-                        _buildStepCard('2', 'Generate CVs', 'Platform creates 3 professional PDF templates'),
+                        _buildStepCard('2', 'Generate CVs',
+                            'Platform creates 3 professional PDF templates'),
                         const SizedBox(height: 32),
-                        _buildStepCard('3', 'Download & Apply', 'Choose the best CV for each job application'),
+                        _buildStepCard('3', 'Download & Apply',
+                            'Choose the best CV for each job application'),
                       ],
                     );
                   } else {
@@ -321,11 +329,17 @@ class _HomeScreenState extends State<HomeScreen>
                     return Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Expanded(child: _buildStepCard('1', 'Fill Information', 'Add your education, skills, and experience once')),
+                        Expanded(
+                            child: _buildStepCard('1', 'Fill Information',
+                                'Add your education, skills, and experience once')),
                         const SizedBox(width: 32),
-                        Expanded(child: _buildStepCard('2', 'Generate CVs', 'Platform creates 3 professional PDF templates')),
+                        Expanded(
+                            child: _buildStepCard('2', 'Generate CVs',
+                                'Platform creates 3 professional PDF templates')),
                         const SizedBox(width: 32),
-                        Expanded(child: _buildStepCard('3', 'Download & Apply', 'Choose the best CV for each job application')),
+                        Expanded(
+                            child: _buildStepCard('3', 'Download & Apply',
+                                'Choose the best CV for each job application')),
                       ],
                     );
                   }
@@ -433,11 +447,14 @@ class _HomeScreenState extends State<HomeScreen>
                     return Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        _buildTemplateCard('Classic', 'Corporate & Government', 'Navy blue sidebar, formal layout'),
+                        _buildTemplateCard('Classic', 'Corporate & Government',
+                            'Navy blue sidebar, formal layout'),
                         const SizedBox(height: 32),
-                        _buildTemplateCard('Modern', 'Tech & Startups', 'Clean design, teal accents'),
+                        _buildTemplateCard('Modern', 'Tech & Startups',
+                            'Clean design, teal accents'),
                         const SizedBox(height: 32),
-                        _buildTemplateCard('Academic', 'Research & Education', 'Structured format, burgundy theme'),
+                        _buildTemplateCard('Academic', 'Research & Education',
+                            'Structured format, burgundy theme'),
                       ],
                     );
                   } else {
@@ -445,11 +462,23 @@ class _HomeScreenState extends State<HomeScreen>
                     return Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Expanded(child: _buildTemplateCard('Classic', 'Corporate & Government', 'Navy blue sidebar, formal layout')),
+                        Expanded(
+                            child: _buildTemplateCard(
+                                'Classic',
+                                'Corporate & Government',
+                                'Navy blue sidebar, formal layout')),
                         const SizedBox(width: 32),
-                        Expanded(child: _buildTemplateCard('Modern', 'Tech & Startups', 'Clean design, teal accents')),
+                        Expanded(
+                            child: _buildTemplateCard(
+                                'Modern',
+                                'Tech & Startups',
+                                'Clean design, teal accents')),
                         const SizedBox(width: 32),
-                        Expanded(child: _buildTemplateCard('Academic', 'Research & Education', 'Structured format, burgundy theme')),
+                        Expanded(
+                            child: _buildTemplateCard(
+                                'Academic',
+                                'Research & Education',
+                                'Structured format, burgundy theme')),
                       ],
                     );
                   }
@@ -472,10 +501,12 @@ class _HomeScreenState extends State<HomeScreen>
               width: 120,
               height: 160,
               decoration: BoxDecoration(
-                color: PremiumPortfolioColors.accentPurple.withValues(alpha: 0.1),
+                color:
+                    PremiumPortfolioColors.accentPurple.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: PremiumPortfolioColors.accentPurple.withValues(alpha: 0.2),
+                  color: PremiumPortfolioColors.accentPurple
+                      .withValues(alpha: 0.2),
                 ),
               ),
               child: Icon(
@@ -547,13 +578,23 @@ class _HomeScreenState extends State<HomeScreen>
                     return Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        _buildFeatureCard(LucideIcons.shield, 'Secure & Private', 'Your data is protected with enterprise-grade security'),
+                        _buildFeatureCard(
+                            LucideIcons.shield,
+                            'Secure & Private',
+                            'Your data is protected with enterprise-grade security'),
                         const SizedBox(height: 32),
-                        _buildFeatureCard(LucideIcons.zap, 'Instant Generation', 'Get all 3 CVs in seconds, not hours'),
+                        _buildFeatureCard(LucideIcons.zap, 'Instant Generation',
+                            'Get all 3 CVs in seconds, not hours'),
                         const SizedBox(height: 32),
-                        _buildFeatureCard(LucideIcons.users, 'University Approved', 'Built for students, endorsed by faculty'),
+                        _buildFeatureCard(
+                            LucideIcons.users,
+                            'University Approved',
+                            'Built for students, endorsed by faculty'),
                         const SizedBox(height: 32),
-                        _buildFeatureCard(LucideIcons.download, 'Always Accessible', 'Download your CVs anytime, anywhere'),
+                        _buildFeatureCard(
+                            LucideIcons.download,
+                            'Always Accessible',
+                            'Download your CVs anytime, anywhere'),
                       ],
                     );
                   } else {
@@ -565,19 +606,31 @@ class _HomeScreenState extends State<HomeScreen>
                       children: [
                         SizedBox(
                           width: (constraints.maxWidth - 32) / 2,
-                          child: _buildFeatureCard(LucideIcons.shield, 'Secure & Private', 'Your data is protected with enterprise-grade security'),
+                          child: _buildFeatureCard(
+                              LucideIcons.shield,
+                              'Secure & Private',
+                              'Your data is protected with enterprise-grade security'),
                         ),
                         SizedBox(
                           width: (constraints.maxWidth - 32) / 2,
-                          child: _buildFeatureCard(LucideIcons.zap, 'Instant Generation', 'Get all 3 CVs in seconds, not hours'),
+                          child: _buildFeatureCard(
+                              LucideIcons.zap,
+                              'Instant Generation',
+                              'Get all 3 CVs in seconds, not hours'),
                         ),
                         SizedBox(
                           width: (constraints.maxWidth - 32) / 2,
-                          child: _buildFeatureCard(LucideIcons.users, 'University Approved', 'Built for students, endorsed by faculty'),
+                          child: _buildFeatureCard(
+                              LucideIcons.users,
+                              'University Approved',
+                              'Built for students, endorsed by faculty'),
                         ),
                         SizedBox(
                           width: (constraints.maxWidth - 32) / 2,
-                          child: _buildFeatureCard(LucideIcons.download, 'Always Accessible', 'Download your CVs anytime, anywhere'),
+                          child: _buildFeatureCard(
+                              LucideIcons.download,
+                              'Always Accessible',
+                              'Download your CVs anytime, anywhere'),
                         ),
                       ],
                     );
@@ -602,10 +655,12 @@ class _HomeScreenState extends State<HomeScreen>
               width: 64,
               height: 64,
               decoration: BoxDecoration(
-                color: PremiumPortfolioColors.accentPurple.withValues(alpha: 0.1),
+                color:
+                    PremiumPortfolioColors.accentPurple.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(32),
                 border: Border.all(
-                  color: PremiumPortfolioColors.accentPurple.withValues(alpha: 0.2),
+                  color: PremiumPortfolioColors.accentPurple
+                      .withValues(alpha: 0.2),
                 ),
               ),
               child: Icon(
@@ -736,7 +791,8 @@ class _HomeScreenState extends State<HomeScreen>
             boxShadow: isPrimary
                 ? [
                     BoxShadow(
-                      color: PremiumPortfolioColors.accentPurple.withValues(alpha: 0.3),
+                      color: PremiumPortfolioColors.accentPurple
+                          .withValues(alpha: 0.3),
                       blurRadius: 20,
                       offset: const Offset(0, 8),
                     ),
@@ -749,7 +805,9 @@ class _HomeScreenState extends State<HomeScreen>
               style: TextStyle(
                 fontSize: fontSize,
                 fontWeight: FontWeight.w600,
-                color: isPrimary ? Colors.white : PremiumPortfolioColors.primaryText,
+                color: isPrimary
+                    ? Colors.white
+                    : PremiumPortfolioColors.primaryText,
               ),
             ),
           ),
@@ -816,7 +874,8 @@ class _PremiumHoverCardState extends State<_PremiumHoverCard>
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.05 + (0.1 * _elevationAnimation.value)),
+                  color: Colors.black.withValues(
+                      alpha: 0.05 + (0.1 * _elevationAnimation.value)),
                   blurRadius: 20 + (20 * _elevationAnimation.value),
                   offset: Offset(0, 4 + (8 * _elevationAnimation.value)),
                 ),

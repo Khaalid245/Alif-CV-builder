@@ -19,7 +19,7 @@ class NotificationBadge extends StatelessWidget {
     return Consumer<NotificationProvider>(
       builder: (context, provider, _) {
         final unreadCount = provider.unreadCount;
-        
+
         return Stack(
           children: [
             InkWell(

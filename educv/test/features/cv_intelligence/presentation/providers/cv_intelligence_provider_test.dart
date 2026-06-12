@@ -49,8 +49,7 @@ void main() {
     test('should handle error when loading latest analysis', () async {
       // Arrange
       final exception = AppException(message: 'Network error', statusCode: 500);
-      when(mockRepository.getLatestAnalysis())
-          .thenThrow(exception);
+      when(mockRepository.getLatestAnalysis()).thenThrow(exception);
 
       // Act
       final notifier = container.read(analysisProvider.notifier);
@@ -83,16 +82,17 @@ void main() {
 
     test('should handle error during CV analysis', () async {
       // Arrange
-      final exception = AppException(message: 'Analysis failed', statusCode: 400);
+      final exception =
+          AppException(message: 'Analysis failed', statusCode: 400);
       when(mockRepository.analyzeCV(options: anyNamed('options')))
           .thenThrow(exception);
 
       // Act
       final notifier = container.read(analysisProvider.notifier);
-      
+
       // Assert
       expect(() => notifier.analyzeCV(), throwsA(isA<AppException>()));
-      
+
       await container.pump();
       final state = container.read(analysisProvider);
       expect(state.isLoading, false);
@@ -112,14 +112,14 @@ void main() {
       // Assert
       final state = container.read(analysisProvider);
       expect(state.analysis, equals(analysis));
-      verify(mockRepository.getLatestAnalysis()).called(2); // Once on init, once on refresh
+      verify(mockRepository.getLatestAnalysis())
+          .called(2); // Once on init, once on refresh
     });
 
     test('should clear error', () async {
       // Arrange
       final exception = AppException(message: 'Test error', statusCode: 500);
-      when(mockRepository.getLatestAnalysis())
-          .thenThrow(exception);
+      when(mockRepository.getLatestAnalysis()).thenThrow(exception);
 
       final notifier = container.read(analysisProvider.notifier);
       await container.pump();
@@ -165,7 +165,7 @@ void main() {
         currentPage: 1,
         totalPages: 2,
       );
-      
+
       final nextPageHistory = AnalysisHistoryModel(
         analyses: [_createMockAnalysis(id: 'analysis-2')],
         totalCount: 2,
@@ -259,13 +259,13 @@ void main() {
       // Arrange
       final recommendation = _createMockRecommendation();
       final recommendations = [recommendation];
-      
+
       when(mockRepository.getRecommendations(
         category: anyNamed('category'),
         priority: anyNamed('priority'),
         includeImplemented: anyNamed('includeImplemented'),
       )).thenAnswer((_) async => recommendations);
-      
+
       when(mockRepository.markRecommendationImplemented(any))
           .thenAnswer((_) async {});
 
@@ -278,7 +278,8 @@ void main() {
       final state = container.read(recommendationsProvider);
       final updatedRec = state.recommendations.first;
       expect(updatedRec.isImplemented, true);
-      verify(mockRepository.markRecommendationImplemented(recommendation.id)).called(1);
+      verify(mockRepository.markRecommendationImplemented(recommendation.id))
+          .called(1);
     });
 
     test('should filter recommendations by category', () async {
@@ -287,7 +288,7 @@ void main() {
         _createMockRecommendation(category: 'education'),
         _createMockRecommendation(category: 'experience', id: 'rec-2'),
       ];
-      
+
       when(mockRepository.getRecommendations(
         category: anyNamed('category'),
         priority: anyNamed('priority'),
@@ -312,9 +313,10 @@ void main() {
       final recommendations = [
         _createMockRecommendation(priority: 'high'),
         _createMockRecommendation(priority: 'low', id: 'rec-2'),
-        _createMockRecommendation(priority: 'high', id: 'rec-3', isImplemented: true),
+        _createMockRecommendation(
+            priority: 'high', id: 'rec-3', isImplemented: true),
       ];
-      
+
       when(mockRepository.getRecommendations(
         category: anyNamed('category'),
         priority: anyNamed('priority'),
@@ -337,10 +339,12 @@ void main() {
       // Arrange
       final recommendations = [
         _createMockRecommendation(category: 'education', priority: 'high'),
-        _createMockRecommendation(category: 'experience', priority: 'medium', id: 'rec-2'),
-        _createMockRecommendation(category: 'education', priority: 'low', id: 'rec-3'),
+        _createMockRecommendation(
+            category: 'experience', priority: 'medium', id: 'rec-2'),
+        _createMockRecommendation(
+            category: 'education', priority: 'low', id: 'rec-3'),
       ];
-      
+
       when(mockRepository.getRecommendations(
         category: anyNamed('category'),
         priority: anyNamed('priority'),
@@ -396,7 +400,8 @@ void main() {
       verify(mockRepository.getSubmissionReadiness()).called(1);
     });
 
-    test('benchmarkingDataProvider should return data with comparison group', () async {
+    test('benchmarkingDataProvider should return data with comparison group',
+        () async {
       // Arrange
       final benchmarking = _createMockBenchmarkingData();
       const comparisonGroup = 'computer_science';
@@ -404,19 +409,21 @@ void main() {
           .thenAnswer((_) async => benchmarking);
 
       // Act
-      final future = container.read(benchmarkingDataProvider(comparisonGroup).future);
+      final future =
+          container.read(benchmarkingDataProvider(comparisonGroup).future);
       final result = await future;
 
       // Assert
       expect(result, equals(benchmarking));
-      verify(mockRepository.getBenchmarkingData(comparisonGroup: comparisonGroup)).called(1);
+      verify(mockRepository.getBenchmarkingData(
+              comparisonGroup: comparisonGroup))
+          .called(1);
     });
 
     test('analysisConfigProvider should return configuration', () async {
       // Arrange
       final config = {'detailed_analysis': true, 'recommendation_limit': 10};
-      when(mockRepository.getAnalysisConfig())
-          .thenAnswer((_) async => config);
+      when(mockRepository.getAnalysisConfig()).thenAnswer((_) async => config);
 
       // Act
       final future = container.read(analysisConfigProvider.future);
@@ -435,7 +442,8 @@ void main() {
           .thenAnswer((_) async => analysis);
 
       // Act
-      final future = container.read(specificAnalysisProvider(analysisId).future);
+      final future =
+          container.read(specificAnalysisProvider(analysisId).future);
       final result = await future;
 
       // Assert

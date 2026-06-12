@@ -198,7 +198,7 @@ class EnterpriseStatsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cardColor = color ?? AppColors.primary;
-    
+
     return EnterpriseCard(
       backgroundColor: cardColor.withValues(alpha: 0.05),
       showBorder: true,

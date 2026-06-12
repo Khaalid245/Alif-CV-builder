@@ -9,7 +9,9 @@ import '../../data/models/workflow_models.dart';
 
 class WorkflowTransitionActionsWidget extends StatefulWidget {
   final List<WorkflowTransitionModel> transitions;
-  final Function(String transitionId, String? comment, Map<String, dynamic>? metadata) onTransition;
+  final Function(
+          String transitionId, String? comment, Map<String, dynamic>? metadata)
+      onTransition;
   final bool isLoading;
 
   const WorkflowTransitionActionsWidget({
@@ -20,10 +22,12 @@ class WorkflowTransitionActionsWidget extends StatefulWidget {
   });
 
   @override
-  State<WorkflowTransitionActionsWidget> createState() => _WorkflowTransitionActionsWidgetState();
+  State<WorkflowTransitionActionsWidget> createState() =>
+      _WorkflowTransitionActionsWidgetState();
 }
 
-class _WorkflowTransitionActionsWidgetState extends State<WorkflowTransitionActionsWidget> {
+class _WorkflowTransitionActionsWidgetState
+    extends State<WorkflowTransitionActionsWidget> {
   WorkflowTransitionModel? selectedTransition;
   final TextEditingController commentController = TextEditingController();
   final Map<String, dynamic> metadata = {};
@@ -95,9 +99,8 @@ class _WorkflowTransitionActionsWidgetState extends State<WorkflowTransitionActi
           ),
         ),
         const SizedBox(height: AppSpacing.sm),
-        ...widget.transitions.map((transition) => 
-          _buildTransitionTile(transition)
-        ),
+        ...widget.transitions
+            .map((transition) => _buildTransitionTile(transition)),
       ],
     );
   }
@@ -199,7 +202,9 @@ class _WorkflowTransitionActionsWidgetState extends State<WorkflowTransitionActi
               ),
               const SizedBox(width: AppSpacing.xs),
               Text(
-                selectedTransition!.requiresComment ? 'Comment (Required)' : 'Comment (Optional)',
+                selectedTransition!.requiresComment
+                    ? 'Comment (Required)'
+                    : 'Comment (Optional)',
                 style: AppTypography.bodyMedium.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -244,7 +249,8 @@ class _WorkflowTransitionActionsWidgetState extends State<WorkflowTransitionActi
                           height: 16,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
                           ),
                         )
                       : Text(selectedTransition!.name),
@@ -259,7 +265,8 @@ class _WorkflowTransitionActionsWidgetState extends State<WorkflowTransitionActi
 
   void _selectTransition(WorkflowTransitionModel transition) {
     setState(() {
-      selectedTransition = selectedTransition?.id == transition.id ? null : transition;
+      selectedTransition =
+          selectedTransition?.id == transition.id ? null : transition;
       commentController.clear();
       metadata.clear();
     });
@@ -275,7 +282,8 @@ class _WorkflowTransitionActionsWidgetState extends State<WorkflowTransitionActi
 
   bool _canPerformTransition() {
     if (selectedTransition == null) return false;
-    if (selectedTransition!.requiresComment && commentController.text.trim().isEmpty) {
+    if (selectedTransition!.requiresComment &&
+        commentController.text.trim().isEmpty) {
       return false;
     }
     return true;

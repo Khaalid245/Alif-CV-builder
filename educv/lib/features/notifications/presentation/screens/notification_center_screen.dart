@@ -18,7 +18,8 @@ class NotificationCenterScreen extends StatefulWidget {
   const NotificationCenterScreen({super.key});
 
   @override
-  State<NotificationCenterScreen> createState() => _NotificationCenterScreenState();
+  State<NotificationCenterScreen> createState() =>
+      _NotificationCenterScreenState();
 }
 
 class _NotificationCenterScreenState extends State<NotificationCenterScreen> {
@@ -55,7 +56,8 @@ class _NotificationCenterScreenState extends State<NotificationCenterScreen> {
                   children: [
                     TextButton(
                       onPressed: () => _markSelectedAsRead(provider),
-                      child: Text('Mark Read (${_selectedNotifications.length})'),
+                      child:
+                          Text('Mark Read (${_selectedNotifications.length})'),
                     ),
                     IconButton(
                       onPressed: _exitSelectionMode,
@@ -64,7 +66,7 @@ class _NotificationCenterScreenState extends State<NotificationCenterScreen> {
                   ],
                 );
               }
-              
+
               return Row(
                 children: [
                   if (provider.unreadCount > 0)
@@ -111,13 +113,13 @@ class _NotificationCenterScreenState extends State<NotificationCenterScreen> {
     switch (provider.state) {
       case NotificationState.loading:
         return const AppLoader();
-      
+
       case NotificationState.error:
         return AppErrorState(
           message: provider.errorMessage ?? 'Failed to load notifications',
           onRetry: _loadData,
         );
-      
+
       case NotificationState.loaded:
         final notifications = provider.filteredNotifications;
         if (notifications.isEmpty) {
@@ -128,13 +130,14 @@ class _NotificationCenterScreenState extends State<NotificationCenterScreen> {
           );
         }
         return _buildNotificationList(provider, notifications);
-      
+
       case NotificationState.initial:
         return const AppLoader();
     }
   }
 
-  Widget _buildNotificationList(NotificationProvider provider, List<NotificationModel> notifications) {
+  Widget _buildNotificationList(
+      NotificationProvider provider, List<NotificationModel> notifications) {
     return Column(
       children: [
         if (provider.stats != null) ...[
@@ -175,14 +178,16 @@ class _NotificationCenterScreenState extends State<NotificationCenterScreen> {
             itemCount: notifications.length,
             itemBuilder: (context, index) {
               final notification = notifications[index];
-              final isSelected = _selectedNotifications.contains(notification.id);
-              
+              final isSelected =
+                  _selectedNotifications.contains(notification.id);
+
               return NotificationItemCard(
                 notification: notification,
                 isSelected: isSelected,
                 isSelectionMode: _isSelectionMode,
                 onTap: () => _handleNotificationTap(notification),
-                onSelectionChanged: (selected) => _handleSelectionChanged(notification.id, selected),
+                onSelectionChanged: (selected) =>
+                    _handleSelectionChanged(notification.id, selected),
                 onMarkAsRead: () => _markAsRead(provider, notification.id),
               );
             },
@@ -194,7 +199,8 @@ class _NotificationCenterScreenState extends State<NotificationCenterScreen> {
 
   void _handleNotificationTap(NotificationModel notification) {
     if (_isSelectionMode) {
-      _handleSelectionChanged(notification.id, !_selectedNotifications.contains(notification.id));
+      _handleSelectionChanged(
+          notification.id, !_selectedNotifications.contains(notification.id));
     } else {
       _showNotificationDetails(notification);
     }
@@ -253,9 +259,10 @@ class _NotificationCenterScreenState extends State<NotificationCenterScreen> {
 
   void _markSelectedAsRead(NotificationProvider provider) async {
     if (_selectedNotifications.isEmpty) return;
-    
-    final markedCount = await provider.markMultipleAsRead(_selectedNotifications.toList());
-    
+
+    final markedCount =
+        await provider.markMultipleAsRead(_selectedNotifications.toList());
+
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -272,11 +279,11 @@ class _NotificationCenterScreenState extends State<NotificationCenterScreen> {
         .where((n) => n.isUnread)
         .map((n) => n.id)
         .toList();
-    
+
     if (unreadIds.isEmpty) return;
-    
+
     final markedCount = await provider.markMultipleAsRead(unreadIds);
-    
+
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -327,7 +334,8 @@ class _NotificationCenterScreenState extends State<NotificationCenterScreen> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                _markAsRead(context.read<NotificationProvider>(), notification.id);
+                _markAsRead(
+                    context.read<NotificationProvider>(), notification.id);
               },
               child: const Text('Mark as Read'),
             ),

@@ -53,11 +53,11 @@ class _PremiumFloatingCardState extends State<PremiumFloatingCard>
 
   void _onHover(bool isHovered) {
     if (!widget.enableHover) return;
-    
+
     setState(() {
       _isHovered = isHovered;
     });
-    
+
     if (isHovered) {
       _animationController.forward();
     } else {

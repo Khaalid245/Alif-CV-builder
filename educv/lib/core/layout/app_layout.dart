@@ -26,7 +26,7 @@ class _AppLayoutState extends ConsumerState<AppLayout> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(currentUserProvider);
-    
+
     return ResponsiveBuilder(
       builder: (context, deviceType) {
         return Scaffold(
@@ -38,16 +38,18 @@ class _AppLayoutState extends ConsumerState<AppLayout> {
                 currentIndex: _getCurrentIndex(),
                 onNavigationChanged: _handleNavigation,
                 isCollapsed: deviceType.isTablet ? _isSidebarCollapsed : false,
-                onToggleCollapse: deviceType.isTablet ? () {
-                  setState(() {
-                    _isSidebarCollapsed = !_isSidebarCollapsed;
-                  });
-                } : null,
+                onToggleCollapse: deviceType.isTablet
+                    ? () {
+                        setState(() {
+                          _isSidebarCollapsed = !_isSidebarCollapsed;
+                        });
+                      }
+                    : null,
                 userName: user?.fullName,
                 userEmail: user?.email,
                 onProfileTap: () => _showProfileBottomSheet(context),
               ),
-              
+
               // Main content area
               Expanded(
                 child: Container(
@@ -66,27 +68,27 @@ class _AppLayoutState extends ConsumerState<AppLayout> {
 
   int _getCurrentIndex() {
     final currentPath = widget.currentRoute ?? '';
-    
+
     // Main Navigation (0-1)
     if (currentPath == '/cv/dashboard') return 0;
     if (currentPath == '/cv/sections') return 1;
-    
+
     // CV Builder items (2-5)
     if (currentPath == '/cv/form') return 2;
     if (currentPath == '/cv/preview') return 3;
     if (currentPath == '/cv/downloads') return 4;
     if (currentPath == '/cv/intelligence') return 5;
-    
+
     // Tools items (6-9)
     if (currentPath == '/templates') return 6;
     if (currentPath == '/analytics') return 7;
     if (currentPath == '/notifications') return 8;
     if (currentPath == '/cv/version-history') return 9;
-    
+
     // Account items (10-11)
     if (currentPath == '/account') return 10;
     if (currentPath == '/account/change-password') return 11;
-    
+
     return 0; // Default to dashboard
   }
 
@@ -99,7 +101,7 @@ class _AppLayoutState extends ConsumerState<AppLayout> {
       context.go('/cv/sections');
       return;
     }
-    
+
     // CV Builder items (2-5)
     final cvBuilderStartIndex = 2;
     if (index >= cvBuilderStartIndex && index < cvBuilderStartIndex + 4) {
@@ -120,7 +122,7 @@ class _AppLayoutState extends ConsumerState<AppLayout> {
       }
       return;
     }
-    
+
     // Tools items (6-9)
     final toolsStartIndex = 6;
     if (index >= toolsStartIndex && index < toolsStartIndex + 4) {
@@ -141,7 +143,7 @@ class _AppLayoutState extends ConsumerState<AppLayout> {
       }
       return;
     }
-    
+
     // Account items (10-11)
     final accountStartIndex = 10;
     if (index >= accountStartIndex && index < accountStartIndex + 2) {
@@ -159,7 +161,7 @@ class _AppLayoutState extends ConsumerState<AppLayout> {
 
   void _showProfileBottomSheet(BuildContext context) {
     final user = ref.read(currentUserProvider);
-    
+
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,

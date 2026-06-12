@@ -134,8 +134,7 @@ class _LanguagesStepState extends ConsumerState<LanguagesStep> {
 
     switch (proficiency) {
       case 'professional':
-        backgroundColor =
-            PremiumPortfolioColors.accentBlue.withOpacity(0.12);
+        backgroundColor = PremiumPortfolioColors.accentBlue.withOpacity(0.12);
         textColor = PremiumPortfolioColors.accentBlue;
         break;
       case 'native':

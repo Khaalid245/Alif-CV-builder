@@ -102,7 +102,7 @@ class WorkflowStateWidget extends StatelessWidget {
 
   Widget _buildStateTypeChip() {
     final color = _getStateColor();
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.sm,
@@ -214,9 +214,10 @@ class WorkflowStateWidget extends StatelessWidget {
   }
 
   String _formatStateType(String stateType) {
-    return stateType.split('_').map((word) => 
-      word[0].toUpperCase() + word.substring(1).toLowerCase()
-    ).join(' ');
+    return stateType
+        .split('_')
+        .map((word) => word[0].toUpperCase() + word.substring(1).toLowerCase())
+        .join(' ');
   }
 
   String _formatDateTime(DateTime dateTime) {
@@ -279,14 +280,15 @@ class WorkflowProgressWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildProgressIndicator(List<WorkflowStateModel> states, int currentIndex) {
+  Widget _buildProgressIndicator(
+      List<WorkflowStateModel> states, int currentIndex) {
     return Row(
       children: states.asMap().entries.map((entry) {
         final index = entry.key;
         final state = entry.value;
         final isActive = index <= currentIndex;
         final isCurrent = index == currentIndex;
-        
+
         return Expanded(
           child: Row(
             children: [
@@ -304,17 +306,17 @@ class WorkflowProgressWidget extends StatelessWidget {
                 height: 12,
                 margin: const EdgeInsets.symmetric(horizontal: 4),
                 decoration: BoxDecoration(
-                  color: isCurrent 
-                      ? AppColors.primary 
-                      : isActive 
-                          ? AppColors.success 
+                  color: isCurrent
+                      ? AppColors.primary
+                      : isActive
+                          ? AppColors.success
                           : AppColors.surface,
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: isCurrent 
-                        ? AppColors.primary 
-                        : isActive 
-                            ? AppColors.success 
+                    color: isCurrent
+                        ? AppColors.primary
+                        : isActive
+                            ? AppColors.success
                             : AppColors.border,
                     width: 2,
                   ),
@@ -325,7 +327,9 @@ class WorkflowProgressWidget extends StatelessWidget {
                   child: Container(
                     height: 4,
                     decoration: BoxDecoration(
-                      color: index < currentIndex ? AppColors.primary : AppColors.surface,
+                      color: index < currentIndex
+                          ? AppColors.primary
+                          : AppColors.surface,
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -337,22 +341,23 @@ class WorkflowProgressWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildProgressLabels(List<WorkflowStateModel> states, int currentIndex) {
+  Widget _buildProgressLabels(
+      List<WorkflowStateModel> states, int currentIndex) {
     return Row(
       children: states.asMap().entries.map((entry) {
         final index = entry.key;
         final state = entry.value;
         final isActive = index <= currentIndex;
         final isCurrent = index == currentIndex;
-        
+
         return Expanded(
           child: Text(
             state.name,
             style: AppTypography.bodySmall.copyWith(
-              color: isCurrent 
-                  ? AppColors.primary 
-                  : isActive 
-                      ? AppColors.textPrimary 
+              color: isCurrent
+                  ? AppColors.primary
+                  : isActive
+                      ? AppColors.textPrimary
                       : AppColors.textSecondary,
               fontWeight: isCurrent ? FontWeight.w600 : FontWeight.normal,
             ),

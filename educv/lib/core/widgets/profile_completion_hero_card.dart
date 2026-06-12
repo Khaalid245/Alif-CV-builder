@@ -24,7 +24,8 @@ class ProfileCompletionHeroCard extends StatefulWidget {
   });
 
   @override
-  State<ProfileCompletionHeroCard> createState() => _ProfileCompletionHeroCardState();
+  State<ProfileCompletionHeroCard> createState() =>
+      _ProfileCompletionHeroCardState();
 }
 
 class _ProfileCompletionHeroCardState extends State<ProfileCompletionHeroCard>
@@ -38,12 +39,12 @@ class _ProfileCompletionHeroCardState extends State<ProfileCompletionHeroCard>
   @override
   void initState() {
     super.initState();
-    
+
     _progressController = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
-    
+
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
@@ -169,19 +170,19 @@ class _ProfileCompletionHeroCardState extends State<ProfileCompletionHeroCard>
         children: [
           // Header section
           _buildHeaderSection(compact: true),
-          
+
           const SizedBox(height: 20),
-          
+
           // Progress section
           _buildProgressSection(compact: true),
-          
+
           const SizedBox(height: 24),
-          
+
           // Illustration
           _buildIllustration(size: 120),
-          
+
           const SizedBox(height: 24),
-          
+
           // Action buttons
           _buildActionButtons(stacked: true),
         ],
@@ -191,7 +192,7 @@ class _ProfileCompletionHeroCardState extends State<ProfileCompletionHeroCard>
 
   Widget _buildDesktopLayout(DeviceType deviceType) {
     final isTablet = deviceType.isTablet;
-    
+
     return Padding(
       padding: EdgeInsets.all(isTablet ? 28 : 32),
       child: Row(
@@ -210,9 +211,9 @@ class _ProfileCompletionHeroCardState extends State<ProfileCompletionHeroCard>
               ],
             ),
           ),
-          
+
           SizedBox(width: isTablet ? 24 : 32),
-          
+
           // Illustration section
           Expanded(
             flex: 2,
@@ -259,9 +260,9 @@ class _ProfileCompletionHeroCardState extends State<ProfileCompletionHeroCard>
             ],
           ),
         ),
-        
+
         SizedBox(height: compact ? 12 : 16),
-        
+
         // Title
         Text(
           _getTitle(),
@@ -275,9 +276,9 @@ class _ProfileCompletionHeroCardState extends State<ProfileCompletionHeroCard>
                   letterSpacing: -0.5,
                 ),
         ),
-        
+
         SizedBox(height: compact ? 8 : 12),
-        
+
         // Subtitle
         Text(
           _getSubtitle(),
@@ -333,14 +334,14 @@ class _ProfileCompletionHeroCardState extends State<ProfileCompletionHeroCard>
             ),
           ],
         ),
-        
+
         SizedBox(height: compact ? 12 : 16),
-        
+
         // Progress bar
         _buildProgressBar(compact: compact),
-        
+
         SizedBox(height: compact ? 8 : 12),
-        
+
         // Progress details
         Text(
           '${widget.completedSections} of ${widget.totalSections} sections completed',
@@ -373,7 +374,7 @@ class _ProfileCompletionHeroCardState extends State<ProfileCompletionHeroCard>
                   borderRadius: BorderRadius.circular(compact ? 4 : 5),
                 ),
               ),
-              
+
               // Progress fill
               FractionallySizedBox(
                 widthFactor: _progressAnimation.value,
@@ -389,7 +390,8 @@ class _ProfileCompletionHeroCardState extends State<ProfileCompletionHeroCard>
                     borderRadius: BorderRadius.circular(compact ? 4 : 5),
                     boxShadow: [
                       BoxShadow(
-                        color: ModernSaaSDashboardTheme.accentPurple.withOpacity(0.3),
+                        color: ModernSaaSDashboardTheme.accentPurple
+                            .withOpacity(0.3),
                         blurRadius: 4,
                         offset: const Offset(0, 1),
                       ),
@@ -397,7 +399,7 @@ class _ProfileCompletionHeroCardState extends State<ProfileCompletionHeroCard>
                   ),
                 ),
               ),
-              
+
               // Shimmer effect
               if (_progressAnimation.value > 0)
                 FractionallySizedBox(
@@ -455,7 +457,7 @@ class _ProfileCompletionHeroCardState extends State<ProfileCompletionHeroCard>
                 ),
               ),
             ),
-            
+
             // Inner circle with icon
             Container(
               width: size * 0.6,
@@ -472,7 +474,8 @@ class _ProfileCompletionHeroCardState extends State<ProfileCompletionHeroCard>
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: ModernSaaSDashboardTheme.accentPurple.withOpacity(0.3),
+                    color:
+                        ModernSaaSDashboardTheme.accentPurple.withOpacity(0.3),
                     blurRadius: 16,
                     offset: const Offset(0, 4),
                   ),
@@ -484,7 +487,7 @@ class _ProfileCompletionHeroCardState extends State<ProfileCompletionHeroCard>
                 color: Colors.white,
               ),
             ),
-            
+
             // Floating elements
             ..._buildFloatingElements(size),
           ],
@@ -505,7 +508,7 @@ class _ProfileCompletionHeroCardState extends State<ProfileCompletionHeroCard>
           size: 16,
         ),
       ),
-      
+
       // Bottom left
       Positioned(
         bottom: size * 0.2,
@@ -516,7 +519,7 @@ class _ProfileCompletionHeroCardState extends State<ProfileCompletionHeroCard>
           size: 14,
         ),
       ),
-      
+
       // Top left
       Positioned(
         top: size * 0.25,
@@ -585,7 +588,7 @@ class _ProfileCompletionHeroCardState extends State<ProfileCompletionHeroCard>
           ),
         ),
       ),
-      
+
       // Secondary button
       Expanded(
         child: OutlinedButton(
@@ -745,9 +748,9 @@ class CompactProfileCompletionCard extends StatelessWidget {
                   size: 20,
                 ),
               ),
-              
+
               const SizedBox(width: 12),
-              
+
               // Content
               Expanded(
                 child: Column(
@@ -766,7 +769,8 @@ class CompactProfileCompletionCard extends StatelessWidget {
                           child: Container(
                             height: 4,
                             decoration: BoxDecoration(
-                              color: ModernSaaSDashboardTheme.accentPurple.withOpacity(0.1),
+                              color: ModernSaaSDashboardTheme.accentPurple
+                                  .withOpacity(0.1),
                               borderRadius: BorderRadius.circular(2),
                             ),
                             child: FractionallySizedBox(
@@ -777,7 +781,8 @@ class CompactProfileCompletionCard extends StatelessWidget {
                                   gradient: LinearGradient(
                                     colors: [
                                       ModernSaaSDashboardTheme.accentPurple,
-                                      ModernSaaSDashboardTheme.accentPurpleLight,
+                                      ModernSaaSDashboardTheme
+                                          .accentPurpleLight,
                                     ],
                                   ),
                                   borderRadius: BorderRadius.circular(2),
@@ -801,7 +806,7 @@ class CompactProfileCompletionCard extends StatelessWidget {
                   ],
                 ),
               ),
-              
+
               // Arrow
               Icon(
                 LucideIcons.chevronRight,

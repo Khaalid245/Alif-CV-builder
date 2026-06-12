@@ -23,8 +23,8 @@ class ModernWelcomeCard extends StatelessWidget {
           width: double.infinity,
           padding: EdgeInsets.all(_getPadding(deviceType)),
           decoration: ModernComponentStyles.card,
-          child: deviceType.isMobile 
-              ? _buildMobileLayout() 
+          child: deviceType.isMobile
+              ? _buildMobileLayout()
               : _buildDesktopLayout(),
         );
       },
@@ -147,7 +147,8 @@ class ModernStatCard extends StatelessWidget {
           color: Colors.transparent,
           child: InkWell(
             onTap: onTap,
-            borderRadius: BorderRadius.circular(ModernSaaSDashboardTheme.radiusLg),
+            borderRadius:
+                BorderRadius.circular(ModernSaaSDashboardTheme.radiusLg),
             child: Container(
               padding: EdgeInsets.all(_getPadding(deviceType)),
               decoration: ModernComponentStyles.card,
@@ -157,10 +158,12 @@ class ModernStatCard extends StatelessWidget {
                   Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(ModernSaaSDashboardTheme.spacingSm),
+                        padding: const EdgeInsets.all(
+                            ModernSaaSDashboardTheme.spacingSm),
                         decoration: BoxDecoration(
                           color: color.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(ModernSaaSDashboardTheme.radiusMd),
+                          borderRadius: BorderRadius.circular(
+                              ModernSaaSDashboardTheme.radiusMd),
                         ),
                         child: Icon(
                           icon,
@@ -376,10 +379,12 @@ class ModernEmptyState extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                padding: const EdgeInsets.all(ModernSaaSDashboardTheme.spacingLg),
+                padding:
+                    const EdgeInsets.all(ModernSaaSDashboardTheme.spacingLg),
                 decoration: BoxDecoration(
                   color: ModernSaaSDashboardTheme.accentPurpleSubtle,
-                  borderRadius: BorderRadius.circular(ModernSaaSDashboardTheme.radius2xl),
+                  borderRadius:
+                      BorderRadius.circular(ModernSaaSDashboardTheme.radius2xl),
                 ),
                 child: Icon(
                   icon,
@@ -411,7 +416,8 @@ class ModernEmptyState extends StatelessWidget {
                       vertical: _getButtonPadding(deviceType),
                     ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(ModernSaaSDashboardTheme.radiusMd),
+                      borderRadius: BorderRadius.circular(
+                          ModernSaaSDashboardTheme.radiusMd),
                     ),
                     elevation: 0,
                   ),

@@ -180,7 +180,7 @@ class WorkflowIntegrationWidget extends HookConsumerWidget {
     CVWorkflowState state,
   ) {
     final transitions = state.availableTransitions.take(3).toList();
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -207,9 +207,10 @@ class WorkflowIntegrationWidget extends HookConsumerWidget {
         Wrap(
           spacing: AppSpacing.sm,
           runSpacing: AppSpacing.sm,
-          children: transitions.map((transition) => 
-            _buildQuickActionChip(context, ref, transition, state.isTransitioning)
-          ).toList(),
+          children: transitions
+              .map((transition) => _buildQuickActionChip(
+                  context, ref, transition, state.isTransitioning))
+              .toList(),
         ),
       ],
     );
@@ -222,10 +223,10 @@ class WorkflowIntegrationWidget extends HookConsumerWidget {
     bool isLoading,
   ) {
     final color = _getTransitionColor(transition);
-    
+
     return ActionChip(
-      onPressed: isLoading 
-          ? null 
+      onPressed: isLoading
+          ? null
           : () => _performQuickTransition(context, ref, transition),
       label: Text(transition.name),
       avatar: Icon(
@@ -249,8 +250,9 @@ class WorkflowIntegrationWidget extends HookConsumerWidget {
   ) {
     return Consumer(
       builder: (context, ref, child) {
-        final historyState = ref.watch(transitionHistoryProvider(state.workflow!.id));
-        
+        final historyState =
+            ref.watch(transitionHistoryProvider(state.workflow!.id));
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -264,7 +266,8 @@ class WorkflowIntegrationWidget extends HookConsumerWidget {
                 ),
                 const Spacer(),
                 TextButton(
-                  onPressed: () => _showFullHistoryDialog(context, ref, state.workflow!.id),
+                  onPressed: () =>
+                      _showFullHistoryDialog(context, ref, state.workflow!.id),
                   child: const Text('View All'),
                   style: TextButton.styleFrom(
                     foregroundColor: AppColors.primary,
@@ -290,12 +293,10 @@ class WorkflowIntegrationWidget extends HookConsumerWidget {
                 ),
               )
             else
-              ...historyState.history.take(3).map((log) => 
-                Padding(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.xs),
-                  child: _buildHistoryItem(log),
-                )
-              ),
+              ...historyState.history.take(3).map((log) => Padding(
+                    padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+                    child: _buildHistoryItem(log),
+                  )),
           ],
         );
       },
@@ -383,9 +384,9 @@ class WorkflowIntegrationWidget extends HookConsumerWidget {
 
     try {
       await ref.read(cvWorkflowProvider(cvId).notifier).performTransition(
-        transition.id,
-      );
-      
+            transition.id,
+          );
+
       if (context.mounted) {
         SnackbarHelper.showSuccess(
           context,
@@ -416,9 +417,9 @@ class WorkflowIntegrationWidget extends HookConsumerWidget {
           Navigator.of(context).pop();
           try {
             await ref.read(cvWorkflowProvider(cvId).notifier).performTransition(
-              transition.id,
-            );
-            
+                  transition.id,
+                );
+
             if (context.mounted) {
               SnackbarHelper.showSuccess(
                 context,
@@ -454,12 +455,14 @@ class WorkflowIntegrationWidget extends HookConsumerWidget {
             onTransition: (transitionId, comment, metadata) async {
               Navigator.of(context).pop();
               try {
-                await ref.read(cvWorkflowProvider(cvId).notifier).performTransition(
-                  transitionId,
-                  comment: comment,
-                  metadata: metadata,
-                );
-                
+                await ref
+                    .read(cvWorkflowProvider(cvId).notifier)
+                    .performTransition(
+                      transitionId,
+                      comment: comment,
+                      metadata: metadata,
+                    );
+
                 if (context.mounted) {
                   SnackbarHelper.showSuccess(
                     context,
@@ -488,7 +491,8 @@ class WorkflowIntegrationWidget extends HookConsumerWidget {
     );
   }
 
-  void _showFullHistoryDialog(BuildContext context, WidgetRef ref, String instanceId) {
+  void _showFullHistoryDialog(
+      BuildContext context, WidgetRef ref, String instanceId) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -498,29 +502,38 @@ class WorkflowIntegrationWidget extends HookConsumerWidget {
           height: 400,
           child: Consumer(
             builder: (context, ref, child) {
-              final historyState = ref.watch(transitionHistoryProvider(instanceId));
-              
+              final historyState =
+                  ref.watch(transitionHistoryProvider(instanceId));
+
               return historyState.isLoading
                   ? const Center(child: AppLoader())
                   : historyState.error != null
                       ? AppErrorState(
                           message: historyState.error!,
-                          onRetry: () => ref.read(transitionHistoryProvider(instanceId).notifier).loadHistory(refresh: true),
+                          onRetry: () => ref
+                              .read(transitionHistoryProvider(instanceId)
+                                  .notifier)
+                              .loadHistory(refresh: true),
                         )
                       : history_widget.TransitionHistoryWidget(
-                          history: historyState.history.map((log) => 
-                            history_widget.TransitionHistoryItem(
-                              id: log.id,
-                              transitionName: '${log.fromState.name} → ${log.toState.name}',
-                              status: log.result,
-                              userName: log.performedBy ?? 'System',
-                              timestamp: log.performedAt,
-                              comment: log.comment,
-                            )
-                          ).toList(),
+                          history: historyState.history
+                              .map(
+                                  (log) => history_widget.TransitionHistoryItem(
+                                        id: log.id,
+                                        transitionName:
+                                            '${log.fromState.name} → ${log.toState.name}',
+                                        status: log.result,
+                                        userName: log.performedBy ?? 'System',
+                                        timestamp: log.performedAt,
+                                        comment: log.comment,
+                                      ))
+                              .toList(),
                           isLoading: historyState.isLoadingMore,
                           hasMore: historyState.hasMore,
-                          onLoadMore: () => ref.read(transitionHistoryProvider(instanceId).notifier).loadMoreHistory(),
+                          onLoadMore: () => ref
+                              .read(transitionHistoryProvider(instanceId)
+                                  .notifier)
+                              .loadMoreHistory(),
                         );
             },
           ),

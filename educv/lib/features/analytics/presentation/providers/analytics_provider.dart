@@ -51,7 +51,7 @@ class AnalyticsProvider extends ChangeNotifier {
 
   Future<void> loadDashboardData() async {
     _setState(AnalyticsState.loading);
-    
+
     try {
       _dashboardData = await _repository.getDashboardData();
       _setState(AnalyticsState.loaded);
@@ -115,11 +115,11 @@ class AnalyticsProvider extends ChangeNotifier {
         snapshotType: snapshotType,
         triggerEvent: triggerEvent,
       );
-      
+
       // Add to local list
       _snapshots.insert(0, snapshot);
       notifyListeners();
-      
+
       return true;
     } catch (e) {
       _errorMessage = e.toString();

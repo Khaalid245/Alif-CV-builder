@@ -17,7 +17,8 @@ class PremiumEnterpriseSidebar extends StatefulWidget {
   });
 
   @override
-  State<PremiumEnterpriseSidebar> createState() => _PremiumEnterpriseSidebarState();
+  State<PremiumEnterpriseSidebar> createState() =>
+      _PremiumEnterpriseSidebarState();
 }
 
 class _PremiumEnterpriseSidebarState extends State<PremiumEnterpriseSidebar>
@@ -41,10 +42,12 @@ class _PremiumEnterpriseSidebarState extends State<PremiumEnterpriseSidebar>
     );
 
     _widthAnimation = Tween<double>(begin: 280, end: 80).animate(
-      CurvedAnimation(parent: _collapseController, curve: PremiumSaaSTheme.curveDefault),
+      CurvedAnimation(
+          parent: _collapseController, curve: PremiumSaaSTheme.curveDefault),
     );
     _fadeAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(
-      CurvedAnimation(parent: _collapseController, curve: PremiumSaaSTheme.curveDefault),
+      CurvedAnimation(
+          parent: _collapseController, curve: PremiumSaaSTheme.curveDefault),
     );
     _glowAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _glowController, curve: Curves.easeInOut),
@@ -114,7 +117,9 @@ class _PremiumEnterpriseSidebarState extends State<PremiumEnterpriseSidebar>
 
   Widget _buildHeader() {
     return Container(
-      padding: EdgeInsets.all(widget.isCollapsed ? PremiumSaaSTheme.space4 : PremiumSaaSTheme.space6),
+      padding: EdgeInsets.all(widget.isCollapsed
+          ? PremiumSaaSTheme.space4
+          : PremiumSaaSTheme.space6),
       child: Row(
         children: [
           Container(
@@ -166,7 +171,9 @@ class _PremiumEnterpriseSidebarState extends State<PremiumEnterpriseSidebar>
               child: Container(
                 padding: EdgeInsets.all(PremiumSaaSTheme.space2),
                 child: Icon(
-                  widget.isCollapsed ? LucideIcons.chevronRight : LucideIcons.chevronLeft,
+                  widget.isCollapsed
+                      ? LucideIcons.chevronRight
+                      : LucideIcons.chevronLeft,
                   color: PremiumSaaSTheme.textInverseSecondary,
                   size: 16,
                 ),
@@ -230,7 +237,7 @@ class _PremiumEnterpriseSidebarState extends State<PremiumEnterpriseSidebar>
       itemBuilder: (context, index) {
         final item = navItems[index];
         final isActive = widget.currentRoute == item.route;
-        
+
         return _buildNavItem(item, isActive);
       },
     );
@@ -251,86 +258,88 @@ class _PremiumEnterpriseSidebarState extends State<PremiumEnterpriseSidebar>
             onTap: () => widget.onNavigate(item.route),
             borderRadius: BorderRadius.circular(PremiumSaaSTheme.radiusLg),
             child: AnimatedContainer(
-            duration: PremiumSaaSTheme.animationFast,
-            padding: EdgeInsets.symmetric(
-              horizontal: PremiumSaaSTheme.space4,
-              vertical: PremiumSaaSTheme.space3,
-            ),
-            decoration: BoxDecoration(
-              gradient: isActive
-                  ? LinearGradient(
-                      colors: [
-                        PremiumSaaSTheme.primaryPurple.withOpacity(0.2),
-                        PremiumSaaSTheme.primaryPurple.withOpacity(0.1),
-                      ],
-                    )
-                  : null,
-              borderRadius: BorderRadius.circular(PremiumSaaSTheme.radiusLg),
-              border: isActive
-                  ? Border.all(
-                      color: PremiumSaaSTheme.primaryPurple.withOpacity(0.3),
-                    )
-                  : null,
-            ),
-            child: Row(
-              children: [
-                Container(
-                  width: 20,
-                  height: 20,
-                  child: Icon(
-                    item.icon,
-                    color: isActive
-                        ? PremiumSaaSTheme.primaryPurpleLight
-                        : PremiumSaaSTheme.textInverseSecondary,
-                    size: 18,
+              duration: PremiumSaaSTheme.animationFast,
+              padding: EdgeInsets.symmetric(
+                horizontal: PremiumSaaSTheme.space4,
+                vertical: PremiumSaaSTheme.space3,
+              ),
+              decoration: BoxDecoration(
+                gradient: isActive
+                    ? LinearGradient(
+                        colors: [
+                          PremiumSaaSTheme.primaryPurple.withOpacity(0.2),
+                          PremiumSaaSTheme.primaryPurple.withOpacity(0.1),
+                        ],
+                      )
+                    : null,
+                borderRadius: BorderRadius.circular(PremiumSaaSTheme.radiusLg),
+                border: isActive
+                    ? Border.all(
+                        color: PremiumSaaSTheme.primaryPurple.withOpacity(0.3),
+                      )
+                    : null,
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 20,
+                    height: 20,
+                    child: Icon(
+                      item.icon,
+                      color: isActive
+                          ? PremiumSaaSTheme.primaryPurpleLight
+                          : PremiumSaaSTheme.textInverseSecondary,
+                      size: 18,
+                    ),
                   ),
-                ),
-                if (!widget.isCollapsed) ...[
-                  SizedBox(width: PremiumSaaSTheme.space3),
-                  FadeTransition(
-                    opacity: _fadeAnimation,
-                    child: Expanded(
-                      child: Text(
-                        item.label,
-                        style: PremiumSaaSTheme.labelMedium.copyWith(
-                          color: isActive
-                              ? PremiumSaaSTheme.textInverse
-                              : PremiumSaaSTheme.textInverseSecondary,
-                          fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
+                  if (!widget.isCollapsed) ...[
+                    SizedBox(width: PremiumSaaSTheme.space3),
+                    FadeTransition(
+                      opacity: _fadeAnimation,
+                      child: Expanded(
+                        child: Text(
+                          item.label,
+                          style: PremiumSaaSTheme.labelMedium.copyWith(
+                            color: isActive
+                                ? PremiumSaaSTheme.textInverse
+                                : PremiumSaaSTheme.textInverseSecondary,
+                            fontWeight:
+                                isActive ? FontWeight.w600 : FontWeight.w500,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  if (item.badge != null) ...[
-                    SizedBox(width: PremiumSaaSTheme.space2),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: PremiumSaaSTheme.space2,
-                        vertical: PremiumSaaSTheme.space1,
-                      ),
-                      decoration: BoxDecoration(
-                        color: item.badge == 'NEW'
-                            ? PremiumSaaSTheme.accentGreen
-                            : PremiumSaaSTheme.primaryPurple.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(PremiumSaaSTheme.radiusSm),
-                      ),
-                      child: Text(
-                        item.badge!,
-                        style: PremiumSaaSTheme.labelSmall.copyWith(
+                    if (item.badge != null) ...[
+                      SizedBox(width: PremiumSaaSTheme.space2),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: PremiumSaaSTheme.space2,
+                          vertical: PremiumSaaSTheme.space1,
+                        ),
+                        decoration: BoxDecoration(
                           color: item.badge == 'NEW'
-                              ? PremiumSaaSTheme.textInverse
-                              : PremiumSaaSTheme.primaryPurpleLight,
-                          fontWeight: FontWeight.w600,
+                              ? PremiumSaaSTheme.accentGreen
+                              : PremiumSaaSTheme.primaryPurple.withOpacity(0.2),
+                          borderRadius:
+                              BorderRadius.circular(PremiumSaaSTheme.radiusSm),
+                        ),
+                        child: Text(
+                          item.badge!,
+                          style: PremiumSaaSTheme.labelSmall.copyWith(
+                            color: item.badge == 'NEW'
+                                ? PremiumSaaSTheme.textInverse
+                                : PremiumSaaSTheme.primaryPurpleLight,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ],
                 ],
-              ],
+              ),
             ),
           ),
         ),
-      ),
       ),
     );
   }
@@ -350,7 +359,8 @@ class _PremiumEnterpriseSidebarState extends State<PremiumEnterpriseSidebar>
                 borderRadius: BorderRadius.circular(PremiumSaaSTheme.radiusLg),
                 boxShadow: [
                   BoxShadow(
-                    color: PremiumSaaSTheme.primaryPurple.withOpacity(0.3 + (_glowAnimation.value * 0.2)),
+                    color: PremiumSaaSTheme.primaryPurple
+                        .withOpacity(0.3 + (_glowAnimation.value * 0.2)),
                     blurRadius: 12 + (_glowAnimation.value * 8),
                     offset: const Offset(0, 4),
                   ),
@@ -387,11 +397,13 @@ class _PremiumEnterpriseSidebarState extends State<PremiumEnterpriseSidebar>
                 ),
                 borderRadius: BorderRadius.circular(PremiumSaaSTheme.radiusXl),
                 border: Border.all(
-                  color: PremiumSaaSTheme.primaryPurple.withOpacity(0.2 + (_glowAnimation.value * 0.1)),
+                  color: PremiumSaaSTheme.primaryPurple
+                      .withOpacity(0.2 + (_glowAnimation.value * 0.1)),
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: PremiumSaaSTheme.primaryPurple.withOpacity(0.1 + (_glowAnimation.value * 0.1)),
+                    color: PremiumSaaSTheme.primaryPurple
+                        .withOpacity(0.1 + (_glowAnimation.value * 0.1)),
                     blurRadius: 16,
                     offset: const Offset(0, 4),
                   ),
@@ -432,7 +444,8 @@ class _PremiumEnterpriseSidebarState extends State<PremiumEnterpriseSidebar>
                     ),
                     decoration: BoxDecoration(
                       gradient: PremiumSaaSTheme.heroGradient,
-                      borderRadius: BorderRadius.circular(PremiumSaaSTheme.radiusMd),
+                      borderRadius:
+                          BorderRadius.circular(PremiumSaaSTheme.radiusMd),
                     ),
                     child: Text(
                       'Try AI Tools',
@@ -496,7 +509,8 @@ class _PremiumEnterpriseSidebarState extends State<PremiumEnterpriseSidebar>
                       ),
                       decoration: BoxDecoration(
                         color: PremiumSaaSTheme.accentGreen.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(PremiumSaaSTheme.radiusXs),
+                        borderRadius:
+                            BorderRadius.circular(PremiumSaaSTheme.radiusXs),
                       ),
                       child: Text(
                         'Premium',

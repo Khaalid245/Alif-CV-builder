@@ -38,7 +38,7 @@ class _ModernSaaSSidebarState extends State<ModernSaaSSidebar>
   late AnimationController _collapseController;
   late Animation<double> _collapseAnimation;
   late AnimationController _hoverController;
-  
+
   int? _hoveredIndex;
 
   @override
@@ -55,7 +55,7 @@ class _ModernSaaSSidebarState extends State<ModernSaaSSidebar>
       parent: _collapseController,
       curve: Curves.easeInOut,
     ));
-    
+
     _hoverController = AnimationController(
       duration: const Duration(milliseconds: 200),
       vsync: this,
@@ -97,7 +97,7 @@ class _ModernSaaSSidebarState extends State<ModernSaaSSidebar>
           animation: _collapseAnimation,
           builder: (context, child) {
             final isCollapsed = _collapseController.value > 0.5;
-            
+
             return Container(
               width: _collapseAnimation.value,
               decoration: const BoxDecoration(
@@ -208,7 +208,6 @@ class _ModernSaaSSidebarState extends State<ModernSaaSSidebar>
               isCollapsed,
             );
           }),
-          
           if (!isCollapsed) ...[
             const SizedBox(height: 24),
             _buildSectionLabel('CV Builder'),
@@ -216,7 +215,6 @@ class _ModernSaaSSidebarState extends State<ModernSaaSSidebar>
             const SizedBox(height: 16),
             _buildSectionDivider(isCollapsed),
           ],
-          
           ..._getCVBuilderItems().asMap().entries.map((entry) {
             final adjustedIndex = entry.key + _getMainNavigationItems().length;
             return _buildSidebarItem(
@@ -225,7 +223,6 @@ class _ModernSaaSSidebarState extends State<ModernSaaSSidebar>
               isCollapsed,
             );
           }),
-          
           if (!isCollapsed) ...[
             const SizedBox(height: 24),
             _buildSectionLabel('Tools'),
@@ -233,10 +230,9 @@ class _ModernSaaSSidebarState extends State<ModernSaaSSidebar>
             const SizedBox(height: 16),
             _buildSectionDivider(isCollapsed),
           ],
-          
           ..._getToolsItems().asMap().entries.map((entry) {
-            final adjustedIndex = entry.key + 
-                _getMainNavigationItems().length + 
+            final adjustedIndex = entry.key +
+                _getMainNavigationItems().length +
                 _getCVBuilderItems().length;
             return _buildSidebarItem(
               entry.value,
@@ -244,7 +240,6 @@ class _ModernSaaSSidebarState extends State<ModernSaaSSidebar>
               isCollapsed,
             );
           }),
-          
           if (!isCollapsed) ...[
             const SizedBox(height: 24),
             _buildSectionLabel('Account'),
@@ -252,10 +247,9 @@ class _ModernSaaSSidebarState extends State<ModernSaaSSidebar>
             const SizedBox(height: 16),
             _buildSectionDivider(isCollapsed),
           ],
-          
           ..._getAccountItems().asMap().entries.map((entry) {
-            final adjustedIndex = entry.key + 
-                _getMainNavigationItems().length + 
+            final adjustedIndex = entry.key +
+                _getMainNavigationItems().length +
                 _getCVBuilderItems().length +
                 _getToolsItems().length;
             return _buildSidebarItem(
@@ -336,7 +330,8 @@ class _ModernSaaSSidebarState extends State<ModernSaaSSidebar>
                   borderRadius: BorderRadius.circular(12),
                   border: isSelected
                       ? Border.all(
-                          color: ModernSaaSDashboardTheme.accentPurple.withOpacity(0.2),
+                          color: ModernSaaSDashboardTheme.accentPurple
+                              .withOpacity(0.2),
                           width: 1,
                         )
                       : null,
@@ -368,9 +363,8 @@ class _ModernSaaSSidebarState extends State<ModernSaaSSidebar>
                                 : isHovered
                                     ? ModernSaaSDashboardTheme.primaryText
                                     : ModernSaaSDashboardTheme.primaryText,
-                            fontWeight: isSelected 
-                                ? FontWeight.w600 
-                                : FontWeight.w500,
+                            fontWeight:
+                                isSelected ? FontWeight.w600 : FontWeight.w500,
                           ),
                         ),
                       ),
@@ -381,7 +375,8 @@ class _ModernSaaSSidebarState extends State<ModernSaaSSidebar>
                             vertical: 2,
                           ),
                           decoration: BoxDecoration(
-                            color: item.badgeColor ?? ModernSaaSDashboardTheme.accentPurple,
+                            color: item.badgeColor ??
+                                ModernSaaSDashboardTheme.accentPurple,
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text(
@@ -439,7 +434,8 @@ class _ModernSaaSSidebarState extends State<ModernSaaSSidebar>
                     borderRadius: BorderRadius.circular(10),
                     boxShadow: [
                       BoxShadow(
-                        color: ModernSaaSDashboardTheme.accentPurple.withOpacity(0.3),
+                        color: ModernSaaSDashboardTheme.accentPurple
+                            .withOpacity(0.3),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
@@ -456,7 +452,8 @@ class _ModernSaaSSidebarState extends State<ModernSaaSSidebar>
                       : Center(
                           child: Text(
                             _getInitials(widget.userName ?? 'User'),
-                            style: ModernSaaSDashboardTheme.labelMedium.copyWith(
+                            style:
+                                ModernSaaSDashboardTheme.labelMedium.copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.w700,
                             ),
@@ -579,8 +576,10 @@ class _ModernSaaSSidebarState extends State<ModernSaaSSidebar>
       return names[0][0].toUpperCase();
     }
 
-    final firstInitial = names.first.isNotEmpty ? names.first[0].toUpperCase() : '';
-    final lastInitial = names.last.isNotEmpty ? names.last[0].toUpperCase() : '';
+    final firstInitial =
+        names.first.isNotEmpty ? names.first[0].toUpperCase() : '';
+    final lastInitial =
+        names.last.isNotEmpty ? names.last[0].toUpperCase() : '';
 
     return '$firstInitial$lastInitial';
   }

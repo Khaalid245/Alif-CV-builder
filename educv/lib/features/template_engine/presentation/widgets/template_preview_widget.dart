@@ -32,7 +32,9 @@ class _TemplatePreviewWidgetState extends State<TemplatePreviewWidget> {
     });
 
     try {
-      await context.read<TemplateEngineProvider>().previewTemplate(widget.template.slug);
+      await context
+          .read<TemplateEngineProvider>()
+          .previewTemplate(widget.template.slug);
     } finally {
       if (mounted) {
         setState(() {
@@ -81,7 +83,7 @@ class _TemplatePreviewWidgetState extends State<TemplatePreviewWidget> {
                   ],
                 ),
               ),
-              
+
               // Preview content
               Expanded(
                 child: _buildPreviewContent(provider),
@@ -248,9 +250,9 @@ class _TemplatePreviewWidgetState extends State<TemplatePreviewWidget> {
             ],
           ),
         ),
-        
+
         const SizedBox(height: 24),
-        
+
         // Summary section
         _buildPreviewSection(
           title: 'Professional Summary',
@@ -263,9 +265,9 @@ class _TemplatePreviewWidgetState extends State<TemplatePreviewWidget> {
             ),
           ),
         ),
-        
+
         const SizedBox(height: 24),
-        
+
         // Experience section
         _buildPreviewSection(
           title: 'Work Experience',
@@ -276,45 +278,49 @@ class _TemplatePreviewWidgetState extends State<TemplatePreviewWidget> {
                 title: 'Senior Software Engineer',
                 company: 'Tech Company Inc.',
                 period: '2020 - Present',
-                description: 'Led development of microservices architecture, improved system performance by 40%.',
+                description:
+                    'Led development of microservices architecture, improved system performance by 40%.',
               ),
               const SizedBox(height: 16),
               _buildExperienceItem(
                 title: 'Software Engineer',
                 company: 'Startup Co.',
                 period: '2018 - 2020',
-                description: 'Developed web applications using React and Node.js, collaborated with cross-functional teams.',
+                description:
+                    'Developed web applications using React and Node.js, collaborated with cross-functional teams.',
               ),
             ],
           ),
         ),
-        
+
         const SizedBox(height: 24),
-        
+
         // Skills section
         _buildPreviewSection(
           title: 'Skills',
           content: Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: [
-              'JavaScript', 'React', 'Node.js', 'Python', 'AWS', 'Docker'
-            ].map((skill) => Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: Colors.blue[50],
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.blue[200]!),
-              ),
-              child: Text(
-                skill,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.blue[700],
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            )).toList(),
+            children:
+                ['JavaScript', 'React', 'Node.js', 'Python', 'AWS', 'Docker']
+                    .map((skill) => Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: Colors.blue[50],
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: Colors.blue[200]!),
+                          ),
+                          child: Text(
+                            skill,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.blue[700],
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ))
+                    .toList(),
           ),
         ),
       ],

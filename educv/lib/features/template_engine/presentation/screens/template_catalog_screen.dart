@@ -52,8 +52,8 @@ class _TemplateCatalogScreenState extends ConsumerState<TemplateCatalogScreen> {
 
     // Watch the user's CV profile to extract their target role
     final profileAsync = ref.watch(cvProfileProvider);
-    final targetRole =
-        profileAsync.whenOrNull(data: (p) => p?.targetRole) as Map<String, dynamic>?;
+    final targetRole = profileAsync.whenOrNull(data: (p) => p?.targetRole)
+        as Map<String, dynamic>?;
     final roleSlug = targetRole?['slug'] as String?;
     final roleName = targetRole?['name'] as String?;
 
@@ -113,7 +113,8 @@ class _TemplateCatalogScreenState extends ConsumerState<TemplateCatalogScreen> {
             else if (templateState.templates.isEmpty)
               _buildEmptyState(templateState, roleName)
             else
-              _buildTemplatesGrid(templateState.templates, templateState, context),
+              _buildTemplatesGrid(
+                  templateState.templates, templateState, context),
           ],
         ),
       ),
@@ -135,7 +136,8 @@ class _TemplateCatalogScreenState extends ConsumerState<TemplateCatalogScreen> {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(LucideIcons.sparkles, size: 16, color: AppColors.primary),
+              const Icon(LucideIcons.sparkles,
+                  size: 16, color: AppColors.primary),
               const SizedBox(width: 6),
               Text(
                 'Enterprise Templates',
@@ -152,16 +154,18 @@ class _TemplateCatalogScreenState extends ConsumerState<TemplateCatalogScreen> {
           roleName != null
               ? 'Templates for $roleName'
               : 'Choose your professional look',
-          style: AppTypography.h1.copyWith(fontSize: 32, color: AppColors.textPrimary),
+          style: AppTypography.h1
+              .copyWith(fontSize: 32, color: AppColors.textPrimary),
         ),
         const SizedBox(height: AppSpacing.sm),
         Text(
           roleName != null
               ? 'Showing templates optimised for $roleName roles. '
-                'Tap "Show all" to browse every template.'
+                  'Tap "Show all" to browse every template.'
               : 'Select from our meticulously designed CV templates. '
-                'Optimized for Applicant Tracking Systems (ATS).',
-          style: AppTypography.bodyLarge.copyWith(color: AppColors.textSecondary),
+                  'Optimized for Applicant Tracking Systems (ATS).',
+          style:
+              AppTypography.bodyLarge.copyWith(color: AppColors.textSecondary),
         ),
       ],
     );
@@ -225,11 +229,12 @@ class _TemplateCatalogScreenState extends ConsumerState<TemplateCatalogScreen> {
                 ),
               ),
               TextButton(
-                onPressed: () => ref.read(templateEngineProvider).clearFilters(),
+                onPressed: () =>
+                    ref.read(templateEngineProvider).clearFilters(),
                 child: Text(
                   'Show all',
-                  style: AppTypography.bodySmall
-                      .copyWith(color: AppColors.primary, fontWeight: FontWeight.w600),
+                  style: AppTypography.bodySmall.copyWith(
+                      color: AppColors.primary, fontWeight: FontWeight.w600),
                 ),
               ),
             ],
@@ -245,10 +250,12 @@ class _TemplateCatalogScreenState extends ConsumerState<TemplateCatalogScreen> {
   Widget _buildActiveFilterRow(dynamic templateState, String? roleName) {
     return Row(
       children: [
-        const Icon(LucideIcons.filter, size: 14, color: AppColors.textSecondary),
+        const Icon(LucideIcons.filter,
+            size: 14, color: AppColors.textSecondary),
         const SizedBox(width: 6),
         Text('Filters: ',
-            style: AppTypography.bodySmall.copyWith(color: AppColors.textSecondary)),
+            style: AppTypography.bodySmall
+                .copyWith(color: AppColors.textSecondary)),
         if (templateState.selectedRole != null)
           _filterChip(
             roleName ?? templateState.selectedRole,
@@ -258,7 +265,8 @@ class _TemplateCatalogScreenState extends ConsumerState<TemplateCatalogScreen> {
         TextButton(
           onPressed: () => ref.read(templateEngineProvider).clearFilters(),
           child: Text('Clear all',
-              style: AppTypography.bodySmall.copyWith(color: AppColors.textSecondary)),
+              style: AppTypography.bodySmall
+                  .copyWith(color: AppColors.textSecondary)),
         ),
       ],
     );
@@ -282,7 +290,8 @@ class _TemplateCatalogScreenState extends ConsumerState<TemplateCatalogScreen> {
           const SizedBox(width: 4),
           GestureDetector(
             onTap: onRemove,
-            child: const Icon(LucideIcons.x, size: 12, color: AppColors.primary),
+            child:
+                const Icon(LucideIcons.x, size: 12, color: AppColors.primary),
           ),
         ],
       ),
@@ -326,10 +335,8 @@ class _TemplateCatalogScreenState extends ConsumerState<TemplateCatalogScreen> {
 
   // ── Templates grid ─────────────────────────────────────────────────────────
 
-  Widget _buildTemplatesGrid(
-      List<TemplateModel> templates,
-      TemplateEngineProvider templateState,
-      BuildContext context) {
+  Widget _buildTemplatesGrid(List<TemplateModel> templates,
+      TemplateEngineProvider templateState, BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
         if (constraints.maxWidth > 800) {
@@ -357,13 +364,13 @@ class _TemplateCatalogScreenState extends ConsumerState<TemplateCatalogScreen> {
     );
   }
 
-  Widget _buildTemplateCard(
-      BuildContext context,
-      TemplateModel template,
+  Widget _buildTemplateCard(BuildContext context, TemplateModel template,
       TemplateEngineProvider templateState) {
     // A card is "recommended" when it's the first result in a role-filtered list
     final isRoleMatch = templateState.selectedRole != null;
-    final isFeatured = template.slug == 'modern' || (isRoleMatch && templateState.templates.firstOrNull?.slug == template.slug);
+    final isFeatured = template.slug == 'modern' ||
+        (isRoleMatch &&
+            templateState.templates.firstOrNull?.slug == template.slug);
     final accentColor = _getAccentColor(template.slug);
 
     return Container(
@@ -397,7 +404,8 @@ class _TemplateCatalogScreenState extends ConsumerState<TemplateCatalogScreen> {
                   : AppColors.background,
               borderRadius:
                   const BorderRadius.vertical(top: Radius.circular(14)),
-              border: const Border(bottom: BorderSide(color: AppColors.divider)),
+              border:
+                  const Border(bottom: BorderSide(color: AppColors.divider)),
             ),
             child: template.previewImageUrl != null
                 ? Image.asset(

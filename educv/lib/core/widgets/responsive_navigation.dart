@@ -104,7 +104,8 @@ class ResponsiveNavigation extends StatelessWidget {
             height: 32,
             decoration: BoxDecoration(
               color: ModernSaaSDashboardTheme.accentPurple,
-              borderRadius: BorderRadius.circular(ModernSaaSDashboardTheme.radiusMd),
+              borderRadius:
+                  BorderRadius.circular(ModernSaaSDashboardTheme.radiusMd),
             ),
             child: const Icon(
               LucideIcons.fileText,
@@ -126,7 +127,7 @@ class ResponsiveNavigation extends StatelessWidget {
 
   Widget _buildSidebarItems() {
     final items = _getSidebarItems();
-    
+
     return ListView.builder(
       padding: const EdgeInsets.symmetric(
         vertical: ModernSaaSDashboardTheme.spacingMd,
@@ -145,7 +146,8 @@ class ResponsiveNavigation extends StatelessWidget {
             color: Colors.transparent,
             child: InkWell(
               onTap: () => onNavigationChanged?.call(item.index),
-              borderRadius: BorderRadius.circular(ModernSaaSDashboardTheme.radiusMd),
+              borderRadius:
+                  BorderRadius.circular(ModernSaaSDashboardTheme.radiusMd),
               child: Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: ModernSaaSDashboardTheme.spacingMd,
@@ -155,7 +157,8 @@ class ResponsiveNavigation extends StatelessWidget {
                   color: isSelected
                       ? ModernSaaSDashboardTheme.accentPurple.withOpacity(0.08)
                       : Colors.transparent,
-                  borderRadius: BorderRadius.circular(ModernSaaSDashboardTheme.radiusMd),
+                  borderRadius:
+                      BorderRadius.circular(ModernSaaSDashboardTheme.radiusMd),
                 ),
                 child: Row(
                   children: [
@@ -173,7 +176,8 @@ class ResponsiveNavigation extends StatelessWidget {
                         color: isSelected
                             ? ModernSaaSDashboardTheme.accentPurple
                             : ModernSaaSDashboardTheme.primaryText,
-                        fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                        fontWeight:
+                            isSelected ? FontWeight.w600 : FontWeight.w500,
                       ),
                     ),
                   ],
@@ -193,7 +197,8 @@ class ResponsiveNavigation extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: onProfileTap,
-          borderRadius: BorderRadius.circular(ModernSaaSDashboardTheme.radiusMd),
+          borderRadius:
+              BorderRadius.circular(ModernSaaSDashboardTheme.radiusMd),
           child: Container(
             padding: const EdgeInsets.all(ModernSaaSDashboardTheme.spacingSm),
             child: Row(
@@ -302,8 +307,10 @@ class ResponsiveNavigation extends StatelessWidget {
       return names[0][0].toUpperCase();
     }
 
-    final firstInitial = names.first.isNotEmpty ? names.first[0].toUpperCase() : '';
-    final lastInitial = names.last.isNotEmpty ? names.last[0].toUpperCase() : '';
+    final firstInitial =
+        names.first.isNotEmpty ? names.first[0].toUpperCase() : '';
+    final lastInitial =
+        names.last.isNotEmpty ? names.last[0].toUpperCase() : '';
 
     return '$firstInitial$lastInitial';
   }
@@ -413,5 +420,6 @@ class ResponsiveAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(ModernSaaSDashboardTheme.appBarHeight);
+  Size get preferredSize =>
+      const Size.fromHeight(ModernSaaSDashboardTheme.appBarHeight);
 }

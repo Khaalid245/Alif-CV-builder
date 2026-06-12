@@ -7,7 +7,8 @@ class ApiConstants {
   static String get baseUrl => AppConfig.baseUrl;
 
   /// Helper to check if running in production
-  static bool get isProductionEnvironment => AppConfig.environment == 'production';
+  static bool get isProductionEnvironment =>
+      AppConfig.environment == 'production';
 
   // ─── Authentication Endpoints ──────────────────────────────────────────────
   static const String register = '/auth/register/';
@@ -33,7 +34,8 @@ class ApiConstants {
   static const String cvCompletion = '/cv/completion/';
   static const String cvGenerate = '/cv/generate/';
   static const String cvHistory = '/cv/history/';
-  static String cvDownload(String generatedCvId) => '/cv/download/$generatedCvId/';
+  static String cvDownload(String generatedCvId) =>
+      '/cv/download/$generatedCvId/';
   static const String announcement = '/cv/announcement/';
 
   // ─── CV Intelligence Endpoints ─────────────────────────────────────────────
@@ -44,7 +46,8 @@ class ApiConstants {
   // ─── Workflow Control System Endpoints ────────────────────────────────────
   static const String workflowInstances = '/workflow/instances/';
   static const String workflowConfigurations = '/workflow/configurations/';
-  static String workflowTransition(String instanceId) => '/workflow/instances/$instanceId/transition/';
+  static String workflowTransition(String instanceId) =>
+      '/workflow/instances/$instanceId/transition/';
   static String workflowCV(String cvId) => '/workflow/cv/$cvId/';
   static const String workflowDashboard = '/workflow/dashboard/';
 
@@ -53,11 +56,14 @@ class ApiConstants {
   static const String adminStatsTemplates = '/administration/stats/templates/';
   static const String adminStatsGrowth = '/administration/stats/growth/';
   static const String adminStudents = '/administration/students/';
-  static const String adminDeletionRequests = '/administration/students/deletion-requests/';
+  static const String adminDeletionRequests =
+      '/administration/students/deletion-requests/';
   static const String adminGeneratedCVs = '/administration/cvs/generated/';
-  static const String adminCVSectionFillRates = '/administration/cvs/stats/popular-sections/';
+  static const String adminCVSectionFillRates =
+      '/administration/cvs/stats/popular-sections/';
   static const String adminAuditLogs = '/administration/audit-logs/';
-  static const String adminAuditLogsSecurity = '/administration/audit-logs/security/';
+  static const String adminAuditLogsSecurity =
+      '/administration/audit-logs/security/';
   static const String adminHealth = '/administration/health/';
   static const String adminHealthDetailed = '/administration/health/detailed/';
 
@@ -65,8 +71,10 @@ class ApiConstants {
   static const String notifications = '/notifications/';
   static const String notificationStats = '/notifications/stats/';
   static const String notificationPreferences = '/notifications/preferences/';
-  static String markNotificationRead(String id) => '/notifications/$id/mark_read/';
-  static const String markMultipleNotificationsRead = '/notifications/mark_multiple_read/';
+  static String markNotificationRead(String id) =>
+      '/notifications/$id/mark_read/';
+  static const String markMultipleNotificationsRead =
+      '/notifications/mark_multiple_read/';
 
   // ─── Analytics Endpoints ───────────────────────────────────────────────────
   static const String analyticsDashboard = '/analytics/dashboard/';
@@ -74,21 +82,27 @@ class ApiConstants {
   static const String createSnapshot = '/analytics/snapshots/create/';
   static const String trendAnalysis = '/analytics/trend-analysis/';
   static const String benchmarking = '/analytics/benchmarking/';
-  static const String completionStatistics = '/analytics/completion-statistics/';
+  static const String completionStatistics =
+      '/analytics/completion-statistics/';
 
   // ─── Template Engine Endpoints ────────────────────────────────────────────
   static const String templateIndustries = '/templates/industries/';
   static const String templateRoles = '/templates/roles/';
   static const String templateCategories = '/templates/categories/';
   static const String templates = '/templates/templates/';
-  static const String templateRecommendations = '/templates/templates/recommendations/';
+  static const String templateRecommendations =
+      '/templates/templates/recommendations/';
   static const String templatePopular = '/templates/templates/popular/';
   static const String templatePreferences = '/templates/preferences/';
   static String templateDetail(String slug) => '/templates/templates/$slug/';
-  static String templatePreview(String slug) => '/templates/templates/$slug/preview/';
-  static String templateRender(String slug) => '/templates/templates/$slug/render/';
-  static String templateFavorite(String slug) => '/templates/templates/$slug/favorite/';
-  static String templateUnfavorite(String slug) => '/templates/templates/$slug/unfavorite/';
+  static String templatePreview(String slug) =>
+      '/templates/templates/$slug/preview/';
+  static String templateRender(String slug) =>
+      '/templates/templates/$slug/render/';
+  static String templateFavorite(String slug) =>
+      '/templates/templates/$slug/favorite/';
+  static String templateUnfavorite(String slug) =>
+      '/templates/templates/$slug/unfavorite/';
 
   // ─── Configuration Validation ──────────────────────────────────────────────
   /// Validates that all required configuration is properly set
@@ -98,11 +112,11 @@ class ApiConstants {
       if (url.isEmpty) {
         throw Exception('API base URL is not configured');
       }
-      
+
       if (isProductionEnvironment && url.contains('localhost')) {
         throw Exception('Production environment cannot use localhost URLs');
       }
-      
+
       print('API Configuration validated successfully');
       print('Base URL: $url');
       print('Environment: ${AppConfig.environment}');

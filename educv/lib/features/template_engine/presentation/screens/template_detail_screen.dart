@@ -33,9 +33,11 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<TemplateEngineProvider>().selectTemplate(widget.templateSlug);
+      context
+          .read<TemplateEngineProvider>()
+          .selectTemplate(widget.templateSlug);
     });
   }
 
@@ -88,7 +90,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen>
             children: [
               // Template header
               _buildTemplateHeader(template, provider),
-              
+
               // Tab bar
               Container(
                 color: Colors.white,
@@ -112,7 +114,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen>
                   ],
                 ),
               ),
-              
+
               // Content
               Expanded(
                 child: TabBarView(
@@ -120,16 +122,16 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen>
                   children: [
                     // Preview tab
                     TemplatePreviewWidget(template: template),
-                    
+
                     // Features tab
                     TemplateFeaturesWidget(template: template),
-                    
+
                     // Customize tab
                     TemplateBrandingWidget(template: template),
                   ],
                 ),
               ),
-              
+
               // Bottom action bar
               _buildBottomActionBar(template, provider),
             ],
@@ -139,7 +141,8 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen>
     );
   }
 
-  Widget _buildTemplateHeader(TemplateModel template, TemplateEngineProvider provider) {
+  Widget _buildTemplateHeader(
+      TemplateModel template, TemplateEngineProvider provider) {
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.all(16),
@@ -187,7 +190,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen>
             ],
           ),
           const SizedBox(height: 16),
-          
+
           // Template metadata
           Wrap(
             spacing: 12,
@@ -216,7 +219,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen>
               ),
             ],
           ),
-          
+
           // Industries and roles
           if (template.industries.isNotEmpty || template.roles.isNotEmpty) ...[
             const SizedBox(height: 12),
@@ -274,7 +277,8 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen>
     );
   }
 
-  Widget _buildBottomActionBar(TemplateModel template, TemplateEngineProvider provider) {
+  Widget _buildBottomActionBar(
+      TemplateModel template, TemplateEngineProvider provider) {
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.all(16),
@@ -293,12 +297,14 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen>
               ),
             ),
             const SizedBox(width: 12),
-            
+
             // Apply template button
             Expanded(
               flex: 2,
               child: ElevatedButton.icon(
-                onPressed: _isApplying ? null : () => _applyTemplate(template, provider),
+                onPressed: _isApplying
+                    ? null
+                    : () => _applyTemplate(template, provider),
                 icon: _isApplying
                     ? const SizedBox(
                         width: 18,
@@ -318,13 +324,14 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen>
     );
   }
 
-  Future<void> _previewTemplate(TemplateModel template, TemplateEngineProvider provider) async {
+  Future<void> _previewTemplate(
+      TemplateModel template, TemplateEngineProvider provider) async {
     // Add to recent templates
     provider.addToRecent(template);
-    
+
     // Generate preview
     await provider.previewTemplate(template.slug);
-    
+
     if (provider.templatePreview != null) {
       // Show preview in dialog or navigate to preview screen
       _showPreviewDialog(provider.templatePreview!);
@@ -360,7 +367,8 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen>
               const Divider(),
               Expanded(
                 child: SingleChildScrollView(
-                  child: Text(previewHtml), // In a real app, use WebView or HTML renderer
+                  child: Text(
+                      previewHtml), // In a real app, use WebView or HTML renderer
                 ),
               ),
             ],
@@ -370,7 +378,8 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen>
     );
   }
 
-  Future<void> _applyTemplate(TemplateModel template, TemplateEngineProvider provider) async {
+  Future<void> _applyTemplate(
+      TemplateModel template, TemplateEngineProvider provider) async {
     setState(() {
       _isApplying = true;
     });
@@ -378,10 +387,10 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen>
     try {
       // Add to recent templates
       provider.addToRecent(template);
-      
+
       // Render template with user's CV data
       final result = await provider.renderTemplate(template.slug);
-      
+
       if (result != null) {
         // Navigate to CV preview with the rendered template
         if (mounted) {

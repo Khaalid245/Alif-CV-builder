@@ -44,7 +44,7 @@ class LocalAuthNotifier extends StateNotifier<LocalAuthState> {
       final isSupported = await _auth.isDeviceSupported();
       final canCheckBiometrics = await _auth.canCheckBiometrics;
       state = state.copyWith(isSupported: isSupported || canCheckBiometrics);
-      
+
       // If hardware isn't supported, just let them through
       if (!state.isSupported) {
         state = state.copyWith(isVerified: true);
@@ -85,7 +85,7 @@ class LocalAuthNotifier extends StateNotifier<LocalAuthState> {
         isVerified: didAuthenticate,
         isAuthenticating: false,
       );
-      
+
       return didAuthenticate;
     } on PlatformException catch (e) {
       state = state.copyWith(
@@ -95,12 +95,13 @@ class LocalAuthNotifier extends StateNotifier<LocalAuthState> {
       return false;
     }
   }
-  
+
   void reset() {
     state = state.copyWith(isVerified: !state.isSupported);
   }
 }
 
-final localAuthProvider = StateNotifierProvider<LocalAuthNotifier, LocalAuthState>((ref) {
+final localAuthProvider =
+    StateNotifierProvider<LocalAuthNotifier, LocalAuthState>((ref) {
   return LocalAuthNotifier();
 });

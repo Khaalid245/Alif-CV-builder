@@ -28,7 +28,7 @@ class CompletionStatisticsCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: AppSpacing.lg),
-            
+
             // Overview metrics
             Row(
               children: [
@@ -51,9 +51,9 @@ class CompletionStatisticsCard extends StatelessWidget {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: AppSpacing.md),
-            
+
             Row(
               children: [
                 Expanded(
@@ -75,9 +75,9 @@ class CompletionStatisticsCard extends StatelessWidget {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: AppSpacing.lg),
-            
+
             // Score distribution chart
             if (statistics.scoreDistribution.isNotEmpty) ...[
               Text(
@@ -87,7 +87,6 @@ class CompletionStatisticsCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.md),
-              
               SizedBox(
                 height: 200,
                 child: BarChart(
@@ -167,10 +166,9 @@ class CompletionStatisticsCard extends StatelessWidget {
                   ),
                 ),
               ),
-              
               const SizedBox(height: AppSpacing.lg),
             ],
-            
+
             // Section averages
             if (statistics.sectionAverages.isNotEmpty) ...[
               Text(
@@ -180,7 +178,6 @@ class CompletionStatisticsCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.md),
-              
               ...statistics.sectionAverages.entries.map((entry) {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: AppSpacing.sm),
@@ -194,7 +191,8 @@ class CompletionStatisticsCard extends StatelessWidget {
     );
   }
 
-  Widget _buildStatCard(String title, String value, IconData icon, Color color) {
+  Widget _buildStatCard(
+      String title, String value, IconData icon, Color color) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
@@ -228,7 +226,7 @@ class CompletionStatisticsCard extends StatelessWidget {
   Widget _buildSectionBar(String section, double average) {
     final percentage = (average / 100).clamp(0.0, 1.0);
     final color = _getSectionColor(average);
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -268,7 +266,7 @@ class CompletionStatisticsCard extends StatelessWidget {
       final index = entry.key;
       final range = entry.value;
       final count = statistics.scoreDistribution[range] ?? 0;
-      
+
       return BarChartGroupData(
         x: index,
         barRods: [
@@ -318,7 +316,6 @@ class CompletionStatisticsCard extends StatelessWidget {
 
   int _getMaxScoreCount() {
     if (statistics.scoreDistribution.isEmpty) return 10;
-    return statistics.scoreDistribution.values
-        .reduce((a, b) => a > b ? a : b);
+    return statistics.scoreDistribution.values.reduce((a, b) => a > b ? a : b);
   }
 }

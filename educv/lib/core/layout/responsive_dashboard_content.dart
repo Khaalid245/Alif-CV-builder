@@ -51,12 +51,12 @@ class ResponsiveDashboardContent extends StatelessWidget {
     final rows = <Widget>[];
     for (int i = 0; i < children.length; i += 2) {
       final rowChildren = <Widget>[];
-      
+
       // First item
       rowChildren.add(
         Expanded(child: children[i]),
       );
-      
+
       // Second item if exists
       if (i + 1 < children.length) {
         rowChildren.add(const SizedBox(width: 24));
@@ -64,7 +64,7 @@ class ResponsiveDashboardContent extends StatelessWidget {
           Expanded(child: children[i + 1]),
         );
       }
-      
+
       rows.add(
         Padding(
           padding: const EdgeInsets.only(bottom: 24),
@@ -75,7 +75,7 @@ class ResponsiveDashboardContent extends StatelessWidget {
         ),
       );
     }
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: rows,
@@ -89,7 +89,8 @@ class ResponsiveDashboardContent extends StatelessWidget {
       runSpacing: 24,
       children: children.map((child) {
         return SizedBox(
-          width: (MediaQuery.of(context).size.width - 280 - 64 - 48) / 2, // Sidebar width - padding - spacing
+          width: (MediaQuery.of(context).size.width - 280 - 64 - 48) /
+              2, // Sidebar width - padding - spacing
           child: child,
         );
       }).toList(),
@@ -173,7 +174,7 @@ class DashboardGrid extends StatelessWidget {
     return ResponsiveBuilder(
       builder: (context, deviceType) {
         final columns = crossAxisCount ?? deviceType.gridColumns;
-        
+
         return GridView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
@@ -241,7 +242,7 @@ class ResponsiveRow extends StatelessWidget {
             }).toList(),
           );
         }
-        
+
         return Row(
           mainAxisAlignment: mainAxisAlignment,
           crossAxisAlignment: crossAxisAlignment,

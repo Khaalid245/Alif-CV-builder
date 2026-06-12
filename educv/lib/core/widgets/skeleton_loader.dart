@@ -51,7 +51,8 @@ class _SkeletonLoaderState extends State<SkeletonLoader>
           width: widget.width,
           height: widget.height,
           decoration: BoxDecoration(
-            borderRadius: widget.borderRadius ?? BorderRadius.circular(AppSpacing.radiusSm),
+            borderRadius: widget.borderRadius ??
+                BorderRadius.circular(AppSpacing.radiusSm),
             gradient: LinearGradient(
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,

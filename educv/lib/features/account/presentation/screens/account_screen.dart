@@ -58,7 +58,8 @@ class AccountScreen extends ConsumerWidget {
                   const SizedBox(height: 12),
                   Text(
                     user?.fullName ?? 'User',
-                    style: AppTypography.h2.copyWith(color: const Color(0xFF0A0A0A)),
+                    style: AppTypography.h2
+                        .copyWith(color: const Color(0xFF0A0A0A)),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 4),
@@ -73,9 +74,9 @@ class AccountScreen extends ConsumerWidget {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Security Section
             Text(
               'SECURITY',
@@ -87,7 +88,7 @@ class AccountScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 8),
-            
+
             SectionCard(
               padding: EdgeInsets.zero,
               child: Column(
@@ -103,7 +104,8 @@ class AccountScreen extends ConsumerWidget {
                     iconColor: const Color(0xFF2E7D32),
                     title: 'Email verified',
                     trailing: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: const Color(0xFFF0FFF4),
                         borderRadius: BorderRadius.circular(20),
@@ -128,9 +130,9 @@ class AccountScreen extends ConsumerWidget {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Privacy & Legal Section
             Text(
               'PRIVACY & LEGAL',
@@ -142,7 +144,7 @@ class AccountScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 8),
-            
+
             SectionCard(
               padding: EdgeInsets.zero,
               child: Column(
@@ -176,9 +178,9 @@ class AccountScreen extends ConsumerWidget {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 32),
-            
+
             // Sign Out Button
             Container(
               width: double.infinity,
@@ -213,15 +215,17 @@ class AccountScreen extends ConsumerWidget {
 
   String _getInitials(String fullName) {
     if (fullName.isEmpty) return 'U';
-    
+
     final names = fullName.trim().split(' ');
     if (names.length == 1) {
       return names[0][0].toUpperCase();
     }
-    
-    final firstInitial = names.first.isNotEmpty ? names.first[0].toUpperCase() : '';
-    final lastInitial = names.last.isNotEmpty ? names.last[0].toUpperCase() : '';
-    
+
+    final firstInitial =
+        names.first.isNotEmpty ? names.first[0].toUpperCase() : '';
+    final lastInitial =
+        names.last.isNotEmpty ? names.last[0].toUpperCase() : '';
+
     return '$firstInitial$lastInitial';
   }
 
@@ -245,13 +249,15 @@ class AccountScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             ListTile(
-              leading: const Icon(LucideIcons.smartphone, color: Color(0xFF2E7D32)),
+              leading:
+                  const Icon(LucideIcons.smartphone, color: Color(0xFF2E7D32)),
               title: const Text('Current device'),
               subtitle: const Text('Active now'),
               contentPadding: EdgeInsets.zero,
             ),
             ListTile(
-              leading: const Icon(LucideIcons.monitor, color: Color(0xFF6B7280)),
+              leading:
+                  const Icon(LucideIcons.monitor, color: Color(0xFF6B7280)),
               title: const Text('Other device'),
               subtitle: const Text('Last seen 2 days ago'),
               contentPadding: EdgeInsets.zero,

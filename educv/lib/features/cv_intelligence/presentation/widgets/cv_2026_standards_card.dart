@@ -40,13 +40,15 @@ class CV2026StandardsCard extends StatelessWidget {
                     color: AppColors.primary.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(LucideIcons.graduationCap, color: AppColors.primary),
+                  child: const Icon(LucideIcons.graduationCap,
+                      color: AppColors.primary),
                 ),
                 const SizedBox(width: AppSpacing.md),
                 Expanded(
                   child: Text(
                     'The 2026 CV Standard',
-                    style: AppTypography.headingSmall.copyWith(fontWeight: FontWeight.bold),
+                    style: AppTypography.headingSmall
+                        .copyWith(fontWeight: FontWeight.bold),
                   ),
                 ),
               ],
@@ -54,10 +56,10 @@ class CV2026StandardsCard extends StatelessWidget {
             const SizedBox(height: AppSpacing.md),
             Text(
               'Designed using modern career development principles, this platform helps you create highly competitive resumes that effectively communicate your impact.',
-              style: AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary),
+              style: AppTypography.bodyMedium
+                  .copyWith(color: AppColors.textSecondary),
             ),
             const SizedBox(height: AppSpacing.lg),
-            
             _buildStandardItem(
               LucideIcons.fileSearch,
               'ATS Optimization',
@@ -93,12 +95,14 @@ class CV2026StandardsCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: AppTypography.bodyMedium.copyWith(fontWeight: FontWeight.bold),
+                  style: AppTypography.bodyMedium
+                      .copyWith(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   description,
-                  style: AppTypography.bodySmall.copyWith(color: AppColors.textSecondary),
+                  style: AppTypography.bodySmall
+                      .copyWith(color: AppColors.textSecondary),
                 ),
               ],
             ),

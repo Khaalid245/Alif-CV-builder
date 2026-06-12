@@ -6,25 +6,25 @@ import 'package:flutter/services.dart';
 class MemoryOptimizedImageCache {
   static const int _maxCacheSize = 100; // Maximum number of cached images
   static const int _maxMemoryUsage = 50 * 1024 * 1024; // 50MB max memory usage
-  
+
   static final Map<String, ImageProvider> _cache = {};
   static int _currentMemoryUsage = 0;
-  
+
   static ImageProvider? getCachedImage(String key) {
     return _cache[key];
   }
-  
+
   static void cacheImage(String key, ImageProvider image, int estimatedSize) {
     // Remove old images if cache is full
-    if (_cache.length >= _maxCacheSize || 
+    if (_cache.length >= _maxCacheSize ||
         _currentMemoryUsage + estimatedSize > _maxMemoryUsage) {
       _evictOldestImages();
     }
-    
+
     _cache[key] = image;
     _currentMemoryUsage += estimatedSize;
   }
-  
+
   static void _evictOldestImages() {
     // Remove 25% of cached images (FIFO)
     final keysToRemove = _cache.keys.take(_cache.length ~/ 4).toList();
@@ -34,7 +34,7 @@ class MemoryOptimizedImageCache {
     // Estimate memory reduction (rough calculation)
     _currentMemoryUsage = (_currentMemoryUsage * 0.75).round();
   }
-  
+
   static void clearCache() {
     _cache.clear();
     _currentMemoryUsage = 0;
@@ -64,7 +64,6 @@ class LifecycleAwareWidget extends StatefulWidget {
 
 class _LifecycleAwareWidgetState extends State<LifecycleAwareWidget>
     with WidgetsBindingObserver {
-  
   @override
   void initState() {
     super.initState();
@@ -127,15 +126,15 @@ class PerformanceUtils {
   static const Duration _frameThreshold = Duration(milliseconds: 16); // 60fps
   static int _slowFrameCount = 0;
   static int _totalFrameCount = 0;
-  
+
   static void startFrameMonitoring() {
     WidgetsBinding.instance.addTimingsCallback(_onFrameTiming);
   }
-  
+
   static void stopFrameMonitoring() {
     WidgetsBinding.instance.removeTimingsCallback(_onFrameTiming);
   }
-  
+
   static void _onFrameTiming(List<FrameTiming> timings) {
     for (final timing in timings) {
       _totalFrameCount++;
@@ -144,26 +143,26 @@ class PerformanceUtils {
       }
     }
   }
-  
+
   static double get frameDropPercentage {
     if (_totalFrameCount == 0) return 0.0;
     return (_slowFrameCount / _totalFrameCount) * 100;
   }
-  
+
   static void resetFrameStats() {
     _slowFrameCount = 0;
     _totalFrameCount = 0;
   }
-  
+
   // Memory optimization helpers
   static void optimizeMemory() {
     // Clear image cache if memory usage is high
     MemoryOptimizedImageCache.clearCache();
-    
+
     // Force garbage collection (use sparingly)
     SystemChannels.platform.invokeMethod('SystemNavigator.pop');
   }
-  
+
   // Widget rebuild optimization
   static bool shouldRebuild<T>(T oldValue, T newValue) {
     return oldValue != newValue;
@@ -175,22 +174,22 @@ class OptimizedScrollController extends ScrollController {
   final Duration _debounceDelay;
   Timer? _debounceTimer;
   VoidCallback? _onScrollEnd;
-  
+
   OptimizedScrollController({
     Duration debounceDelay = const Duration(milliseconds: 100),
     VoidCallback? onScrollEnd,
-  }) : _debounceDelay = debounceDelay,
-       _onScrollEnd = onScrollEnd {
+  })  : _debounceDelay = debounceDelay,
+        _onScrollEnd = onScrollEnd {
     addListener(_onScroll);
   }
-  
+
   void _onScroll() {
     _debounceTimer?.cancel();
     _debounceTimer = Timer(_debounceDelay, () {
       _onScrollEnd?.call();
     });
   }
-  
+
   @override
   void dispose() {
     _debounceTimer?.cancel();
@@ -203,56 +202,58 @@ mixin PerformanceOptimizedState<T extends StatefulWidget> on State<T> {
   bool _isMounted = false;
   final List<Timer> _timers = [];
   final List<DebouncedCallback> _debouncedCallbacks = [];
-  
+
   @override
   void initState() {
     super.initState();
     _isMounted = true;
   }
-  
+
   @override
   void dispose() {
     _isMounted = false;
-    
+
     // Clean up timers
     for (final timer in _timers) {
       timer.cancel();
     }
     _timers.clear();
-    
+
     // Clean up debounced callbacks
     for (final callback in _debouncedCallbacks) {
       callback.dispose();
     }
     _debouncedCallbacks.clear();
-    
+
     super.dispose();
   }
-  
+
   // Safe setState that checks if widget is still mounted
   void safeSetState(VoidCallback fn) {
     if (_isMounted && mounted) {
       setState(fn);
     }
   }
-  
+
   // Add timer with automatic cleanup
   Timer addTimer(Duration duration, VoidCallback callback) {
     final timer = Timer(duration, callback);
     _timers.add(timer);
     return timer;
   }
-  
+
   // Add periodic timer with automatic cleanup
   Timer addPeriodicTimer(Duration duration, void Function(Timer) callback) {
     final timer = Timer.periodic(duration, callback);
     _timers.add(timer);
     return timer;
   }
-  
+
   // Add debounced callback with automatic cleanup
-  DebouncedCallback addDebouncedCallback(Duration delay, VoidCallback callback) {
-    final debouncedCallback = DebouncedCallback(delay: delay, callback: callback);
+  DebouncedCallback addDebouncedCallback(
+      Duration delay, VoidCallback callback) {
+    final debouncedCallback =
+        DebouncedCallback(delay: delay, callback: callback);
     _debouncedCallbacks.add(debouncedCallback);
     return debouncedCallback;
   }
@@ -262,7 +263,8 @@ mixin PerformanceOptimizedState<T extends StatefulWidget> on State<T> {
 class OptimizedFutureBuilder<T> extends StatefulWidget {
   final Future<T>? future;
   final T? initialData;
-  final Widget Function(BuildContext context, AsyncSnapshot<T> snapshot) builder;
+  final Widget Function(BuildContext context, AsyncSnapshot<T> snapshot)
+      builder;
 
   const OptimizedFutureBuilder({
     super.key,
@@ -272,7 +274,8 @@ class OptimizedFutureBuilder<T> extends StatefulWidget {
   });
 
   @override
-  State<OptimizedFutureBuilder<T>> createState() => _OptimizedFutureBuilderState<T>();
+  State<OptimizedFutureBuilder<T>> createState() =>
+      _OptimizedFutureBuilderState<T>();
 }
 
 class _OptimizedFutureBuilderState<T> extends State<OptimizedFutureBuilder<T>> {
@@ -298,12 +301,13 @@ class _OptimizedFutureBuilderState<T> extends State<OptimizedFutureBuilder<T>> {
 
   void _subscribeTo(Future<T>? future) {
     if (_activeFuture == future) return;
-    
+
     _activeFuture = future;
     if (future == null) {
       _snapshot = widget.initialData == null
           ? const AsyncSnapshot.nothing()
-          : AsyncSnapshot.withData(ConnectionState.none, widget.initialData as T);
+          : AsyncSnapshot.withData(
+              ConnectionState.none, widget.initialData as T);
     } else {
       _snapshot = _snapshot.inState(ConnectionState.waiting);
       future.then<void>((T data) {
@@ -315,7 +319,8 @@ class _OptimizedFutureBuilderState<T> extends State<OptimizedFutureBuilder<T>> {
       }, onError: (Object error, StackTrace stackTrace) {
         if (_activeFuture == future && mounted) {
           setState(() {
-            _snapshot = AsyncSnapshot.withError(ConnectionState.done, error, stackTrace);
+            _snapshot = AsyncSnapshot.withError(
+                ConnectionState.done, error, stackTrace);
           });
         }
       });

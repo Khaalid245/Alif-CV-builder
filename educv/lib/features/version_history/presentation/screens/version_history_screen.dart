@@ -19,7 +19,8 @@ class VersionHistoryScreen extends ConsumerStatefulWidget {
   const VersionHistoryScreen({super.key});
 
   @override
-  ConsumerState<VersionHistoryScreen> createState() => _VersionHistoryScreenState();
+  ConsumerState<VersionHistoryScreen> createState() =>
+      _VersionHistoryScreenState();
 }
 
 class _VersionHistoryScreenState extends ConsumerState<VersionHistoryScreen> {
@@ -42,7 +43,7 @@ class _VersionHistoryScreenState extends ConsumerState<VersionHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     final provider = ref.watch(versionHistoryNotifierProvider);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Version History'),
@@ -68,13 +69,13 @@ class _VersionHistoryScreenState extends ConsumerState<VersionHistoryScreen> {
     switch (provider.state) {
       case VersionHistoryState.loading:
         return const AppLoader();
-      
+
       case VersionHistoryState.error:
         return AppErrorState(
           message: provider.errorMessage ?? 'Failed to load version history',
           onRetry: _loadData,
         );
-      
+
       case VersionHistoryState.loaded:
         if (provider.versions.isEmpty) {
           return const EmptyState(
@@ -84,7 +85,7 @@ class _VersionHistoryScreenState extends ConsumerState<VersionHistoryScreen> {
           );
         }
         return _buildVersionList(provider);
-      
+
       case VersionHistoryState.initial:
         return const AppLoader();
     }
@@ -129,8 +130,9 @@ class _VersionHistoryScreenState extends ConsumerState<VersionHistoryScreen> {
             itemCount: provider.versions.length,
             itemBuilder: (context, index) {
               final version = provider.versions[index];
-              final isSelected = _selectedVersions.contains(version.versionNumber);
-              
+              final isSelected =
+                  _selectedVersions.contains(version.versionNumber);
+
               return VersionItemCard(
                 version: version,
                 isSelected: isSelected,
@@ -156,7 +158,7 @@ class _VersionHistoryScreenState extends ConsumerState<VersionHistoryScreen> {
 
   void _compareVersions(VersionHistoryProvider provider) {
     if (_selectedVersions.length != 2) return;
-    
+
     final versions = _selectedVersions.toList()..sort();
     provider.compareVersions(versions[0], versions[1]).then((_) {
       if (provider.comparison != null) {
@@ -170,12 +172,14 @@ class _VersionHistoryScreenState extends ConsumerState<VersionHistoryScreen> {
     });
   }
 
-  void _showRestoreDialog(VersionHistoryProvider provider, CVVersionModel version) {
+  void _showRestoreDialog(
+      VersionHistoryProvider provider, CVVersionModel version) {
     showDialog(
       context: context,
       builder: (context) => ConfirmationDialog(
         title: 'Restore Version',
-        message: 'Are you sure you want to restore your CV to version ${version.versionNumber}? This will create a new version with the restored data.',
+        message:
+            'Are you sure you want to restore your CV to version ${version.versionNumber}? This will create a new version with the restored data.',
         confirmText: 'Restore',
         onConfirm: () async {
           Navigator.of(context).pop();
@@ -183,14 +187,16 @@ class _VersionHistoryScreenState extends ConsumerState<VersionHistoryScreen> {
           if (success && mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('CV restored to version ${version.versionNumber}'),
+                content:
+                    Text('CV restored to version ${version.versionNumber}'),
                 backgroundColor: AppColors.success,
               ),
             );
           } else if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(provider.errorMessage ?? 'Failed to restore version'),
+                content:
+                    Text(provider.errorMessage ?? 'Failed to restore version'),
                 backgroundColor: AppColors.error,
               ),
             );

@@ -34,15 +34,16 @@ void main() {
         // Arrange
         final mockWorkflow = _createMockWorkflow();
         final mockTransitions = [_createMockTransition()];
-        
+
         when(mockRepository.getCVWorkflow('test-cv-id'))
             .thenAnswer((_) async => mockWorkflow);
         when(mockRepository.getAvailableTransitions(mockWorkflow.id))
             .thenAnswer((_) async => mockTransitions);
 
         // Act
-        final notifier = container.read(cvWorkflowProvider('test-cv-id').notifier);
-        
+        final notifier =
+            container.read(cvWorkflowProvider('test-cv-id').notifier);
+
         // Wait for initial load
         await Future.delayed(Duration.zero);
 
@@ -60,8 +61,9 @@ void main() {
             .thenAnswer((_) async => null);
 
         // Act
-        final notifier = container.read(cvWorkflowProvider('test-cv-id').notifier);
-        
+        final notifier =
+            container.read(cvWorkflowProvider('test-cv-id').notifier);
+
         // Wait for initial load
         await Future.delayed(Duration.zero);
 
@@ -79,8 +81,9 @@ void main() {
             .thenThrow(AppException(message: 'Network error', statusCode: 500));
 
         // Act
-        final notifier = container.read(cvWorkflowProvider('test-cv-id').notifier);
-        
+        final notifier =
+            container.read(cvWorkflowProvider('test-cv-id').notifier);
+
         // Wait for initial load
         await Future.delayed(Duration.zero);
 
@@ -96,9 +99,10 @@ void main() {
         final mockWorkflow = _createMockWorkflow();
         final mockTransitions = [_createMockTransition()];
         final updatedWorkflow = mockWorkflow.copyWith(
-          currentState: _createMockState('review', 'Under Review', 'intermediate', 1),
+          currentState:
+              _createMockState('review', 'Under Review', 'intermediate', 1),
         );
-        
+
         when(mockRepository.getCVWorkflow('test-cv-id'))
             .thenAnswer((_) async => mockWorkflow);
         when(mockRepository.getAvailableTransitions(mockWorkflow.id))
@@ -109,12 +113,14 @@ void main() {
             .thenAnswer((_) async => []);
 
         // Act
-        final notifier = container.read(cvWorkflowProvider('test-cv-id').notifier);
-        
+        final notifier =
+            container.read(cvWorkflowProvider('test-cv-id').notifier);
+
         // Wait for initial load
         await Future.delayed(Duration.zero);
-        
-        await notifier.performTransition('transition-1', comment: 'Test comment');
+
+        await notifier.performTransition('transition-1',
+            comment: 'Test comment');
 
         // Assert
         final state = container.read(cvWorkflowProvider('test-cv-id'));
@@ -127,20 +133,21 @@ void main() {
         // Arrange
         final mockWorkflow = _createMockWorkflow();
         final mockTransitions = [_createMockTransition()];
-        
+
         when(mockRepository.getCVWorkflow('test-cv-id'))
             .thenAnswer((_) async => mockWorkflow);
         when(mockRepository.getAvailableTransitions(mockWorkflow.id))
             .thenAnswer((_) async => mockTransitions);
-        when(mockRepository.performTransition(any, any))
-            .thenThrow(AppException(message: 'Transition failed', statusCode: 400));
+        when(mockRepository.performTransition(any, any)).thenThrow(
+            AppException(message: 'Transition failed', statusCode: 400));
 
         // Act
-        final notifier = container.read(cvWorkflowProvider('test-cv-id').notifier);
-        
+        final notifier =
+            container.read(cvWorkflowProvider('test-cv-id').notifier);
+
         // Wait for initial load
         await Future.delayed(Duration.zero);
-        
+
         try {
           await notifier.performTransition('transition-1');
         } catch (e) {
@@ -157,23 +164,25 @@ void main() {
         // Arrange
         final mockWorkflow = _createMockWorkflow();
         final mockTransitions = [_createMockTransition()];
-        
+
         when(mockRepository.getCVWorkflow('test-cv-id'))
             .thenAnswer((_) async => mockWorkflow);
         when(mockRepository.getAvailableTransitions(mockWorkflow.id))
             .thenAnswer((_) async => mockTransitions);
 
         // Act
-        final notifier = container.read(cvWorkflowProvider('test-cv-id').notifier);
-        
+        final notifier =
+            container.read(cvWorkflowProvider('test-cv-id').notifier);
+
         // Wait for initial load
         await Future.delayed(Duration.zero);
-        
+
         await notifier.refreshWorkflow();
 
         // Assert
         verify(mockRepository.getCVWorkflow('test-cv-id')).called(2);
-        verify(mockRepository.getAvailableTransitions(mockWorkflow.id)).called(2);
+        verify(mockRepository.getAvailableTransitions(mockWorkflow.id))
+            .called(2);
       });
     });
 
@@ -190,7 +199,7 @@ void main() {
 
         // Act
         final notifier = container.read(workflowInstancesProvider.notifier);
-        
+
         // Wait for initial load
         await Future.delayed(Duration.zero);
 
@@ -212,7 +221,7 @@ void main() {
 
         // Act
         final notifier = container.read(workflowInstancesProvider.notifier);
-        
+
         // Wait for initial load
         await Future.delayed(Duration.zero);
 
@@ -227,14 +236,14 @@ void main() {
         // Arrange
         final firstBatch = [_createMockWorkflow()];
         final secondBatch = [_createMockWorkflow()];
-        
+
         when(mockRepository.getWorkflowInstances(
           page: 1,
           pageSize: anyNamed('pageSize'),
           status: anyNamed('status'),
           workflowConfigId: anyNamed('workflowConfigId'),
         )).thenAnswer((_) async => firstBatch);
-        
+
         when(mockRepository.getWorkflowInstances(
           page: 2,
           pageSize: anyNamed('pageSize'),
@@ -244,10 +253,10 @@ void main() {
 
         // Act
         final notifier = container.read(workflowInstancesProvider.notifier);
-        
+
         // Wait for initial load
         await Future.delayed(Duration.zero);
-        
+
         await notifier.loadMoreInstances();
 
         // Assert
@@ -270,7 +279,7 @@ void main() {
         // Act
         final notifier = container.read(workflowInstancesProvider.notifier);
         notifier.setFilters(status: 'active', config: 'config-1');
-        
+
         // Wait for load
         await Future.delayed(Duration.zero);
 
@@ -298,8 +307,9 @@ void main() {
         )).thenAnswer((_) async => mockHistory);
 
         // Act
-        final notifier = container.read(transitionHistoryProvider('instance-1').notifier);
-        
+        final notifier =
+            container.read(transitionHistoryProvider('instance-1').notifier);
+
         // Wait for initial load
         await Future.delayed(Duration.zero);
 
@@ -316,11 +326,13 @@ void main() {
           'instance-1',
           page: anyNamed('page'),
           pageSize: anyNamed('pageSize'),
-        )).thenThrow(AppException(message: 'History load failed', statusCode: 500));
+        )).thenThrow(
+            AppException(message: 'History load failed', statusCode: 500));
 
         // Act
-        final notifier = container.read(transitionHistoryProvider('instance-1').notifier);
-        
+        final notifier =
+            container.read(transitionHistoryProvider('instance-1').notifier);
+
         // Wait for initial load
         await Future.delayed(Duration.zero);
 
@@ -375,7 +387,8 @@ WorkflowInstanceModel _createMockWorkflow() {
   );
 }
 
-WorkflowStateModel _createMockState(String code, String name, String type, int order) {
+WorkflowStateModel _createMockState(
+    String code, String name, String type, int order) {
   return WorkflowStateModel(
     id: 'state-$code',
     workflowConfigId: 'config-1',
@@ -415,7 +428,7 @@ WorkflowTransitionModel _createMockTransition({bool requiresComment = false}) {
 
 WorkflowTransitionLogModel _createMockTransitionLog() {
   final transition = _createMockTransition();
-  
+
   return WorkflowTransitionLogModel(
     id: 'log-1',
     workflowInstanceId: 'instance-1',

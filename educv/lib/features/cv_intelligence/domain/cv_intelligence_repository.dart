@@ -16,6 +16,7 @@ abstract class CVIntelligenceRepository {
   Future<CVAnalysisModel> getAnalysisById(String analysisId);
   Future<bool> hasCVProfile();
   Future<String> exportAnalysisReport();
+
   /// Returns the score progression timeline (last N analyses with deltas).
   Future<Map<String, dynamic>> getScoreProgression({int limit = 10});
 }

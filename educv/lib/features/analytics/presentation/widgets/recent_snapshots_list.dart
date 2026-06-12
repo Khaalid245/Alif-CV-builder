@@ -18,7 +18,7 @@ class RecentSnapshotsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final displaySnapshots = snapshots.take(maxItems).toList();
-    
+
     if (displaySnapshots.isEmpty) {
       return Card(
         child: Padding(
@@ -75,12 +75,11 @@ class RecentSnapshotsList extends StatelessWidget {
               ],
             ),
           ),
-          
           ...displaySnapshots.asMap().entries.map((entry) {
             final index = entry.key;
             final snapshot = entry.value;
             final isLast = index == displaySnapshots.length - 1;
-            
+
             return Column(
               children: [
                 _buildSnapshotItem(snapshot),
@@ -118,9 +117,7 @@ class RecentSnapshotsList extends StatelessWidget {
               ),
             ),
           ),
-          
           const SizedBox(width: AppSpacing.md),
-          
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -154,9 +151,7 @@ class RecentSnapshotsList extends StatelessWidget {
                       ),
                   ],
                 ),
-                
                 const SizedBox(height: AppSpacing.xs),
-                
                 Row(
                   children: [
                     Text(
@@ -180,7 +175,6 @@ class RecentSnapshotsList extends StatelessWidget {
               ],
             ),
           ),
-          
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -199,7 +193,6 @@ class RecentSnapshotsList extends StatelessWidget {
               ),
             ],
           ),
-          
           if (snapshot.percentileRank != null) ...[
             const SizedBox(width: AppSpacing.md),
             Container(
@@ -208,7 +201,8 @@ class RecentSnapshotsList extends StatelessWidget {
                 vertical: AppSpacing.xs,
               ),
               decoration: BoxDecoration(
-                color: _getPercentileColor(snapshot.percentileRank!).withOpacity(0.1),
+                color: _getPercentileColor(snapshot.percentileRank!)
+                    .withOpacity(0.1),
                 borderRadius: BorderRadius.circular(AppSpacing.radiusBtn),
               ),
               child: Text(

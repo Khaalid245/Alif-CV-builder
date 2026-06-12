@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../theme/premium_saas_theme.dart';
 
-class PremiumTopNavigation extends StatefulWidget implements PreferredSizeWidget {
+class PremiumTopNavigation extends StatefulWidget
+    implements PreferredSizeWidget {
   final VoidCallback? onMenuPressed;
   final VoidCallback? onNotificationPressed;
   final VoidCallback? onProfilePressed;
@@ -29,7 +30,7 @@ class _PremiumTopNavigationState extends State<PremiumTopNavigation>
   late AnimationController _notificationController;
   late Animation<double> _searchFocusAnimation;
   late Animation<double> _notificationPulseAnimation;
-  
+
   final TextEditingController _searchTextController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
   bool _isSearchFocused = false;
@@ -47,7 +48,8 @@ class _PremiumTopNavigationState extends State<PremiumTopNavigation>
     );
 
     _searchFocusAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _searchController, curve: PremiumSaaSTheme.curveDefault),
+      CurvedAnimation(
+          parent: _searchController, curve: PremiumSaaSTheme.curveDefault),
     );
     _notificationPulseAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
       CurvedAnimation(parent: _notificationController, curve: Curves.easeInOut),
@@ -207,7 +209,8 @@ class _PremiumTopNavigationState extends State<PremiumTopNavigation>
                     : PremiumSaaSTheme.lightBorder,
                 width: _isSearchFocused ? 2 : 1,
               ),
-              boxShadow: _isSearchFocused ? PremiumSaaSTheme.shadowMedium : null,
+              boxShadow:
+                  _isSearchFocused ? PremiumSaaSTheme.shadowMedium : null,
             ),
             child: TextField(
               controller: _searchTextController,
@@ -238,7 +241,8 @@ class _PremiumTopNavigationState extends State<PremiumTopNavigation>
                             _searchTextController.clear();
                             setState(() {});
                           },
-                          borderRadius: BorderRadius.circular(PremiumSaaSTheme.radiusSm),
+                          borderRadius:
+                              BorderRadius.circular(PremiumSaaSTheme.radiusSm),
                           child: Container(
                             padding: EdgeInsets.all(PremiumSaaSTheme.space1),
                             child: Icon(
@@ -342,14 +346,17 @@ class _PremiumTopNavigationState extends State<PremiumTopNavigation>
       animation: _notificationPulseAnimation,
       builder: (context, child) {
         return Transform.scale(
-          scale: widget.notificationCount > 0 ? _notificationPulseAnimation.value : 1.0,
+          scale: widget.notificationCount > 0
+              ? _notificationPulseAnimation.value
+              : 1.0,
           child: Stack(
             children: [
               Material(
                 color: Colors.transparent,
                 child: InkWell(
                   onTap: widget.onNotificationPressed,
-                  borderRadius: BorderRadius.circular(PremiumSaaSTheme.radiusMd),
+                  borderRadius:
+                      BorderRadius.circular(PremiumSaaSTheme.radiusMd),
                   child: Container(
                     padding: EdgeInsets.all(PremiumSaaSTheme.space2),
                     child: Icon(
@@ -382,7 +389,9 @@ class _PremiumTopNavigationState extends State<PremiumTopNavigation>
                       minHeight: 16,
                     ),
                     child: Text(
-                      widget.notificationCount > 99 ? '99+' : '${widget.notificationCount}',
+                      widget.notificationCount > 99
+                          ? '99+'
+                          : '${widget.notificationCount}',
                       style: PremiumSaaSTheme.labelSmall.copyWith(
                         color: PremiumSaaSTheme.textInverse,
                         fontSize: 9,
@@ -423,7 +432,8 @@ class _PremiumTopNavigationState extends State<PremiumTopNavigation>
                 height: 28,
                 decoration: BoxDecoration(
                   gradient: PremiumSaaSTheme.heroGradient,
-                  borderRadius: BorderRadius.circular(PremiumSaaSTheme.radiusMd),
+                  borderRadius:
+                      BorderRadius.circular(PremiumSaaSTheme.radiusMd),
                 ),
                 child: Center(
                   child: Text(

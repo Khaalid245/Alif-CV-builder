@@ -42,7 +42,7 @@ class TemplateFiltersWidget extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 16),
-              
+
               // Filter chips row
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -53,54 +53,62 @@ class TemplateFiltersWidget extends StatelessWidget {
                       context: context,
                       label: 'Category',
                       value: provider.selectedCategory,
-                      items: provider.categories.map((c) => DropdownMenuItem(
-                        value: c.slug,
-                        child: Text(c.name),
-                      )).toList(),
+                      items: provider.categories
+                          .map((c) => DropdownMenuItem(
+                                value: c.slug,
+                                child: Text(c.name),
+                              ))
+                          .toList(),
                       onChanged: provider.setCategory,
                     ),
                     const SizedBox(width: 12),
-                    
+
                     // Industry filter
                     _buildFilterDropdown(
                       context: context,
                       label: 'Industry',
                       value: provider.selectedIndustry,
-                      items: provider.industries.map((i) => DropdownMenuItem(
-                        value: i.slug,
-                        child: Text(i.name),
-                      )).toList(),
+                      items: provider.industries
+                          .map((i) => DropdownMenuItem(
+                                value: i.slug,
+                                child: Text(i.name),
+                              ))
+                          .toList(),
                       onChanged: provider.setIndustry,
                     ),
                     const SizedBox(width: 12),
-                    
+
                     // Role filter (filtered by industry)
                     _buildFilterDropdown(
                       context: context,
                       label: 'Role',
                       value: provider.selectedRole,
-                      items: provider.roles.map((r) => DropdownMenuItem(
-                        value: r.slug,
-                        child: Text(r.name),
-                      )).toList(),
+                      items: provider.roles
+                          .map((r) => DropdownMenuItem(
+                                value: r.slug,
+                                child: Text(r.name),
+                              ))
+                          .toList(),
                       onChanged: provider.setRole,
                       enabled: provider.selectedIndustry != null,
                     ),
                     const SizedBox(width: 12),
-                    
+
                     // Layout filter
                     _buildFilterDropdown(
                       context: context,
                       label: 'Layout',
                       value: provider.selectedLayout,
-                      items: TemplateLayout.values.map((layout) => DropdownMenuItem(
-                        value: _layoutToString(layout),
-                        child: Text(_layoutToDisplayName(layout)),
-                      )).toList(),
+                      items: TemplateLayout.values
+                          .map((layout) => DropdownMenuItem(
+                                value: _layoutToString(layout),
+                                child: Text(_layoutToDisplayName(layout)),
+                              ))
+                          .toList(),
                       onChanged: provider.setLayout,
                     ),
                     const SizedBox(width: 12),
-                    
+
                     // Premium filter
                     _buildPremiumFilter(provider),
                   ],
@@ -141,7 +149,8 @@ class TemplateFiltersWidget extends StatelessWidget {
           ),
           filled: true,
           fillColor: enabled ? Colors.white : Colors.grey[100],
-          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           isDense: true,
         ),
         items: [

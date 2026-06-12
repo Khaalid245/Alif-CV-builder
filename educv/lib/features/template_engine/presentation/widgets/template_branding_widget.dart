@@ -20,11 +20,11 @@ class _TemplateBrandingWidgetState extends State<TemplateBrandingWidget> {
   Color _primaryColor = const Color(0xFF2563eb);
   Color _secondaryColor = const Color(0xFF64748b);
   Color _accentColor = const Color(0xFF0ea5e9);
-  
+
   // Typography
   String _fontFamily = 'Inter';
   double _fontSize = 14.0;
-  
+
   // Layout
   double _marginTop = 20.0;
   double _marginBottom = 20.0;
@@ -62,15 +62,15 @@ class _TemplateBrandingWidgetState extends State<TemplateBrandingWidget> {
           // Color customization
           _buildColorCustomization(),
           const SizedBox(height: 24),
-          
+
           // Typography
           _buildTypographyCustomization(),
           const SizedBox(height: 24),
-          
+
           // Layout spacing
           _buildLayoutCustomization(),
           const SizedBox(height: 24),
-          
+
           // Preview and apply
           _buildPreviewSection(),
         ],
@@ -99,7 +99,7 @@ class _TemplateBrandingWidgetState extends State<TemplateBrandingWidget> {
               ],
             ),
             const SizedBox(height: 16),
-            
+
             // Color presets
             Text(
               'Quick Presets',
@@ -110,31 +110,36 @@ class _TemplateBrandingWidgetState extends State<TemplateBrandingWidget> {
               ),
             ),
             const SizedBox(height: 8),
-            
+
             Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: _presetColors.map((color) => GestureDetector(
-                onTap: () => setState(() => _primaryColor = color),
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: color,
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: _primaryColor == color ? Colors.black : Colors.grey[300]!,
-                      width: _primaryColor == color ? 3 : 1,
-                    ),
-                  ),
-                  child: _primaryColor == color
-                      ? const Icon(LucideIcons.check, color: Colors.white, size: 20)
-                      : null,
-                ),
-              )).toList(),
+              children: _presetColors
+                  .map((color) => GestureDetector(
+                        onTap: () => setState(() => _primaryColor = color),
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: color,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: _primaryColor == color
+                                  ? Colors.black
+                                  : Colors.grey[300]!,
+                              width: _primaryColor == color ? 3 : 1,
+                            ),
+                          ),
+                          child: _primaryColor == color
+                              ? const Icon(LucideIcons.check,
+                                  color: Colors.white, size: 20)
+                              : null,
+                        ),
+                      ))
+                  .toList(),
             ),
             const SizedBox(height: 16),
-            
+
             // Custom colors
             Text(
               'Custom Colors',
@@ -145,21 +150,21 @@ class _TemplateBrandingWidgetState extends State<TemplateBrandingWidget> {
               ),
             ),
             const SizedBox(height: 12),
-            
+
             _buildColorPicker(
               label: 'Primary Color',
               color: _primaryColor,
               onChanged: (color) => setState(() => _primaryColor = color),
             ),
             const SizedBox(height: 12),
-            
+
             _buildColorPicker(
               label: 'Secondary Color',
               color: _secondaryColor,
               onChanged: (color) => setState(() => _secondaryColor = color),
             ),
             const SizedBox(height: 12),
-            
+
             _buildColorPicker(
               label: 'Accent Color',
               color: _accentColor,
@@ -192,7 +197,7 @@ class _TemplateBrandingWidgetState extends State<TemplateBrandingWidget> {
               ],
             ),
             const SizedBox(height: 16),
-            
+
             // Font family
             Text(
               'Font Family',
@@ -203,26 +208,29 @@ class _TemplateBrandingWidgetState extends State<TemplateBrandingWidget> {
               ),
             ),
             const SizedBox(height: 8),
-            
+
             DropdownButtonFormField<String>(
               value: _fontFamily,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               ),
-              items: _availableFonts.map((font) => DropdownMenuItem(
-                value: font,
-                child: Text(
-                  font,
-                  style: TextStyle(fontFamily: font),
-                ),
-              )).toList(),
+              items: _availableFonts
+                  .map((font) => DropdownMenuItem(
+                        value: font,
+                        child: Text(
+                          font,
+                          style: TextStyle(fontFamily: font),
+                        ),
+                      ))
+                  .toList(),
               onChanged: (value) => setState(() => _fontFamily = value!),
             ),
             const SizedBox(height: 16),
-            
+
             // Font size
             Text(
               'Base Font Size: ${_fontSize.toInt()}px',
@@ -233,7 +241,7 @@ class _TemplateBrandingWidgetState extends State<TemplateBrandingWidget> {
               ),
             ),
             const SizedBox(height: 8),
-            
+
             Slider(
               value: _fontSize,
               min: 10,
@@ -268,7 +276,7 @@ class _TemplateBrandingWidgetState extends State<TemplateBrandingWidget> {
               ],
             ),
             const SizedBox(height: 16),
-            
+
             // Margin top
             Text(
               'Top Margin: ${_marginTop.toInt()}px',
@@ -279,7 +287,7 @@ class _TemplateBrandingWidgetState extends State<TemplateBrandingWidget> {
               ),
             ),
             const SizedBox(height: 8),
-            
+
             Slider(
               value: _marginTop,
               min: 0,
@@ -288,7 +296,7 @@ class _TemplateBrandingWidgetState extends State<TemplateBrandingWidget> {
               onChanged: (value) => setState(() => _marginTop = value),
             ),
             const SizedBox(height: 16),
-            
+
             // Margin bottom
             Text(
               'Bottom Margin: ${_marginBottom.toInt()}px',
@@ -299,7 +307,7 @@ class _TemplateBrandingWidgetState extends State<TemplateBrandingWidget> {
               ),
             ),
             const SizedBox(height: 8),
-            
+
             Slider(
               value: _marginBottom,
               min: 0,
@@ -308,7 +316,7 @@ class _TemplateBrandingWidgetState extends State<TemplateBrandingWidget> {
               onChanged: (value) => setState(() => _marginBottom = value),
             ),
             const SizedBox(height: 16),
-            
+
             // Section spacing
             Text(
               'Section Spacing: ${_sectionSpacing.toInt()}px',
@@ -319,7 +327,7 @@ class _TemplateBrandingWidgetState extends State<TemplateBrandingWidget> {
               ),
             ),
             const SizedBox(height: 8),
-            
+
             Slider(
               value: _sectionSpacing,
               min: 5,
@@ -354,7 +362,7 @@ class _TemplateBrandingWidgetState extends State<TemplateBrandingWidget> {
               ],
             ),
             const SizedBox(height: 16),
-            
+
             // Preview container
             Container(
               width: double.infinity,
@@ -378,7 +386,7 @@ class _TemplateBrandingWidgetState extends State<TemplateBrandingWidget> {
                     ),
                   ),
                   SizedBox(height: _sectionSpacing / 2),
-                  
+
                   Text(
                     'Software Engineer',
                     style: TextStyle(
@@ -388,7 +396,7 @@ class _TemplateBrandingWidgetState extends State<TemplateBrandingWidget> {
                     ),
                   ),
                   SizedBox(height: _sectionSpacing),
-                  
+
                   // Sample section
                   Container(
                     width: 40,
@@ -396,7 +404,7 @@ class _TemplateBrandingWidgetState extends State<TemplateBrandingWidget> {
                     color: _accentColor,
                   ),
                   SizedBox(height: _sectionSpacing / 2),
-                  
+
                   Text(
                     'Professional Summary',
                     style: TextStyle(
@@ -407,7 +415,7 @@ class _TemplateBrandingWidgetState extends State<TemplateBrandingWidget> {
                     ),
                   ),
                   SizedBox(height: _sectionSpacing / 2),
-                  
+
                   Text(
                     'This is a sample text to demonstrate how your customization will look in the final CV.',
                     style: TextStyle(
@@ -422,7 +430,7 @@ class _TemplateBrandingWidgetState extends State<TemplateBrandingWidget> {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Action buttons
             Row(
               children: [
@@ -485,24 +493,28 @@ class _TemplateBrandingWidgetState extends State<TemplateBrandingWidget> {
           child: Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: _presetColors.map((color) => GestureDetector(
-              onTap: () {
-                onChanged(color);
-                Navigator.of(context).pop();
-              },
-              child: Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: currentColor == color ? Colors.black : Colors.grey[300]!,
-                    width: currentColor == color ? 3 : 1,
-                  ),
-                ),
-              ),
-            )).toList(),
+            children: _presetColors
+                .map((color) => GestureDetector(
+                      onTap: () {
+                        onChanged(color);
+                        Navigator.of(context).pop();
+                      },
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: color,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: currentColor == color
+                                ? Colors.black
+                                : Colors.grey[300]!,
+                            width: currentColor == color ? 3 : 1,
+                          ),
+                        ),
+                      ),
+                    ))
+                .toList(),
           ),
         ),
         actions: [
@@ -531,7 +543,8 @@ class _TemplateBrandingWidgetState extends State<TemplateBrandingWidget> {
   void _applyCustomization() {
     final customBranding = {
       'primary_color': '#${_primaryColor.value.toRadixString(16).substring(2)}',
-      'secondary_color': '#${_secondaryColor.value.toRadixString(16).substring(2)}',
+      'secondary_color':
+          '#${_secondaryColor.value.toRadixString(16).substring(2)}',
       'accent_color': '#${_accentColor.value.toRadixString(16).substring(2)}',
       'font_family': _fontFamily,
       'font_size_base': _fontSize.toInt(),

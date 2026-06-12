@@ -284,14 +284,18 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         // Use in-memory auth state first (set immediately on login)
         final authState = ref.read(authProvider);
         final isAuthenticated = authState.isAuthenticated;
-        
+
         final localAuthState = ref.read(localAuthProvider);
 
-        if (isAuthenticated && localAuthState.isSupported && !localAuthState.isVerified) {
-          if (currentPath != AppRoutes.localAuth && currentPath != AppRoutes.splash) {
+        if (isAuthenticated &&
+            localAuthState.isSupported &&
+            !localAuthState.isVerified) {
+          if (currentPath != AppRoutes.localAuth &&
+              currentPath != AppRoutes.splash) {
             return AppRoutes.localAuth;
           }
-        } else if (currentPath == AppRoutes.localAuth && localAuthState.isVerified) {
+        } else if (currentPath == AppRoutes.localAuth &&
+            localAuthState.isVerified) {
           final role = authState.user?.role;
           return role == 'admin' ? AppRoutes.admin : AppRoutes.cvDashboard;
         }
@@ -335,7 +339,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 class _AuthChangeNotifier extends ChangeNotifier {
   _AuthChangeNotifier(Ref ref) {
     _sub1 = ref.listen<AuthState>(authProvider, (_, __) => notifyListeners());
-    _sub2 = ref.listen<LocalAuthState>(localAuthProvider, (_, __) => notifyListeners());
+    _sub2 = ref.listen<LocalAuthState>(
+        localAuthProvider, (_, __) => notifyListeners());
   }
 
   late final ProviderSubscription<AuthState> _sub1;

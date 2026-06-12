@@ -31,10 +31,11 @@ class ScoreDisplayWidget extends HookWidget {
     final animationController = useAnimationController(
       duration: const Duration(milliseconds: 1500),
     );
-    
+
     final animation = useAnimation(
       Tween<double>(begin: 0, end: score / maxScore).animate(
-        CurvedAnimation(parent: animationController, curve: Curves.easeOutCubic),
+        CurvedAnimation(
+            parent: animationController, curve: Curves.easeOutCubic),
       ),
     );
 
@@ -110,9 +111,9 @@ class ScoreDisplayWidget extends HookWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Text(
-          showPercentage 
-            ? '${displayPercentage.toStringAsFixed(0)}%'
-            : '${displayValue.toStringAsFixed(1)}/${maxScore.toStringAsFixed(0)}',
+          showPercentage
+              ? '${displayPercentage.toStringAsFixed(0)}%'
+              : '${displayValue.toStringAsFixed(1)}/${maxScore.toStringAsFixed(0)}',
           style: AppTypography.headingSmall.copyWith(
             color: _getScoreColor(displayPercentage),
             fontWeight: FontWeight.bold,
@@ -205,7 +206,8 @@ class SectionScoreCard extends StatelessWidget {
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: _getStatusColor(sectionScore.percentage).withOpacity(0.1),
+                      color: _getStatusColor(sectionScore.percentage)
+                          .withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
@@ -245,9 +247,10 @@ class SectionScoreCard extends StatelessWidget {
   }
 
   String _formatSectionName(String name) {
-    return name.split('_').map((word) => 
-      word[0].toUpperCase() + word.substring(1).toLowerCase()
-    ).join(' ');
+    return name
+        .split('_')
+        .map((word) => word[0].toUpperCase() + word.substring(1).toLowerCase())
+        .join(' ');
   }
 
   Color _getStatusColor(double percentage) {

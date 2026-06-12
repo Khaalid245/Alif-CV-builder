@@ -15,12 +15,7 @@ enum TemplateLayout {
   timeline
 }
 
-enum TemplateStatus {
-  draft,
-  active,
-  archived,
-  deprecated
-}
+enum TemplateStatus { draft, active, archived, deprecated }
 
 class TemplateModel {
   final String id;
@@ -97,15 +92,21 @@ class TemplateModel {
       version: json['version'] ?? '1.0.0',
       htmlTemplate: json['html_template'],
       cssStyles: json['css_styles'],
-      createdAt: json['created_at'] != null ? DateTime.parse(json['created_at']) : null,
-      updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at']) : null,
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'])
+          : null,
+      updatedAt: json['updated_at'] != null
+          ? DateTime.parse(json['updated_at'])
+          : null,
       category: TemplateCategoryModel.fromJson(json['category'] ?? {}),
       industries: (json['industries'] as List<dynamic>?)
-          ?.map((e) => IndustryModel.fromJson(e))
-          .toList() ?? [],
+              ?.map((e) => IndustryModel.fromJson(e))
+              .toList() ??
+          [],
       roles: (json['roles'] as List<dynamic>?)
-          ?.map((e) => RoleModel.fromJson(e))
-          .toList() ?? [],
+              ?.map((e) => RoleModel.fromJson(e))
+              .toList() ??
+          [],
       layout: _parseLayout(json['layout']),
       layoutType: _parseLayout(json['layout_type'] ?? json['layout']),
       status: _parseStatus(json['status']),

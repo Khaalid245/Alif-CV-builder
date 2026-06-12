@@ -8,16 +8,17 @@ abstract class NotificationRepository {
     int? limit,
     int? offset,
   });
-  
+
   Future<NotificationModel> getNotification(String id);
-  
+
   Future<bool> markAsRead(String id);
-  
+
   Future<int> markMultipleAsRead(List<String> ids);
-  
+
   Future<NotificationStatsModel> getNotificationStats();
-  
+
   Future<NotificationPreferencesModel> getPreferences();
-  
-  Future<NotificationPreferencesModel> updatePreferences(NotificationPreferencesModel preferences);
+
+  Future<NotificationPreferencesModel> updatePreferences(
+      NotificationPreferencesModel preferences);
 }

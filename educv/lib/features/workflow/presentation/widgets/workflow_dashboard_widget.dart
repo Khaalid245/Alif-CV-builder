@@ -76,7 +76,8 @@ class WorkflowDashboardStatsWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildStatCard(String title, String value, IconData icon, Color color) {
+  Widget _buildStatCard(
+      String title, String value, IconData icon, Color color) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
@@ -128,9 +129,8 @@ class WorkflowDashboardStatsWidget extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppSpacing.sm),
-        ...dashboard.stateDistribution.entries.map((entry) => 
-          _buildStateDistributionItem(entry.key, entry.value)
-        ),
+        ...dashboard.stateDistribution.entries.map(
+            (entry) => _buildStateDistributionItem(entry.key, entry.value)),
       ],
     );
   }
@@ -138,7 +138,7 @@ class WorkflowDashboardStatsWidget extends StatelessWidget {
   Widget _buildStateDistributionItem(String state, int count) {
     final total = dashboard.totalInstances;
     final percentage = total > 0 ? (count / total * 100) : 0.0;
-    
+
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.xs),
       child: Row(
@@ -216,12 +216,12 @@ class WorkflowInstanceListWidget extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.md),
         ...instances.map((instance) => Padding(
-          padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-          child: WorkflowInstanceCard(
-            instance: instance,
-            onTap: () => onInstanceTap?.call(instance),
-          ),
-        )),
+              padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+              child: WorkflowInstanceCard(
+                instance: instance,
+                onTap: () => onInstanceTap?.call(instance),
+              ),
+            )),
         if (hasMore && onLoadMore != null)
           Center(
             child: Padding(
@@ -393,7 +393,7 @@ class WorkflowInstanceCard extends StatelessWidget {
 
   Widget _buildStatusChip() {
     final color = _getStateColor();
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.sm,

@@ -33,7 +33,8 @@ void main() {
       expect(provider.statsPeriod, 30);
     });
 
-    test('loadDashboardData should update state correctly on success', () async {
+    test('loadDashboardData should update state correctly on success',
+        () async {
       final mockDashboard = AnalyticsDashboardModel(
         userSummary: UserSummaryModel(
           latestScore: 85,
@@ -48,7 +49,8 @@ void main() {
         systemMetrics: {},
       );
 
-      when(mockRepository.getDashboardData()).thenAnswer((_) async => mockDashboard);
+      when(mockRepository.getDashboardData())
+          .thenAnswer((_) async => mockDashboard);
 
       await provider.loadDashboardData();
 
@@ -58,7 +60,8 @@ void main() {
     });
 
     test('loadDashboardData should handle errors correctly', () async {
-      when(mockRepository.getDashboardData()).thenThrow(Exception('Network error'));
+      when(mockRepository.getDashboardData())
+          .thenThrow(Exception('Network error'));
 
       await provider.loadDashboardData();
 
@@ -127,7 +130,8 @@ void main() {
       expect(provider.errorMessage, null);
     });
 
-    test('loadBenchmarkingData should update benchmarking data on success', () async {
+    test('loadBenchmarkingData should update benchmarking data on success',
+        () async {
       final mockBenchmarking = BenchmarkingDataModel(
         userId: 'user-123',
         currentScore: 85.5,
@@ -138,7 +142,8 @@ void main() {
         peerComparisons: [],
       );
 
-      when(mockRepository.getBenchmarkingData()).thenAnswer((_) async => mockBenchmarking);
+      when(mockRepository.getBenchmarkingData())
+          .thenAnswer((_) async => mockBenchmarking);
 
       await provider.loadBenchmarkingData();
 
@@ -146,7 +151,8 @@ void main() {
       expect(provider.errorMessage, null);
     });
 
-    test('loadCompletionStatistics should update completion stats on success', () async {
+    test('loadCompletionStatistics should update completion stats on success',
+        () async {
       final mockStats = CompletionStatisticsModel(
         timePeriod: '30',
         totalUsers: 1000,
@@ -219,7 +225,8 @@ void main() {
       expect(provider.errorMessage, 'Exception: Creation failed');
     });
 
-    test('setSnapshotTypeFilter should update filter and reload snapshots', () async {
+    test('setSnapshotTypeFilter should update filter and reload snapshots',
+        () async {
       when(mockRepository.getScoreSnapshots(
         snapshotType: 'manual',
         submissionReady: null,
@@ -236,7 +243,8 @@ void main() {
       )).called(1);
     });
 
-    test('setSubmissionReadyFilter should update filter and reload snapshots', () async {
+    test('setSubmissionReadyFilter should update filter and reload snapshots',
+        () async {
       when(mockRepository.getScoreSnapshots(
         snapshotType: null,
         submissionReady: true,
@@ -258,19 +266,19 @@ void main() {
         days: 90,
         metric: 'overall_score',
       )).thenAnswer((_) async => TrendAnalysisModel(
-        trendDirection: 'stable',
-        trendStrength: 'weak',
-        slope: 0.1,
-        rSquared: 0.2,
-        absoluteChange: 1.0,
-        percentageChange: 1.5,
-        volatilityScore: 1.0,
-        confidenceInterval: {},
-        dataPoints: [],
-        analysisStart: DateTime.now(),
-        analysisEnd: DateTime.now(),
-        dataPointsCount: 0,
-      ));
+            trendDirection: 'stable',
+            trendStrength: 'weak',
+            slope: 0.1,
+            rSquared: 0.2,
+            absoluteChange: 1.0,
+            percentageChange: 1.5,
+            volatilityScore: 1.0,
+            confidenceInterval: {},
+            dataPoints: [],
+            analysisStart: DateTime.now(),
+            analysisEnd: DateTime.now(),
+            dataPointsCount: 0,
+          ));
 
       provider.setTrendDays(90);
 
@@ -281,21 +289,22 @@ void main() {
       )).called(1);
     });
 
-    test('setStatsPeriod should update period and reload completion statistics', () async {
+    test('setStatsPeriod should update period and reload completion statistics',
+        () async {
       when(mockRepository.getCompletionStatistics(
         timePeriod: 90,
       )).thenAnswer((_) async => CompletionStatisticsModel(
-        timePeriod: '90',
-        totalUsers: 500,
-        averageCompletion: 70.0,
-        averageScore: 75.0,
-        submissionReadyCount: 300,
-        submissionReadyPercentage: 60.0,
-        scoreDistribution: {},
-        completionDistribution: {},
-        sectionAverages: {},
-        trends: [],
-      ));
+            timePeriod: '90',
+            totalUsers: 500,
+            averageCompletion: 70.0,
+            averageScore: 75.0,
+            submissionReadyCount: 300,
+            submissionReadyPercentage: 60.0,
+            scoreDistribution: {},
+            completionDistribution: {},
+            sectionAverages: {},
+            trends: [],
+          ));
 
       provider.setStatsPeriod(90);
 
@@ -324,18 +333,19 @@ void main() {
 
     test('refreshAll should call all load methods', () async {
       // Mock all repository methods
-      when(mockRepository.getDashboardData()).thenAnswer((_) async => AnalyticsDashboardModel(
-        userSummary: UserSummaryModel(
-          latestScore: 0,
-          latestCompletion: 0,
-          submissionReady: false,
-          grade: '',
-          totalSnapshots: 0,
-        ),
-        recentSnapshots: [],
-        benchmarkingSummary: {},
-        systemMetrics: {},
-      ));
+      when(mockRepository.getDashboardData())
+          .thenAnswer((_) async => AnalyticsDashboardModel(
+                userSummary: UserSummaryModel(
+                  latestScore: 0,
+                  latestCompletion: 0,
+                  submissionReady: false,
+                  grade: '',
+                  totalSnapshots: 0,
+                ),
+                recentSnapshots: [],
+                benchmarkingSummary: {},
+                systemMetrics: {},
+              ));
       when(mockRepository.getScoreSnapshots(
         snapshotType: null,
         submissionReady: null,
@@ -345,42 +355,43 @@ void main() {
         days: 30,
         metric: 'overall_score',
       )).thenAnswer((_) async => TrendAnalysisModel(
-        trendDirection: 'stable',
-        trendStrength: 'weak',
-        slope: 0.0,
-        rSquared: 0.0,
-        absoluteChange: 0.0,
-        percentageChange: 0.0,
-        volatilityScore: 0.0,
-        confidenceInterval: {},
-        dataPoints: [],
-        analysisStart: DateTime.now(),
-        analysisEnd: DateTime.now(),
-        dataPointsCount: 0,
-      ));
-      when(mockRepository.getBenchmarkingData()).thenAnswer((_) async => BenchmarkingDataModel(
-        userId: '',
-        currentScore: 0.0,
-        percentileRank: 0.0,
-        totalPeers: 0,
-        groups: [],
-        summary: {},
-        peerComparisons: [],
-      ));
+            trendDirection: 'stable',
+            trendStrength: 'weak',
+            slope: 0.0,
+            rSquared: 0.0,
+            absoluteChange: 0.0,
+            percentageChange: 0.0,
+            volatilityScore: 0.0,
+            confidenceInterval: {},
+            dataPoints: [],
+            analysisStart: DateTime.now(),
+            analysisEnd: DateTime.now(),
+            dataPointsCount: 0,
+          ));
+      when(mockRepository.getBenchmarkingData())
+          .thenAnswer((_) async => BenchmarkingDataModel(
+                userId: '',
+                currentScore: 0.0,
+                percentileRank: 0.0,
+                totalPeers: 0,
+                groups: [],
+                summary: {},
+                peerComparisons: [],
+              ));
       when(mockRepository.getCompletionStatistics(
         timePeriod: 30,
       )).thenAnswer((_) async => CompletionStatisticsModel(
-        timePeriod: '30',
-        totalUsers: 0,
-        averageCompletion: 0.0,
-        averageScore: 0.0,
-        submissionReadyCount: 0,
-        submissionReadyPercentage: 0.0,
-        scoreDistribution: {},
-        completionDistribution: {},
-        sectionAverages: {},
-        trends: [],
-      ));
+            timePeriod: '30',
+            totalUsers: 0,
+            averageCompletion: 0.0,
+            averageScore: 0.0,
+            submissionReadyCount: 0,
+            submissionReadyPercentage: 0.0,
+            scoreDistribution: {},
+            completionDistribution: {},
+            sectionAverages: {},
+            trends: [],
+          ));
 
       provider.refreshAll();
 

@@ -98,7 +98,8 @@ class _PremiumInputState extends State<PremiumInput>
                 borderRadius: BorderRadius.circular(28),
                 border: Border.all(
                   color: Color.lerp(
-                    const Color(0xFFE5E7EB), // Light gray border when not focused
+                    const Color(
+                        0xFFE5E7EB), // Light gray border when not focused
                     const Color(0xFF4F46E5), // Blue border when focused
                     _focusAnimation.value,
                   )!,
@@ -120,7 +121,8 @@ class _PremiumInputState extends State<PremiumInput>
                   filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                   child: Container(
                     decoration: const BoxDecoration(
-                      color: Colors.white, // White background for better contrast
+                      color:
+                          Colors.white, // White background for better contrast
                     ),
                     child: TextFormField(
                       controller: widget.controller,
@@ -132,7 +134,8 @@ class _PremiumInputState extends State<PremiumInput>
                       obscureText: widget.obscureText,
                       focusNode: widget.focusNode,
                       style: const TextStyle(
-                        color: Color(0xFF111827), // Dark text for visibility on white background
+                        color: Color(
+                            0xFF111827), // Dark text for visibility on white background
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),

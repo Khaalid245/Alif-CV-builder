@@ -7,7 +7,7 @@ class ResponsiveBreakpoints {
   static const double tablet = 768;
   static const double desktop = 1024;
   static const double largeDesktop = 1440;
-  
+
   // Grid columns based on screen size
   static int getGridColumns(double width) {
     if (width >= largeDesktop) return 6;
@@ -15,14 +15,14 @@ class ResponsiveBreakpoints {
     if (width >= tablet) return 3;
     return 2;
   }
-  
+
   // Padding based on screen size
   static EdgeInsets getScreenPadding(double width) {
     if (width >= desktop) return const EdgeInsets.all(32);
     if (width >= tablet) return const EdgeInsets.all(24);
     return const EdgeInsets.all(16);
   }
-  
+
   // Content max width for readability
   static double getContentMaxWidth(double width) {
     // Always return full width for CV builder app
@@ -32,7 +32,8 @@ class ResponsiveBreakpoints {
 
 // Performance-optimized responsive builder
 class ResponsiveBuilder extends StatelessWidget {
-  final Widget Function(BuildContext context, ResponsiveConstraints constraints) builder;
+  final Widget Function(BuildContext context, ResponsiveConstraints constraints)
+      builder;
 
   const ResponsiveBuilder({
     super.key,
@@ -43,7 +44,8 @@ class ResponsiveBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final responsiveConstraints = ResponsiveConstraints.fromConstraints(constraints);
+        final responsiveConstraints =
+            ResponsiveConstraints.fromConstraints(constraints);
         return builder(context, responsiveConstraints);
       },
     );
@@ -70,7 +72,7 @@ class ResponsiveConstraints {
   factory ResponsiveConstraints.fromConstraints(BoxConstraints constraints) {
     final width = constraints.maxWidth;
     final height = constraints.maxHeight;
-    
+
     DeviceType deviceType;
     if (width >= ResponsiveBreakpoints.desktop) {
       deviceType = DeviceType.desktop;
@@ -79,7 +81,7 @@ class ResponsiveConstraints {
     } else {
       deviceType = DeviceType.mobile;
     }
-    
+
     return ResponsiveConstraints._(
       width: width,
       height: height,
@@ -119,7 +121,8 @@ class PerformantAnimatedWidget extends StatefulWidget {
   });
 
   @override
-  State<PerformantAnimatedWidget> createState() => _PerformantAnimatedWidgetState();
+  State<PerformantAnimatedWidget> createState() =>
+      _PerformantAnimatedWidgetState();
 }
 
 class _PerformantAnimatedWidgetState extends State<PerformantAnimatedWidget>
@@ -146,7 +149,9 @@ class _PerformantAnimatedWidgetState extends State<PerformantAnimatedWidget>
     ));
 
     _slideAnimation = Tween<Offset>(
-      begin: widget.slideIn ? (widget.slideOffset ?? const Offset(0, 0.3)) : Offset.zero,
+      begin: widget.slideIn
+          ? (widget.slideOffset ?? const Offset(0, 0.3))
+          : Offset.zero,
       end: Offset.zero,
     ).animate(CurvedAnimation(
       parent: _controller,
@@ -437,7 +442,8 @@ class OptimizedImage extends StatelessWidget {
       child: Center(
         child: CircularProgressIndicator(
           value: loadingProgress?.expectedTotalBytes != null
-              ? loadingProgress!.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+              ? loadingProgress!.cumulativeBytesLoaded /
+                  loadingProgress.expectedTotalBytes!
               : null,
           strokeWidth: 2,
         ),

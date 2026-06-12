@@ -16,7 +16,8 @@ class BenchmarkingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentScore = (benchmarkingData['current_score'] ?? 0.0).toDouble();
-    final percentileRank = (benchmarkingData['percentile_rank'] ?? 0.0).toDouble();
+    final percentileRank =
+        (benchmarkingData['percentile_rank'] ?? 0.0).toDouble();
     final totalPeers = benchmarkingData['total_peers'] ?? 0;
     final roleName = benchmarkingData['role_name'] as String?;
 
@@ -56,14 +57,11 @@ class BenchmarkingCard extends StatelessWidget {
                 ),
               ],
             ),
-            
             const SizedBox(height: AppSpacing.lg),
-
             if (!isCompact) ...[
               _buildPercentileVisualization(percentileRank, roleName),
               const SizedBox(height: AppSpacing.lg),
             ],
-            
             Row(
               children: [
                 Expanded(
@@ -85,7 +83,6 @@ class BenchmarkingCard extends StatelessWidget {
                 ),
               ],
             ),
-            
             if (!isCompact) ...[
               const SizedBox(height: AppSpacing.md),
               Row(
@@ -112,9 +109,7 @@ class BenchmarkingCard extends StatelessWidget {
                 ],
               ),
             ],
-            
             const SizedBox(height: AppSpacing.md),
-            
             Container(
               padding: const EdgeInsets.all(AppSpacing.sm),
               decoration: BoxDecoration(
@@ -146,7 +141,8 @@ class BenchmarkingCard extends StatelessWidget {
     );
   }
 
-  Widget _buildPercentileVisualization(double percentileRank, String? roleName) {
+  Widget _buildPercentileVisualization(
+      double percentileRank, String? roleName) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -159,7 +155,6 @@ class BenchmarkingCard extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppSpacing.sm),
-        
         Container(
           height: 40,
           decoration: BoxDecoration(
@@ -175,7 +170,7 @@ class BenchmarkingCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(AppSpacing.radiusBtn),
                 ),
               ),
-              
+
               // Progress bar
               FractionallySizedBox(
                 widthFactor: percentileRank / 100,
@@ -191,10 +186,11 @@ class BenchmarkingCard extends StatelessWidget {
                   ),
                 ),
               ),
-              
+
               // Position indicator
               Positioned(
-                left: (percentileRank / 100) * 300 - 12, // Fixed width instead of context
+                left: (percentileRank / 100) * 300 -
+                    12, // Fixed width instead of context
                 top: 8,
                 child: Container(
                   width: 24,
@@ -211,7 +207,7 @@ class BenchmarkingCard extends StatelessWidget {
                   ),
                 ),
               ),
-              
+
               // Labels
               Positioned(
                 left: 8,
@@ -236,9 +232,7 @@ class BenchmarkingCard extends StatelessWidget {
             ],
           ),
         ),
-        
         const SizedBox(height: AppSpacing.sm),
-        
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -267,7 +261,8 @@ class BenchmarkingCard extends StatelessWidget {
     );
   }
 
-  Widget _buildMetricCard(String title, String value, IconData icon, Color color) {
+  Widget _buildMetricCard(
+      String title, String value, IconData icon, Color color) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.sm),
       decoration: BoxDecoration(

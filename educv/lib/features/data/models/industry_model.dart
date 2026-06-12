@@ -25,7 +25,8 @@ class IndustryModel {
       slug: json['slug'] ?? '',
       templateCount: json['template_count'] ?? 0,
       isActive: json['is_active'] ?? true,
-      createdAt: DateTime.parse(json['created_at'] ?? DateTime.now().toIso8601String()),
+      createdAt: DateTime.parse(
+          json['created_at'] ?? DateTime.now().toIso8601String()),
     );
   }
 

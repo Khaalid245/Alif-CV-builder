@@ -174,7 +174,8 @@ class _ModernTopBarState extends State<ModernTopBar>
                     ),
                     decoration: BoxDecoration(
                       color: EnterpriseTheme.gray200,
-                      borderRadius: BorderRadius.circular(EnterpriseTheme.radiusXs),
+                      borderRadius:
+                          BorderRadius.circular(EnterpriseTheme.radiusXs),
                     ),
                     child: Text(
                       '⌘K',
@@ -231,7 +232,9 @@ class _ModernTopBarState extends State<ModernTopBar>
                 minHeight: 16,
               ),
               child: Text(
-                widget.notificationCount > 99 ? '99+' : '${widget.notificationCount}',
+                widget.notificationCount > 99
+                    ? '99+'
+                    : '${widget.notificationCount}',
                 style: EnterpriseTheme.labelSmall.copyWith(
                   color: EnterpriseTheme.white,
                   fontSize: 10,

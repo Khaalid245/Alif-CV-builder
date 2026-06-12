@@ -24,7 +24,7 @@ class TemplateCardWidget extends StatelessWidget {
     return Consumer<TemplateEngineProvider>(
       builder: (context, provider, child) {
         final isFavorite = provider.isFavorite(template);
-        
+
         return Card(
           elevation: 2,
           shape: RoundedRectangleBorder(
@@ -66,7 +66,7 @@ class TemplateCardWidget extends StatelessWidget {
                           )
                         else
                           _buildPlaceholder(),
-                        
+
                         // Premium badge
                         if (template.isPremium)
                           Positioned(
@@ -102,7 +102,7 @@ class TemplateCardWidget extends StatelessWidget {
                               ),
                             ),
                           ),
-                        
+
                         // Action buttons
                         Positioned(
                           top: 8,
@@ -128,7 +128,7 @@ class TemplateCardWidget extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(width: 4),
-                              
+
                               // Favorite button
                               Container(
                                 decoration: BoxDecoration(
@@ -137,9 +137,13 @@ class TemplateCardWidget extends StatelessWidget {
                                 ),
                                 child: IconButton(
                                   icon: Icon(
-                                    isFavorite ? LucideIcons.heart : LucideIcons.heart,
+                                    isFavorite
+                                        ? LucideIcons.heart
+                                        : LucideIcons.heart,
                                     size: 16,
-                                    color: isFavorite ? Colors.red : Colors.grey[600],
+                                    color: isFavorite
+                                        ? Colors.red
+                                        : Colors.grey[600],
                                   ),
                                   onPressed: onFavorite,
                                   padding: const EdgeInsets.all(4),
@@ -147,7 +151,9 @@ class TemplateCardWidget extends StatelessWidget {
                                     minWidth: 28,
                                     minHeight: 28,
                                   ),
-                                  tooltip: isFavorite ? 'Remove from favorites' : 'Add to favorites',
+                                  tooltip: isFavorite
+                                      ? 'Remove from favorites'
+                                      : 'Add to favorites',
                                 ),
                               ),
                             ],
@@ -157,7 +163,7 @@ class TemplateCardWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-                
+
                 // Template info
                 Expanded(
                   flex: 2,
@@ -177,7 +183,7 @@ class TemplateCardWidget extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 4),
-                        
+
                         // Category
                         Text(
                           template.category.name,
@@ -188,7 +194,7 @@ class TemplateCardWidget extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        
+
                         // Layout and usage info
                         Row(
                           children: [
@@ -212,7 +218,7 @@ class TemplateCardWidget extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 4),
-                        
+
                         Row(
                           children: [
                             Icon(

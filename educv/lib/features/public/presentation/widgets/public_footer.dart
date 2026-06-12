@@ -23,7 +23,9 @@ class PublicFooter extends StatelessWidget {
           final isDesktop = constraints.maxWidth >= 800;
           return Column(
             children: [
-              isDesktop ? _buildDesktopLinks(context) : _buildMobileLinks(context),
+              isDesktop
+                  ? _buildDesktopLinks(context)
+                  : _buildMobileLinks(context),
               const SizedBox(height: 40),
               Container(height: 1, color: PremiumPortfolioColors.borderLight),
               const SizedBox(height: 24),
@@ -131,7 +133,8 @@ class PublicFooter extends StatelessWidget {
             color: PremiumPortfolioColors.accentPurple.withValues(alpha: 0.08),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: PremiumPortfolioColors.accentPurple.withValues(alpha: 0.15),
+              color:
+                  PremiumPortfolioColors.accentPurple.withValues(alpha: 0.15),
             ),
           ),
           child: const Text(
@@ -191,9 +194,15 @@ class PublicFooter extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              _FooterLink(icon: LucideIcons.shield, label: 'Privacy Policy', route: '/privacy'),
+              _FooterLink(
+                  icon: LucideIcons.shield,
+                  label: 'Privacy Policy',
+                  route: '/privacy'),
               const SizedBox(width: 20),
-              _FooterLink(icon: LucideIcons.scrollText, label: 'Terms of Service', route: '/terms'),
+              _FooterLink(
+                  icon: LucideIcons.scrollText,
+                  label: 'Terms of Service',
+                  route: '/terms'),
             ],
           );
         }
@@ -210,9 +219,15 @@ class PublicFooter extends StatelessWidget {
             const SizedBox(height: 12),
             Row(
               children: [
-                _FooterLink(icon: LucideIcons.shield, label: 'Privacy Policy', route: '/privacy'),
+                _FooterLink(
+                    icon: LucideIcons.shield,
+                    label: 'Privacy Policy',
+                    route: '/privacy'),
                 const SizedBox(width: 20),
-                _FooterLink(icon: LucideIcons.scrollText, label: 'Terms of Service', route: '/terms'),
+                _FooterLink(
+                    icon: LucideIcons.scrollText,
+                    label: 'Terms of Service',
+                    route: '/terms'),
               ],
             ),
           ],
@@ -226,7 +241,8 @@ class _FooterLink extends StatefulWidget {
   final IconData icon;
   final String label;
   final String route;
-  const _FooterLink({required this.icon, required this.label, required this.route});
+  const _FooterLink(
+      {required this.icon, required this.label, required this.route});
 
   @override
   State<_FooterLink> createState() => _FooterLinkState();

@@ -26,7 +26,8 @@ class CVPreviewScreen extends ConsumerWidget {
         backgroundColor: PremiumSaaSTheme.lightBackground,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(LucideIcons.arrowLeft, color: PremiumSaaSTheme.textPrimary),
+          icon: const Icon(LucideIcons.arrowLeft,
+              color: PremiumSaaSTheme.textPrimary),
           onPressed: () => context.pop(),
         ),
         title: Text(
@@ -78,8 +79,8 @@ class CVPreviewScreen extends ConsumerWidget {
                                 profile.fullName.isNotEmpty
                                     ? profile.fullName[0].toUpperCase()
                                     : 'U',
-                                style: AppTypography.h3
-                                    .copyWith(color: PremiumSaaSTheme.primaryPurple),
+                                style: AppTypography.h3.copyWith(
+                                    color: PremiumSaaSTheme.primaryPurple),
                               )
                             : null,
                       ),
@@ -92,24 +93,24 @@ class CVPreviewScreen extends ConsumerWidget {
                               profile.fullName.isNotEmpty
                                   ? profile.fullName
                                   : 'No name provided',
-                              style: AppTypography.h2
-                                  .copyWith(color: PremiumSaaSTheme.textPrimary),
+                              style: AppTypography.h2.copyWith(
+                                  color: PremiumSaaSTheme.textPrimary),
                             ),
                             const SizedBox(height: 4),
                             Text(
                               profile.email.isNotEmpty
                                   ? profile.email
                                   : 'No email provided',
-                              style: AppTypography.body
-                                  .copyWith(color: PremiumSaaSTheme.textSecondary),
+                              style: AppTypography.body.copyWith(
+                                  color: PremiumSaaSTheme.textSecondary),
                             ),
                             const SizedBox(height: 4),
                             Text(
                               profile.studentId.isNotEmpty
                                   ? profile.studentId
                                   : 'No student ID',
-                              style: AppTypography.caption
-                                  .copyWith(color: PremiumSaaSTheme.textSecondary),
+                              style: AppTypography.caption.copyWith(
+                                  color: PremiumSaaSTheme.textSecondary),
                             ),
                           ],
                         ),
@@ -167,8 +168,8 @@ class CVPreviewScreen extends ConsumerWidget {
 
                 Text(
                   'Classic • Modern • Academic formats',
-                  style:
-                      AppTypography.caption.copyWith(color: PremiumSaaSTheme.textSecondary),
+                  style: AppTypography.caption
+                      .copyWith(color: PremiumSaaSTheme.textSecondary),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -191,14 +192,15 @@ class CVPreviewScreen extends ConsumerWidget {
             const SizedBox(height: AppSpacing.md),
             Text(
               'No CV profile found',
-              style: AppTypography.h3.copyWith(color: PremiumSaaSTheme.textPrimary),
+              style: AppTypography.h3
+                  .copyWith(color: PremiumSaaSTheme.textPrimary),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: AppSpacing.sm),
             Text(
               'Add your personal information before previewing your CV.',
-              style:
-                  AppTypography.body.copyWith(color: PremiumSaaSTheme.textSecondary),
+              style: AppTypography.body
+                  .copyWith(color: PremiumSaaSTheme.textSecondary),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: AppSpacing.lg),
@@ -226,7 +228,9 @@ class CVPreviewScreen extends ConsumerWidget {
         children: [
           Icon(
             isComplete ? LucideIcons.checkCircle : LucideIcons.alertTriangle,
-            color: isComplete ? PremiumSaaSTheme.accentGreen : PremiumSaaSTheme.accentAmber,
+            color: isComplete
+                ? PremiumSaaSTheme.accentGreen
+                : PremiumSaaSTheme.accentAmber,
             size: 20,
           ),
           const SizedBox(width: AppSpacing.sm),
@@ -239,7 +243,9 @@ class CVPreviewScreen extends ConsumerWidget {
                       ? 'Great! Your CV is $percentage% complete.'
                       : 'Your CV is $percentage% complete. Add more to improve your CV.',
                   style: AppTypography.body.copyWith(
-                    color: isComplete ? PremiumSaaSTheme.accentGreen : PremiumSaaSTheme.accentAmber,
+                    color: isComplete
+                        ? PremiumSaaSTheme.accentGreen
+                        : PremiumSaaSTheme.accentAmber,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -280,8 +286,8 @@ class CVPreviewScreen extends ConsumerWidget {
                   size: 20, color: PremiumSaaSTheme.primaryPurple),
               const SizedBox(width: AppSpacing.sm),
               Text('Education',
-                  style:
-                      AppTypography.h3.copyWith(color: PremiumSaaSTheme.textPrimary)),
+                  style: AppTypography.h3
+                      .copyWith(color: PremiumSaaSTheme.textPrimary)),
             ],
           ),
           const SizedBox(height: AppSpacing.md),
@@ -306,8 +312,8 @@ class CVPreviewScreen extends ConsumerWidget {
                           const SizedBox(height: 2),
                           Text(
                             '${edu.startYear}–${edu.endYear ?? 'Present'}',
-                            style: AppTypography.caption
-                                .copyWith(color: PremiumSaaSTheme.textSecondary),
+                            style: AppTypography.caption.copyWith(
+                                color: PremiumSaaSTheme.textSecondary),
                           ),
                         ],
                       ),
@@ -333,8 +339,8 @@ class CVPreviewScreen extends ConsumerWidget {
                   size: 20, color: PremiumSaaSTheme.primaryPurple),
               const SizedBox(width: AppSpacing.sm),
               Text('Experience',
-                  style:
-                      AppTypography.h3.copyWith(color: PremiumSaaSTheme.textPrimary)),
+                  style: AppTypography.h3
+                      .copyWith(color: PremiumSaaSTheme.textPrimary)),
             ],
           ),
           const SizedBox(height: AppSpacing.md),
@@ -365,8 +371,8 @@ class CVPreviewScreen extends ConsumerWidget {
                           const SizedBox(height: 2),
                           Text(
                             '$startFmt – $endFmt',
-                            style: AppTypography.caption
-                                .copyWith(color: PremiumSaaSTheme.textSecondary),
+                            style: AppTypography.caption.copyWith(
+                                color: PremiumSaaSTheme.textSecondary),
                           ),
                         ],
                       ),
@@ -390,17 +396,19 @@ class CVPreviewScreen extends ConsumerWidget {
         children: [
           Row(
             children: [
-              const Icon(LucideIcons.zap, size: 20, color: PremiumSaaSTheme.primaryPurple),
+              const Icon(LucideIcons.zap,
+                  size: 20, color: PremiumSaaSTheme.primaryPurple),
               const SizedBox(width: AppSpacing.sm),
               Text('Skills',
-                  style:
-                      AppTypography.h3.copyWith(color: PremiumSaaSTheme.textPrimary)),
+                  style: AppTypography.h3
+                      .copyWith(color: PremiumSaaSTheme.textPrimary)),
             ],
           ),
           const SizedBox(height: AppSpacing.md),
           Text(
             remaining > 0 ? '$skillNames +$remaining more' : skillNames,
-            style: AppTypography.body.copyWith(color: PremiumSaaSTheme.textPrimary),
+            style: AppTypography.body
+                .copyWith(color: PremiumSaaSTheme.textPrimary),
           ),
         ],
       ),
@@ -414,11 +422,12 @@ class CVPreviewScreen extends ConsumerWidget {
         children: [
           Row(
             children: [
-              const Icon(LucideIcons.globe, size: 20, color: PremiumSaaSTheme.primaryPurple),
+              const Icon(LucideIcons.globe,
+                  size: 20, color: PremiumSaaSTheme.primaryPurple),
               const SizedBox(width: AppSpacing.sm),
               Text('Languages',
-                  style:
-                      AppTypography.h3.copyWith(color: PremiumSaaSTheme.textPrimary)),
+                  style: AppTypography.h3
+                      .copyWith(color: PremiumSaaSTheme.textPrimary)),
             ],
           ),
           const SizedBox(height: AppSpacing.md),
@@ -459,8 +468,8 @@ class CVPreviewScreen extends ConsumerWidget {
                   size: 20, color: PremiumSaaSTheme.primaryPurple),
               const SizedBox(width: AppSpacing.sm),
               Text('Projects',
-                  style:
-                      AppTypography.h3.copyWith(color: PremiumSaaSTheme.textPrimary)),
+                  style: AppTypography.h3
+                      .copyWith(color: PremiumSaaSTheme.textPrimary)),
             ],
           ),
           const SizedBox(height: AppSpacing.md),
@@ -492,8 +501,8 @@ class CVPreviewScreen extends ConsumerWidget {
                             const SizedBox(height: 2),
                             Text(
                               '$startFmt – $endFmt',
-                              style: AppTypography.caption
-                                  .copyWith(color: PremiumSaaSTheme.textSecondary),
+                              style: AppTypography.caption.copyWith(
+                                  color: PremiumSaaSTheme.textSecondary),
                             ),
                           ],
                         ],
@@ -516,11 +525,12 @@ class CVPreviewScreen extends ConsumerWidget {
         children: [
           Row(
             children: [
-              const Icon(LucideIcons.award, size: 20, color: PremiumSaaSTheme.primaryPurple),
+              const Icon(LucideIcons.award,
+                  size: 20, color: PremiumSaaSTheme.primaryPurple),
               const SizedBox(width: AppSpacing.sm),
               Text('Certifications',
-                  style:
-                      AppTypography.h3.copyWith(color: PremiumSaaSTheme.textPrimary)),
+                  style: AppTypography.h3
+                      .copyWith(color: PremiumSaaSTheme.textPrimary)),
             ],
           ),
           const SizedBox(height: AppSpacing.md),
@@ -545,8 +555,8 @@ class CVPreviewScreen extends ConsumerWidget {
                           const SizedBox(height: 2),
                           Text(
                             DateFormat('MMM yyyy').format(cert.issueDate),
-                            style: AppTypography.caption
-                                .copyWith(color: PremiumSaaSTheme.textSecondary),
+                            style: AppTypography.caption.copyWith(
+                                color: PremiumSaaSTheme.textSecondary),
                           ),
                         ],
                       ),

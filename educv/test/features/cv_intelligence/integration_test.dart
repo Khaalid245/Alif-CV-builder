@@ -23,7 +23,8 @@ void main() {
       mockRepository = MockCVIntelligenceRepository();
     });
 
-    testWidgets('should display complete CV Intelligence screen with analysis', (tester) async {
+    testWidgets('should display complete CV Intelligence screen with analysis',
+        (tester) async {
       // Arrange
       final mockAnalysis = _createMockAnalysis();
       final mockRecommendations = [_createMockRecommendation()];
@@ -39,7 +40,8 @@ void main() {
       )).thenAnswer((_) async => mockRecommendations);
       when(mockRepository.getSubmissionReadiness())
           .thenAnswer((_) async => mockReadiness);
-      when(mockRepository.getBenchmarkingData(comparisonGroup: anyNamed('comparisonGroup')))
+      when(mockRepository.getBenchmarkingData(
+              comparisonGroup: anyNamed('comparisonGroup')))
           .thenAnswer((_) async => mockBenchmarking);
 
       // Act
@@ -78,8 +80,7 @@ void main() {
 
     testWidgets('should handle empty analysis state', (tester) async {
       // Arrange
-      when(mockRepository.getLatestAnalysis())
-          .thenAnswer((_) async => null);
+      when(mockRepository.getLatestAnalysis()).thenAnswer((_) async => null);
       when(mockRepository.getRecommendations(
         category: anyNamed('category'),
         priority: anyNamed('priority'),
@@ -102,17 +103,20 @@ void main() {
 
       // Assert
       expect(find.text('No Analysis Yet'), findsOneWidget);
-      expect(find.text('Get intelligent insights about your CV by running an analysis.'), findsOneWidget);
+      expect(
+          find.text(
+              'Get intelligent insights about your CV by running an analysis.'),
+          findsOneWidget);
       expect(find.text('Analyze My CV'), findsOneWidget);
       expect(find.byIcon(LucideIcons.brain), findsAtLeastNWidgets(1));
     });
 
-    testWidgets('should perform CV analysis when button is tapped', (tester) async {
+    testWidgets('should perform CV analysis when button is tapped',
+        (tester) async {
       // Arrange
       final mockAnalysis = _createMockAnalysis();
-      
-      when(mockRepository.getLatestAnalysis())
-          .thenAnswer((_) async => null);
+
+      when(mockRepository.getLatestAnalysis()).thenAnswer((_) async => null);
       when(mockRepository.analyzeCV(options: anyNamed('options')))
           .thenAnswer((_) async => mockAnalysis);
       when(mockRepository.getRecommendations(
@@ -144,10 +148,11 @@ void main() {
       expect(find.text('Overall CV Score'), findsOneWidget);
     });
 
-    testWidgets('should display sections tab with section scores', (tester) async {
+    testWidgets('should display sections tab with section scores',
+        (tester) async {
       // Arrange
       final mockAnalysis = _createMockAnalysis();
-      
+
       when(mockRepository.getLatestAnalysis())
           .thenAnswer((_) async => mockAnalysis);
       when(mockRepository.getRecommendations(
@@ -180,15 +185,15 @@ void main() {
       expect(find.text('90%'), findsOneWidget);
     });
 
-    testWidgets('should display recommendations tab with filters', (tester) async {
+    testWidgets('should display recommendations tab with filters',
+        (tester) async {
       // Arrange
       final mockRecommendations = [
         _createMockRecommendation(category: 'skills', priority: 'high'),
         _createMockRecommendation(category: 'education', priority: 'medium'),
       ];
-      
-      when(mockRepository.getLatestAnalysis())
-          .thenAnswer((_) async => null);
+
+      when(mockRepository.getLatestAnalysis()).thenAnswer((_) async => null);
       when(mockRepository.getRecommendations(
         category: anyNamed('category'),
         priority: anyNamed('priority'),
@@ -216,15 +221,15 @@ void main() {
       // Assert
       expect(find.text('Recommendations'), findsAtLeastNWidgets(1));
       expect(find.text('1 high priority items'), findsOneWidget);
-      expect(find.text('Add Technical Skills'), findsNWidgets(2)); // One for each recommendation
+      expect(find.text('Add Technical Skills'),
+          findsNWidgets(2)); // One for each recommendation
     });
 
     testWidgets('should mark recommendation as implemented', (tester) async {
       // Arrange
       final mockRecommendations = [_createMockRecommendation()];
-      
-      when(mockRepository.getLatestAnalysis())
-          .thenAnswer((_) async => null);
+
+      when(mockRepository.getLatestAnalysis()).thenAnswer((_) async => null);
       when(mockRepository.getRecommendations(
         category: anyNamed('category'),
         priority: anyNamed('priority'),
@@ -269,9 +274,8 @@ void main() {
         currentPage: 1,
         totalPages: 1,
       );
-      
-      when(mockRepository.getLatestAnalysis())
-          .thenAnswer((_) async => null);
+
+      when(mockRepository.getLatestAnalysis()).thenAnswer((_) async => null);
       when(mockRepository.getRecommendations(
         category: anyNamed('category'),
         priority: anyNamed('priority'),
@@ -313,7 +317,8 @@ void main() {
         category: anyNamed('category'),
         priority: anyNamed('priority'),
         includeImplemented: anyNamed('includeImplemented'),
-      )).thenThrow(AppException(message: 'Failed to load recommendations', statusCode: 500));
+      )).thenThrow(AppException(
+          message: 'Failed to load recommendations', statusCode: 500));
 
       // Act
       await tester.pumpWidget(
@@ -340,10 +345,11 @@ void main() {
       expect(find.text('Failed to load recommendations'), findsOneWidget);
     });
 
-    testWidgets('should refresh data when refresh button is tapped', (tester) async {
+    testWidgets('should refresh data when refresh button is tapped',
+        (tester) async {
       // Arrange
       final mockAnalysis = _createMockAnalysis();
-      
+
       when(mockRepository.getLatestAnalysis())
           .thenAnswer((_) async => mockAnalysis);
       when(mockRepository.getRecommendations(
@@ -371,14 +377,16 @@ void main() {
       await tester.pumpAndSettle();
 
       // Assert - Should call repository methods again
-      verify(mockRepository.getLatestAnalysis()).called(2); // Once for init, once for refresh
+      verify(mockRepository.getLatestAnalysis())
+          .called(2); // Once for init, once for refresh
     });
 
-    testWidgets('CV Intelligence Summary Widget should integrate properly', (tester) async {
+    testWidgets('CV Intelligence Summary Widget should integrate properly',
+        (tester) async {
       // Arrange
       final mockAnalysis = _createMockAnalysis();
       final mockReadiness = _createMockSubmissionReadiness();
-      
+
       when(mockRepository.getLatestAnalysis())
           .thenAnswer((_) async => mockAnalysis);
       when(mockRepository.getRecommendations(
@@ -418,8 +426,7 @@ void main() {
 
     testWidgets('should handle loading states correctly', (tester) async {
       // Arrange - Create a completer to control when the future completes
-      when(mockRepository.getLatestAnalysis())
-          .thenAnswer((_) async {
+      when(mockRepository.getLatestAnalysis()).thenAnswer((_) async {
         // Simulate a delay
         await Future.delayed(Duration(seconds: 1));
         return _createMockAnalysis();

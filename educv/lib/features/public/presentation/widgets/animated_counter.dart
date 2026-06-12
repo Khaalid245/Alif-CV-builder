@@ -71,7 +71,10 @@ class _AnimatedCounterState extends State<AnimatedCounter>
       return Text(
         widget.value,
         style: widget.textStyle,
-      ).animate(delay: widget.delay).fadeIn(duration: 800.ms).slideY(begin: 0.3, end: 0);
+      )
+          .animate(delay: widget.delay)
+          .fadeIn(duration: 800.ms)
+          .slideY(begin: 0.3, end: 0);
     }
 
     return AnimatedBuilder(

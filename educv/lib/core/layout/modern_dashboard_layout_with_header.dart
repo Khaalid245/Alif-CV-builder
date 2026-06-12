@@ -40,10 +40,12 @@ class ModernDashboardLayoutWithHeader extends StatefulWidget {
   });
 
   @override
-  State<ModernDashboardLayoutWithHeader> createState() => _ModernDashboardLayoutWithHeaderState();
+  State<ModernDashboardLayoutWithHeader> createState() =>
+      _ModernDashboardLayoutWithHeaderState();
 }
 
-class _ModernDashboardLayoutWithHeaderState extends State<ModernDashboardLayoutWithHeader> {
+class _ModernDashboardLayoutWithHeaderState
+    extends State<ModernDashboardLayoutWithHeader> {
   final GlobalKey<ResponsiveSidebarWrapperState> _sidebarKey = GlobalKey();
 
   @override
@@ -77,7 +79,7 @@ class _ModernDashboardLayoutWithHeaderState extends State<ModernDashboardLayoutW
                 showSearch: widget.showSearch && deviceType.isDesktop,
                 additionalActions: widget.headerActions,
               ),
-              
+
               // Main content
               Expanded(
                 child: Container(
@@ -85,10 +87,9 @@ class _ModernDashboardLayoutWithHeaderState extends State<ModernDashboardLayoutW
                   child: widget.child,
                 ),
               ),
-              
+
               // Bottom navigation for mobile
-              if (deviceType.isMobile)
-                _buildMobileBottomNavigation(),
+              if (deviceType.isMobile) _buildMobileBottomNavigation(),
             ],
           ),
         );
@@ -146,11 +147,16 @@ class _ModernDashboardLayoutWithHeaderState extends State<ModernDashboardLayoutW
   int _getMobileNavIndex() {
     // Map sidebar index to mobile bottom nav index
     switch (widget.currentIndex) {
-      case 0: return 0; // Dashboard
-      case 1: return 1; // My CV
-      case 6: return 2; // AI Assistant
-      case 5: return 3; // Downloads
-      default: return 0;
+      case 0:
+        return 0; // Dashboard
+      case 1:
+        return 1; // My CV
+      case 6:
+        return 2; // AI Assistant
+      case 5:
+        return 3; // Downloads
+      default:
+        return 0;
     }
   }
 
@@ -158,11 +164,20 @@ class _ModernDashboardLayoutWithHeaderState extends State<ModernDashboardLayoutW
     // Map mobile bottom nav index to sidebar index
     int sidebarIndex;
     switch (index) {
-      case 0: sidebarIndex = 0; break; // Dashboard
-      case 1: sidebarIndex = 1; break; // My CV
-      case 2: sidebarIndex = 6; break; // AI Assistant
-      case 3: sidebarIndex = 5; break; // Downloads
-      default: sidebarIndex = 0;
+      case 0:
+        sidebarIndex = 0;
+        break; // Dashboard
+      case 1:
+        sidebarIndex = 1;
+        break; // My CV
+      case 2:
+        sidebarIndex = 6;
+        break; // AI Assistant
+      case 3:
+        sidebarIndex = 5;
+        break; // Downloads
+      default:
+        sidebarIndex = 0;
     }
     widget.onNavigationChanged?.call(sidebarIndex);
   }
@@ -202,7 +217,7 @@ class ModernDashboardContentWithHeader extends StatelessWidget {
                   subtitle: sectionSubtitle,
                   actions: sectionActions,
                 ),
-              
+
               // Main content
               Expanded(
                 child: SingleChildScrollView(
@@ -233,7 +248,8 @@ class ModernDashboardContentWithHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: children.map((child) {
         return Padding(
-          padding: const EdgeInsets.only(bottom: ModernSaaSDashboardTheme.spacingMd),
+          padding:
+              const EdgeInsets.only(bottom: ModernSaaSDashboardTheme.spacingMd),
           child: child,
         );
       }).toList(),
@@ -244,17 +260,19 @@ class ModernDashboardContentWithHeader extends StatelessWidget {
     final rows = <Widget>[];
     for (int i = 0; i < children.length; i += 2) {
       final rowChildren = <Widget>[];
-      
+
       rowChildren.add(Expanded(child: children[i]));
-      
+
       if (i + 1 < children.length) {
-        rowChildren.add(const SizedBox(width: ModernSaaSDashboardTheme.spacingXl));
+        rowChildren
+            .add(const SizedBox(width: ModernSaaSDashboardTheme.spacingXl));
         rowChildren.add(Expanded(child: children[i + 1]));
       }
-      
+
       rows.add(
         Padding(
-          padding: const EdgeInsets.only(bottom: ModernSaaSDashboardTheme.spacingXl),
+          padding:
+              const EdgeInsets.only(bottom: ModernSaaSDashboardTheme.spacingXl),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: rowChildren,
@@ -262,7 +280,7 @@ class ModernDashboardContentWithHeader extends StatelessWidget {
         ),
       );
     }
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: rows,
@@ -295,9 +313,9 @@ class ModernDashboardContentWithHeader extends StatelessWidget {
 
   double _calculateDesktopCardWidth(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final availableWidth = screenWidth - 
-        ModernSaaSDashboardTheme.sidebarWidth - 
-        (ModernSaaSDashboardTheme.spacing2xl * 2) - 
+    final availableWidth = screenWidth -
+        ModernSaaSDashboardTheme.sidebarWidth -
+        (ModernSaaSDashboardTheme.spacing2xl * 2) -
         ModernSaaSDashboardTheme.spacingXl;
     return (availableWidth / 2).clamp(300.0, 500.0);
   }
@@ -336,7 +354,7 @@ class _MobileSearchWidgetState extends State<MobileSearchWidget>
       CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
     );
     _animationController.forward();
-    
+
     // Auto-focus when opened
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _focusNode.requestFocus();

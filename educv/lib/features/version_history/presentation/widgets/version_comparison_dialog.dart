@@ -79,7 +79,8 @@ class VersionComparisonDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildVersionHeader(String title, CVVersionModel version, Color backgroundColor) {
+  Widget _buildVersionHeader(
+      String title, CVVersionModel version, Color backgroundColor) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
@@ -233,9 +234,10 @@ class VersionComparisonDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildValueContainer(String label, dynamic value, Color backgroundColor, Color borderColor) {
+  Widget _buildValueContainer(
+      String label, dynamic value, Color backgroundColor, Color borderColor) {
     final displayValue = _formatValue(value);
-    
+
     return Container(
       padding: const EdgeInsets.all(AppSpacing.sm),
       decoration: BoxDecoration(
@@ -309,19 +311,19 @@ class VersionComparisonDialog extends StatelessWidget {
     if (value == null) {
       return '(empty)';
     }
-    
+
     if (value is String) {
       return value.isEmpty ? '(empty)' : value;
     }
-    
+
     if (value is List) {
       return value.isEmpty ? '(empty list)' : '${value.length} items';
     }
-    
+
     if (value is Map) {
       return value.isEmpty ? '(empty object)' : '${value.length} fields';
     }
-    
+
     return value.toString();
   }
 }

@@ -14,7 +14,7 @@ class NotificationProvider extends ChangeNotifier {
   NotificationStatsModel? _stats;
   NotificationPreferencesModel? _preferences;
   String? _errorMessage;
-  
+
   // Filters
   String? _selectedType;
   String? _selectedStatus;
@@ -33,25 +33,26 @@ class NotificationProvider extends ChangeNotifier {
 
   List<NotificationModel> get filteredNotifications {
     var filtered = _notifications;
-    
+
     if (_selectedType != null) {
-      filtered = filtered.where((n) => n.notificationType == _selectedType).toList();
+      filtered =
+          filtered.where((n) => n.notificationType == _selectedType).toList();
     }
-    
+
     if (_selectedStatus != null) {
       filtered = filtered.where((n) => n.status == _selectedStatus).toList();
     }
-    
+
     if (_showUnreadOnly) {
       filtered = filtered.where((n) => n.isUnread).toList();
     }
-    
+
     return filtered;
   }
 
   Future<void> loadNotifications() async {
     _setState(NotificationState.loading);
-    
+
     try {
       _notifications = await _repository.getNotifications(
         type: _selectedType,
@@ -119,7 +120,7 @@ class NotificationProvider extends ChangeNotifier {
   Future<int> markMultipleAsRead(List<String> ids) async {
     try {
       final markedCount = await _repository.markMultipleAsRead(ids);
-      
+
       // Update local state
       for (final id in ids) {
         final index = _notifications.indexWhere((n) => n.id == id);
@@ -143,7 +144,7 @@ class NotificationProvider extends ChangeNotifier {
           );
         }
       }
-      
+
       notifyListeners();
       return markedCount;
     } catch (e) {
@@ -152,7 +153,8 @@ class NotificationProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> updatePreferences(NotificationPreferencesModel preferences) async {
+  Future<bool> updatePreferences(
+      NotificationPreferencesModel preferences) async {
     try {
       _preferences = await _repository.updatePreferences(preferences);
       notifyListeners();

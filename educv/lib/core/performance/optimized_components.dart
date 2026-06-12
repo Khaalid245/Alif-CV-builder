@@ -94,7 +94,7 @@ class OptimizedStatsCard extends StatelessWidget {
       builder: (context, constraints) {
         final cardColor = color ?? AppColors.primary;
         final isCompact = constraints.isMobile;
-        
+
         return PerformantAnimatedWidget(
           fadeIn: true,
           slideIn: true,
@@ -110,14 +110,16 @@ class OptimizedStatsCard extends StatelessWidget {
                 Row(
                   children: [
                     Container(
-                      padding: EdgeInsets.all(isCompact ? AppSpacing.sm : AppSpacing.md),
+                      padding: EdgeInsets.all(
+                          isCompact ? AppSpacing.sm : AppSpacing.md),
                       decoration: BoxDecoration(
                         color: cardColor.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                        borderRadius:
+                            BorderRadius.circular(AppSpacing.radiusSm),
                       ),
                       child: Icon(
-                        icon, 
-                        color: cardColor, 
+                        icon,
+                        color: cardColor,
                         size: isCompact ? 18 : 20,
                       ),
                     ),
@@ -139,7 +141,8 @@ class OptimizedStatsCard extends StatelessWidget {
                   child: Text(
                     value,
                     key: ValueKey(value),
-                    style: (isCompact ? AppTypography.h4 : AppTypography.h2).copyWith(
+                    style: (isCompact ? AppTypography.h4 : AppTypography.h2)
+                        .copyWith(
                       color: cardColor,
                       fontWeight: FontWeight.bold,
                     ),
@@ -147,13 +150,15 @@ class OptimizedStatsCard extends StatelessWidget {
                 ),
                 const SizedBox(height: AppSpacing.xs),
                 Text(
-                  title, 
-                  style: isCompact ? AppTypography.bodySmall : AppTypography.bodyMedium,
+                  title,
+                  style: isCompact
+                      ? AppTypography.bodySmall
+                      : AppTypography.bodyMedium,
                 ),
                 if (subtitle != null) ...[
                   const SizedBox(height: 2),
                   Text(
-                    subtitle!, 
+                    subtitle!,
                     style: AppTypography.caption,
                   ),
                 ],
@@ -195,7 +200,8 @@ class OptimizedResponsiveGrid extends StatelessWidget {
             crossAxisCount: constraints.gridColumns,
             mainAxisSpacing: mainAxisSpacing,
             crossAxisSpacing: crossAxisSpacing,
-            childAspectRatio: childAspectRatio ?? (constraints.isMobile ? 1.2 : 1.5),
+            childAspectRatio:
+                childAspectRatio ?? (constraints.isMobile ? 1.2 : 1.5),
           ),
           itemBuilder: (context, index) {
             return PerformantAnimatedWidget(
@@ -237,12 +243,13 @@ class OptimizedListItem extends StatelessWidget {
     return ResponsiveBuilder(
       builder: (context, constraints) {
         final isCompact = constraints.isMobile;
-        
+
         Widget listItem = RepaintBoundary(
           child: Column(
             children: [
               Container(
-                padding: EdgeInsets.all(isCompact ? AppSpacing.sm : AppSpacing.md),
+                padding:
+                    EdgeInsets.all(isCompact ? AppSpacing.sm : AppSpacing.md),
                 child: Row(
                   children: [
                     leading,
@@ -252,23 +259,29 @@ class OptimizedListItem extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            title, 
-                            style: (isCompact ? AppTypography.bodyMedium : AppTypography.bodyLarge).copyWith(
+                            title,
+                            style: (isCompact
+                                    ? AppTypography.bodyMedium
+                                    : AppTypography.bodyLarge)
+                                .copyWith(
                               fontWeight: FontWeight.w500,
                             ),
                           ),
                           if (subtitle != null) ...[
                             const SizedBox(height: 2),
                             Text(
-                              subtitle!, 
-                              style: isCompact ? AppTypography.caption : AppTypography.bodySmall,
+                              subtitle!,
+                              style: isCompact
+                                  ? AppTypography.caption
+                                  : AppTypography.bodySmall,
                             ),
                           ],
                         ],
                       ),
                     ),
                     if (trailing != null) ...[
-                      SizedBox(width: isCompact ? AppSpacing.xs : AppSpacing.sm),
+                      SizedBox(
+                          width: isCompact ? AppSpacing.xs : AppSpacing.sm),
                       trailing!,
                     ],
                   ],
@@ -324,7 +337,7 @@ class OptimizedSectionHeader extends StatelessWidget {
     return ResponsiveBuilder(
       builder: (context, constraints) {
         final isCompact = constraints.isMobile;
-        
+
         return RepaintBoundary(
           child: Column(
             children: [
@@ -339,14 +352,17 @@ class OptimizedSectionHeader extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            title, 
-                            style: isCompact ? AppTypography.h3 : AppTypography.h2,
+                            title,
+                            style:
+                                isCompact ? AppTypography.h3 : AppTypography.h2,
                           ),
                           if (subtitle != null) ...[
                             const SizedBox(height: 4),
                             Text(
-                              subtitle!, 
-                              style: isCompact ? AppTypography.bodySmall : AppTypography.bodyMedium,
+                              subtitle!,
+                              style: isCompact
+                                  ? AppTypography.bodySmall
+                                  : AppTypography.bodyMedium,
                             ),
                           ],
                         ],
@@ -385,7 +401,8 @@ class OptimizedAnimatedContainer extends StatefulWidget {
   });
 
   @override
-  State<OptimizedAnimatedContainer> createState() => _OptimizedAnimatedContainerState();
+  State<OptimizedAnimatedContainer> createState() =>
+      _OptimizedAnimatedContainerState();
 }
 
 class _OptimizedAnimatedContainerState extends State<OptimizedAnimatedContainer>

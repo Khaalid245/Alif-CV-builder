@@ -10,7 +10,8 @@ class EnterpriseDashboardScreen extends StatefulWidget {
   const EnterpriseDashboardScreen({super.key});
 
   @override
-  State<EnterpriseDashboardScreen> createState() => _EnterpriseDashboardScreenState();
+  State<EnterpriseDashboardScreen> createState() =>
+      _EnterpriseDashboardScreenState();
 }
 
 class _EnterpriseDashboardScreenState extends State<EnterpriseDashboardScreen>
@@ -67,7 +68,8 @@ class _EnterpriseDashboardScreenState extends State<EnterpriseDashboardScreen>
         children: [
           ModernSidebar(
             isCollapsed: _isSidebarCollapsed,
-            onToggle: () => setState(() => _isSidebarCollapsed = !_isSidebarCollapsed),
+            onToggle: () =>
+                setState(() => _isSidebarCollapsed = !_isSidebarCollapsed),
             currentRoute: _currentRoute,
             onNavigate: (route) => setState(() => _currentRoute = route),
           ),
@@ -319,7 +321,8 @@ class _EnterpriseDashboardScreenState extends State<EnterpriseDashboardScreen>
               children: [
                 ActionCard(
                   title: 'Edit CV Information',
-                  description: 'Update your personal details, experience, and skills',
+                  description:
+                      'Update your personal details, experience, and skills',
                   icon: LucideIcons.edit3,
                   onTap: () {},
                   accentColor: EnterpriseTheme.primaryPurple,
@@ -548,7 +551,8 @@ class _EnterpriseDashboardScreenState extends State<EnterpriseDashboardScreen>
     );
   }
 
-  Widget _buildTimelineItem(String title, String time, IconData icon, Color color) {
+  Widget _buildTimelineItem(
+      String title, String time, IconData icon, Color color) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: EnterpriseTheme.spacing8),
       child: Row(

@@ -125,7 +125,8 @@ class CVVersionModel {
       dataSize: dataSize ?? this.dataSize,
       dataSizeMb: dataSizeMb ?? this.dataSizeMb,
       fieldsChanged: fieldsChanged ?? this.fieldsChanged,
-      previousVersionNumber: previousVersionNumber ?? this.previousVersionNumber,
+      previousVersionNumber:
+          previousVersionNumber ?? this.previousVersionNumber,
     );
   }
 
@@ -206,7 +207,11 @@ class UserBasicModel {
   String get initials {
     final first = firstName.isNotEmpty ? firstName[0].toUpperCase() : '';
     final last = lastName.isNotEmpty ? lastName[0].toUpperCase() : '';
-    return '$first$last'.isEmpty ? email.isNotEmpty ? email[0].toUpperCase() : '?' : '$first$last';
+    return '$first$last'.isEmpty
+        ? email.isNotEmpty
+            ? email[0].toUpperCase()
+            : '?'
+        : '$first$last';
   }
 
   UserBasicModel copyWith({
@@ -255,7 +260,8 @@ class VersionDiffModel {
         newValue: json['new_value'],
         fromVersionNumber: json['from_version_number'] ?? 0,
         toVersionNumber: json['to_version_number'] ?? 0,
-        createdAt: CVVersionModel._parseDateTime(json['created_at']) ?? DateTime.now(),
+        createdAt:
+            CVVersionModel._parseDateTime(json['created_at']) ?? DateTime.now(),
       );
     } catch (e) {
       throw FormatException('Failed to parse VersionDiffModel: $e');
@@ -307,12 +313,13 @@ class VersionDiffModel {
     // Convert field path to human-readable name
     final parts = fieldPath.split('.');
     if (parts.isEmpty) return fieldPath;
-    
+
     final fieldName = parts.last;
     return fieldName
         .replaceAll('_', ' ')
         .split(' ')
-        .map((word) => word.isEmpty ? '' : word[0].toUpperCase() + word.substring(1))
+        .map((word) =>
+            word.isEmpty ? '' : word[0].toUpperCase() + word.substring(1))
         .join(' ');
   }
 
@@ -402,21 +409,22 @@ class VersionComparisonModel {
 
   // Business logic helpers
   bool get hasChanges => totalChanges > 0;
-  
-  List<VersionDiffModel> get fieldChanges => 
+
+  List<VersionDiffModel> get fieldChanges =>
       differences.where((d) => d.isFieldChange).toList();
-  
-  List<VersionDiffModel> get sectionChanges => 
-      differences.where((d) => d.isSectionAdd || d.isSectionRemove || d.isSectionModify).toList();
+
+  List<VersionDiffModel> get sectionChanges => differences
+      .where((d) => d.isSectionAdd || d.isSectionRemove || d.isSectionModify)
+      .toList();
 
   Map<String, List<VersionDiffModel>> get changesBySection {
     final Map<String, List<VersionDiffModel>> grouped = {};
-    
+
     for (final diff in differences) {
       final section = diff.fieldPath.split('.').first;
       grouped.putIfAbsent(section, () => []).add(diff);
     }
-    
+
     return grouped;
   }
 }
@@ -451,7 +459,8 @@ class VersionActionModel {
         versionNumber: json['version_number'],
         ipAddress: json['ip_address']?.toString(),
         metadata: Map<String, dynamic>.from(json['metadata'] ?? {}),
-        createdAt: CVVersionModel._parseDateTime(json['created_at']) ?? DateTime.now(),
+        createdAt:
+            CVVersionModel._parseDateTime(json['created_at']) ?? DateTime.now(),
       );
     } catch (e) {
       throw FormatException('Failed to parse VersionActionModel: $e');

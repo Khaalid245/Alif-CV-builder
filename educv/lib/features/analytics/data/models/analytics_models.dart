@@ -54,12 +54,13 @@ class ScoreSnapshotModel {
       projectsScore: json['projects_score'] ?? 0,
       submissionReady: json['submission_ready'] ?? false,
       grade: json['grade'] ?? '',
-      percentileRank: json['percentile_rank'] != null 
-          ? double.tryParse(json['percentile_rank'].toString()) 
+      percentileRank: json['percentile_rank'] != null
+          ? double.tryParse(json['percentile_rank'].toString())
           : null,
       peerGroupSize: json['peer_group_size'] ?? 0,
       metricsData: json['metrics_data'] ?? {},
-      createdAt: DateTime.parse(json['created_at'] ?? DateTime.now().toIso8601String()),
+      createdAt: DateTime.parse(
+          json['created_at'] ?? DateTime.now().toIso8601String()),
     );
   }
 }
@@ -104,15 +105,18 @@ class TrendAnalysisModel {
       absoluteChange: (json['absolute_change'] ?? 0.0).toDouble(),
       percentageChange: (json['percentage_change'] ?? 0.0).toDouble(),
       volatilityScore: (json['volatility_score'] ?? 0.0).toDouble(),
-      predictedNextValue: json['predicted_next_value'] != null 
-          ? double.tryParse(json['predicted_next_value'].toString()) 
+      predictedNextValue: json['predicted_next_value'] != null
+          ? double.tryParse(json['predicted_next_value'].toString())
           : null,
       confidenceInterval: json['confidence_interval'] ?? {},
       dataPoints: (json['data_points'] as List<dynamic>?)
-          ?.map((d) => TrendDataPoint.fromJson(d))
-          .toList() ?? [],
-      analysisStart: DateTime.parse(json['analysis_start'] ?? DateTime.now().toIso8601String()),
-      analysisEnd: DateTime.parse(json['analysis_end'] ?? DateTime.now().toIso8601String()),
+              ?.map((d) => TrendDataPoint.fromJson(d))
+              .toList() ??
+          [],
+      analysisStart: DateTime.parse(
+          json['analysis_start'] ?? DateTime.now().toIso8601String()),
+      analysisEnd: DateTime.parse(
+          json['analysis_end'] ?? DateTime.now().toIso8601String()),
       dataPointsCount: json['data_points_count'] ?? 0,
     );
   }
@@ -170,15 +174,18 @@ class CompletionStatisticsModel {
       averageCompletion: (json['average_completion'] ?? 0.0).toDouble(),
       averageScore: (json['average_score'] ?? 0.0).toDouble(),
       submissionReadyCount: json['submission_ready_count'] ?? 0,
-      submissionReadyPercentage: (json['submission_ready_percentage'] ?? 0.0).toDouble(),
-      scoreDistribution: Map<String, int>.from(json['score_distribution'] ?? {}),
-      completionDistribution: Map<String, int>.from(json['completion_distribution'] ?? {}),
-      sectionAverages: Map<String, double>.from(
-        (json['section_averages'] ?? {}).map((k, v) => MapEntry(k, (v ?? 0.0).toDouble()))
-      ),
+      submissionReadyPercentage:
+          (json['submission_ready_percentage'] ?? 0.0).toDouble(),
+      scoreDistribution:
+          Map<String, int>.from(json['score_distribution'] ?? {}),
+      completionDistribution:
+          Map<String, int>.from(json['completion_distribution'] ?? {}),
+      sectionAverages: Map<String, double>.from((json['section_averages'] ?? {})
+          .map((k, v) => MapEntry(k, (v ?? 0.0).toDouble()))),
       trends: (json['trends'] as List<dynamic>?)
-          ?.map((t) => StatisticsTrendPoint.fromJson(t))
-          .toList() ?? [],
+              ?.map((t) => StatisticsTrendPoint.fromJson(t))
+              .toList() ??
+          [],
     );
   }
 }
@@ -227,14 +234,15 @@ class AnalyticsDashboardModel {
     return AnalyticsDashboardModel(
       userSummary: UserSummaryModel.fromJson(json['user_summary'] ?? {}),
       recentSnapshots: (json['recent_snapshots'] as List<dynamic>?)
-          ?.map((s) => ScoreSnapshotModel.fromJson(s))
-          .toList() ?? [],
-      trendAnalysis: json['trend_analysis'] != null 
-          ? TrendAnalysisModel.fromJson(json['trend_analysis']) 
+              ?.map((s) => ScoreSnapshotModel.fromJson(s))
+              .toList() ??
+          [],
+      trendAnalysis: json['trend_analysis'] != null
+          ? TrendAnalysisModel.fromJson(json['trend_analysis'])
           : null,
       benchmarkingSummary: json['benchmarking_summary'] ?? {},
-      completionStats: json['completion_stats'] != null 
-          ? CompletionStatisticsModel.fromJson(json['completion_stats']) 
+      completionStats: json['completion_stats'] != null
+          ? CompletionStatisticsModel.fromJson(json['completion_stats'])
           : null,
       systemMetrics: json['system_metrics'] ?? {},
     );
@@ -264,8 +272,8 @@ class UserSummaryModel {
       latestCompletion: json['latest_completion'] ?? 0,
       submissionReady: json['submission_ready'] ?? false,
       grade: json['grade'] ?? '',
-      percentileRank: json['percentile_rank'] != null 
-          ? double.tryParse(json['percentile_rank'].toString()) 
+      percentileRank: json['percentile_rank'] != null
+          ? double.tryParse(json['percentile_rank'].toString())
           : null,
       totalSnapshots: json['total_snapshots'] ?? 0,
     );

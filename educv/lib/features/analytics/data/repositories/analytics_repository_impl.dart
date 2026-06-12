@@ -12,12 +12,13 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
   @override
   Future<AnalyticsDashboardModel> getDashboardData() async {
     final response = await _apiClient.get('/analytics/dashboard/');
-    
+
     if (response.success && response.data != null) {
       return AnalyticsDashboardModel.fromJson(response.data);
     }
-    
-    throw Exception(response.error?.message ?? 'Failed to fetch dashboard data');
+
+    throw Exception(
+        response.error?.message ?? 'Failed to fetch dashboard data');
   }
 
   @override
@@ -28,9 +29,10 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
     int? offset,
   }) async {
     final queryParams = <String, String>{};
-    
+
     if (snapshotType != null) queryParams['snapshot_type'] = snapshotType;
-    if (submissionReady != null) queryParams['submission_ready'] = submissionReady.toString();
+    if (submissionReady != null)
+      queryParams['submission_ready'] = submissionReady.toString();
     if (limit != null) queryParams['limit'] = limit.toString();
     if (offset != null) queryParams['offset'] = offset.toString();
 
@@ -38,13 +40,14 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
       '/analytics/snapshots/',
       queryParameters: queryParams,
     );
-    
+
     if (response.success && response.data != null) {
       final List<dynamic> results = response.data['results'] ?? [];
       return results.map((json) => ScoreSnapshotModel.fromJson(json)).toList();
     }
-    
-    throw Exception(response.error?.message ?? 'Failed to fetch score snapshots');
+
+    throw Exception(
+        response.error?.message ?? 'Failed to fetch score snapshots');
   }
 
   @override
@@ -59,12 +62,13 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
         if (metric != null) 'metric': metric,
       },
     );
-    
+
     if (response.success && response.data != null) {
       return TrendAnalysisModel.fromJson(response.data);
     }
-    
-    throw Exception(response.error?.message ?? 'Failed to fetch trend analysis');
+
+    throw Exception(
+        response.error?.message ?? 'Failed to fetch trend analysis');
   }
 
   @override
@@ -77,12 +81,13 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
         if (groupTypes != null) 'group_types': groupTypes,
       },
     );
-    
+
     if (response.success && response.data != null) {
       return BenchmarkingDataModel.fromJson(response.data);
     }
-    
-    throw Exception(response.error?.message ?? 'Failed to fetch benchmarking data');
+
+    throw Exception(
+        response.error?.message ?? 'Failed to fetch benchmarking data');
   }
 
   @override
@@ -97,12 +102,13 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
         if (groupType != null) 'group_type': groupType,
       },
     );
-    
+
     if (response.success && response.data != null) {
       return CompletionStatisticsModel.fromJson(response.data);
     }
-    
-    throw Exception(response.error?.message ?? 'Failed to fetch completion statistics');
+
+    throw Exception(
+        response.error?.message ?? 'Failed to fetch completion statistics');
   }
 
   @override
@@ -117,11 +123,11 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
         if (triggerEvent != null) 'trigger_event': triggerEvent,
       },
     );
-    
+
     if (response.success && response.data != null) {
       return ScoreSnapshotModel.fromJson(response.data);
     }
-    
+
     throw Exception(response.error?.message ?? 'Failed to create snapshot');
   }
 }

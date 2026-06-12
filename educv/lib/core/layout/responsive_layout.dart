@@ -66,7 +66,7 @@ extension DeviceTypeExtension on DeviceType {
   bool get isMobile => this == DeviceType.mobile;
   bool get isTablet => this == DeviceType.tablet;
   bool get isDesktop => this == DeviceType.desktop;
-  
+
   int get gridColumns {
     switch (this) {
       case DeviceType.mobile:
@@ -77,7 +77,7 @@ extension DeviceTypeExtension on DeviceType {
         return 4;
     }
   }
-  
+
   EdgeInsets get padding {
     switch (this) {
       case DeviceType.mobile:
@@ -88,7 +88,7 @@ extension DeviceTypeExtension on DeviceType {
         return const EdgeInsets.all(32);
     }
   }
-  
+
   double get sidebarWidth {
     switch (this) {
       case DeviceType.mobile:

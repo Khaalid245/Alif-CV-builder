@@ -71,7 +71,8 @@ class WorkflowTransitionLogModel {
       toState: json['to_state']?.toString() ?? '',
       comment: json['comment']?.toString(),
       performedBy: json['performed_by']?.toString() ?? '',
-      performedAt: DateTime.parse(json['performed_at'] ?? DateTime.now().toIso8601String()),
+      performedAt: DateTime.parse(
+          json['performed_at'] ?? DateTime.now().toIso8601String()),
       metadata: Map<String, dynamic>.from(json['metadata'] ?? {}),
     );
   }

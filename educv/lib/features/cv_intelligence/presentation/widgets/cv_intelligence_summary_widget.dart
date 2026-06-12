@@ -76,7 +76,8 @@ class CVIntelligenceSummaryWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildContent(BuildContext context, WidgetRef ref, AnalysisState state) {
+  Widget _buildContent(
+      BuildContext context, WidgetRef ref, AnalysisState state) {
     if (state.isLoading) {
       return const SizedBox(
         height: 100,
@@ -181,7 +182,7 @@ class CVIntelligenceSummaryWidget extends ConsumerWidget {
           ],
         ),
         const SizedBox(height: AppSpacing.md),
-        
+
         // Progress Bar
         LinearProgressIndicator(
           value: analysis.overallScore / 100,
@@ -245,7 +246,7 @@ class CVIntelligenceSummaryWidget extends ConsumerWidget {
         ],
 
         const SizedBox(height: AppSpacing.md),
-        
+
         // Action Buttons
         Row(
           children: [

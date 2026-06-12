@@ -76,7 +76,8 @@ void main() {
         'section_scores': 'invalid_data', // Should be a map
       };
 
-      expect(() => CVAnalysisModel.fromJson(json), throwsA(isA<FormatException>()));
+      expect(() => CVAnalysisModel.fromJson(json),
+          throwsA(isA<FormatException>()));
     });
 
     test('should convert to JSON correctly', () {
@@ -451,7 +452,7 @@ void main() {
     test('should parse DateTime values correctly', () {
       final validDate = '2024-01-01T00:00:00Z';
       final parsed = CVAnalysisModel._parseDateTime(validDate);
-      
+
       expect(parsed, isNotNull);
       expect(parsed!.year, 2024);
       expect(parsed.month, 1);

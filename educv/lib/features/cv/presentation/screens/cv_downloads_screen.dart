@@ -391,7 +391,8 @@ class _CVDownloadsScreenState extends ConsumerState<CVDownloadsScreen> {
           width: 0.5,
         ),
         borderRadius: BorderRadius.circular(4),
-        color: isFeatured ? AppColors.primary.withOpacity(0.1) : AppColors.surface,
+        color:
+            isFeatured ? AppColors.primary.withOpacity(0.1) : AppColors.surface,
       ),
       padding: const EdgeInsets.all(4),
       child: Column(

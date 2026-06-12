@@ -27,7 +27,9 @@ class PremiumNavBar extends StatelessWidget {
           child: LayoutBuilder(
             builder: (context, constraints) {
               final isWeb = constraints.maxWidth >= 800;
-              return isWeb ? _buildWebNavBar(context) : _buildMobileNavBar(context);
+              return isWeb
+                  ? _buildWebNavBar(context)
+                  : _buildMobileNavBar(context);
             },
           ),
         ),
@@ -267,7 +269,8 @@ class PremiumNavBar extends StatelessWidget {
                   ),
                   const SizedBox(height: 32),
                   _buildMobileNavLink(context, 'Home', '/'),
-                  _buildMobileNavLink(context, 'How it works', '/#how-it-works'),
+                  _buildMobileNavLink(
+                      context, 'How it works', '/#how-it-works'),
                   _buildMobileNavLink(context, 'Templates', '/#templates'),
                   _buildMobileNavLink(context, 'About', '/about'),
                   _buildMobileNavLink(context, 'Contact', '/contact'),

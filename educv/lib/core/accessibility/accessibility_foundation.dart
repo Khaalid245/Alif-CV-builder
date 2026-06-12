@@ -12,26 +12,28 @@ class AccessibleColors {
   static const Color successAccessible = Color(0xFF2E7D32); // WCAG AA compliant
   static const Color warningAccessible = Color(0xFFED6C02); // WCAG AA compliant
   static const Color infoAccessible = Color(0xFF0288D1); // WCAG AA compliant
-  
+
   // Text colors with proper contrast ratios
   static const Color textPrimaryAccessible = Color(0xFF000000); // 21:1 contrast
-  static const Color textSecondaryAccessible = Color(0xFF424242); // 12.6:1 contrast
-  static const Color textOnPrimaryAccessible = Color(0xFFFFFFFF); // 21:1 contrast
-  
+  static const Color textSecondaryAccessible =
+      Color(0xFF424242); // 12.6:1 contrast
+  static const Color textOnPrimaryAccessible =
+      Color(0xFFFFFFFF); // 21:1 contrast
+
   // Background colors
   static const Color backgroundAccessible = Color(0xFFFFFFFF);
   static const Color surfaceAccessible = Color(0xFFF5F5F5);
   static const Color cardAccessible = Color(0xFFFFFFFF);
-  
+
   // Border colors with sufficient contrast
   static const Color borderAccessible = Color(0xFF757575); // 4.5:1 contrast
   static const Color borderLightAccessible = Color(0xFFBDBDBD); // 3:1 contrast
-  
+
   // Interactive states
   static const Color hoverAccessible = Color(0xFFF5F5F5);
   static const Color pressedAccessible = Color(0xFFEEEEEE);
   static const Color disabledAccessible = Color(0xFF9E9E9E);
-  
+
   // Validation colors with high contrast
   static const Color validationSuccess = Color(0xFF1B5E20);
   static const Color validationError = Color(0xFFB71C1C);
@@ -42,7 +44,7 @@ class AccessibleColors {
 class AccessibilityFocus {
   static const double focusWidth = 3.0;
   static const double focusOffset = 2.0;
-  
+
   static BoxDecoration getFocusDecoration({
     Color? focusColor,
     double? width,
@@ -56,7 +58,7 @@ class AccessibilityFocus {
       borderRadius: BorderRadius.circular(borderRadius ?? 8.0),
     );
   }
-  
+
   static OutlineInputBorder getFocusedInputBorder({
     Color? focusColor,
     double? width,
@@ -79,27 +81,27 @@ class AccessibilityLabels {
   static const String closeButton = 'Close dialog';
   static const String menuButton = 'Open navigation menu';
   static const String homeButton = 'Go to home screen';
-  
+
   // Form elements
   static const String requiredField = 'Required field';
   static const String optionalField = 'Optional field';
   static const String validInput = 'Valid input';
   static const String invalidInput = 'Invalid input, please correct';
   static const String loadingInput = 'Validating input';
-  
+
   // Actions
   static const String saveButton = 'Save changes';
   static const String cancelButton = 'Cancel and discard changes';
   static const String deleteButton = 'Delete item permanently';
   static const String editButton = 'Edit item';
   static const String addButton = 'Add new item';
-  
+
   // Status indicators
   static const String loadingStatus = 'Loading content';
   static const String errorStatus = 'Error occurred';
   static const String successStatus = 'Action completed successfully';
   static const String emptyStatus = 'No items to display';
-  
+
   // CV specific
   static const String cvProgress = 'CV completion progress';
   static const String cvSection = 'CV section';
@@ -114,19 +116,19 @@ class AccessibilityAnnouncements {
   static void announce(BuildContext context, String message) {
     SemanticsService.announce(message, TextDirection.ltr);
   }
-  
+
   static void announceSuccess(BuildContext context, String action) {
     announce(context, '$action completed successfully');
   }
-  
+
   static void announceError(BuildContext context, String error) {
     announce(context, 'Error: $error');
   }
-  
+
   static void announceLoading(BuildContext context, String action) {
     announce(context, '$action in progress');
   }
-  
+
   static void announceNavigation(BuildContext context, String destination) {
     announce(context, 'Navigated to $destination');
   }
@@ -138,7 +140,7 @@ class KeyboardNavigation {
     LogicalKeyboardKey.enter,
     LogicalKeyboardKey.space,
   ];
-  
+
   static const List<LogicalKeyboardKey> navigationKeys = [
     LogicalKeyboardKey.tab,
     LogicalKeyboardKey.arrowUp,
@@ -146,15 +148,15 @@ class KeyboardNavigation {
     LogicalKeyboardKey.arrowLeft,
     LogicalKeyboardKey.arrowRight,
   ];
-  
+
   static bool isActivationKey(LogicalKeyboardKey key) {
     return activationKeys.contains(key);
   }
-  
+
   static bool isNavigationKey(LogicalKeyboardKey key) {
     return navigationKeys.contains(key);
   }
-  
+
   static void handleActivation(VoidCallback? onPressed) {
     if (onPressed != null) {
       // Provide haptic feedback for keyboard activation
@@ -303,7 +305,8 @@ class AccessibleButton extends StatelessWidget {
         onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: backgroundColor ?? AccessibleColors.focusIndicator,
-          foregroundColor: foregroundColor ?? AccessibleColors.textOnPrimaryAccessible,
+          foregroundColor:
+              foregroundColor ?? AccessibleColors.textOnPrimaryAccessible,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
@@ -347,7 +350,8 @@ class AccessibleButton extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: foregroundColor ?? AccessibleColors.textOnPrimaryAccessible,
+                      color: foregroundColor ??
+                          AccessibleColors.textOnPrimaryAccessible,
                     ),
                   ),
                 ],

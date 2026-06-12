@@ -24,8 +24,10 @@ class UserTemplatePreferenceModel {
       favoriteTemplateIds: List<String>.from(json['favorite_templates'] ?? []),
       recentTemplateIds: List<String>.from(json['recent_templates'] ?? []),
       preferences: Map<String, dynamic>.from(json['preferences'] ?? {}),
-      createdAt: DateTime.parse(json['created_at'] ?? DateTime.now().toIso8601String()),
-      updatedAt: DateTime.parse(json['updated_at'] ?? DateTime.now().toIso8601String()),
+      createdAt: DateTime.parse(
+          json['created_at'] ?? DateTime.now().toIso8601String()),
+      updatedAt: DateTime.parse(
+          json['updated_at'] ?? DateTime.now().toIso8601String()),
     );
   }
 

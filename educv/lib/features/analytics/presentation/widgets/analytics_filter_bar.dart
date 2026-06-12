@@ -35,7 +35,6 @@ class AnalyticsFilterBar extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.sm),
-          
           Wrap(
             spacing: AppSpacing.sm,
             children: [
@@ -52,7 +51,7 @@ class AnalyticsFilterBar extends StatelessWidget {
 
   Widget _buildPeriodChip(int days, String label) {
     final isSelected = selectedPeriod == days;
-    
+
     return FilterChip(
       label: Text(label),
       selected: isSelected,

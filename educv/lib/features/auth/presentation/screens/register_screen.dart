@@ -178,8 +178,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
             color: PremiumPortfolioColors.accentPurple.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color:
-                  PremiumPortfolioColors.accentPurple.withValues(alpha: 0.2),
+              color: PremiumPortfolioColors.accentPurple.withValues(alpha: 0.2),
             ),
           ),
           child: const Text(
@@ -206,8 +205,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: PremiumPortfolioColors.accentPurple
-                    .withValues(alpha: 0.3),
+                color:
+                    PremiumPortfolioColors.accentPurple.withValues(alpha: 0.3),
                 blurRadius: 20,
                 offset: const Offset(0, 8),
               ),
@@ -444,21 +443,18 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
   InputDecoration _inputDecoration(String hint, IconData icon) {
     return InputDecoration(
       hintText: hint,
-      hintStyle:
-          const TextStyle(color: PremiumPortfolioColors.secondaryText),
+      hintStyle: const TextStyle(color: PremiumPortfolioColors.secondaryText),
       prefixIcon:
           Icon(icon, color: PremiumPortfolioColors.secondaryText, size: 20),
       filled: true,
       fillColor: PremiumPortfolioColors.background,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide:
-            const BorderSide(color: PremiumPortfolioColors.borderLight),
+        borderSide: const BorderSide(color: PremiumPortfolioColors.borderLight),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide:
-            const BorderSide(color: PremiumPortfolioColors.borderLight),
+        borderSide: const BorderSide(color: PremiumPortfolioColors.borderLight),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
@@ -607,8 +603,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                     height: 24,
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
-                      valueColor:
-                          AlwaysStoppedAnimation<Color>(Colors.white),
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                     ),
                   )
                 : const Text(

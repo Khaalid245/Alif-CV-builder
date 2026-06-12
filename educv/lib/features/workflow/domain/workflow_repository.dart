@@ -24,7 +24,8 @@ abstract class WorkflowRepository {
   );
 
   /// Get available transitions for a workflow instance
-  Future<List<WorkflowTransitionModel>> getAvailableTransitions(String instanceId);
+  Future<List<WorkflowTransitionModel>> getAvailableTransitions(
+      String instanceId);
 
   /// Get transition history for a workflow instance
   Future<List<WorkflowTransitionLogModel>> getTransitionHistory(

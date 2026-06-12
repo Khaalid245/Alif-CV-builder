@@ -44,7 +44,8 @@ class ScoreTrendChart extends StatelessWidget {
                     vertical: AppSpacing.xs,
                   ),
                   decoration: BoxDecoration(
-                    color: _getTrendColor(trendAnalysis.trendDirection).withOpacity(0.1),
+                    color: _getTrendColor(trendAnalysis.trendDirection)
+                        .withOpacity(0.1),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusBtn),
                   ),
                   child: Text(
@@ -57,7 +58,6 @@ class ScoreTrendChart extends StatelessWidget {
                 ),
               ],
             ),
-            
             if (showDetails) ...[
               const SizedBox(height: AppSpacing.sm),
               Row(
@@ -78,9 +78,7 @@ class ScoreTrendChart extends StatelessWidget {
                 ],
               ),
             ],
-            
             const SizedBox(height: AppSpacing.lg),
-            
             SizedBox(
               height: 200,
               child: LineChart(
@@ -111,7 +109,8 @@ class ScoreTrendChart extends StatelessWidget {
                         interval: _calculateXInterval(),
                         getTitlesWidget: (value, meta) {
                           final index = value.toInt();
-                          if (index >= 0 && index < trendAnalysis.dataPoints.length) {
+                          if (index >= 0 &&
+                              index < trendAnalysis.dataPoints.length) {
                             final date = trendAnalysis.dataPoints[index].date;
                             return SideTitleWidget(
                               axisSide: meta.axisSide,
@@ -177,7 +176,8 @@ class ScoreTrendChart extends StatelessWidget {
                       ),
                       belowBarData: BarAreaData(
                         show: true,
-                        color: _getTrendColor(trendAnalysis.trendDirection).withOpacity(0.1),
+                        color: _getTrendColor(trendAnalysis.trendDirection)
+                            .withOpacity(0.1),
                       ),
                     ),
                     if (trendAnalysis.predictedNextValue != null)
@@ -191,7 +191,8 @@ class ScoreTrendChart extends StatelessWidget {
                       getTooltipItems: (touchedSpots) {
                         return touchedSpots.map((spot) {
                           final index = spot.x.toInt();
-                          if (index >= 0 && index < trendAnalysis.dataPoints.length) {
+                          if (index >= 0 &&
+                              index < trendAnalysis.dataPoints.length) {
                             final dataPoint = trendAnalysis.dataPoints[index];
                             return LineTooltipItem(
                               '${DateFormatter.formatShortDate(dataPoint.date)}\nScore: ${spot.y.toStringAsFixed(1)}',
@@ -208,7 +209,6 @@ class ScoreTrendChart extends StatelessWidget {
                 ),
               ),
             ),
-            
             if (showDetails && trendAnalysis.predictedNextValue != null) ...[
               const SizedBox(height: AppSpacing.md),
               Container(
@@ -249,7 +249,8 @@ class ScoreTrendChart extends StatelessWidget {
   }
 
   LineChartBarData _getPredictionLine() {
-    if (trendAnalysis.predictedNextValue == null || trendAnalysis.dataPoints.isEmpty) {
+    if (trendAnalysis.predictedNextValue == null ||
+        trendAnalysis.dataPoints.isEmpty) {
       return LineChartBarData(spots: []);
     }
 
@@ -269,7 +270,8 @@ class ScoreTrendChart extends StatelessWidget {
       dotData: FlDotData(
         show: true,
         getDotPainter: (spot, percent, barData, index) {
-          if (index == 1) { // Prediction point
+          if (index == 1) {
+            // Prediction point
             return FlDotCirclePainter(
               radius: 6,
               color: AppColors.primary.withOpacity(0.5),
@@ -299,12 +301,12 @@ class ScoreTrendChart extends StatelessWidget {
     var maxValue = trendAnalysis.dataPoints
         .map((p) => p.value)
         .reduce((a, b) => a > b ? a : b);
-    
+
     if (trendAnalysis.predictedNextValue != null) {
       maxValue = [maxValue, trendAnalysis.predictedNextValue!]
           .reduce((a, b) => a > b ? a : b);
     }
-    
+
     return (maxValue + 10).clamp(0, 100);
   }
 

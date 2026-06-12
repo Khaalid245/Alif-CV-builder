@@ -69,9 +69,7 @@ void main() {
 
       test('should handle invalid JSON gracefully', () {
         // Arrange
-        final invalidJson = {
-          'invalid_field': 'value'
-        };
+        final invalidJson = {'invalid_field': 'value'};
 
         // Act & Assert
         expect(

@@ -16,21 +16,21 @@ class ErrorInterceptor extends Interceptor {
           details: _extractErrorDetails(err),
         );
         break;
-      
+
       case DioExceptionType.badResponse:
         final statusCode = err.response?.statusCode;
         final responseData = err.response?.data;
-        
-        String message = _extractErrorMessage(responseData) ?? 
-                        'Server error (${statusCode ?? 'Unknown'})';
-        
+
+        String message = _extractErrorMessage(responseData) ??
+            'Server error (${statusCode ?? 'Unknown'})';
+
         appException = ServerException(
           message: message,
           code: statusCode?.toString(),
           details: responseData,
         );
         break;
-      
+
       case DioExceptionType.cancel:
         appException = AppException(
           message: 'Request was cancelled',
@@ -38,25 +38,27 @@ class ErrorInterceptor extends Interceptor {
           details: _extractErrorDetails(err),
         );
         break;
-      
+
       case DioExceptionType.connectionError:
         appException = NetworkException(
-          message: 'Connection failed. Please check your network and server availability.',
+          message:
+              'Connection failed. Please check your network and server availability.',
           code: 'CONNECTION_ERROR',
           details: _extractErrorDetails(err),
         );
         break;
-      
+
       default:
-        String errorMessage = _extractErrorMessage(err.response?.data) ?? 
-                             err.message ?? 
-                             'An unexpected error occurred';
-        
+        String errorMessage = _extractErrorMessage(err.response?.data) ??
+            err.message ??
+            'An unexpected error occurred';
+
         // Prevent null error messages
         if (errorMessage.isEmpty || errorMessage == 'null') {
-          errorMessage = 'Network request failed. Please check your connection and try again.';
+          errorMessage =
+              'Network request failed. Please check your connection and try again.';
         }
-        
+
         appException = AppException(
           message: errorMessage,
           code: 'UNKNOWN',
@@ -77,17 +79,21 @@ class ErrorInterceptor extends Interceptor {
   String? _extractErrorMessage(dynamic responseData) {
     if (responseData is Map<String, dynamic>) {
       // Try multiple possible error message fields
-      final message = responseData['message'] ?? 
-                     responseData['error']?['message'] ?? 
-                     responseData['detail'] ??
-                     responseData['non_field_errors']?.first;
-      
+      final message = responseData['message'] ??
+          responseData['error']?['message'] ??
+          responseData['detail'] ??
+          responseData['non_field_errors']?.first;
+
       // Return non-empty message only
-      if (message != null && message.toString().isNotEmpty && message.toString() != 'null') {
+      if (message != null &&
+          message.toString().isNotEmpty &&
+          message.toString() != 'null') {
         return message.toString();
       }
     }
-    if (responseData is String && responseData.isNotEmpty && responseData != 'null') {
+    if (responseData is String &&
+        responseData.isNotEmpty &&
+        responseData != 'null') {
       return responseData;
     }
     return null;
@@ -95,19 +101,19 @@ class ErrorInterceptor extends Interceptor {
 
   String _extractErrorDetails(DioException err) {
     final details = <String>[];
-    
+
     if (err.message != null) {
       details.add('Message: ${err.message}');
     }
-    
+
     if (err.response?.statusCode != null) {
       details.add('Status: ${err.response!.statusCode}');
     }
-    
+
     if (err.requestOptions.uri.toString().isNotEmpty) {
       details.add('URL: ${err.requestOptions.uri}');
     }
-    
+
     return details.join(', ');
   }
 }

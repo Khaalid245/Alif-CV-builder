@@ -43,7 +43,8 @@ void main() {
         expect(find.byType(LinearProgressIndicator), findsOneWidget);
       });
 
-      testWidgets('should show raw score when showPercentage is false', (tester) async {
+      testWidgets('should show raw score when showPercentage is false',
+          (tester) async {
         // Act
         await tester.pumpWidget(
           MaterialApp(
@@ -219,14 +220,18 @@ void main() {
 
         // Assert
         expect(find.text('Add Technical Skills'), findsOneWidget);
-        expect(find.text('Consider adding more technical skills to your CV'), findsOneWidget);
+        expect(find.text('Consider adding more technical skills to your CV'),
+            findsOneWidget);
         expect(find.text('Skills'), findsOneWidget);
-        expect(find.byIcon(LucideIcons.alertTriangle), findsOneWidget); // High priority icon
+        expect(find.byIcon(LucideIcons.alertTriangle),
+            findsOneWidget); // High priority icon
         expect(find.text('Add Skills'), findsOneWidget);
         expect(find.text('Mark as Done'), findsOneWidget);
       });
 
-      testWidgets('should show implemented badge when recommendation is implemented', (tester) async {
+      testWidgets(
+          'should show implemented badge when recommendation is implemented',
+          (tester) async {
         // Arrange
         final recommendation = RecommendationModel(
           id: 'rec-1',
@@ -254,7 +259,8 @@ void main() {
         // Assert
         expect(find.text('Implemented'), findsOneWidget);
         expect(find.byIcon(LucideIcons.check), findsOneWidget);
-        expect(find.text('Mark as Done'), findsNothing); // Should not show actions
+        expect(
+            find.text('Mark as Done'), findsNothing); // Should not show actions
       });
 
       testWidgets('should handle action button taps', (tester) async {
@@ -296,7 +302,8 @@ void main() {
         expect(actionCalled, isTrue);
       });
 
-      testWidgets('should display correct priority icons and colors', (tester) async {
+      testWidgets('should display correct priority icons and colors',
+          (tester) async {
         // Test high priority
         final highPriorityRec = RecommendationModel(
           id: 'rec-high',
@@ -413,7 +420,8 @@ void main() {
         expect(find.byType(RecommendationCard), findsNWidgets(2));
       });
 
-      testWidgets('should show empty state when no recommendations', (tester) async {
+      testWidgets('should show empty state when no recommendations',
+          (tester) async {
         // Act
         await tester.pumpWidget(
           MaterialApp(
@@ -427,7 +435,8 @@ void main() {
 
         // Assert
         expect(find.text('All Caught Up!'), findsOneWidget);
-        expect(find.text('You\'ve implemented all recommendations. Great job!'), findsOneWidget);
+        expect(find.text('You\'ve implemented all recommendations. Great job!'),
+            findsOneWidget);
         expect(find.byIcon(LucideIcons.checkCircle), findsOneWidget);
       });
 

@@ -25,7 +25,8 @@ class NotificationFilterBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hasFilters = selectedType != null || selectedStatus != null || showUnreadOnly;
+    final hasFilters =
+        selectedType != null || selectedStatus != null || showUnreadOnly;
 
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),

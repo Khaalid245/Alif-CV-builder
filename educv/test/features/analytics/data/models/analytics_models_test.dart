@@ -83,16 +83,8 @@ void main() {
         'predicted_next_value': 88.5,
         'confidence_interval': {'lower': 85.0, 'upper': 92.0},
         'data_points': [
-          {
-            'date': '2024-01-01T10:00:00Z',
-            'value': 70.0,
-            'label': 'Initial'
-          },
-          {
-            'date': '2024-01-15T10:00:00Z',
-            'value': 85.0,
-            'label': 'Improved'
-          }
+          {'date': '2024-01-01T10:00:00Z', 'value': 70.0, 'label': 'Initial'},
+          {'date': '2024-01-15T10:00:00Z', 'value': 85.0, 'label': 'Improved'}
         ],
         'analysis_start': '2024-01-01T00:00:00Z',
         'analysis_end': '2024-01-31T23:59:59Z',

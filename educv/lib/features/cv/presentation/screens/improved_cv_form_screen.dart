@@ -25,7 +25,8 @@ class ImprovedCVFormScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ImprovedCVFormScreen> createState() => _ImprovedCVFormScreenState();
+  ConsumerState<ImprovedCVFormScreen> createState() =>
+      _ImprovedCVFormScreenState();
 }
 
 class _ImprovedCVFormScreenState extends ConsumerState<ImprovedCVFormScreen>
@@ -47,14 +48,16 @@ class _ImprovedCVFormScreenState extends ConsumerState<ImprovedCVFormScreen>
       title: 'Education',
       subtitle: 'Your academic background',
       icon: LucideIcons.graduationCap,
-      description: 'Add your degrees, certifications, and academic achievements',
+      description:
+          'Add your degrees, certifications, and academic achievements',
       isRequired: true,
     ),
     CVFormStep(
       title: 'Work Experience',
       subtitle: 'Your professional journey',
       icon: LucideIcons.briefcase,
-      description: 'Add your work history, internships, and professional experience',
+      description:
+          'Add your work history, internships, and professional experience',
       isRequired: false,
     ),
     CVFormStep(
@@ -92,7 +95,7 @@ class _ImprovedCVFormScreenState extends ConsumerState<ImprovedCVFormScreen>
     super.initState();
     _initialStep = widget.initialStep;
     _pageController = PageController(initialPage: _initialStep);
-    
+
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
@@ -100,7 +103,7 @@ class _ImprovedCVFormScreenState extends ConsumerState<ImprovedCVFormScreen>
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _fadeController, curve: Curves.easeOut),
     );
-    
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(cvFormStepProvider.notifier).state = _initialStep;
       _fadeController.forward();
@@ -157,8 +160,7 @@ class _ImprovedCVFormScreenState extends ConsumerState<ImprovedCVFormScreen>
                 showPrevious: currentStep > 0,
                 onPrevious: _goToPreviousStep,
                 onPrimary: isLoading ? null : _goToNextStep,
-                primaryLabel:
-                    isLastStep ? 'Preview CV' : 'Save & continue',
+                primaryLabel: isLastStep ? 'Preview CV' : 'Save & continue',
                 primaryIcon:
                     isLastStep ? LucideIcons.eye : LucideIcons.arrowRight,
               ),
@@ -265,8 +267,7 @@ class _ImprovedCVFormScreenState extends ConsumerState<ImprovedCVFormScreen>
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: PremiumSaaSTheme.primaryPurple
-                        .withOpacity(0.08),
+                    color: PremiumSaaSTheme.primaryPurple.withOpacity(0.08),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
@@ -282,7 +283,8 @@ class _ImprovedCVFormScreenState extends ConsumerState<ImprovedCVFormScreen>
             ),
           ),
           Padding(
-            padding: EdgeInsets.fromLTRB(horizontalPadding, 0, horizontalPadding, 10),
+            padding: EdgeInsets.fromLTRB(
+                horizontalPadding, 0, horizontalPadding, 10),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(2),
               child: LinearProgressIndicator(

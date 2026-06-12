@@ -27,7 +27,6 @@ class AnalyticsOverviewCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: AppSpacing.lg),
-            
             Row(
               children: [
                 Expanded(
@@ -51,9 +50,7 @@ class AnalyticsOverviewCard extends StatelessWidget {
                 ),
               ],
             ),
-            
             const SizedBox(height: AppSpacing.lg),
-            
             Row(
               children: [
                 Expanded(
@@ -61,28 +58,29 @@ class AnalyticsOverviewCard extends StatelessWidget {
                     'Submission Ready',
                     userSummary.submissionReady ? 'Yes' : 'No',
                     userSummary.submissionReady ? Icons.check : Icons.close,
-                    userSummary.submissionReady ? AppColors.success : AppColors.error,
+                    userSummary.submissionReady
+                        ? AppColors.success
+                        : AppColors.error,
                   ),
                 ),
                 const SizedBox(width: AppSpacing.md),
                 Expanded(
                   child: _buildStatusCard(
                     'Grade',
-                    userSummary.grade.isNotEmpty ? userSummary.grade : 'Not Graded',
+                    userSummary.grade.isNotEmpty
+                        ? userSummary.grade
+                        : 'Not Graded',
                     Icons.grade,
                     _getGradeColor(userSummary.grade),
                   ),
                 ),
               ],
             ),
-            
             if (userSummary.percentileRank != null) ...[
               const SizedBox(height: AppSpacing.lg),
               _buildPercentileRank(userSummary.percentileRank!),
             ],
-            
             const SizedBox(height: AppSpacing.md),
-            
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -98,7 +96,8 @@ class AnalyticsOverviewCard extends StatelessWidget {
                     vertical: AppSpacing.xs,
                   ),
                   decoration: BoxDecoration(
-                    color: _getReadinessColor(userSummary.submissionReady).withOpacity(0.1),
+                    color: _getReadinessColor(userSummary.submissionReady)
+                        .withOpacity(0.1),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusBtn),
                   ),
                   child: Text(
@@ -117,7 +116,8 @@ class AnalyticsOverviewCard extends StatelessWidget {
     );
   }
 
-  Widget _buildScoreCard(String title, int value, IconData icon, Color color, {String suffix = ''}) {
+  Widget _buildScoreCard(String title, int value, IconData icon, Color color,
+      {String suffix = ''}) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
@@ -148,7 +148,8 @@ class AnalyticsOverviewCard extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusCard(String title, String value, IconData icon, Color color) {
+  Widget _buildStatusCard(
+      String title, String value, IconData icon, Color color) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(

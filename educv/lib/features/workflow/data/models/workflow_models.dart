@@ -178,8 +178,12 @@ class WorkflowStateModel {
         isActive: json['is_active'] == true,
         order: json['order'] ?? 0,
         properties: Map<String, dynamic>.from(json['properties'] ?? {}),
-        createdAt: WorkflowConfigurationModel._parseDateTime(json['created_at']) ?? DateTime.now(),
-        updatedAt: WorkflowConfigurationModel._parseDateTime(json['updated_at']) ?? DateTime.now(),
+        createdAt:
+            WorkflowConfigurationModel._parseDateTime(json['created_at']) ??
+                DateTime.now(),
+        updatedAt:
+            WorkflowConfigurationModel._parseDateTime(json['updated_at']) ??
+                DateTime.now(),
       );
     } catch (e) {
       throw FormatException('Failed to parse WorkflowStateModel: $e');
@@ -283,13 +287,18 @@ class WorkflowTransitionModel {
           Map<String, dynamic>.from(json['to_state'] ?? {}),
         ),
         allowedRoles: _parseStringList(json['allowed_roles']),
-        validationRules: Map<String, dynamic>.from(json['validation_rules'] ?? {}),
+        validationRules:
+            Map<String, dynamic>.from(json['validation_rules'] ?? {}),
         isActive: json['is_active'] == true,
         requiresComment: json['requires_comment'] == true,
         autoTransition: json['auto_transition'] == true,
         properties: Map<String, dynamic>.from(json['properties'] ?? {}),
-        createdAt: WorkflowConfigurationModel._parseDateTime(json['created_at']) ?? DateTime.now(),
-        updatedAt: WorkflowConfigurationModel._parseDateTime(json['updated_at']) ?? DateTime.now(),
+        createdAt:
+            WorkflowConfigurationModel._parseDateTime(json['created_at']) ??
+                DateTime.now(),
+        updatedAt:
+            WorkflowConfigurationModel._parseDateTime(json['updated_at']) ??
+                DateTime.now(),
       );
     } catch (e) {
       throw FormatException('Failed to parse WorkflowTransitionModel: $e');
@@ -396,8 +405,12 @@ class WorkflowInstanceModel {
         currentState: WorkflowStateModel.fromJson(
           Map<String, dynamic>.from(json['current_state'] ?? {}),
         ),
-        startedAt: WorkflowConfigurationModel._parseDateTime(json['started_at']) ?? DateTime.now(),
-        updatedAt: WorkflowConfigurationModel._parseDateTime(json['updated_at']) ?? DateTime.now(),
+        startedAt:
+            WorkflowConfigurationModel._parseDateTime(json['started_at']) ??
+                DateTime.now(),
+        updatedAt:
+            WorkflowConfigurationModel._parseDateTime(json['updated_at']) ??
+                DateTime.now(),
         startedBy: json['started_by']?.toString() ?? '',
         properties: Map<String, dynamic>.from(json['properties'] ?? {}),
         transitionLogs: _parseTransitionLogs(json['transition_logs']),
@@ -438,10 +451,8 @@ class WorkflowInstanceModel {
 
   List<WorkflowTransitionModel> get availableTransitions {
     return workflowConfig.transitions
-        .where((transition) => 
-          transition.fromState.id == currentState.id && 
-          transition.isActive
-        )
+        .where((transition) =>
+            transition.fromState.id == currentState.id && transition.isActive)
         .toList();
   }
 
@@ -516,7 +527,9 @@ class WorkflowTransitionLogModel {
           Map<String, dynamic>.from(json['to_state'] ?? {}),
         ),
         performedBy: json['performed_by']?.toString() ?? '',
-        performedAt: WorkflowConfigurationModel._parseDateTime(json['performed_at']) ?? DateTime.now(),
+        performedAt:
+            WorkflowConfigurationModel._parseDateTime(json['performed_at']) ??
+                DateTime.now(),
         result: json['result']?.toString() ?? 'success',
         comment: json['comment']?.toString() ?? '',
         ipAddress: json['ip_address']?.toString(),
@@ -623,7 +636,8 @@ class WorkflowDashboardModel {
         totalInstances: json['total_instances'] ?? 0,
         activeInstances: json['active_instances'] ?? 0,
         completedInstances: json['completed_instances'] ?? 0,
-        stateDistribution: Map<String, int>.from(json['state_distribution'] ?? {}),
+        stateDistribution:
+            Map<String, int>.from(json['state_distribution'] ?? {}),
         recentInstances: _parseRecentInstances(json['recent_instances']),
         statistics: Map<String, dynamic>.from(json['statistics'] ?? {}),
       );
@@ -691,8 +705,12 @@ class WorkflowStepModel {
         isRequired: json['is_required'] == true,
         isCompleted: json['is_completed'] == true,
         properties: Map<String, dynamic>.from(json['properties'] ?? {}),
-        createdAt: WorkflowConfigurationModel._parseDateTime(json['created_at']) ?? DateTime.now(),
-        updatedAt: WorkflowConfigurationModel._parseDateTime(json['updated_at']) ?? DateTime.now(),
+        createdAt:
+            WorkflowConfigurationModel._parseDateTime(json['created_at']) ??
+                DateTime.now(),
+        updatedAt:
+            WorkflowConfigurationModel._parseDateTime(json['updated_at']) ??
+                DateTime.now(),
       );
     } catch (e) {
       throw FormatException('Failed to parse WorkflowStepModel: $e');
@@ -771,8 +789,12 @@ class WorkflowActionModel {
         isActive: json['is_active'] == true,
         parameters: Map<String, dynamic>.from(json['parameters'] ?? {}),
         properties: Map<String, dynamic>.from(json['properties'] ?? {}),
-        createdAt: WorkflowConfigurationModel._parseDateTime(json['created_at']) ?? DateTime.now(),
-        updatedAt: WorkflowConfigurationModel._parseDateTime(json['updated_at']) ?? DateTime.now(),
+        createdAt:
+            WorkflowConfigurationModel._parseDateTime(json['created_at']) ??
+                DateTime.now(),
+        updatedAt:
+            WorkflowConfigurationModel._parseDateTime(json['updated_at']) ??
+                DateTime.now(),
       );
     } catch (e) {
       throw FormatException('Failed to parse WorkflowActionModel: $e');

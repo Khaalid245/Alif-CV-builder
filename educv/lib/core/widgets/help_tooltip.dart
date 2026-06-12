@@ -189,7 +189,7 @@ class _HelpTooltipState extends State<HelpTooltip>
                 ],
               ),
             ),
-            
+
             // Content
             Padding(
               padding: const EdgeInsets.all(16),
@@ -202,7 +202,7 @@ class _HelpTooltipState extends State<HelpTooltip>
                 ),
               ),
             ),
-            
+
             // Footer
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -422,7 +422,7 @@ class HelpDialog extends StatelessWidget {
                 ],
               ),
             ),
-            
+
             // Content
             Expanded(
               child: SingleChildScrollView(
@@ -435,43 +435,45 @@ class HelpDialog extends StatelessWidget {
                       [
                         HelpItem(
                           question: 'How do I create my first CV?',
-                          answer: 'Click "Build My CV" in the sidebar, then fill out each section step by step. Start with Personal Information and work your way through.',
+                          answer:
+                              'Click "Build My CV" in the sidebar, then fill out each section step by step. Start with Personal Information and work your way through.',
                         ),
                         HelpItem(
                           question: 'Which sections are required?',
-                          answer: 'Personal Information and Education are required. Other sections like Experience, Skills, and Projects are optional but recommended.',
+                          answer:
+                              'Personal Information and Education are required. Other sections like Experience, Skills, and Projects are optional but recommended.',
                         ),
                       ],
                     ),
-                    
                     const SizedBox(height: 24),
-                    
                     _buildHelpSection(
                       'Using the CV Builder',
                       [
                         HelpItem(
                           question: 'Can I save my progress?',
-                          answer: 'Yes! Your information is automatically saved as you fill out each section. You can come back anytime to continue.',
+                          answer:
+                              'Yes! Your information is automatically saved as you fill out each section. You can come back anytime to continue.',
                         ),
                         HelpItem(
                           question: 'How do I navigate between sections?',
-                          answer: 'Use the step navigation at the top, the sidebar on the left, or the Previous/Next buttons at the bottom.',
+                          answer:
+                              'Use the step navigation at the top, the sidebar on the left, or the Previous/Next buttons at the bottom.',
                         ),
                       ],
                     ),
-                    
                     const SizedBox(height: 24),
-                    
                     _buildHelpSection(
                       'CV Templates',
                       [
                         HelpItem(
                           question: 'What are the different templates?',
-                          answer: 'Classic (corporate/government), Modern (tech/creative), and Academic (research/education). You get all three automatically.',
+                          answer:
+                              'Classic (corporate/government), Modern (tech/creative), and Academic (research/education). You get all three automatically.',
                         ),
                         HelpItem(
                           question: 'How do I download my CV?',
-                          answer: 'Complete your information, then go to "Preview CV" or "Download CVs" to generate and download your PDF files.',
+                          answer:
+                              'Complete your information, then go to "Preview CV" or "Download CVs" to generate and download your PDF files.',
                         ),
                       ],
                     ),
@@ -479,7 +481,7 @@ class HelpDialog extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             // Footer
             Container(
               padding: const EdgeInsets.all(24),

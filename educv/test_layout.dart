@@ -23,7 +23,11 @@ class TestLayout extends StatelessWidget {
                         child: Column(
                           children: [
                             Container(height: 100, color: Colors.red),
-                            Expanded(child: Container(height: 50, color: Colors.blue)), // Wait! Does this fail?
+                            Expanded(
+                                child: Container(
+                                    height: 50,
+                                    color:
+                                        Colors.blue)), // Wait! Does this fail?
                           ],
                         ),
                       ),

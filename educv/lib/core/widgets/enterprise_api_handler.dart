@@ -14,13 +14,14 @@ class EnterpriseApiErrorHandler {
   }) {
     final appException = ErrorHandler.handleError(error);
     final userMessage = _getUserFriendlyMessage(appException, customMessage);
-    
+
     if (showToast) {
       _showErrorToast(context, userMessage, appException, onRetry);
     }
   }
 
-  static String _getUserFriendlyMessage(AppException exception, String? customMessage) {
+  static String _getUserFriendlyMessage(
+      AppException exception, String? customMessage) {
     if (customMessage != null) return customMessage;
 
     // Return user-friendly messages based on exception type
@@ -44,8 +45,8 @@ class EnterpriseApiErrorHandler {
       case 'SERVICE_UNAVAILABLE':
         return 'Service temporarily unavailable. Please try again later.';
       default:
-        return exception.message.isNotEmpty 
-            ? exception.message 
+        return exception.message.isNotEmpty
+            ? exception.message
             : 'Something went wrong. Please try again.';
     }
   }
@@ -54,7 +55,7 @@ class EnterpriseApiErrorHandler {
     // Try to extract specific validation errors from details
     if (exception.details is Map<String, dynamic>) {
       final details = exception.details as Map<String, dynamic>;
-      
+
       // Check for field-specific errors
       if (details.containsKey('errors')) {
         final errors = details['errors'];
@@ -68,15 +69,15 @@ class EnterpriseApiErrorHandler {
           }
         }
       }
-      
+
       // Check for direct error message
       if (details.containsKey('message')) {
         return details['message'].toString();
       }
     }
-    
-    return exception.message.isNotEmpty 
-        ? exception.message 
+
+    return exception.message.isNotEmpty
+        ? exception.message
         : 'Please check your input and try again.';
   }
 
@@ -88,7 +89,7 @@ class EnterpriseApiErrorHandler {
   ) {
     // Determine if we should show retry action
     final shouldShowRetry = _shouldShowRetry(exception) && onRetry != null;
-    
+
     EnterpriseToast.error(
       context,
       message,
@@ -149,8 +150,9 @@ class EnterpriseApiErrorHandler {
     Map<String, dynamic> errors, {
     String? generalMessage,
   }) {
-    final message = generalMessage ?? 'Please fix the errors below and try again.';
-    
+    final message =
+        generalMessage ?? 'Please fix the errors below and try again.';
+
     // Extract first validation error for toast
     String? firstError;
     if (errors.isNotEmpty) {
@@ -161,7 +163,7 @@ class EnterpriseApiErrorHandler {
         firstError = firstField;
       }
     }
-    
+
     EnterpriseToast.warning(
       context,
       firstError ?? message,
