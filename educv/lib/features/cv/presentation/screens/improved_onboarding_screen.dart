@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
-import '../../../../core/theme/premium_portfolio_colors.dart';
+import '../../../../core/theme/premium_saas_theme.dart';
 
 class ImprovedOnboardingScreen extends StatefulWidget {
   const ImprovedOnboardingScreen({super.key});
@@ -24,7 +24,7 @@ class _ImprovedOnboardingScreenState extends State<ImprovedOnboardingScreen>
       subtitle: 'Your Professional CV Builder',
       description: 'Create stunning, professional CVs in minutes. No design skills needed - just fill in your information and we\'ll handle the rest.',
       icon: LucideIcons.sparkles,
-      color: PremiumPortfolioColors.accentPurple,
+      color: PremiumSaaSTheme.primaryPurple,
       features: [
         'Fill information once, get 3 CV templates',
         'Professional designs approved by employers',
@@ -37,7 +37,7 @@ class _ImprovedOnboardingScreenState extends State<ImprovedOnboardingScreen>
       subtitle: 'Simple 3-Step Process',
       description: 'Building your CV is as easy as 1-2-3. Follow our guided process and you\'ll have a professional CV ready in no time.',
       icon: LucideIcons.target,
-      color: PremiumPortfolioColors.accentBlue,
+      color: PremiumSaaSTheme.accentBlue,
       features: [
         '1. Fill in your personal information',
         '2. Add education, skills, and experience',
@@ -50,7 +50,7 @@ class _ImprovedOnboardingScreenState extends State<ImprovedOnboardingScreen>
       subtitle: 'Choose What Fits Your Career',
       description: 'Each template is designed for different career paths. You get all three automatically - use the right one for each job application.',
       icon: LucideIcons.layout,
-      color: PremiumPortfolioColors.success,
+      color: PremiumSaaSTheme.accentGreen,
       features: [
         'Classic: Perfect for corporate and government jobs',
         'Modern: Great for tech and creative roles',
@@ -62,8 +62,8 @@ class _ImprovedOnboardingScreenState extends State<ImprovedOnboardingScreen>
       title: 'Ready to Start?',
       subtitle: 'Let\'s Build Your First CV',
       description: 'You\'re all set! Click the button below to start building your professional CV. Remember, you can always edit and improve it later.',
-      icon: LucideIcons.rocketIcon,
-      color: PremiumPortfolioColors.warning,
+      icon: LucideIcons.rocket,
+      color: PremiumSaaSTheme.accentAmber,
       features: [
         'Start with basic information',
         'Add sections one by one',
@@ -97,7 +97,7 @@ class _ImprovedOnboardingScreenState extends State<ImprovedOnboardingScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: PremiumPortfolioColors.background,
+      backgroundColor: PremiumSaaSTheme.lightBackground,
       body: SafeArea(
         child: FadeTransition(
           opacity: _fadeAnimation,
@@ -135,14 +135,8 @@ class _ImprovedOnboardingScreenState extends State<ImprovedOnboardingScreen>
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: PremiumSaaSTheme.lightSurface,
+        boxShadow: PremiumSaaSTheme.shadowSoft,
       ),
       child: Column(
         children: [
@@ -155,15 +149,15 @@ class _ImprovedOnboardingScreenState extends State<ImprovedOnboardingScreen>
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      PremiumPortfolioColors.accentPurple,
-                      PremiumPortfolioColors.accentBlue,
+                      PremiumSaaSTheme.primaryPurple,
+                      PremiumSaaSTheme.accentBlue,
                     ],
                   ),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(
                   LucideIcons.fileText,
-                  color: Colors.white,
+                  color: PremiumSaaSTheme.lightSurface,
                   size: 20,
                 ),
               ),
@@ -173,7 +167,7 @@ class _ImprovedOnboardingScreenState extends State<ImprovedOnboardingScreen>
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
-                  color: PremiumPortfolioColors.primaryText,
+                  color: PremiumSaaSTheme.textPrimary,
                 ),
               ),
               const Spacer(),
@@ -184,7 +178,7 @@ class _ImprovedOnboardingScreenState extends State<ImprovedOnboardingScreen>
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: PremiumPortfolioColors.secondaryText,
+                    color: PremiumSaaSTheme.textSecondary,
                   ),
                 ),
               ),
@@ -208,7 +202,7 @@ class _ImprovedOnboardingScreenState extends State<ImprovedOnboardingScreen>
                   decoration: BoxDecoration(
                     color: isActive || isCompleted
                       ? _steps[_currentPage].color
-                      : PremiumPortfolioColors.borderLight,
+                      : PremiumSaaSTheme.lightBorder,
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -259,7 +253,7 @@ class _ImprovedOnboardingScreenState extends State<ImprovedOnboardingScreen>
             style: TextStyle(
               fontSize: 32,
               fontWeight: FontWeight.w800,
-              color: PremiumPortfolioColors.primaryText,
+              color: PremiumSaaSTheme.textPrimary,
             ),
             textAlign: TextAlign.center,
           ),
@@ -285,7 +279,7 @@ class _ImprovedOnboardingScreenState extends State<ImprovedOnboardingScreen>
               step.description,
               style: TextStyle(
                 fontSize: 16,
-                color: PremiumPortfolioColors.secondaryText,
+                color: PremiumSaaSTheme.textSecondary,
                 height: 1.6,
               ),
               textAlign: TextAlign.center,
@@ -303,18 +297,12 @@ class _ImprovedOnboardingScreenState extends State<ImprovedOnboardingScreen>
                   margin: const EdgeInsets.only(bottom: 16),
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: PremiumSaaSTheme.lightSurface,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
                       color: step.color.withOpacity(0.1),
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.03),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
+                    boxShadow: PremiumSaaSTheme.shadowSoft,
                   ),
                   child: Row(
                     children: [
@@ -338,7 +326,7 @@ class _ImprovedOnboardingScreenState extends State<ImprovedOnboardingScreen>
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
-                            color: PremiumPortfolioColors.primaryText,
+                            color: PremiumSaaSTheme.textPrimary,
                           ),
                         ),
                       ),
@@ -359,14 +347,8 @@ class _ImprovedOnboardingScreenState extends State<ImprovedOnboardingScreen>
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -2),
-          ),
-        ],
+        color: PremiumSaaSTheme.lightSurface,
+        boxShadow: PremiumSaaSTheme.shadowSoft,
       ),
       child: Row(
         children: [
@@ -390,7 +372,7 @@ class _ImprovedOnboardingScreenState extends State<ImprovedOnboardingScreen>
             flex: 2,
             child: _buildNavigationButton(
               text: isLastPage ? 'Start Building My CV' : 'Next',
-              icon: isLastPage ? LucideIcons.rocketIcon : LucideIcons.arrowRight,
+              icon: isLastPage ? LucideIcons.rocket : LucideIcons.arrowRight,
               onPressed: isLastPage ? _startBuilding : _goToNextPage,
               isPrimary: true,
             ),
@@ -416,18 +398,18 @@ class _ImprovedOnboardingScreenState extends State<ImprovedOnboardingScreen>
           decoration: BoxDecoration(
             gradient: isPrimary ? LinearGradient(
               colors: [
-                PremiumPortfolioColors.accentPurple,
-                PremiumPortfolioColors.accentBlue,
+                PremiumSaaSTheme.primaryPurple,
+                PremiumSaaSTheme.accentBlue,
               ],
             ) : null,
             color: isPrimary ? null : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
             border: isPrimary ? null : Border.all(
-              color: PremiumPortfolioColors.borderLight,
+              color: PremiumSaaSTheme.lightBorder,
             ),
             boxShadow: isPrimary ? [
               BoxShadow(
-                color: PremiumPortfolioColors.accentPurple.withOpacity(0.3),
+                color: PremiumSaaSTheme.primaryPurple.withOpacity(0.3),
                 blurRadius: 12,
                 offset: const Offset(0, 4),
               ),
@@ -441,7 +423,7 @@ class _ImprovedOnboardingScreenState extends State<ImprovedOnboardingScreen>
                   Icon(
                     icon,
                     size: 18,
-                    color: PremiumPortfolioColors.secondaryText,
+                    color: PremiumSaaSTheme.textSecondary,
                   ),
                   const SizedBox(width: 8),
                 ],
@@ -450,7 +432,7 @@ class _ImprovedOnboardingScreenState extends State<ImprovedOnboardingScreen>
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: isPrimary ? Colors.white : PremiumPortfolioColors.secondaryText,
+                    color: isPrimary ? Colors.white : PremiumSaaSTheme.textSecondary,
                   ),
                 ),
                 if (isPrimary) ...[
@@ -458,7 +440,7 @@ class _ImprovedOnboardingScreenState extends State<ImprovedOnboardingScreen>
                   Icon(
                     icon,
                     size: 18,
-                    color: Colors.white,
+                    color: PremiumSaaSTheme.lightSurface,
                   ),
                 ],
               ],

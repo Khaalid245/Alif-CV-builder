@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_spacing.dart';
-import '../../../../core/theme/app_typography.dart';
+import '../../../../core/theme/premium_portfolio_colors.dart';
 
 class AddItemButton extends StatelessWidget {
   final String text;
@@ -17,37 +15,16 @@ class AddItemButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(AppSpacing.md),
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: AppColors.primary,
-            width: 1.5,
-            style: BorderStyle.solid,
-          ),
-          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-          color: Colors.transparent,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              LucideIcons.plus,
-              size: 20,
-              color: AppColors.primary,
-            ),
-            const SizedBox(width: AppSpacing.xs),
-            Text(
-              text,
-              style: AppTypography.body.copyWith(
-                color: AppColors.primary,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
+    return OutlinedButton.icon(
+      onPressed: onTap,
+      icon: const Icon(LucideIcons.plus, size: 18),
+      label: Text(text),
+      style: OutlinedButton.styleFrom(
+        foregroundColor: PremiumPortfolioColors.accentPurple,
+        side: const BorderSide(color: PremiumPortfolioColors.accentPurple),
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
         ),
       ),
     );

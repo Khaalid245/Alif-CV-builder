@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import '../../theme/premium_portfolio_colors.dart';
+import '../theme/premium_saas_theme.dart';
 
 class ImprovedSidebar extends StatefulWidget {
   final int currentIndex;
@@ -57,120 +57,90 @@ class _ImprovedSidebarState extends State<ImprovedSidebar>
       child: Container(
         width: widget.isCollapsed ? 80 : 280,
         decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 20,
-              offset: const Offset(2, 0),
+          color: PremiumSaaSTheme.lightSurface,
+          border: Border(
+            right: BorderSide(
+              color: PremiumSaaSTheme.lightBorder,
+              width: 1,
             ),
-          ],
+          ),
+          boxShadow: PremiumSaaSTheme.shadowSoft,
         ),
         child: Column(
           children: [
-            // Header with Logo and User Info
+            // Header with Logo
             _buildHeader(),
             
             // Main Navigation
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(vertical: 16),
+                padding: const EdgeInsets.symmetric(vertical: 24),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Quick Actions Section
+                    // Quick Start Section
                     _buildSection(
-                      title: 'Quick Start',
+                      title: 'QUICK START',
                       items: [
                         NavigationItem(
-                          icon: LucideIcons.home,
+                          icon: LucideIcons.layoutDashboard,
                           label: 'Dashboard',
-                          description: 'Overview of your CV progress',
                           index: 0,
                         ),
                         NavigationItem(
-                          icon: LucideIcons.edit3,
-                          label: 'Build My CV',
-                          description: 'Add and edit your information',
+                          icon: LucideIcons.fileEdit,
+                          label: 'Build CV',
                           index: 2,
-                          badge: 'Start Here',
-                          badgeColor: PremiumPortfolioColors.success,
                         ),
                       ],
                     ),
                     
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 32),
                     
                     // CV Management Section
                     _buildSection(
-                      title: 'My CV',
+                      title: 'MY CV',
                       items: [
                         NavigationItem(
                           icon: LucideIcons.eye,
                           label: 'Preview CV',
-                          description: 'See how your CV looks',
                           index: 3,
                         ),
                         NavigationItem(
                           icon: LucideIcons.download,
-                          label: 'Download CVs',
-                          description: 'Get your PDF files',
+                          label: 'Downloads',
                           index: 4,
                         ),
                         NavigationItem(
-                          icon: LucideIcons.brain,
+                          icon: LucideIcons.sparkles,
                           label: 'AI Suggestions',
-                          description: 'Improve with AI help',
                           index: 5,
                           badge: 'New',
-                          badgeColor: PremiumPortfolioColors.accentPurple,
+                          badgeColor: PremiumSaaSTheme.accentGreen,
                         ),
                       ],
                     ),
                     
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 32),
                     
                     // Tools Section
                     _buildSection(
-                      title: 'Tools & Resources',
+                      title: 'TOOLS & RESOURCES',
                       items: [
                         NavigationItem(
                           icon: LucideIcons.layout,
-                          label: 'CV Templates',
-                          description: 'Browse available designs',
+                          label: 'Templates',
                           index: 6,
                         ),
                         NavigationItem(
-                          icon: LucideIcons.barChart3,
+                          icon: LucideIcons.barChart2,
                           label: 'Analytics',
-                          description: 'Track your CV performance',
                           index: 7,
                         ),
                         NavigationItem(
                           icon: LucideIcons.history,
                           label: 'Version History',
-                          description: 'See previous versions',
                           index: 9,
-                        ),
-                      ],
-                    ),
-                    
-                    const SizedBox(height: 24),
-                    
-                    // Account Section
-                    _buildSection(
-                      title: 'Account',
-                      items: [
-                        NavigationItem(
-                          icon: LucideIcons.bell,
-                          label: 'Notifications',
-                          description: 'Manage your alerts',
-                          index: 8,
-                        ),
-                        NavigationItem(
-                          icon: LucideIcons.settings,
-                          label: 'Settings',
-                          description: 'Account preferences',
-                          index: 10,
                         ),
                       ],
                     ),
@@ -179,8 +149,8 @@ class _ImprovedSidebarState extends State<ImprovedSidebar>
               ),
             ),
             
-            // Footer with Help
-            _buildFooter(),
+            // User Profile Footer
+            _buildUserProfile(),
           ],
         ),
       ),
@@ -189,147 +159,61 @@ class _ImprovedSidebarState extends State<ImprovedSidebar>
 
   Widget _buildHeader() {
     return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            PremiumPortfolioColors.accentPurple.withOpacity(0.05),
-            PremiumPortfolioColors.accentBlue.withOpacity(0.05),
-          ],
-        ),
-        border: Border(
-          bottom: BorderSide(
-            color: PremiumPortfolioColors.borderLight,
-            width: 1,
-          ),
-        ),
-      ),
-      child: Column(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
+      child: Row(
         children: [
-          // Logo and Brand
-          Row(
-            children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      PremiumPortfolioColors.accentPurple,
-                      PremiumPortfolioColors.accentBlue,
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(
-                  LucideIcons.fileText,
-                  color: Colors.white,
-                  size: 20,
-                ),
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  PremiumSaaSTheme.accentGreen,
+                  const Color(0xFF34D399), // lighter emerald
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-              if (!widget.isCollapsed) ...[
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'EduCV',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                          color: PremiumPortfolioColors.primaryText,
-                        ),
-                      ),
-                      Text(
-                        'CV Builder',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: PremiumPortfolioColors.secondaryText,
-                        ),
-                      ),
-                    ],
-                  ),
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: PremiumSaaSTheme.accentGreen.withValues(alpha: 0.3),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
                 ),
               ],
-              if (widget.onToggleCollapse != null)
-                IconButton(
-                  onPressed: widget.onToggleCollapse,
-                  icon: Icon(
-                    widget.isCollapsed ? LucideIcons.chevronRight : LucideIcons.chevronLeft,
-                    size: 16,
-                    color: PremiumPortfolioColors.secondaryText,
-                  ),
-                ),
-            ],
+            ),
+            child: const Icon(
+              LucideIcons.leaf,
+              color: Colors.white,
+              size: 18,
+            ),
           ),
-          
           if (!widget.isCollapsed) ...[
-            const SizedBox(height: 16),
-            
-            // User Profile Card
-            GestureDetector(
-              onTap: widget.onProfileTap,
-              child: Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: PremiumPortfolioColors.borderLight,
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 16,
-                      backgroundColor: PremiumPortfolioColors.accentPurple,
-                      child: Text(
-                        _getInitials(widget.userName ?? ''),
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.userName ?? 'User',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: PremiumPortfolioColors.primaryText,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            'Student Account',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: PremiumPortfolioColors.secondaryText,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Icon(
-                      LucideIcons.chevronDown,
-                      size: 16,
-                      color: PremiumPortfolioColors.secondaryText,
-                    ),
-                  ],
+            const SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                'EduCV',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800,
+                  color: PremiumSaaSTheme.textPrimary,
+                  letterSpacing: -0.5,
                 ),
               ),
             ),
           ],
+          if (widget.onToggleCollapse != null)
+            IconButton(
+              onPressed: widget.onToggleCollapse,
+              icon: Icon(
+                widget.isCollapsed ? LucideIcons.panelLeftOpen : LucideIcons.panelLeftClose,
+                size: 18,
+                color: PremiumSaaSTheme.textTertiary,
+              ),
+              tooltip: widget.isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar',
+              splashRadius: 20,
+            ),
         ],
       ),
     );
@@ -349,17 +233,18 @@ class _ImprovedSidebarState extends State<ImprovedSidebar>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 8),
           child: Text(
             title,
             style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: PremiumPortfolioColors.secondaryText,
-              letterSpacing: 0.5,
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              color: PremiumSaaSTheme.textTertiary,
+              letterSpacing: 1.2,
             ),
           ),
         ),
+        const SizedBox(height: 4),
         ...items.map((item) => _buildNavItem(item)),
       ],
     );
@@ -374,91 +259,81 @@ class _ImprovedSidebarState extends State<ImprovedSidebar>
         color: Colors.transparent,
         child: InkWell(
           onTap: () => widget.onNavigationChanged(item.index),
-          borderRadius: BorderRadius.circular(12),
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: isActive 
-                ? PremiumPortfolioColors.accentPurple.withOpacity(0.1)
-                : Colors.transparent,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: isActive 
-                  ? PremiumPortfolioColors.accentPurple.withOpacity(0.3)
-                  : Colors.transparent,
-              ),
-            ),
-            child: Row(
-              children: [
-                Container(
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    color: isActive 
-                      ? PremiumPortfolioColors.accentPurple
-                      : PremiumPortfolioColors.borderLight,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Icon(
-                    item.icon,
-                    size: 18,
-                    color: isActive 
-                      ? Colors.white 
-                      : PremiumPortfolioColors.secondaryText,
-                  ),
+          borderRadius: BorderRadius.circular(8),
+          hoverColor: PremiumSaaSTheme.lightSurfaceVariant,
+          splashColor: PremiumSaaSTheme.accentGreen.withValues(alpha: 0.1),
+          highlightColor: PremiumSaaSTheme.accentGreen.withValues(alpha: 0.05),
+          child: Stack(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  color: isActive 
+                    ? PremiumSaaSTheme.accentGreen.withValues(alpha: 0.1)
+                    : Colors.transparent,
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                
-                const SizedBox(width: 12),
-                
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              item.label,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: isActive 
-                                  ? PremiumPortfolioColors.accentPurple
-                                  : PremiumPortfolioColors.primaryText,
-                              ),
-                            ),
-                          ),
-                          if (item.badge != null)
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                              decoration: BoxDecoration(
-                                color: item.badgeColor ?? PremiumPortfolioColors.accentPurple,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text(
-                                item.badge!,
-                                style: const TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        item.description,
+                child: Row(
+                  children: [
+                    Icon(
+                      item.icon,
+                      size: 20,
+                      color: isActive 
+                        ? PremiumSaaSTheme.accentGreen 
+                        : PremiumSaaSTheme.textSecondary,
+                    ),
+                    
+                    const SizedBox(width: 14),
+                    
+                    Expanded(
+                      child: Text(
+                        item.label,
                         style: TextStyle(
-                          fontSize: 12,
-                          color: PremiumPortfolioColors.secondaryText,
+                          fontSize: 14,
+                          fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
+                          color: isActive 
+                            ? PremiumSaaSTheme.textPrimary
+                            : PremiumSaaSTheme.textSecondary,
                         ),
                       ),
-                    ],
+                    ),
+                    
+                    if (item.badge != null)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: item.badgeColor ?? PremiumSaaSTheme.accentGreen,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          item.badge!,
+                          style: const TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              if (isActive)
+                Positioned(
+                  left: 0,
+                  top: 8,
+                  bottom: 8,
+                  child: Container(
+                    width: 3,
+                    decoration: BoxDecoration(
+                      color: PremiumSaaSTheme.accentGreen,
+                      borderRadius: const BorderRadius.only(
+                        topRight: Radius.circular(4),
+                        bottomRight: Radius.circular(4),
+                      ),
+                    ),
                   ),
                 ),
-              ],
-            ),
+            ],
           ),
         ),
       ),
@@ -469,27 +344,25 @@ class _ImprovedSidebarState extends State<ImprovedSidebar>
     final isActive = widget.currentIndex == item.index;
     
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       child: Tooltip(
         message: item.label,
+        preferBelow: false,
+        verticalOffset: 24,
         child: Material(
           color: Colors.transparent,
           child: InkWell(
             onTap: () => widget.onNavigationChanged(item.index),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(10),
+            hoverColor: PremiumSaaSTheme.lightSurfaceVariant,
             child: Container(
-              width: 48,
-              height: 48,
+              width: 44,
+              height: 44,
               decoration: BoxDecoration(
                 color: isActive 
-                  ? PremiumPortfolioColors.accentPurple.withOpacity(0.1)
+                  ? PremiumSaaSTheme.accentGreen.withValues(alpha: 0.1)
                   : Colors.transparent,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: isActive 
-                    ? PremiumPortfolioColors.accentPurple.withOpacity(0.3)
-                    : Colors.transparent,
-                ),
+                borderRadius: BorderRadius.circular(10),
               ),
               child: Stack(
                 children: [
@@ -498,20 +371,36 @@ class _ImprovedSidebarState extends State<ImprovedSidebar>
                       item.icon,
                       size: 20,
                       color: isActive 
-                        ? PremiumPortfolioColors.accentPurple
-                        : PremiumPortfolioColors.secondaryText,
+                        ? PremiumSaaSTheme.accentGreen
+                        : PremiumSaaSTheme.textSecondary,
                     ),
                   ),
                   if (item.badge != null)
                     Positioned(
-                      top: 8,
-                      right: 8,
+                      top: 10,
+                      right: 10,
                       child: Container(
-                        width: 8,
-                        height: 8,
+                        width: 6,
+                        height: 6,
                         decoration: BoxDecoration(
-                          color: item.badgeColor ?? PremiumPortfolioColors.accentPurple,
-                          borderRadius: BorderRadius.circular(4),
+                          color: item.badgeColor ?? PremiumSaaSTheme.accentGreen,
+                          borderRadius: BorderRadius.circular(3),
+                        ),
+                      ),
+                    ),
+                  if (isActive)
+                    Positioned(
+                      left: 0,
+                      top: 10,
+                      bottom: 10,
+                      child: Container(
+                        width: 3,
+                        decoration: BoxDecoration(
+                          color: PremiumSaaSTheme.accentGreen,
+                          borderRadius: const BorderRadius.only(
+                            topRight: Radius.circular(4),
+                            bottomRight: Radius.circular(4),
+                          ),
                         ),
                       ),
                     ),
@@ -524,98 +413,106 @@ class _ImprovedSidebarState extends State<ImprovedSidebar>
     );
   }
 
-  Widget _buildFooter() {
+  Widget _buildUserProfile() {
+    final name = widget.userName ?? 'Guest User';
+    final initials = name.isNotEmpty ? name[0].toUpperCase() : 'U';
+    final email = widget.userEmail ?? 'Not signed in';
+
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         border: Border(
           top: BorderSide(
-            color: PremiumPortfolioColors.borderLight,
+            color: PremiumSaaSTheme.lightBorder,
             width: 1,
           ),
         ),
       ),
       child: widget.isCollapsed 
         ? Center(
-            child: IconButton(
-              onPressed: () {},
-              icon: Icon(
-                LucideIcons.helpCircle,
-                size: 20,
-                color: PremiumPortfolioColors.secondaryText,
-              ),
-            ),
+            child: _buildAvatar(initials),
           )
-        : Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      PremiumPortfolioColors.accentBlue.withOpacity(0.1),
-                      PremiumPortfolioColors.accentPurple.withOpacity(0.1),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: PremiumPortfolioColors.accentBlue.withOpacity(0.2),
-                  ),
-                ),
+        : Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: widget.onProfileTap,
+              borderRadius: BorderRadius.circular(8),
+              hoverColor: PremiumSaaSTheme.lightSurfaceVariant,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
-                    Icon(
-                      LucideIcons.helpCircle,
-                      size: 16,
-                      color: PremiumPortfolioColors.accentBlue,
-                    ),
-                    const SizedBox(width: 8),
+                    _buildAvatar(initials),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Need Help?',
+                            name,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: PremiumSaaSTheme.textPrimary,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            email,
                             style: TextStyle(
                               fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: PremiumPortfolioColors.accentBlue,
+                              color: PremiumSaaSTheme.textSecondary,
                             ),
-                          ),
-                          Text(
-                            'Get support and tips',
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: PremiumPortfolioColors.secondaryText,
-                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ],
                       ),
                     ),
+                    Icon(
+                      LucideIcons.settings,
+                      size: 16,
+                      color: PremiumSaaSTheme.textTertiary,
+                    ),
                   ],
                 ),
               ),
-            ],
+            ),
           ),
     );
   }
 
-  String _getInitials(String fullName) {
-    if (fullName.isEmpty) return 'U';
-    final names = fullName.trim().split(' ');
-    if (names.length == 1) {
-      return names[0][0].toUpperCase();
-    }
-    final firstInitial = names.first.isNotEmpty ? names.first[0].toUpperCase() : '';
-    final lastInitial = names.last.isNotEmpty ? names.last[0].toUpperCase() : '';
-    return '$firstInitial$lastInitial';
+  Widget _buildAvatar(String initials) {
+    return Container(
+      width: 36,
+      height: 36,
+      decoration: BoxDecoration(
+        color: PremiumSaaSTheme.lightSurfaceVariant,
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: PremiumSaaSTheme.lightBorder,
+          width: 1,
+        ),
+      ),
+      child: Center(
+        child: Text(
+          initials,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w700,
+            color: PremiumSaaSTheme.textPrimary,
+          ),
+        ),
+      ),
+    );
   }
 }
 
 class NavigationItem {
   final IconData icon;
   final String label;
-  final String description;
   final int index;
   final String? badge;
   final Color? badgeColor;
@@ -623,7 +520,6 @@ class NavigationItem {
   NavigationItem({
     required this.icon,
     required this.label,
-    required this.description,
     required this.index,
     this.badge,
     this.badgeColor,

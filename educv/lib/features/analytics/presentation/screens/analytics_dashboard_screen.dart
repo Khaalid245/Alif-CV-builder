@@ -1,581 +1,419 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/widgets/app_error_state.dart';
 import '../../../../core/widgets/app_loader.dart';
 import '../../../../core/widgets/empty_state.dart';
-import '../providers/analytics_provider.dart';
-import '../widgets/analytics_overview_card.dart';
-import '../widgets/score_trend_chart.dart';
-import '../widgets/benchmarking_card.dart';
-import '../widgets/completion_statistics_card.dart';
-import '../widgets/recent_snapshots_list.dart';
-import '../widgets/analytics_filter_bar.dart';
-import '../../data/models/analytics_models.dart';
-import '../../../cv_intelligence/data/models/cv_intelligence_models.dart';
 
-class AnalyticsDashboardScreen extends StatefulWidget {
+// CV Intelligence Providers & Models
+import '../../../../features/cv_intelligence/presentation/providers/cv_intelligence_provider.dart';
+import '../../../../features/cv_intelligence/data/models/cv_intelligence_models.dart';
+import '../widgets/benchmarking_card.dart';
+
+class AnalyticsDashboardScreen extends ConsumerStatefulWidget {
   const AnalyticsDashboardScreen({super.key});
 
   @override
-  State<AnalyticsDashboardScreen> createState() => _AnalyticsDashboardScreenState();
+  ConsumerState<AnalyticsDashboardScreen> createState() => _AnalyticsDashboardScreenState();
 }
 
-class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-
+class _AnalyticsDashboardScreenState extends ConsumerState<AnalyticsDashboardScreen> {
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadData();
+      _refreshData();
     });
   }
 
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
+  void _refreshData() {
+    ref.read(analysisProvider.notifier).refreshAnalysis();
+    ref.read(recommendationsProvider.notifier).loadRecommendations();
+    // Invalidate benchmarking future provider so it re-fetches
+    ref.invalidate(benchmarkingDataProvider('all'));
   }
 
-  void _loadData() {
-    final provider = context.read<AnalyticsProvider>();
-    provider.loadDashboardData();
+  void _analyzeCV() {
+    ref.read(analysisProvider.notifier).analyzeCV();
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Analyzing your CV...'),
+        backgroundColor: AppColors.primary,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final analysisState = ref.watch(analysisProvider);
+    final recommendationsState = ref.watch(recommendationsProvider);
+    final benchmarkingAsyncValue = ref.watch(benchmarkingDataProvider('all'));
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Analytics Dashboard'),
-        backgroundColor: AppColors.background,
-        foregroundColor: AppColors.textPrimary,
-        elevation: 0,
-        actions: [
-          IconButton(
-            onPressed: () => _showCreateSnapshotDialog(),
-            icon: const Icon(Icons.add_chart),
-            tooltip: 'Create Snapshot',
-          ),
-          IconButton(
-            onPressed: () => _refreshData(),
-            icon: const Icon(Icons.refresh),
-            tooltip: 'Refresh',
+      backgroundColor: AppColors.surface, // Clean premium background
+      body: CustomScrollView(
+        slivers: [
+          _buildAppBar(),
+          SliverToBoxAdapter(
+            child: _buildBody(analysisState, recommendationsState, benchmarkingAsyncValue),
           ),
         ],
-        bottom: TabBar(
-          controller: _tabController,
-          labelColor: AppColors.primary,
-          unselectedLabelColor: AppColors.textSecondary,
-          indicatorColor: AppColors.primary,
-          tabs: const [
-            Tab(text: 'Overview', icon: Icon(Icons.dashboard)),
-            Tab(text: 'Trends', icon: Icon(Icons.trending_up)),
-            Tab(text: 'Benchmarking', icon: Icon(Icons.compare_arrows)),
-            Tab(text: 'Statistics', icon: Icon(Icons.bar_chart)),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: analysisState.isLoading ? null : _analyzeCV,
+        backgroundColor: AppColors.primary,
+        icon: analysisState.isLoading 
+          ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+          : const Icon(LucideIcons.brain, color: Colors.white),
+        label: const Text('Analyze CV', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+      ),
+    );
+  }
+
+  Widget _buildAppBar() {
+    return SliverAppBar(
+      expandedHeight: 120.0,
+      floating: true,
+      pinned: true,
+      elevation: 0,
+      backgroundColor: Colors.white,
+      foregroundColor: AppColors.textPrimary,
+      flexibleSpace: FlexibleSpaceBar(
+        titlePadding: const EdgeInsets.only(left: 16.0, bottom: 16.0),
+        title: Row(
+          children: [
+            const Icon(LucideIcons.brainCircuit, color: AppColors.primary, size: 24),
+            const SizedBox(width: 8),
+            Text(
+              'CV Intelligence',
+              style: AppTypography.h3.copyWith(color: AppColors.textPrimary),
+            ),
           ],
         ),
       ),
-      body: Consumer<AnalyticsProvider>(
-        builder: (context, provider, _) {
-          return RefreshIndicator(
-            onRefresh: () async => _refreshData(),
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                _buildOverviewTab(provider),
-                _buildTrendsTab(provider),
-                _buildBenchmarkingTab(provider),
-                _buildStatisticsTab(provider),
-              ],
-            ),
-          );
-        },
+      actions: [
+        IconButton(
+          onPressed: _refreshData,
+          icon: const Icon(LucideIcons.refreshCw),
+          tooltip: 'Refresh Data',
+        ),
+      ],
+      bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(1),
+        child: Container(color: AppColors.divider, height: 1),
       ),
     );
   }
 
-  Widget _buildOverviewTab(AnalyticsProvider provider) {
-    switch (provider.state) {
-      case AnalyticsState.loading:
-        return const AppLoader();
-      
-      case AnalyticsState.error:
-        return AppErrorState(
-          message: provider.errorMessage ?? 'Failed to load analytics data',
-          onRetry: _loadData,
-        );
-      
-      case AnalyticsState.loaded:
-        if (provider.dashboardData == null) {
-          return const EmptyState(
-            title: 'No Analytics Data',
-            message: 'No analytics data available. Create a snapshot to get started.',
-            icon: Icons.analytics,
-          );
-        }
-        return _buildOverviewContent(provider);
-      
-      case AnalyticsState.initial:
-        return const AppLoader();
+  Widget _buildBody(AnalysisState state, RecommendationsState recsState, AsyncValue<BenchmarkingDataModel> benchAsync) {
+    if (state.isLoading && state.analysis == null) {
+      return const SizedBox(
+        height: 400,
+        child: Center(child: AppLoader()),
+      );
     }
-  }
-
-  Widget _buildOverviewContent(AnalyticsProvider provider) {
-    final dashboard = provider.dashboardData!;
     
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(AppSpacing.md),
+    if (state.error != null && state.analysis == null) {
+      return SizedBox(
+        height: 400,
+        child: AppErrorState(
+          message: state.error ?? 'Failed to load CV intelligence data',
+          onRetry: _refreshData,
+        ),
+      );
+    }
+
+    if (state.analysis == null) {
+      return const Padding(
+        padding: EdgeInsets.only(top: 100),
+        child: EmptyState(
+          title: 'No CV Analysis Found',
+          message: 'Click "Analyze CV" below to generate your first score and get recommendations.',
+          icon: LucideIcons.fileSearch,
+        ),
+      );
+    }
+
+    final analysis = state.analysis!;
+    
+    return Padding(
+      padding: const EdgeInsets.all(AppSpacing.xl),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AnalyticsOverviewCard(userSummary: dashboard.userSummary),
-          const SizedBox(height: AppSpacing.lg),
+          // 1. Overall Score / Hero
+          _buildHeroScoreSection(analysis),
+          const SizedBox(height: AppSpacing.xxl),
           
-          if (dashboard.trendAnalysis != null) ...[
-            Text(
-              'Score Trend (Last 30 Days)',
-              style: AppTypography.h6.copyWith(
-                fontWeight: FontWeight.w600,
+          // 2. Actionable Recommendations
+          _buildSectionHeader('Actionable Recommendations', LucideIcons.listTodo),
+          if (recsState.isLoading)
+            const Center(child: Padding(padding: EdgeInsets.all(20), child: CircularProgressIndicator()))
+          else if (recsState.recommendations.isEmpty)
+            _buildGlassContainer(
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              child: const Text('Great job! No critical issues found.', style: TextStyle(color: AppColors.success)),
+            )
+          else
+            _buildGlassContainer(
+              padding: const EdgeInsets.all(AppSpacing.md),
+              child: _buildRecommendationsList(recsState.highPriorityRecommendations.isNotEmpty 
+                ? recsState.highPriorityRecommendations 
+                : recsState.recommendations),
+            ),
+          const SizedBox(height: AppSpacing.xxl),
+
+          // 3. Section Breakdown
+          _buildSectionHeader('Section Breakdown', LucideIcons.layers),
+          _buildGlassContainer(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            child: _buildSectionScores(analysis.sectionScores),
+          ),
+          const SizedBox(height: AppSpacing.xxl),
+
+          // 4. Benchmarking
+          _buildSectionHeader('Peer Benchmarking', LucideIcons.target),
+          benchAsync.when(
+            data: (benchData) => _buildGlassContainer(
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              child: BenchmarkingCard(benchmarkingData: {
+                'summary': benchData.summary,
+                'performance_level': benchData.performanceLevel,
+                'percentile_rank': benchData.percentileRank,
+                'total_participants': benchData.totalPeers,
+                'average_score': 0.0, // Backend might not provide this directly in flat benchmap
+                'top_score': 0.0,
+                'user_rank': 0,
+              }, isCompact: false),
+            ),
+            loading: () => const Center(child: Padding(padding: EdgeInsets.all(20), child: CircularProgressIndicator())),
+            error: (err, _) => Container(
+              padding: const EdgeInsets.all(AppSpacing.md),
+              color: AppColors.error.withOpacity(0.1),
+              child: const Text('Could not load benchmarking data.'),
+            ),
+          ),
+          
+          const SizedBox(height: 80), // FAB padding
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeroScoreSection(CVAnalysisModel analysis) {
+    Color scoreColor;
+    if (analysis.overallScore >= 80) {
+      scoreColor = AppColors.success;
+    } else if (analysis.overallScore >= 60) {
+      scoreColor = AppColors.warning;
+    } else {
+      scoreColor = AppColors.error;
+    }
+
+    return _buildGlassContainer(
+      padding: const EdgeInsets.all(AppSpacing.xl),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          // Circular Score
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              SizedBox(
+                width: 120,
+                height: 120,
+                child: CircularProgressIndicator(
+                  value: analysis.overallScore / 100,
+                  strokeWidth: 10,
+                  backgroundColor: AppColors.divider,
+                  valueColor: AlwaysStoppedAnimation<Color>(scoreColor),
+                ),
               ),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            ScoreTrendChart(trendAnalysis: dashboard.trendAnalysis!),
-            const SizedBox(height: AppSpacing.lg),
-          ],
-          
-          if (dashboard.benchmarkingSummary.isNotEmpty) ...[
-            Text(
-              'Peer Comparison',
-              style: AppTypography.h6.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            BenchmarkingCard(
-              benchmarkingData: dashboard.benchmarkingSummary,
-              isCompact: true,
-            ),
-            const SizedBox(height: AppSpacing.lg),
-          ],
-          
-          Text(
-            'Recent Activity',
-            style: AppTypography.h6.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.md),
-          RecentSnapshotsList(
-            snapshots: dashboard.recentSnapshots,
-            maxItems: 5,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTrendsTab(AnalyticsProvider provider) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(AppSpacing.md),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AnalyticsFilterBar(
-            selectedPeriod: provider.trendDays,
-            onPeriodChanged: provider.setTrendDays,
-            showSnapshotFilters: false,
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          
-          if (provider.trendAnalysis != null) ...[
-            ScoreTrendChart(
-              trendAnalysis: provider.trendAnalysis!,
-              showDetails: true,
-            ),
-            const SizedBox(height: AppSpacing.lg),
-            _buildTrendInsights(provider.trendAnalysis!),
-          ] else ...[
-            const EmptyState(
-              title: 'No Trend Data',
-              message: 'Not enough data points for trend analysis. Create more snapshots to see trends.',
-              icon: Icons.trending_up,
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBenchmarkingTab(AnalyticsProvider provider) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(AppSpacing.md),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (provider.benchmarkingData != null) ...[
-            BenchmarkingCard(
-              benchmarkingData: {
-                'current_score': provider.benchmarkingData!.percentileRank,
-                'percentile_rank': provider.benchmarkingData!.percentileRank,
-                'total_peers': provider.benchmarkingData!.statistics['total_peers'] ?? 0,
-              },
-              isCompact: false,
-            ),
-            const SizedBox(height: AppSpacing.lg),
-            _buildPeerComparisons(provider.benchmarkingData!),
-          ] else ...[
-            const EmptyState(
-              title: 'No Benchmarking Data',
-              message: 'Benchmarking data is not available. This may be due to insufficient peer data.',
-              icon: Icons.compare_arrows,
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStatisticsTab(AnalyticsProvider provider) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(AppSpacing.md),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AnalyticsFilterBar(
-            selectedPeriod: provider.statsPeriod,
-            onPeriodChanged: provider.setStatsPeriod,
-            showSnapshotFilters: false,
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          
-          if (provider.completionStats != null) ...[
-            CompletionStatisticsCard(
-              statistics: provider.completionStats!,
-            ),
-          ] else ...[
-            const EmptyState(
-              title: 'No Statistics Data',
-              message: 'Platform statistics are not available at the moment.',
-              icon: Icons.bar_chart,
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTrendInsights(TrendAnalysisModel trend) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Trend Insights',
-              style: AppTypography.h6.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            
-            Row(
-              children: [
-                Expanded(
-                  child: _buildInsightItem(
-                    'Direction',
-                    _formatTrendDirection(trend.trendDirection),
-                    _getTrendDirectionIcon(trend.trendDirection),
-                    _getTrendDirectionColor(trend.trendDirection),
-                  ),
-                ),
-                Expanded(
-                  child: _buildInsightItem(
-                    'Strength',
-                    _formatTrendStrength(trend.trendStrength),
-                    Icons.fitness_center,
-                    AppColors.textSecondary,
-                  ),
-                ),
-              ],
-            ),
-            
-            const SizedBox(height: AppSpacing.md),
-            
-            Row(
-              children: [
-                Expanded(
-                  child: _buildInsightItem(
-                    'Change',
-                    '${trend.absoluteChange > 0 ? '+' : ''}${trend.absoluteChange.toStringAsFixed(1)}',
-                    Icons.change_circle,
-                    trend.absoluteChange > 0 ? AppColors.success : AppColors.error,
-                  ),
-                ),
-                Expanded(
-                  child: _buildInsightItem(
-                    'Volatility',
-                    trend.volatilityScore.toStringAsFixed(2),
-                    Icons.waves,
-                    AppColors.warning,
-                  ),
-                ),
-              ],
-            ),
-            
-            if (trend.predictedNextValue != null) ...[
-              const SizedBox(height: AppSpacing.md),
-              const Divider(),
-              const SizedBox(height: AppSpacing.sm),
-              Row(
+              Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.trending_up, color: AppColors.primary),
-                  const SizedBox(width: AppSpacing.sm),
                   Text(
-                    'Predicted Next Score: ${trend.predictedNextValue!.toStringAsFixed(1)}',
-                    style: AppTypography.body2.copyWith(
-                      fontWeight: FontWeight.w500,
+                    '${analysis.overallScore.toInt()}',
+                    style: AppTypography.h1.copyWith(
+                      color: scoreColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text('/ 100', style: AppTypography.caption),
+                ],
+              ),
+            ],
+          ),
+          // Readiness Info
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: AppSpacing.xl),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'CV Readiness Score',
+                    style: AppTypography.h4.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  Text(
+                    analysis.submissionReadiness.isReady
+                        ? 'Your CV is ready for applications!'
+                        : 'Needs improvement before applying.',
+                    style: AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: analysis.submissionReadiness.isReady 
+                          ? AppColors.success.withOpacity(0.1) 
+                          : AppColors.warning.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          analysis.submissionReadiness.isReady ? LucideIcons.checkCircle : LucideIcons.alertTriangle,
+                          size: 16,
+                          color: analysis.submissionReadiness.isReady ? AppColors.success : AppColors.warning,
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          analysis.submissionReadiness.overallAssessment.toUpperCase(),
+                          style: AppTypography.caption.copyWith(
+                            color: analysis.submissionReadiness.isReady ? AppColors.success : AppColors.warning,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInsightItem(String label, String value, IconData icon, Color color) {
-    return Column(
-      children: [
-        Icon(icon, color: color, size: 24),
-        const SizedBox(height: AppSpacing.xs),
-        Text(
-          value,
-          style: AppTypography.h6.copyWith(
-            fontWeight: FontWeight.w600,
-            color: color,
-          ),
-        ),
-        Text(
-          label,
-          style: AppTypography.caption.copyWith(
-            color: AppColors.textHint,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPeerComparisons(BenchmarkingDataModel benchmarking) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Detailed Peer Comparisons',
-              style: AppTypography.h6.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
             ),
-            const SizedBox(height: AppSpacing.md),
-            
-            ...benchmarking.insights.map((insight) {
-              return Padding(
-                padding: const EdgeInsets.only(bottom: AppSpacing.md),
-                child: _buildComparisonRow(insight),
-              );
-            }).toList(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildComparisonRow(BenchmarkInsightModel insight) {
-    final severity = insight.severity.toLowerCase();
-    final color = severity == 'positive' 
-        ? AppColors.success 
-        : severity == 'negative' 
-            ? AppColors.error 
-            : AppColors.textSecondary;
-    
-    return Row(
-      children: [
-        Expanded(
-          flex: 2,
-          child: Text(
-            insight.type,
-            style: AppTypography.body2,
-          ),
-        ),
-        Expanded(
-          flex: 3,
-          child: Text(
-            insight.message,
-            style: AppTypography.body2.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.xs,
-              vertical: 2,
-            ),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Text(
-              severity.toUpperCase(),
-              style: AppTypography.caption.copyWith(
-                color: color,
-                fontWeight: FontWeight.w600,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  void _showCreateSnapshotDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Create Score Snapshot'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('Create a new score snapshot to track your current CV performance.'),
-            const SizedBox(height: AppSpacing.md),
-            DropdownButtonFormField<String>(
-              decoration: const InputDecoration(
-                labelText: 'Snapshot Type',
-                border: OutlineInputBorder(),
-              ),
-              items: const [
-                DropdownMenuItem(value: 'manual', child: Text('Manual')),
-                DropdownMenuItem(value: 'milestone', child: Text('Milestone')),
-                DropdownMenuItem(value: 'review', child: Text('Review')),
-              ],
-              onChanged: (value) {
-                // Handle selection
-              },
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => _createSnapshot(),
-            child: const Text('Create'),
           ),
         ],
       ),
     );
   }
 
-  void _createSnapshot() async {
-    Navigator.of(context).pop();
-    
-    final provider = context.read<AnalyticsProvider>();
-    final success = await provider.createSnapshot(
-      snapshotType: 'manual',
-      triggerEvent: 'User requested snapshot',
+  Widget _buildRecommendationsList(List<RecommendationModel> recs) {
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: recs.length > 5 ? 5 : recs.length,
+      separatorBuilder: (_, __) => const Divider(),
+      itemBuilder: (context, index) {
+        final rec = recs[index];
+        final isHighPriority = rec.isHighPriority;
+        return ListTile(
+          contentPadding: EdgeInsets.zero,
+          leading: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: isHighPriority ? AppColors.error.withOpacity(0.1) : AppColors.primary.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              isHighPriority ? LucideIcons.alertCircle : LucideIcons.lightbulb,
+              color: isHighPriority ? AppColors.error : AppColors.primary,
+              size: 20,
+            ),
+          ),
+          title: Text(rec.title, style: const TextStyle(fontWeight: FontWeight.bold)),
+          subtitle: Text(rec.description),
+          trailing: rec.actionText.isNotEmpty ? TextButton(
+            onPressed: () {
+              // Implementation action
+            },
+            child: Text(rec.actionText),
+          ) : null,
+        );
+      },
     );
-    
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(success ? 'Snapshot created successfully' : 'Failed to create snapshot'),
-          backgroundColor: success ? AppColors.success : AppColors.error,
-        ),
-      );
+  }
+
+  Widget _buildSectionScores(Map<String, SectionScoreModel> sectionScores) {
+    if (sectionScores.isEmpty) {
+      return const Text('No section breakdown available.');
     }
+    return Column(
+      children: sectionScores.entries.map((entry) {
+        final section = entry.key;
+        final score = entry.value;
+        final color = score.isExcellent ? AppColors.success :
+                      score.isGood ? AppColors.primary :
+                      score.isAverage ? AppColors.warning : AppColors.error;
+
+        return Padding(
+          padding: const EdgeInsets.only(bottom: AppSpacing.md),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(section.toUpperCase(), style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Text('${score.score.toInt()}/100', style: TextStyle(color: color, fontWeight: FontWeight.bold)),
+                ],
+              ),
+              const SizedBox(height: 8),
+              LinearProgressIndicator(
+                value: score.percentage / 100,
+                backgroundColor: AppColors.divider,
+                valueColor: AlwaysStoppedAnimation<Color>(color),
+                minHeight: 8,
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ],
+          ),
+        );
+      }).toList(),
+    );
   }
 
-  void _refreshData() {
-    final provider = context.read<AnalyticsProvider>();
-    provider.refreshAll();
+  Widget _buildSectionHeader(String title, IconData icon) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.md),
+      child: Row(
+        children: [
+          Icon(icon, size: 20, color: AppColors.textSecondary),
+          const SizedBox(width: 8),
+          Text(
+            title,
+            style: AppTypography.h4.copyWith(
+              fontWeight: FontWeight.bold,
+              color: AppColors.textPrimary,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
-  String _formatTrendDirection(String direction) {
-    switch (direction.toLowerCase()) {
-      case 'improving':
-        return 'Improving';
-      case 'declining':
-        return 'Declining';
-      case 'stable':
-        return 'Stable';
-      case 'volatile':
-        return 'Volatile';
-      default:
-        return direction;
-    }
-  }
-
-  String _formatTrendStrength(String strength) {
-    switch (strength.toLowerCase()) {
-      case 'strong':
-        return 'Strong';
-      case 'moderate':
-        return 'Moderate';
-      case 'weak':
-        return 'Weak';
-      default:
-        return strength;
-    }
-  }
-
-  IconData _getTrendDirectionIcon(String direction) {
-    switch (direction.toLowerCase()) {
-      case 'improving':
-        return Icons.trending_up;
-      case 'declining':
-        return Icons.trending_down;
-      case 'stable':
-        return Icons.trending_flat;
-      case 'volatile':
-        return Icons.show_chart;
-      default:
-        return Icons.help;
-    }
-  }
-
-  Color _getTrendDirectionColor(String direction) {
-    switch (direction.toLowerCase()) {
-      case 'improving':
-        return AppColors.success;
-      case 'declining':
-        return AppColors.error;
-      case 'stable':
-        return AppColors.textSecondary;
-      case 'volatile':
-        return AppColors.warning;
-      default:
-        return AppColors.textSecondary;
-    }
-  }
-
-  String _formatMetricName(String metric) {
-    return metric
-        .split('_')
-        .map((word) => word[0].toUpperCase() + word.substring(1))
-        .join(' ');
+  Widget _buildGlassContainer({required Widget child, required EdgeInsets padding}) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.divider.withOpacity(0.5)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      padding: padding,
+      child: child,
+    );
   }
 }

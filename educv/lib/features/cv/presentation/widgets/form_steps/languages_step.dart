@@ -2,16 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
-import '../../../../../core/theme/app_colors.dart';
-import '../../../../../core/theme/app_spacing.dart';
-import '../../../../../core/theme/app_typography.dart';
+import '../../../../../core/theme/premium_portfolio_colors.dart';
 import '../../../../../core/utils/snackbar_helper.dart';
 import '../../../../../core/widgets/app_input.dart';
 import '../../../data/models/cv_models.dart';
 import '../../providers/cv_provider.dart';
-import '../add_item_button.dart';
 import '../cv_section_tile.dart';
-import '../empty_state.dart';
 import '../level_selector.dart';
 import '../step_bottom_sheet.dart';
 
@@ -24,58 +20,98 @@ class LanguagesStep extends ConsumerStatefulWidget {
 
 class _LanguagesStepState extends ConsumerState<LanguagesStep> {
   @override
-  void initState() {
-    super.initState();
-    // Data is pre-populated from cvProfileProvider.fetch() — no separate API call needed
-  }
-
-  @override
   Widget build(BuildContext context) {
     final languagesState = ref.watch(languagesProvider);
 
     return languagesState.when(
-      data: (languagesList) => _buildContent(languagesList),
+      data: (languagesList) => languagesList.isEmpty
+          ? _buildEmptyState()
+          : _buildLanguagesList(languagesList),
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, _) => Center(
-        child: Text(
-          'Error loading languages: $error',
-          style: AppTypography.body.copyWith(color: AppColors.error),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Text(
+            'Unable to load languages. Please try again.',
+            style: TextStyle(
+              fontSize: 14,
+              color: PremiumPortfolioColors.secondaryText,
+            ),
+            textAlign: TextAlign.center,
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildContent(List<LanguageModel> languagesList) {
-    if (languagesList.isEmpty) {
-      return EmptyState(
-        icon: LucideIcons.globe,
-        title: 'No languages added',
-        subtitle: 'Add languages you speak and your proficiency',
-        actionText: 'Add Language',
-        onAction: () => _showLanguageSheet(),
-      );
-    }
+  Widget _buildEmptyState() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
+      decoration: BoxDecoration(
+        color: PremiumPortfolioColors.background,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: PremiumPortfolioColors.borderLight),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            LucideIcons.globe,
+            size: 32,
+            color: PremiumPortfolioColors.accentPurple.withOpacity(0.8),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            'No languages yet',
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              color: PremiumPortfolioColors.primaryText,
+            ),
+          ),
+          const SizedBox(height: 16),
+          FilledButton.icon(
+            onPressed: () => _showLanguageSheet(),
+            icon: const Icon(LucideIcons.plus, size: 18),
+            label: const Text('Add language'),
+            style: FilledButton.styleFrom(
+              backgroundColor: PremiumPortfolioColors.accentPurple,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
+  Widget _buildLanguagesList(List<LanguageModel> languagesList) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Expanded(
-          child: ListView.builder(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            itemCount: languagesList.length,
-            itemBuilder: (context, index) {
-              final language = languagesList[index];
-              return Padding(
-                padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                child: _buildLanguageTile(language),
-              );
-            },
+        ...languagesList.map(
+          (language) => Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: _buildLanguageTile(language),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(AppSpacing.lg),
-          child: AddItemButton(
-            text: 'Add Language',
-            onTap: () => _showLanguageSheet(),
+        const SizedBox(height: 8),
+        OutlinedButton.icon(
+          onPressed: () => _showLanguageSheet(),
+          icon: const Icon(LucideIcons.plus, size: 18),
+          label: const Text('Add another language'),
+          style: OutlinedButton.styleFrom(
+            foregroundColor: PremiumPortfolioColors.accentPurple,
+            side: const BorderSide(color: PremiumPortfolioColors.accentPurple),
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
         ),
       ],
@@ -93,46 +129,38 @@ class _LanguagesStepState extends ConsumerState<LanguagesStep> {
   }
 
   Widget _buildProficiencyBadge(String proficiency) {
-    Color backgroundColor;
-    Color textColor;
+    late Color backgroundColor;
+    late Color textColor;
 
     switch (proficiency) {
-      case 'basic':
-        backgroundColor = AppColors.divider;
-        textColor = AppColors.textSecondary;
-        break;
-      case 'conversational':
-        backgroundColor = AppColors.divider;
-        textColor = AppColors.textSecondary;
-        break;
       case 'professional':
-        backgroundColor = const Color(0xFFE8F0FE);
-        textColor = AppColors.primary;
+        backgroundColor =
+            PremiumPortfolioColors.accentBlue.withOpacity(0.12);
+        textColor = PremiumPortfolioColors.accentBlue;
         break;
       case 'native':
-        backgroundColor = const Color(0xFF1565C0);
-        textColor = AppColors.white;
+        backgroundColor = PremiumPortfolioColors.accentPurple;
+        textColor = Colors.white;
         break;
+      case 'basic':
+      case 'conversational':
       default:
-        backgroundColor = AppColors.divider;
-        textColor = AppColors.textSecondary;
+        backgroundColor = PremiumPortfolioColors.borderLight;
+        textColor = PremiumPortfolioColors.secondaryText;
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.xs,
-        vertical: 4,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
         _getProficiencyDisplayName(proficiency),
-        style: AppTypography.caption.copyWith(
+        style: TextStyle(
           color: textColor,
-          fontWeight: FontWeight.w500,
-          fontSize: 10,
+          fontWeight: FontWeight.w600,
+          fontSize: 11,
         ),
       ),
     );
@@ -166,18 +194,27 @@ class _LanguagesStepState extends ConsumerState<LanguagesStep> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Remove Language', style: AppTypography.h3),
+        title: Text(
+          'Remove language',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: PremiumPortfolioColors.primaryText,
+          ),
+        ),
         content: Text(
-          'This will permanently remove "${language.language}" from your languages.',
-          style: AppTypography.body,
+          'Remove "${language.language}" from your CV?',
+          style: TextStyle(
+            fontSize: 14,
+            color: PremiumPortfolioColors.secondaryText,
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: Text(
-              'Keep',
-              style:
-                  AppTypography.body.copyWith(color: AppColors.textSecondary),
+              'Cancel',
+              style: TextStyle(color: PremiumPortfolioColors.secondaryText),
             ),
           ),
           TextButton(
@@ -186,9 +223,9 @@ class _LanguagesStepState extends ConsumerState<LanguagesStep> {
               ref.read(languagesProvider.notifier).delete(language.id);
               SnackbarHelper.showSuccess(context, 'Language removed');
             },
-            child: Text(
+            child: const Text(
               'Remove',
-              style: AppTypography.body.copyWith(color: AppColors.error),
+              style: TextStyle(color: PremiumPortfolioColors.error),
             ),
           ),
         ],
@@ -218,7 +255,7 @@ class _LanguageBottomSheetState extends ConsumerState<_LanguageBottomSheet> {
     'basic',
     'conversational',
     'professional',
-    'native'
+    'native',
   ];
 
   @override
@@ -252,24 +289,25 @@ class _LanguageBottomSheetState extends ConsumerState<_LanguageBottomSheet> {
         child: Column(
           children: [
             AppInput(
-              label: 'Language Name',
+              label: 'Language name',
               hint: 'e.g. English, Arabic, French',
               controller: _languageController,
               validator: (value) =>
                   value?.isEmpty == true ? 'Language name is required' : null,
             ),
-
-            const SizedBox(height: AppSpacing.md),
-
-            // Proficiency Selector
+            const SizedBox(height: 16),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'Proficiency',
-                  style: AppTypography.label,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: PremiumPortfolioColors.primaryText,
+                  ),
                 ),
-                const SizedBox(height: AppSpacing.xs),
+                const SizedBox(height: 8),
                 LevelSelector(
                   options: _proficiencies
                       .map((prof) => _getProficiencyDisplayName(prof))
@@ -320,14 +358,14 @@ class _LanguageBottomSheetState extends ConsumerState<_LanguageBottomSheet> {
         await ref.read(languagesProvider.notifier).add(data);
         if (!mounted) return;
         Navigator.of(context).pop();
-        SnackbarHelper.showSuccess(context, 'Language added successfully');
+        SnackbarHelper.showSuccess(context, 'Language added');
       } else {
         await ref
             .read(languagesProvider.notifier)
             .updateItem(widget.language!.id, data);
         if (!mounted) return;
         Navigator.of(context).pop();
-        SnackbarHelper.showSuccess(context, 'Language updated successfully');
+        SnackbarHelper.showSuccess(context, 'Language updated');
       }
     } catch (e) {
       if (!mounted) return;

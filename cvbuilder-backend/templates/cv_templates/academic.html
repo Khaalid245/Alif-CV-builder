@@ -1,68 +1,172 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ full_name }} - CV</title>
+    <title>{{ full_name }} - Curriculum Vitae</title>
     <style>
-        body { font-family: 'Times New Roman', serif; margin: 0; padding: 20px; }
-        .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #8B0000; }
-        .section { margin-bottom: 20px; }
-        .section h3 { color: #8B0000; text-transform: uppercase; }
+        * { box-sizing: border-box; }
+        body { 
+            font-family: 'Georgia', serif; 
+            margin: 0; 
+            padding: 30px 40px; 
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .header {
+            border-bottom: 3px double #10B981; /* Emerald Green */
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        .header h1 {
+            font-size: 28px;
+            margin: 0 0 5px 0;
+            color: #111;
+        }
+        .contact-grid {
+            display: flex;
+            flex-wrap: wrap;
+            font-size: 12px;
+            color: #555;
+        }
+        .contact-grid span {
+            width: 50%;
+            margin-bottom: 4px;
+        }
+        
+        .section {
+            margin-bottom: 20px;
+        }
+        .section-title {
+            font-size: 15px;
+            font-weight: bold;
+            color: white;
+            background-color: #10B981; /* Emerald Green background for headings */
+            padding: 4px 10px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .table-layout {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .table-layout td {
+            vertical-align: top;
+            padding-bottom: 10px;
+        }
+        .col-date {
+            width: 20%;
+            font-size: 12px;
+            font-weight: bold;
+            color: #10B981;
+        }
+        .col-content {
+            width: 80%;
+        }
+        .item-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #222;
+        }
+        .item-subtitle {
+            font-size: 13px;
+            font-style: italic;
+        }
+        .item-desc {
+            font-size: 12px;
+            margin-top: 4px;
+            color: #444;
+            text-align: justify;
+        }
+        
+        ul {
+            margin: 5px 0 0 0;
+            padding-left: 15px;
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
     <div class="header">
         <h1>{{ full_name }}</h1>
-        <p>{{ email }} | {{ phone }}</p>
-        {% if city and country %}<p>{{ city }}, {{ country }}</p>{% endif %}
+        <div class="contact-grid">
+            <span><strong>Email:</strong> {{ email }}</span>
+            <span><strong>Phone:</strong> {{ phone }}</span>
+            {% if city and country %}<span><strong>Location:</strong> {{ city }}, {{ country }}</span>{% endif %}
+        </div>
     </div>
     
     {% if summary %}
     <div class="section">
-        <h3>Professional Summary</h3>
-        <p>{{ summary }}</p>
+        <div class="section-title">Research & Academic Summary</div>
+        <div style="font-size: 12px; text-align: justify;">{{ summary }}</div>
     </div>
     {% endif %}
     
     {% if educations %}
     <div class="section">
-        <h3>Education</h3>
-        {% for edu in educations %}
-        <div>
-            <strong>{{ edu.degree }} - {{ edu.institution }}</strong>
-            <span>({{ edu.start_year }} - {{ edu.end_year|default:"Present" }})</span>
-        </div>
-        {% endfor %}
+        <div class="section-title">Education</div>
+        <table class="table-layout">
+            {% for edu in educations %}
+            <tr>
+                <td class="col-date">{{ edu.start_year }} - {{ edu.end_year|default:"Present" }}</td>
+                <td class="col-content">
+                    <div class="item-title">{{ edu.degree }}</div>
+                    <div class="item-subtitle">{{ edu.institution }}</div>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
     </div>
     {% endif %}
     
     {% if experiences %}
     <div class="section">
-        <h3>Experience</h3>
-        {% for exp in experiences %}
-        <div>
-            <strong>{{ exp.position }} - {{ exp.company }}</strong>
-            <span>({{ exp.start_date }} - {{ exp.end_date|default:"Present" }})</span>
-        </div>
-        {% endfor %}
+        <div class="section-title">Academic & Professional Appointments</div>
+        <table class="table-layout">
+            {% for exp in experiences %}
+            <tr>
+                <td class="col-date">{{ exp.start_date }} - {{ exp.end_date|default:"Present" }}</td>
+                <td class="col-content">
+                    <div class="item-title">{{ exp.position }}</div>
+                    <div class="item-subtitle">{{ exp.company }}</div>
+                    {% if exp.description %}
+                    <div class="item-desc">{{ exp.description }}</div>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
     </div>
     {% endif %}
     
-    {% if skills %}
+    {% if skills or languages %}
     <div class="section">
-        <h3>Skills</h3>
-        {% for skill in skills %}
-        <span>{{ skill.name }}</span>{% if not forloop.last %}, {% endif %}
-        {% endfor %}
-    </div>
-    {% endif %}
-    
-    {% if languages %}
-    <div class="section">
-        <h3>Languages</h3>
-        {% for lang in languages %}
-        <span>{{ lang.language }} ({{ lang.proficiency }})</span>{% if not forloop.last %}, {% endif %}
-        {% endfor %}
+        <div class="section-title">Additional Information</div>
+        <table class="table-layout">
+            {% if skills %}
+            <tr>
+                <td class="col-date">Skills</td>
+                <td class="col-content">
+                    <div class="item-desc">
+                        {% for skill in skills %}{{ skill.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                    </div>
+                </td>
+            </tr>
+            {% endif %}
+            {% if languages %}
+            <tr>
+                <td class="col-date">Languages</td>
+                <td class="col-content">
+                    <div class="item-desc">
+                        {% for lang in languages %}{{ lang.language }} ({{ lang.proficiency }}){% if not forloop.last %}, {% endif %}{% endfor %}
+                    </div>
+                </td>
+            </tr>
+            {% endif %}
+        </table>
     </div>
     {% endif %}
 </body>

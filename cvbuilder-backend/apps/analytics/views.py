@@ -641,7 +641,7 @@ class AnalyticsDashboardView(APIView):
                     'percentile_rank': float(latest_snapshot.percentile_rank) if latest_snapshot and latest_snapshot.percentile_rank else None,
                     'total_snapshots': recent_snapshots.count()
                 },
-                'recent_snapshots': ScoreSnapshotListSerializer(recent_snapshots, many=True).data,
+                'recent_snapshots': recent_snapshots,
                 'trend_analysis': trend_data,
                 'benchmarking_summary': benchmarking_data.get('summary', {}),
                 'completion_stats': completion_stats,

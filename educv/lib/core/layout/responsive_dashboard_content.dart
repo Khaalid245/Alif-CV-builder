@@ -18,20 +18,20 @@ class ResponsiveDashboardContent extends StatelessWidget {
       builder: (context, deviceType) {
         return SingleChildScrollView(
           padding: padding ?? deviceType.padding,
-          child: _buildContent(deviceType),
+          child: _buildContent(context, deviceType),
         );
       },
     );
   }
 
-  Widget _buildContent(DeviceType deviceType) {
+  Widget _buildContent(BuildContext context, DeviceType deviceType) {
     switch (deviceType) {
       case DeviceType.mobile:
         return _buildMobileContent();
       case DeviceType.tablet:
         return _buildTabletContent();
       case DeviceType.desktop:
-        return _buildDesktopContent();
+        return _buildDesktopContent(context);
     }
   }
 
@@ -82,7 +82,7 @@ class ResponsiveDashboardContent extends StatelessWidget {
     );
   }
 
-  Widget _buildDesktopContent() {
+  Widget _buildDesktopContent(BuildContext context) {
     // For desktop, we'll use a more flexible grid system
     return Wrap(
       spacing: 24,

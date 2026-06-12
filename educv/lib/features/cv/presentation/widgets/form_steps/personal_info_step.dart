@@ -15,6 +15,7 @@ import '../../../../../core/widgets/enterprise_toast.dart';
 import 'package:educv/features/auth/presentation/providers/auth_provider.dart';
 import '../../providers/cv_provider.dart';
 import '../section_divider.dart';
+import '../target_role_picker.dart';
 
 class PersonalInfoStep extends ConsumerStatefulWidget {
   const PersonalInfoStep({super.key});
@@ -193,6 +194,15 @@ class _PersonalInfoStepState extends ConsumerState<PersonalInfoStep>
 
             const SizedBox(height: AppSpacing.xl),
 
+            // ── Target Role ─────────────────────────────────────────────────
+            // Ask the user what role they are targeting — drives the entire
+            // AI analysis, template recommendations, and benchmarking.
+            const SectionDivider(label: 'Target Role'),
+            const SizedBox(height: AppSpacing.md),
+            _buildRolePicker(),
+
+            const SizedBox(height: AppSpacing.xl),
+
             const SectionDivider(label: 'Professional Summary'),
             const SizedBox(height: AppSpacing.lg),
 
@@ -211,6 +221,13 @@ class _PersonalInfoStepState extends ConsumerState<PersonalInfoStep>
         ),
       ),
     );
+  }
+
+  /// Reads the current target_role from CVProfile and renders the picker.
+  Widget _buildRolePicker() {
+    final profileAsync = ref.watch(cvProfileProvider);
+    final currentRole = profileAsync.valueOrNull?.targetRole;
+    return TargetRolePicker(currentRole: currentRole);
   }
 
   Widget _buildProfilePhotoSection(String? photoUrl) {

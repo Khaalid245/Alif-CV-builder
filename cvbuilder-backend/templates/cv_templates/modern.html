@@ -1,69 +1,187 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>{{ full_name }} - CV</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; }
-        .header { background: #20B2AA; color: white; padding: 20px; text-align: center; }
-        .section { margin-bottom: 15px; }
-        .section h3 { color: #20B2AA; }
+        * { box-sizing: border-box; }
+        body { 
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            color: #333;
+            line-height: 1.5;
+            display: flex;
+        }
+        /* Left Sidebar */
+        .sidebar {
+            width: 30%;
+            background-color: #10B981; /* Emerald Green */
+            color: white;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        .sidebar h1 {
+            font-size: 24px;
+            margin: 0 0 5px 0;
+            line-height: 1.2;
+        }
+        .sidebar .role {
+            font-size: 14px;
+            font-weight: 300;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+        .contact-info {
+            margin-bottom: 30px;
+            font-size: 12px;
+        }
+        .contact-info p { margin: 5px 0; }
+        .sidebar-section {
+            margin-bottom: 30px;
+        }
+        .sidebar-section h3 {
+            font-size: 16px;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+        .skill-tag {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            margin: 0 4px 6px 0;
+        }
+        
+        /* Right Main Content */
+        .main-content {
+            width: 70%;
+            padding: 40px 40px;
+            background: white;
+        }
+        .section-title {
+            color: #10B981;
+            font-size: 20px;
+            text-transform: uppercase;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 5px;
+            margin-bottom: 20px;
+            margin-top: 0;
+        }
+        .summary {
+            font-size: 13px;
+            margin-bottom: 30px;
+            color: #555;
+        }
+        
+        .item {
+            margin-bottom: 20px;
+        }
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 5px;
+        }
+        .item-title {
+            font-weight: bold;
+            font-size: 16px;
+            color: #222;
+        }
+        .item-subtitle {
+            font-style: italic;
+            color: #10B981;
+            font-size: 14px;
+        }
+        .item-date {
+            font-size: 12px;
+            color: #777;
+            font-weight: bold;
+        }
+        .item-desc {
+            font-size: 13px;
+            color: #555;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
-    <div class="header">
+    <div class="sidebar">
         <h1>{{ full_name }}</h1>
-        <p>{{ email }} | {{ phone }}</p>
-        {% if city and country %}<p>{{ city }}, {{ country }}</p>{% endif %}
-    </div>
-    
-    {% if summary %}
-    <div class="section">
-        <h3>Professional Summary</h3>
-        <p>{{ summary }}</p>
-    </div>
-    {% endif %}
-    
-    {% if educations %}
-    <div class="section">
-        <h3>Education</h3>
-        {% for edu in educations %}
-        <div>
-            <strong>{{ edu.degree }} - {{ edu.institution }}</strong>
-            <span>({{ edu.start_year }} - {{ edu.end_year|default:"Present" }})</span>
+        <div class="role">Professional CV</div>
+        
+        <div class="contact-info">
+            <p>{{ email }}</p>
+            <p>{{ phone }}</p>
+            {% if city and country %}<p>{{ city }}, {{ country }}</p>{% endif %}
         </div>
-        {% endfor %}
-    </div>
-    {% endif %}
-    
-    {% if experiences %}
-    <div class="section">
-        <h3>Experience</h3>
-        {% for exp in experiences %}
-        <div>
-            <strong>{{ exp.position }} - {{ exp.company }}</strong>
-            <span>({{ exp.start_date }} - {{ exp.end_date|default:"Present" }})</span>
+        
+        {% if skills %}
+        <div class="sidebar-section">
+            <h3>Skills</h3>
+            <div>
+                {% for skill in skills %}
+                <span class="skill-tag">{{ skill.name }}</span>
+                {% endfor %}
+            </div>
         </div>
-        {% endfor %}
+        {% endif %}
+        
+        {% if languages %}
+        <div class="sidebar-section">
+            <h3>Languages</h3>
+            <div>
+                {% for lang in languages %}
+                <p style="margin:0 0 5px 0; font-size:12px;">{{ lang.language }} - <span style="opacity:0.8">{{ lang.proficiency }}</span></p>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
     </div>
-    {% endif %}
     
-    {% if skills %}
-    <div class="section">
-        <h3>Skills</h3>
-        {% for skill in skills %}
-        <span>{{ skill.name }}</span>{% if not forloop.last %}, {% endif %}
-        {% endfor %}
+    <div class="main-content">
+        {% if summary %}
+        <h2 class="section-title">Profile</h2>
+        <div class="summary">
+            {{ summary }}
+        </div>
+        {% endif %}
+        
+        {% if experiences %}
+        <h2 class="section-title">Experience</h2>
+        <div class="experience-list">
+            {% for exp in experiences %}
+            <div class="item">
+                <div class="item-header">
+                    <span class="item-title">{{ exp.position }}</span>
+                    <span class="item-date">{{ exp.start_date }} - {{ exp.end_date|default:"Present" }}</span>
+                </div>
+                <div class="item-subtitle">{{ exp.company }}</div>
+                {% if exp.description %}
+                <div class="item-desc">{{ exp.description }}</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        {% if educations %}
+        <h2 class="section-title">Education</h2>
+        <div class="education-list">
+            {% for edu in educations %}
+            <div class="item">
+                <div class="item-header">
+                    <span class="item-title">{{ edu.degree }}</span>
+                    <span class="item-date">{{ edu.start_year }} - {{ edu.end_year|default:"Present" }}</span>
+                </div>
+                <div class="item-subtitle">{{ edu.institution }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
     </div>
-    {% endif %}
-    
-    {% if languages %}
-    <div class="section">
-        <h3>Languages</h3>
-        {% for lang in languages %}
-        <span>{{ lang.language }} ({{ lang.proficiency }})</span>{% if not forloop.last %}, {% endif %}
-        {% endfor %}
-    </div>
-    {% endif %}
 </body>
 </html>

@@ -29,10 +29,10 @@ class ResponsiveSidebarWrapper extends StatefulWidget {
   });
 
   @override
-  State<ResponsiveSidebarWrapper> createState() => _ResponsiveSidebarWrapperState();
+  State<ResponsiveSidebarWrapper> createState() => ResponsiveSidebarWrapperState();
 }
 
-class _ResponsiveSidebarWrapperState extends State<ResponsiveSidebarWrapper>
+class ResponsiveSidebarWrapperState extends State<ResponsiveSidebarWrapper>
     with TickerProviderStateMixin {
   bool _isTabletSidebarOpen = false;
   late AnimationController _overlayController;

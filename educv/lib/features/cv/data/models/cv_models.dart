@@ -13,6 +13,8 @@ class CVProfileModel {
   final String fullName;
   final String email;
   final String studentId;
+  // Nullable — set when user selects a target role
+  final Map<String, dynamic>? targetRole;
   final List<EducationModel> education;
   final List<ExperienceModel> experiences;
   final List<SkillModel> skills;
@@ -37,6 +39,7 @@ class CVProfileModel {
     required this.fullName,
     required this.email,
     required this.studentId,
+    this.targetRole,
     required this.education,
     required this.experiences,
     required this.skills,
@@ -60,9 +63,12 @@ class CVProfileModel {
       photoUrl: json['photo'],
       summary: json['summary'] ?? '',
       completionPercentage: json['completion_percentage'] ?? 0,
-      fullName: json['student']?['full_name'] ?? '',
-      email: json['student']?['email'] ?? '',
-      studentId: json['student']?['student_id'] ?? '',
+      fullName: json['full_name'] ?? json['student']?['full_name'] ?? '',
+      email: json['email'] ?? json['student']?['email'] ?? '',
+      studentId: json['student_id'] ?? json['student']?['student_id'] ?? '',
+      targetRole: json['target_role'] != null
+          ? Map<String, dynamic>.from(json['target_role'] as Map)
+          : null,
       education: (json['educations'] as List<dynamic>?)
               ?.map((e) => EducationModel.fromJson(e))
               .toList() ??
@@ -125,6 +131,7 @@ class CVProfileModel {
     String? fullName,
     String? email,
     String? studentId,
+    Map<String, dynamic>? targetRole,
     List<EducationModel>? education,
     List<ExperienceModel>? experiences,
     List<SkillModel>? skills,
@@ -149,6 +156,7 @@ class CVProfileModel {
       fullName: fullName ?? this.fullName,
       email: email ?? this.email,
       studentId: studentId ?? this.studentId,
+      targetRole: targetRole ?? this.targetRole,
       education: education ?? this.education,
       experiences: experiences ?? this.experiences,
       skills: skills ?? this.skills,

@@ -6,6 +6,7 @@ import '../theme/premium_portfolio_colors.dart';
 import 'responsive_layout.dart';
 import '../../features/auth/presentation/providers/auth_provider.dart';
 import '../../core/storage/secure_storage.dart';
+import '../network/connectivity_provider.dart';
 
 class ImprovedAppLayout extends ConsumerStatefulWidget {
   final Widget child;
@@ -23,39 +24,122 @@ class ImprovedAppLayout extends ConsumerStatefulWidget {
 
 class _ImprovedAppLayoutState extends ConsumerState<ImprovedAppLayout> {
   bool _isSidebarCollapsed = false;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(currentUserProvider);
-    
+    final isOffline = ref.watch(connectivityProvider);
+
     return ResponsiveBuilder(
       builder: (context, deviceType) {
+        final sidebar = ImprovedSidebar(
+          currentIndex: _getCurrentIndex(),
+          onNavigationChanged: (index) {
+            _handleNavigation(index);
+            if (deviceType.isMobile) {
+              Navigator.of(context).pop();
+            }
+          },
+          isCollapsed: deviceType.isTablet ? _isSidebarCollapsed : false,
+          onToggleCollapse: deviceType.isTablet
+              ? () {
+                  setState(() {
+                    _isSidebarCollapsed = !_isSidebarCollapsed;
+                  });
+                }
+              : null,
+          userName: user?.fullName,
+          userEmail: user?.email,
+          onProfileTap: () {
+            if (deviceType.isMobile) Navigator.of(context).pop();
+            _showProfileBottomSheet(context);
+          },
+        );
+
+        if (deviceType.isMobile) {
+          return Scaffold(
+            key: _scaffoldKey,
+            backgroundColor: PremiumPortfolioColors.background,
+            drawer: Drawer(child: sidebar),
+            body: Column(
+              children: [
+                Material(
+                  color: Colors.white,
+                  child: SafeArea(
+                    bottom: false,
+                    child: SizedBox(
+                      height: 52,
+                      child: Row(
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.menu),
+                            color: PremiumPortfolioColors.primaryText,
+                            onPressed: () =>
+                                _scaffoldKey.currentState?.openDrawer(),
+                          ),
+                          Text(
+                            'EduCV',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              color: PremiumPortfolioColors.primaryText,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    children: [
+                      if (isOffline)
+                        Container(
+                          width: double.infinity,
+                          color: PremiumPortfolioColors.error,
+                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          child: const Text(
+                            'You are offline. Changes are saved locally.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      Expanded(child: widget.child),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
         return Scaffold(
           backgroundColor: PremiumPortfolioColors.background,
           body: Row(
             children: [
-              // Improved Sidebar
-              ImprovedSidebar(
-                currentIndex: _getCurrentIndex(),
-                onNavigationChanged: _handleNavigation,
-                isCollapsed: deviceType.isTablet ? _isSidebarCollapsed : false,
-                onToggleCollapse: deviceType.isTablet ? () {
-                  setState(() {
-                    _isSidebarCollapsed = !_isSidebarCollapsed;
-                  });
-                } : null,
-                userName: user?.fullName,
-                userEmail: user?.email,
-                onProfileTap: () => _showProfileBottomSheet(context),
-              ),
-              
-              // Main content area
+              sidebar,
               Expanded(
                 child: Container(
                   decoration: const BoxDecoration(
                     color: PremiumPortfolioColors.background,
                   ),
-                  child: widget.child,
+                  child: Column(
+                    children: [
+                      if (isOffline)
+                        Container(
+                          width: double.infinity,
+                          color: PremiumPortfolioColors.error,
+                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          child: const Text(
+                            'You are offline. Changes are saved locally.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      Expanded(child: widget.child),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -195,7 +279,7 @@ class _ImprovedAppLayoutState extends ConsumerState<ImprovedAppLayout> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          'Student Account',
+                          'Professional',
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,

@@ -34,8 +34,8 @@ class CVAnalysisView(APIView):
     def get(self, request):
         """Get existing analysis or create new one if none exists."""
         try:
-            # Check for existing analysis
-            analysis = CVAnalysis.objects.filter(user=request.user).first()
+            # Check for existing analysis (Rec 3: always filter by is_latest=True)
+            analysis = CVAnalysis.objects.filter(user=request.user, is_latest=True).first()
             
             if analysis:
                 return success_response(
@@ -105,9 +105,8 @@ class CVAnalysisView(APIView):
             analysis_result = service.analyze_cv_comprehensive(request.user, cv_profile)
             logger.info(f'Comprehensive analysis completed for user {request.user.id}')
             
-            # Get the saved analysis for response
-            logger.info(f'Fetching saved analysis for user {request.user.id}')
-            analysis = CVAnalysis.objects.filter(user=request.user).first()
+            # Rec 3: fetch the canonical current analysis (is_latest=True)
+            analysis = CVAnalysis.objects.filter(user=request.user, is_latest=True).first()
             
             if not analysis:
                 logger.error(f'No analysis record found after creation for user {request.user.id}')
@@ -134,7 +133,7 @@ class CVAnalysisView(APIView):
     def _format_analysis_response(self, analysis: CVAnalysis) -> Dict:
         """Format analysis object into API response."""
         analysis_data = analysis.analysis_data or {}
-        
+
         return {
             'id': str(analysis.id),
             'overall_score': analysis.overall_score,
@@ -155,7 +154,15 @@ class CVAnalysisView(APIView):
             'critical_issues': analysis.critical_issues,
             'total_recommendations': analysis.total_recommendations,
             'analyzed_at': analysis.created_at.isoformat(),
-            'last_updated': analysis.updated_at.isoformat()
+            'last_updated': analysis.updated_at.isoformat(),
+            # Rec 3: structured diff vs previous analysis
+            # is_first_analysis=True means this is the user's first ever analysis
+            'diff_from_previous': analysis.diff_from_previous or {},
+            'metadata': {
+                'ats_parsability_score': analysis_data.get('ats_parsability_score'),
+                'impact_score': analysis_data.get('impact_score'),
+                'ml_scored': analysis_data.get('ml_scored', False),
+            }
         }
 
 
@@ -168,7 +175,7 @@ class CVScoreView(APIView):
     
     def get(self, request):
         try:
-            analysis = CVAnalysis.objects.filter(user=request.user).first()
+            analysis = CVAnalysis.objects.filter(user=request.user, is_latest=True).first()
             
             if not analysis:
                 return success_response(
@@ -200,7 +207,11 @@ class CVScoreView(APIView):
                     },
                     'recommendations': analysis_data.get('recommendations', {}),
                     'analysis_date': analysis.created_at.isoformat(),
-                    'last_updated': analysis.updated_at.isoformat()
+                    'last_updated': analysis.updated_at.isoformat(),
+                    'metadata': {
+                        'ats_parsability_score': analysis_data.get('ats_parsability_score'),
+                        'impact_score': analysis_data.get('impact_score')
+                    }
                 }
             )
             
@@ -330,6 +341,98 @@ class CVAnalysisHistoryDetailView(APIView):
             )
 
 
+class CVScoreProgressionView(APIView):
+    """
+    GET /api/v1/cv/analysis/history/progression/
+
+    Returns a score progression timeline for the authenticated user.
+    Computes score deltas between consecutive analyses to drive the
+    "You improved from 62 → 78 because you added quantified metrics" narrative.
+    This endpoint powers the progress tracking chart in the History tab.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
+            limit = min(int(request.GET.get('limit', 10)), 20)
+
+            # Oldest-first so the chart renders left-to-right
+            all_analyses = (
+                CVAnalysisHistory.objects
+                .filter(user=request.user)
+                .order_by('created_at')
+            )
+            total = all_analyses.count()
+
+            # Take the last `limit` entries (most recent window)
+            analyses = list(all_analyses)[max(0, total - limit):]
+
+            if not analyses:
+                return success_response('No progression data available.', {
+                    'snapshots': [],
+                    'trend': 'stable',
+                    'total_improvement': 0.0,
+                    'first_score': None,
+                    'latest_score': None,
+                    'has_data': False,
+                    'total_analyses': 0,
+                })
+
+            # Build enriched snapshot list with per-step deltas
+            snapshots = []
+            for i, analysis in enumerate(analyses):
+                prev = analyses[i - 1] if i > 0 else None
+                score = float(analysis.overall_score)
+                prev_score = float(prev.overall_score) if prev else score
+                delta = round(score - prev_score, 1)
+
+                snapshots.append({
+                    'id': str(analysis.id),
+                    'score': round(score, 1),
+                    'grade': analysis.readiness_grade or '',
+                    'analyzed_at': analysis.created_at.isoformat(),
+                    'score_delta': delta,
+                    'total_recommendations': analysis.total_recommendations,
+                    'section_scores': analysis.section_scores or {},
+                })
+
+            first_score = float(analyses[0].overall_score)
+            latest_score = float(analyses[-1].overall_score)
+            total_improvement = round(latest_score - first_score, 1)
+
+            # Determine overall trend direction
+            if len(analyses) >= 2:
+                trend = (
+                    'improving' if total_improvement > 3
+                    else 'declining' if total_improvement < -3
+                    else 'stable'
+                )
+            else:
+                trend = 'stable'
+
+            return success_response('Score progression retrieved successfully.', {
+                'snapshots': snapshots,
+                'trend': trend,
+                'total_improvement': total_improvement,
+                'first_score': round(first_score, 1),
+                'latest_score': round(latest_score, 1),
+                'has_data': True,
+                'total_analyses': total,
+            })
+
+        except ValueError:
+            return error_response(
+                'Invalid limit parameter.',
+                status_code=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            logger.error(f'Failed to get score progression for user {request.user.id}: {str(e)}')
+            return error_response(
+                'Failed to retrieve score progression.',
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
 class CVAnalysisExportView(APIView):
     """
     GET /api/v1/cv/export-analysis/
@@ -434,7 +537,7 @@ class CVBenchmarkingView(APIView):
             comparison_group = request.GET.get('group', None)
             
             # Validate comparison group
-            valid_groups = ['faculty', 'major', 'year', 'experience']
+            valid_groups = ['faculty', 'major', 'year', 'experience', 'role']
             if comparison_group and comparison_group not in valid_groups:
                 return error_response(
                     f'Invalid comparison group. Valid options: {", ".join(valid_groups)}',
@@ -460,3 +563,45 @@ class CVBenchmarkingView(APIView):
                 'Failed to retrieve benchmarking data.',
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+
+class CVRolesView(APIView):
+    """
+    GET /api/v1/cv/roles/
+
+    Returns all active roles that users can target with their CV.
+    Each role includes its intelligence config metadata (icon, guidance) for
+    display in the frontend role picker.
+    No user-specific data — safe to cache aggressively.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        from apps.template_engine.models import Role
+        from .models import RoleIntelligenceConfig
+
+        roles = (
+            Role.objects
+            .filter(is_active=True)
+            .select_related('industry', 'intelligence_config')
+            .order_by('industry__name', 'name')
+        )
+
+        result = []
+        for role in roles:
+            config = getattr(role, 'intelligence_config', None)
+            result.append({
+                'id': str(role.id),
+                'name': role.name,
+                'slug': role.slug,
+                'industry': role.industry.name,
+                'icon': config.icon if config else 'briefcase',
+                'summary_guidance': (
+                    config.role_specific_summary_guidance if config else ''
+                ),
+                'recommended_metrics': (
+                    config.recommended_metrics[:3] if config else []
+                ),
+            })
+
+        return success_response('Roles retrieved successfully.', {'roles': result})

@@ -40,6 +40,26 @@ class CVProfile(models.Model):
     # ── Completion ────────────────────────────────────────────────────────────
     completion_percentage = models.IntegerField(default=0)
 
+    # ── Target Role (Job-Role Intelligence) ───────────────────────────────────
+    # Nullable so existing CVs are unaffected. When set, the AI engine, benchmarking,
+    # and template recommender all adapt to this role automatically.
+    target_role = models.ForeignKey(
+        'template_engine.Role',
+        null=True, blank=True,
+        on_delete=models.SET_NULL,
+        related_name='cv_profiles',
+        help_text='The role the student is targeting with this CV'
+    )
+    # Free-text major/role for students whose field is not in the seeded roles list.
+    # When set and target_role is None, the ML engine uses this as the role context.
+    # Examples: "Civil Engineering", "Nursing", "Marketing", "Architecture"
+    custom_role_name = models.CharField(
+        max_length=100,
+        blank=True,
+        default='',
+        help_text='Custom role/major name when not in the seeded roles list'
+    )
+
     # ── Timestamps ────────────────────────────────────────────────────────────
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -1,4 +1,7 @@
+import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../constants/api_constants.dart';
@@ -22,6 +25,33 @@ final dioProvider = Provider<Dio>((ref) {
   // Add interceptors
   dio.interceptors.add(AuthInterceptor(ref));
   dio.interceptors.add(ErrorInterceptor());
+
+  // SSL Certificate Pinning
+  if (!kIsWeb) {
+    dio.httpClientAdapter = IOHttpClientAdapter(
+      createHttpClient: () {
+        final client = HttpClient();
+        return client;
+      },
+      validateCertificate: (cert, host, port) {
+        // Bypass SSL pinning for local development
+        if (host == 'localhost' || host == '10.0.2.2') {
+          return true;
+        }
+
+        // TODO: Replace with your actual server's SHA-256 certificate fingerprint
+        const validFingerprint = 'YOUR_SHA256_FINGERPRINT_HERE';
+        
+        if (cert == null) return false;
+        
+        // Uncomment the following lines when you have your fingerprint:
+        // final String actualFingerprint = sha256.convert(cert.der).toString();
+        // return actualFingerprint == validFingerprint;
+        
+        return true; // Temporarily allow all until a fingerprint is provided
+      },
+    );
+  }
 
   return dio;
 });

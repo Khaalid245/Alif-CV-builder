@@ -1,6 +1,18 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/network/api_client.dart';
 import '../../data/models/version_models.dart';
 import '../../domain/version_history_repository.dart';
+import '../../data/repositories/version_history_repository_impl.dart';
+
+final versionHistoryRepositoryProvider = Provider<VersionHistoryRepository>((ref) {
+  final apiClient = ref.watch(apiClientProvider);
+  return VersionHistoryRepositoryImpl(apiClient);
+});
+
+final versionHistoryNotifierProvider = ChangeNotifierProvider<VersionHistoryProvider>((ref) {
+  return VersionHistoryProvider(ref.watch(versionHistoryRepositoryProvider));
+});
 
 enum VersionHistoryState { initial, loading, loaded, error }
 

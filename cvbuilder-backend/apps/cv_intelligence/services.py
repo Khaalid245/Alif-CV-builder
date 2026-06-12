@@ -27,6 +27,10 @@ class CVAnalysisService:
         """
         Perform comprehensive CV analysis and store results.
         Returns analysis data and saves to database.
+
+        Rec 3 contract: NEVER delete previous CVAnalysis records.
+        Instead mark them is_latest=False and compute a structured diff
+        so the History tab can show "You fixed 3 issues, 2 new ones appeared."
         """
         try:
             logger.info(f'Starting comprehensive analysis for user {user.id}')
@@ -42,10 +46,26 @@ class CVAnalysisService:
                 score_breakdown = validation_results.get('score_breakdown', {})
                 logger.info(f'Score breakdown for user {user.id}: {score_breakdown}')
                 
-                # Delete existing analysis for this user
-                CVAnalysis.objects.filter(user=user).delete()
-                logger.info(f'Deleted existing analysis records for user {user.id}')
+                # ── Rec 3: Retire old record instead of deleting it ────────────
+                previous_analysis = CVAnalysis.objects.filter(
+                    user=user, is_latest=True
+                ).first()
+                if previous_analysis:
+                    CVAnalysis.objects.filter(
+                        user=user, is_latest=True
+                    ).update(is_latest=False)
+                    logger.info(
+                        f'Retired previous analysis {previous_analysis.id} '
+                        f'for user {user.id} (is_latest → False)'
+                    )
                 
+                # ── Compute structured diff vs previous analysis ───────────────
+                diff = self._compute_analysis_diff(
+                    previous_analysis=previous_analysis,
+                    new_validation=validation_results,
+                )
+                
+                # ── Create the new analysis with is_latest=True ───────────────
                 analysis = CVAnalysis.objects.create(
                     user=user,
                     overall_score=validation_results['overall_score'],
@@ -59,13 +79,15 @@ class CVAnalysisService:
                     total_recommendations=len(validation_results.get('suggestions', [])),
                     analysis_data=validation_results,
                     grade=validation_results['grade'],
-                    submission_ready=validation_results.get('is_submission_ready', False)
+                    submission_ready=validation_results.get('is_submission_ready', False),
+                    is_latest=True,
+                    diff_from_previous=diff,
                 )
                 logger.info(f'Analysis record created for user {user.id}, analysis_id: {analysis.id}')
                 
-                # Store analysis issues
+                # Store analysis issues — linked to this specific analysis record
                 logger.info(f'Storing analysis issues for user {user.id}')
-                self._store_analysis_issues(user, validation_results['issues'])
+                self._store_analysis_issues(user, validation_results['issues'], analysis)
                 logger.info(f'Analysis issues stored for user {user.id}')
                 
                 # Generate content suggestions
@@ -73,9 +95,9 @@ class CVAnalysisService:
                 self._generate_content_recommendations(user, cv_profile, validation_results)
                 logger.info(f'Content suggestions generated for user {user.id}')
                 
-                # Save analysis history
+                # Save analysis history (with diff)
                 logger.info(f'Saving analysis history for user {user.id}')
-                self._save_analysis_history(user, validation_results)
+                self._save_analysis_history(user, validation_results, diff)
                 logger.info(f'Analysis history saved for user {user.id}')
             
             logger.info(f'CV analysis completed for user {user.id} - Score: {validation_results["overall_score"]}')
@@ -88,17 +110,21 @@ class CVAnalysisService:
                 'priority_improvements': validation_results['priority_improvements'],
                 'total_issues': len(validation_results['issues']),
                 'total_suggestions': len(validation_results['suggestions']),
-                'analysis_date': analysis.created_at.isoformat()
+                'analysis_date': analysis.created_at.isoformat(),
+                'diff_from_previous': diff,
             }
             
         except Exception as e:
             logger.error(f'CV analysis failed for user {user.id}: {str(e)}', exc_info=True)
             raise
+
     
     def get_latest_analysis(self, user) -> Dict:
-        """Get the most recent CV analysis for a user."""
+        """Get the most recent CV analysis for a user (is_latest=True)."""
         try:
-            analysis = CVAnalysis.objects.filter(user=user).first()
+            # Rec 3: always use is_latest=True — never falls back to .first()
+            # because old records are now retained with is_latest=False
+            analysis = CVAnalysis.objects.filter(user=user, is_latest=True).first()
             if not analysis:
                 return None
             
@@ -222,14 +248,140 @@ class CVAnalysisService:
             logger.error(f'Failed to resolve issue {issue_id} for user {user.id}: {str(e)}')
             return False
     
-    def _store_analysis_issues(self, user, issues: List[Dict]):
-        """Store analysis issues in the database."""
-        # Clear old unresolved issues for this user
-        AnalysisIssue.objects.filter(user=user, resolved=False).delete()
-        
+    # ─────────────────────────────────────────────────────────────────────────
+    # Rec 3: Diff engine
+    # ─────────────────────────────────────────────────────────────────────────
+
+    def _compute_analysis_diff(
+        self,
+        previous_analysis,  # CVAnalysis | None
+        new_validation: Dict,
+    ) -> Dict:
+        """
+        Compute a structured diff between the previous CVAnalysis and the new
+        validation results.  Returns a dict that can be stored as JSON:
+
+        {
+          "score_delta": 6.0,
+          "is_first_analysis": False,
+          "resolved_issues": [{"type": "missing_content", "section": "experience", "title": "..."}],
+          "new_issues": [...],
+          "improved_sections": {"experience": 8},
+          "regressed_sections": {"skills": -3},
+        }
+        """
+        new_score = new_validation.get('overall_score', 0)
+
+        if previous_analysis is None:
+            return {
+                'score_delta': 0,
+                'is_first_analysis': True,
+                'resolved_issues': [],
+                'new_issues': [],
+                'improved_sections': {},
+                'regressed_sections': {},
+            }
+
+        prev_score = previous_analysis.overall_score
+        score_delta = round(float(new_score) - float(prev_score), 1)
+
+        # ── Section deltas ────────────────────────────────────────────────────
+        prev_sections = {
+            'profile': previous_analysis.profile_score,
+            'experience': previous_analysis.experience_score,
+            'education': previous_analysis.education_score,
+            'skills': previous_analysis.skills_score,
+            'projects': previous_analysis.projects_score,
+        }
+        new_sections = new_validation.get('score_breakdown', {})
+
+        improved_sections: Dict = {}
+        regressed_sections: Dict = {}
+        for section, prev_val in prev_sections.items():
+            new_val = new_sections.get(section, prev_val)
+            delta = round(float(new_val) - float(prev_val), 1)
+            if delta > 0:
+                improved_sections[section] = delta
+            elif delta < 0:
+                regressed_sections[section] = delta
+
+        # ── Issue diff ────────────────────────────────────────────────────────
+        # Read previous issues from analysis_data JSON (not AnalysisIssue FK).
+        # This is reliable because analysis_data is immutable after creation
+        # and doesn't depend on AnalysisIssue records being linked to the analysis.
+        prev_data = previous_analysis.analysis_data or {}
+        prev_issues_raw = prev_data.get('issues', [])
+        prev_issue_keys = {
+            (i.get('type', 'missing_content'), i.get('section', 'overall'))
+            for i in prev_issues_raw
+        }
+
+        new_issues_raw = new_validation.get('issues', [])
+        new_issue_keys = {
+            (i.get('type', 'missing_content'), i.get('section', 'overall'))
+            for i in new_issues_raw
+        }
+
+        resolved_keys = prev_issue_keys - new_issue_keys
+        added_keys = new_issue_keys - prev_issue_keys
+
+        # Enrich resolved issues with titles from the previous analysis_data
+        resolved_issues = []
+        for (itype, isection) in resolved_keys:
+            match = next(
+                (i for i in prev_issues_raw
+                 if i.get('type') == itype and i.get('section') == isection),
+                None,
+            )
+            resolved_issues.append({
+                'type': itype,
+                'section': isection,
+                'title': (
+                    match.get('title') or match.get('message', '')[:80]
+                    if match else itype.replace('_', ' ').title()
+                ),
+            })
+
+        # Enrich new issues with titles from the new validation payload
+        new_issues_list = []
+        for (itype, isection) in added_keys:
+            match = next(
+                (i for i in new_issues_raw
+                 if i.get('type') == itype and i.get('section') == isection),
+                None,
+            )
+            new_issues_list.append({
+                'type': itype,
+                'section': isection,
+                'title': (
+                    match.get('title') or match.get('message', '')[:80]
+                    if match else itype.replace('_', ' ').title()
+                ),
+            })
+
+        return {
+            'score_delta': score_delta,
+            'is_first_analysis': False,
+            'resolved_issues': resolved_issues,
+            'new_issues': new_issues_list,
+            'improved_sections': improved_sections,
+            'regressed_sections': regressed_sections,
+        }
+
+    def _store_analysis_issues(self, user, issues: List[Dict], analysis=None):
+        """
+        Store analysis issues linked to a specific CVAnalysis record.
+        Replaces user-scoped issues rather than wiping all history,
+        preserving the integrity of older analysis records.
+        """
+        # Only remove unresolved issues that are NOT linked to a historical analysis
+        # (i.e. legacy orphan records). Linked records are kept for diff history.
+        AnalysisIssue.objects.filter(user=user, resolved=False, analysis__isnull=True).delete()
+
         issue_objects = [
             AnalysisIssue(
                 user=user,
+                analysis=analysis,  # Always link to the specific CVAnalysis record
                 issue_type=issue.get('type', 'missing_content'),
                 severity=issue.get('severity', 'medium'),
                 section=issue.get('section', 'overall'),
@@ -239,7 +391,7 @@ class CVAnalysisService:
             )
             for issue in issues
         ]
-        
+
         if issue_objects:
             AnalysisIssue.objects.bulk_create(issue_objects)
     
@@ -306,7 +458,7 @@ class CVAnalysisService:
         
         return '\n'.join(enhanced_lines) if enhanced_lines else description
     
-    def _save_analysis_history(self, user, validation_results):
+    def _save_analysis_history(self, user, validation_results, diff: dict = None):
         """Save analysis results to history for tracking progress over time."""
         try:
             # Extract section scores from validation results
@@ -333,14 +485,15 @@ class CVAnalysisService:
             else:
                 readiness_grade = 'D'
             
-            # Extract recommendations
+            # Extract recommendations, strengths, weaknesses
             recommendations = validation_results.get('suggestions', [])
-            
-            # Extract strengths and weaknesses
             strengths = validation_results.get('strengths', [])
             weaknesses = validation_results.get('issues', [])
             
-            # Create history record
+            # Build diff for history (reuse from analysis or compute fresh if missing)
+            history_diff = diff or {}
+
+            # Create history record — including the structured diff
             CVAnalysisHistory.objects.create(
                 user=user,
                 overall_score=validation_results['overall_score'],
@@ -351,10 +504,11 @@ class CVAnalysisService:
                 strengths=strengths,
                 weaknesses=weaknesses,
                 analysis_version='1.0',
-                total_recommendations=len(recommendations)
+                total_recommendations=len(recommendations),
+                diff_from_previous=history_diff,
             )
             
-            logger.info(f'Analysis history saved for user {user.id}')
+            logger.info(f'Analysis history saved for user {user.id} (diff: {bool(history_diff)})')
             
             # Invalidate benchmarking cache since new analysis affects rankings
             benchmarking_service = CVBenchmarkingService()
@@ -363,6 +517,7 @@ class CVAnalysisService:
         except Exception as e:
             logger.error(f'Failed to save analysis history for user {user.id}: {str(e)}')
             # Don't raise exception as this is not critical for the main analysis flow
+
     
     def get_analysis_history(self, user, limit=20):
         """Get analysis history for a user."""

@@ -39,3 +39,9 @@ gunicorn==23.0.0
 django-prometheus==2.3.1
 sentry-sdk[django]==1.38.0
 structlog==23.2.0
+
+# ─── ML Semantic Scoring (Recommendation 4 — ML Layer) ───────────────────────
+# all-MiniLM-L6-v2 model: ~90MB, CPU-only, no GPU required.
+# Downloads automatically on first server start from HuggingFace Hub.
+# Provides real semantic similarity scoring to replace keyword matching.
+sentence-transformers==3.0.1

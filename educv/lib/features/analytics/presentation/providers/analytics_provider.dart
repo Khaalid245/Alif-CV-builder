@@ -1,7 +1,20 @@
 import 'package:flutter/foundation.dart';
 import '../../data/models/analytics_models.dart';
 import '../../domain/analytics_repository.dart';
+import '../../data/repositories/analytics_repository_impl.dart';
 import '../../../cv_intelligence/data/models/cv_intelligence_models.dart';
+import '../../../../core/network/api_client.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final analyticsRepositoryProvider = Provider<AnalyticsRepository>((ref) {
+  final apiClient = ref.watch(apiClientProvider);
+  return AnalyticsRepositoryImpl(apiClient);
+});
+
+final analyticsProvider = ChangeNotifierProvider<AnalyticsProvider>((ref) {
+  final repository = ref.watch(analyticsRepositoryProvider);
+  return AnalyticsProvider(repository);
+});
 
 enum AnalyticsState { initial, loading, loaded, error }
 

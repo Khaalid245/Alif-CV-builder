@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../theme/modern_saas_theme.dart';
 import 'responsive_layout.dart';
-import 'responsive_sidebar_wrapper.dart';
+import '../widgets/responsive_sidebar_wrapper.dart';
 
 class ModernResponsiveDashboardLayout extends StatefulWidget {
   final Widget child;
@@ -37,7 +37,7 @@ class ModernResponsiveDashboardLayout extends StatefulWidget {
 }
 
 class _ModernResponsiveDashboardLayoutState extends State<ModernResponsiveDashboardLayout> {
-  final GlobalKey<_ResponsiveSidebarWrapperState> _sidebarKey = GlobalKey();
+  final GlobalKey<ResponsiveSidebarWrapperState> _sidebarKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -203,21 +203,21 @@ class ModernDashboardContent extends StatelessWidget {
           color: showBackground ? ModernSaaSDashboardTheme.background : null,
           child: SingleChildScrollView(
             padding: padding ?? _getDefaultPadding(deviceType),
-            child: _buildContent(deviceType),
+            child: _buildContent(context, deviceType),
           ),
         );
       },
     );
   }
 
-  Widget _buildContent(DeviceType deviceType) {
+  Widget _buildContent(BuildContext context, DeviceType deviceType) {
     switch (deviceType) {
       case DeviceType.mobile:
         return _buildMobileContent();
       case DeviceType.tablet:
         return _buildTabletContent();
       case DeviceType.desktop:
-        return _buildDesktopContent();
+        return _buildDesktopContent(context);
     }
   }
 
@@ -262,7 +262,7 @@ class ModernDashboardContent extends StatelessWidget {
     );
   }
 
-  Widget _buildDesktopContent() {
+  Widget _buildDesktopContent(BuildContext context) {
     return Wrap(
       spacing: ModernSaaSDashboardTheme.spacingXl,
       runSpacing: ModernSaaSDashboardTheme.spacingXl,

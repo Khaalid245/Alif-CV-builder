@@ -11,10 +11,14 @@ import '../../../../core/widgets/app_loader.dart';
 import '../../../../core/widgets/app_error_state.dart';
 import '../../../../core/utils/snackbar_helper.dart';
 import '../../../analytics/presentation/widgets/benchmarking_card.dart';
+import '../../../cv/presentation/providers/cv_provider.dart';
+import '../../../cv/presentation/widgets/target_role_picker.dart';
 import '../providers/cv_intelligence_provider.dart';
 import '../widgets/score_display_widget.dart';
 import '../widgets/recommendation_card.dart';
 import '../widgets/submission_readiness_widget.dart';
+import '../widgets/score_progression_widget.dart';
+import '../widgets/cv_2026_standards_card.dart';
 import '../../data/models/cv_intelligence_models.dart';
 
 class CVIntelligenceScreen extends HookConsumerWidget {
@@ -27,44 +31,79 @@ class CVIntelligenceScreen extends HookConsumerWidget {
     final recommendationsState = ref.watch(recommendationsProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('CV Intelligence'),
-        backgroundColor: Colors.white,
-        foregroundColor: AppColors.textPrimary,
-        elevation: 0,
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(48),
-          child: Container(
-            color: Colors.white,
-            child: TabBar(
-              controller: tabController,
-              labelColor: AppColors.primary,
-              unselectedLabelColor: AppColors.textSecondary,
-              indicatorColor: AppColors.primary,
-              labelStyle: AppTypography.bodyMedium.copyWith(
-                fontWeight: FontWeight.w600,
+      backgroundColor: AppColors.surface,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(130),
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                AppColors.primaryLight,
+                AppColors.primaryDark,
+              ],
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Color(0x3310B981),
+                blurRadius: 12,
+                offset: Offset(0, 4),
               ),
-              tabs: const [
-                Tab(text: 'Overview'),
-                Tab(text: 'Sections'),
-                Tab(text: 'Recommendations'),
-                Tab(text: 'History'),
+            ],
+          ),
+          child: SafeArea(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  child: Row(
+                    children: [
+                      const Icon(LucideIcons.brainCircuit, color: Colors.white),
+                      const SizedBox(width: 12),
+                      Text(
+                        'CV Intelligence',
+                        style: AppTypography.h3.copyWith(color: Colors.white),
+                      ),
+                      const Spacer(),
+                      IconButton(
+                        onPressed: () => _showAnalysisOptions(context, ref),
+                        icon: const Icon(LucideIcons.settings, color: Colors.white),
+                        tooltip: 'Analysis Settings',
+                      ),
+                      IconButton(
+                        onPressed: () => _refreshAnalysis(ref, context),
+                        icon: const Icon(LucideIcons.refreshCw, color: Colors.white),
+                        tooltip: 'Refresh Analysis',
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    alignment: Alignment.bottomCenter,
+                    child: TabBar(
+                      controller: tabController,
+                      labelColor: Colors.white,
+                      unselectedLabelColor: Colors.white70,
+                      indicatorColor: Colors.white,
+                      indicatorWeight: 3,
+                      labelStyle: AppTypography.bodyMedium.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                      tabs: const [
+                        Tab(text: 'Overview'),
+                        Tab(text: 'Sections'),
+                        Tab(text: 'Recommendations'),
+                        Tab(text: 'History'),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
         ),
-        actions: [
-          IconButton(
-            onPressed: () => _showAnalysisOptions(context, ref),
-            icon: const Icon(LucideIcons.settings),
-            tooltip: 'Analysis Settings',
-          ),
-          IconButton(
-            onPressed: () => _refreshAnalysis(ref, context),
-            icon: const Icon(LucideIcons.refreshCw),
-            tooltip: 'Refresh Analysis',
-          ),
-        ],
       ),
       body: TabBarView(
         controller: tabController,
@@ -88,7 +127,7 @@ class CVIntelligenceScreen extends HookConsumerWidget {
   }
 
   Widget _buildOverviewTab(BuildContext context, WidgetRef ref, AnalysisState state) {
-    if (state.isLoading) {
+    if (state.isLoading && state.analysis == null) {
       return const Center(child: AppLoader());
     }
 
@@ -103,20 +142,43 @@ class CVIntelligenceScreen extends HookConsumerWidget {
       return _buildEmptyAnalysisState(context, ref);
     }
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(AppSpacing.md),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildOverallScoreCard(state.analysis!),
-          const SizedBox(height: AppSpacing.lg),
-          _buildSubmissionReadinessSection(context, ref),
-          const SizedBox(height: AppSpacing.lg),
-          _buildBenchmarkingSection(context, ref),
-          const SizedBox(height: AppSpacing.lg),
-          _buildQuickActionsSection(context, ref),
-        ],
-      ),
+    return Stack(
+      children: [
+        SingleChildScrollView(
+          padding: const EdgeInsets.all(AppSpacing.md),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 2026 AI Educational Card
+              const CV2026StandardsCard(),
+              const SizedBox(height: AppSpacing.lg),
+              // Role picker — always shown; collapses gracefully if no roles loaded
+              _buildTargetRolePicker(context, ref, state),
+              const SizedBox(height: AppSpacing.lg),
+              _buildOverallScoreCard(state.analysis!),
+              const SizedBox(height: AppSpacing.lg),
+              _buildSubmissionReadinessSection(context, ref),
+              const SizedBox(height: AppSpacing.lg),
+              _buildBenchmarkingSection(context, ref),
+              const SizedBox(height: AppSpacing.lg),
+              _buildEnterpriseMetricsSection(state.analysis!),
+              const SizedBox(height: AppSpacing.lg),
+              _buildQuickActionsSection(context, ref),
+            ],
+          ),
+        ),
+        if (state.isLoading)
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: 4,
+              color: Colors.transparent,
+              child: const LinearProgressIndicator(),
+            ),
+          ),
+      ],
     );
   }
 
@@ -216,18 +278,31 @@ class CVIntelligenceScreen extends HookConsumerWidget {
       onRefresh: () => ref.read(analysisHistoryProvider.notifier).loadHistory(refresh: true),
       child: ListView.builder(
         padding: const EdgeInsets.all(AppSpacing.md),
-        itemCount: historyState.history!.analyses.length + (historyState.history!.hasNext ? 1 : 0),
+        // +1 for the progression chart header, +1 for the load-more button
+        itemCount: historyState.history!.analyses.length +
+            (historyState.history!.hasNext ? 2 : 1),
         itemBuilder: (context, index) {
-          if (index == historyState.history!.analyses.length) {
+          // First item: score progression chart
+          if (index == 0) {
+            return const Padding(
+              padding: EdgeInsets.only(bottom: AppSpacing.lg),
+              child: ScoreProgressionWidget(),
+            );
+          }
+
+          final adjustedIndex = index - 1;
+
+          if (adjustedIndex == historyState.history!.analyses.length) {
             return _buildLoadMoreButton(ref, historyState);
           }
 
-          final analysis = historyState.history!.analyses[index];
+          final analysis = historyState.history!.analyses[adjustedIndex];
           return _buildHistoryItem(context, analysis);
         },
       ),
     );
   }
+
 
   Widget _buildEmptyAnalysisState(BuildContext context, WidgetRef ref) {
     return Center(
@@ -276,14 +351,43 @@ class CVIntelligenceScreen extends HookConsumerWidget {
     );
   }
 
+  Widget _buildTargetRolePicker(
+      BuildContext context, WidgetRef ref, AnalysisState state) {
+    // Read current target role from the cv profile
+    final profileAsync = ref.watch(cvProfileProvider);
+    final currentRole = profileAsync.whenOrNull<Map<String, dynamic>?>(
+      data: (profile) {
+        if (profile == null) return null;
+        final roleData = profile.targetRole;
+        return roleData;
+      },
+    );
+
+    return TargetRolePicker(currentRole: currentRole);
+  }
+
   Widget _buildOverallScoreCard(analysis) {
-    return ScoreDisplayWidget(
-      score: analysis.overallScore,
-      maxScore: 100,
-      title: 'Overall CV Score',
-      subtitle: 'Based on comprehensive analysis',
-      showPercentage: true,
-      animated: true,
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        gradient: LinearGradient(
+          colors: [
+            Colors.white,
+            AppColors.primary.withOpacity(0.05),
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+        border: Border.all(color: AppColors.primary.withOpacity(0.2)),
+      ),
+      child: ScoreDisplayWidget(
+        score: analysis.overallScore,
+        maxScore: 100,
+        title: 'Overall CV Score',
+        subtitle: 'Enterprise AI Analysis',
+        showPercentage: true,
+        animated: true,
+      ),
     );
   }
 
@@ -297,8 +401,13 @@ class CVIntelligenceScreen extends HookConsumerWidget {
             readiness: readiness,
             onImprove: () => _showImprovementSuggestions(context, readiness),
           ),
-          loading: () => const Card(
-            child: Padding(
+          loading: () => Card(
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+              side: BorderSide(color: AppColors.border),
+            ),
+            child: const Padding(
               padding: EdgeInsets.all(AppSpacing.lg),
               child: Center(child: AppLoader()),
             ),
@@ -322,11 +431,21 @@ class CVIntelligenceScreen extends HookConsumerWidget {
   Widget _buildBenchmarkingSection(BuildContext context, WidgetRef ref) {
     return Consumer(
       builder: (context, ref, child) {
-        final benchmarkingAsync = ref.watch(benchmarkingDataProvider(null));
-        
+        // ── Role-aware benchmarking ───────────────────────────────────────────
+        // If the user has a target role, compare against peers targeting the
+        // same role.  Otherwise fall back to the whole-platform comparison.
+        final profileAsync = ref.watch(cvProfileProvider);
+        final targetRole = profileAsync.whenOrNull<Map<String, dynamic>?>(
+          data: (p) => p?.targetRole,
+        );
+        final roleName = targetRole?['name'] as String?;
+        final comparisonGroup = roleName != null ? 'role' : null;
+
+        final benchmarkingAsync =
+            ref.watch(benchmarkingDataProvider(comparisonGroup));
+
         return benchmarkingAsync.when(
           data: (benchmarking) {
-            // Convert BenchmarkingDataModel to the format expected by BenchmarkingCard
             final benchmarkingData = {
               'current_score': benchmarking.currentScore,
               'percentile_rank': benchmarking.percentileRank,
@@ -336,14 +455,18 @@ class CVIntelligenceScreen extends HookConsumerWidget {
               'average_score': benchmarking.statistics['average_score'] ?? 0.0,
               'top_score': benchmarking.statistics['top_score'] ?? 0.0,
               'comparison_group': benchmarking.comparisonGroup,
-              'insights': benchmarking.insights.map((insight) => insight.message).toList(),
+              // Surface role name so the card can show "vs Software Engineers"
+              'role_name': roleName,
+              'insights':
+                  benchmarking.insights.map((i) => i.message).toList(),
             };
-            
+
             return BenchmarkingCard(
               benchmarkingData: benchmarkingData,
               isCompact: false,
             );
           },
+
           loading: () => Card(
             child: Padding(
               padding: const EdgeInsets.all(AppSpacing.lg),
@@ -408,6 +531,145 @@ class CVIntelligenceScreen extends HookConsumerWidget {
     );
   }
 
+  Widget _buildEnterpriseMetricsSection(CVAnalysisModel analysis) {
+    final atsScore = analysis.metadata['ats_parsability_score'];
+    final impactScore = analysis.metadata['impact_score'];
+
+    if (atsScore == null && impactScore == null) {
+      return const SizedBox.shrink();
+    }
+
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: AppColors.border),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  LucideIcons.cpu,
+                  color: AppColors.primary,
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                Text(
+                  'Enterprise AI Metrics',
+                  style: AppTypography.headingSmall.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Spacer(),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    'PRO',
+                    style: AppTypography.bodySmall.copyWith(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Row(
+              children: [
+                if (atsScore != null)
+                  Expanded(
+                    child: _buildEnterpriseMetricCard(
+                      'ATS Parsability',
+                      atsScore.toString(),
+                      LucideIcons.fileSearch,
+                      _getMetricColor(atsScore),
+                    ),
+                  ),
+                if (atsScore != null && impactScore != null)
+                  const SizedBox(width: AppSpacing.md),
+                if (impactScore != null)
+                  Expanded(
+                    child: _buildEnterpriseMetricCard(
+                      'Impact Score',
+                      impactScore.toString(),
+                      LucideIcons.zap,
+                      _getMetricColor(impactScore),
+                    ),
+                  ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Color _getMetricColor(dynamic scoreValue) {
+    final score = double.tryParse(scoreValue.toString()) ?? 0;
+    if (score >= 80) return AppColors.success;
+    if (score >= 60) return AppColors.warning;
+    return AppColors.error;
+  }
+
+  Widget _buildEnterpriseMetricCard(String title, String score, IconData icon, Color color) {
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withOpacity(0.2)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, size: 16, color: color),
+              const SizedBox(width: AppSpacing.xs),
+              Expanded(
+                child: Text(
+                  title,
+                  style: AppTypography.bodySmall.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Text(
+                score,
+                style: AppTypography.headingMedium.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: color,
+                ),
+              ),
+              Text(
+                '/100',
+                style: AppTypography.bodySmall.copyWith(
+                  color: AppColors.textSecondary,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildQuickActionsSection(BuildContext context, WidgetRef ref) {
     return Card(
       child: Padding(
@@ -425,18 +687,29 @@ class CVIntelligenceScreen extends HookConsumerWidget {
             Row(
               children: [
                 Expanded(
-                  child: OutlinedButton.icon(
+                  child: ElevatedButton.icon(
                     onPressed: () => _analyzeCV(context, ref),
-                    icon: const Icon(LucideIcons.refreshCw),
+                    icon: const Icon(LucideIcons.refreshCw, size: 18),
                     label: const Text('Re-analyze'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    ),
                   ),
                 ),
                 const SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: OutlinedButton.icon(
                     onPressed: () => _exportAnalysis(context, ref),
-                    icon: const Icon(LucideIcons.download),
+                    icon: const Icon(LucideIcons.download, size: 18),
                     label: const Text('Export PDF'),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppColors.primary,
+                      side: const BorderSide(color: AppColors.primary),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    ),
                   ),
                 ),
               ],
@@ -533,45 +806,200 @@ class CVIntelligenceScreen extends HookConsumerWidget {
   }
 
   Widget _buildHistoryItem(BuildContext context, analysis) {
-    return Card(
+    // ── Read diff_from_previous from metadata (populated by Rec 3) ───────────
+    final diff = (analysis.metadata['diff_from_previous'] as Map<String, dynamic>?) ?? {};
+    final isFirst = diff['is_first_analysis'] as bool? ?? diff.isEmpty;
+    final scoreDelta = (diff['score_delta'] as num?)?.toDouble() ?? 0;
+    final resolvedCount = (diff['resolved_issues'] as List?)?.length ?? 0;
+    final newCount = (diff['new_issues'] as List?)?.length ?? 0;
+    final improvedSections = (diff['improved_sections'] as Map?)?.keys.toList() ?? [];
+    final regressedSections = (diff['regressed_sections'] as Map?)?.keys.toList() ?? [];
+
+    // Grade colour
+    final score = analysis.overallScore;
+    final scoreColor = score >= 85
+        ? AppColors.success
+        : score >= 70
+            ? AppColors.primary
+            : score >= 55
+                ? const Color(0xFFF59E0B) // amber
+                : AppColors.error;
+
+    return Container(
       margin: const EdgeInsets.only(bottom: AppSpacing.sm),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: AppColors.primary.withOpacity(0.1),
-          child: Text(
-            '${analysis.overallScore.toStringAsFixed(0)}',
-            style: AppTypography.bodySmall.copyWith(
-              color: AppColors.primary,
-              fontWeight: FontWeight.bold,
-            ),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.divider),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
-        ),
-        title: Text(
-          'Analysis ${analysis.analyzedAt.day}/${analysis.analyzedAt.month}/${analysis.analyzedAt.year}',
-          style: AppTypography.bodyMedium.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        subtitle: Text(
-          '${analysis.recommendations.length} recommendations',
-          style: AppTypography.bodySmall.copyWith(
-            color: AppColors.textSecondary,
-          ),
-        ),
-        trailing: const Icon(LucideIcons.chevronRight),
+        ],
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
         onTap: () => _viewAnalysisDetails(context, analysis.id),
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.md),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // ── Header row ──────────────────────────────────────────
+              Row(
+                children: [
+                  // Score badge
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: scoreColor.withOpacity(0.12),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: scoreColor.withOpacity(0.3)),
+                    ),
+                    child: Center(
+                      child: Text(
+                        score.toStringAsFixed(0),
+                        style: AppTypography.bodyMedium.copyWith(
+                          color: scoreColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.md),
+
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${analysis.analyzedAt.day}/${analysis.analyzedAt.month}/${analysis.analyzedAt.year}  '
+                          '${analysis.analyzedAt.hour.toString().padLeft(2, '0')}:'
+                          '${analysis.analyzedAt.minute.toString().padLeft(2, '0')}',
+                          style: AppTypography.bodyMedium.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          '${analysis.recommendations.length} recommendation${analysis.recommendations.length == 1 ? '' : 's'}',
+                          style: AppTypography.caption.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Score delta / baseline badge
+                  if (isFirst)
+                    _diffChip('Baseline', const Color(0xFF6366F1), const Color(0xFFEEF2FF))
+                  else if (scoreDelta > 0)
+                    _diffChip('+${scoreDelta.toStringAsFixed(0)} pts', AppColors.success, AppColors.success.withOpacity(0.1))
+                  else if (scoreDelta < 0)
+                    _diffChip('${scoreDelta.toStringAsFixed(0)} pts', AppColors.error, AppColors.error.withOpacity(0.1))
+                  else
+                    _diffChip('No change', AppColors.textSecondary, AppColors.textSecondary.withOpacity(0.08)),
+
+                  const SizedBox(width: 4),
+                  Icon(LucideIcons.chevronRight, size: 16, color: AppColors.textSecondary),
+                ],
+              ),
+
+              // ── Diff narrative (hidden for first analysis) ──────────
+              if (!isFirst && (resolvedCount > 0 || newCount > 0 || improvedSections.isNotEmpty || regressedSections.isNotEmpty)) ...[
+                const SizedBox(height: AppSpacing.sm),
+                const Divider(height: 1),
+                const SizedBox(height: AppSpacing.sm),
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 6,
+                  children: [
+                    if (resolvedCount > 0)
+                      _narrativeTag('✓ $resolvedCount fixed', AppColors.success),
+                    if (newCount > 0)
+                      _narrativeTag('⚠ $newCount new issue${newCount == 1 ? '' : 's'}', AppColors.error),
+                    for (final s in improvedSections.take(2))
+                      _narrativeTag('↑ ${_sectionLabel(s)}', AppColors.primary),
+                    for (final s in regressedSections.take(2))
+                      _narrativeTag('↓ ${_sectionLabel(s)}', const Color(0xFFF59E0B)),
+                  ],
+                ),
+              ],
+            ],
+          ),
+        ),
       ),
     );
+  }
+
+  Widget _diffChip(String label, Color textColor, Color bgColor) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: textColor.withOpacity(0.3)),
+      ),
+      child: Text(
+        label,
+        style: AppTypography.caption.copyWith(
+          color: textColor,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  Widget _narrativeTag(String text, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Text(
+        text,
+        style: AppTypography.caption.copyWith(
+          color: color,
+          fontWeight: FontWeight.w600,
+          fontSize: 10,
+        ),
+      ),
+    );
+  }
+
+  String _sectionLabel(String key) {
+    const labels = {
+      'profile': 'Profile',
+      'experience': 'Experience',
+      'education': 'Education',
+      'skills': 'Skills',
+      'projects': 'Projects',
+    };
+    return labels[key] ?? key[0].toUpperCase() + key.substring(1);
   }
 
   // Action methods
   Future<void> _analyzeCV(BuildContext context, WidgetRef ref) async {
     try {
       await ref.read(analysisProvider.notifier).analyzeCV();
+
+      // Invalidate ALL dependent providers so every tab reflects the new analysis
+      ref.invalidate(scoreProgressionProvider);
+      ref.read(analysisHistoryProvider.notifier).loadHistory(refresh: true);
+      ref.read(recommendationsProvider.notifier).loadRecommendations();
+      ref.invalidate(submissionReadinessProvider);
+      ref.invalidate(benchmarkingDataProvider(null));
+
       if (context.mounted) {
         SnackbarHelper.showSuccess(
           context,
-          'CV analysis completed successfully!',
+          'CV analysis completed! Your score has been updated.',
         );
       }
     } catch (e) {
@@ -616,6 +1044,7 @@ class CVIntelligenceScreen extends HookConsumerWidget {
         ref.invalidate(submissionReadinessProvider);
         ref.invalidate(benchmarkingDataProvider(null));
         ref.read(analysisHistoryProvider.notifier).loadHistory(refresh: true);
+        ref.invalidate(scoreProgressionProvider); // Refresh score timeline chart
         
         if (context.mounted) {
           SnackbarHelper.showSuccess(

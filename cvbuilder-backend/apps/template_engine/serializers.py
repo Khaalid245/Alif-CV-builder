@@ -100,15 +100,19 @@ class TemplateListSerializer(serializers.ModelSerializer):
     industries = IndustrySerializer(many=True, read_only=True)
     roles = RoleSerializer(many=True, read_only=True)
     is_favorited = serializers.SerializerMethodField()
+    preview_image_url = serializers.SerializerMethodField()
     
     class Meta:
         model = Template
         fields = [
             'id', 'name', 'slug', 'description', 'category', 'industries', 'roles',
             'layout_type', 'version', 'status', 'is_premium', 'usage_count',
-            'is_favorited', 'created_at', 'updated_at', 'published_at'
+            'is_favorited', 'preview_image_url', 'created_at', 'updated_at', 'published_at'
         ]
         read_only_fields = ['id', 'usage_count', 'created_at', 'updated_at', 'published_at']
+    
+    def get_preview_image_url(self, obj):
+        return f"assets/images/{obj.slug}_template_preview.png"
     
     def get_is_favorited(self, obj):
         """Check if template is favorited by current user."""
@@ -138,6 +142,7 @@ class TemplateDetailSerializer(serializers.ModelSerializer):
     sections = SectionConfigurationSerializer(many=True, read_only=True)
     branding = BrandingConfigurationSerializer(read_only=True)
     is_favorited = serializers.SerializerMethodField()
+    preview_image_url = serializers.SerializerMethodField()
     
     class Meta:
         model = Template
@@ -146,9 +151,12 @@ class TemplateDetailSerializer(serializers.ModelSerializer):
             'industries', 'industry_ids', 'roles', 'role_ids', 'layout_type',
             'html_template', 'css_styles', 'version', 'parent_template',
             'status', 'is_premium', 'usage_count', 'sections', 'branding',
-            'is_favorited', 'created_at', 'updated_at', 'published_at'
+            'is_favorited', 'preview_image_url', 'created_at', 'updated_at', 'published_at'
         ]
         read_only_fields = ['id', 'usage_count', 'created_at', 'updated_at', 'published_at']
+    
+    def get_preview_image_url(self, obj):
+        return f"assets/images/{obj.slug}_template_preview.png"
     
     def get_is_favorited(self, obj):
         """Check if template is favorited by current user."""

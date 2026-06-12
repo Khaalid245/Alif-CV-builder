@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 class PremiumSaaSTheme {
   // === PREMIUM COLOR SYSTEM ===
   
-  // Primary Brand Colors
-  static const Color primaryPurple = Color(0xFF6366F1);
-  static const Color primaryPurpleLight = Color(0xFF818CF8);
-  static const Color primaryPurpleDark = Color(0xFF4F46E5);
+  // Primary Brand Colors (Changed to Emerald Green per user request)
+  static const Color primaryPurple = Color(0xFF10B981); // Emerald 500
+  static const Color primaryPurpleLight = Color(0xFF34D399); // Emerald 400
+  static const Color primaryPurpleDark = Color(0xFF059669); // Emerald 600
   
   // Accent Colors for Intelligence
   static const Color accentBlue = Color(0xFF3B82F6);
@@ -40,9 +40,9 @@ class PremiumSaaSTheme {
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: [
-      Color(0xFF6366F1),
-      Color(0xFF8B5CF6),
-      Color(0xFFA855F7),
+      Color(0xFF10B981), // Emerald 500
+      Color(0xFF059669), // Emerald 600
+      Color(0xFF047857), // Emerald 700
     ],
     stops: [0.0, 0.5, 1.0],
   );

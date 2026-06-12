@@ -48,7 +48,11 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
         'recommendations': _transformRecommendations(analysisData['recommendations']),
         'submission_readiness': _transformSubmissionReadiness(analysisData),
         'benchmarking_data': null, // Will be loaded separately
-        'metadata': {},
+        // Carry diff so Overview can show "You improved +X pts" immediately
+        'metadata': {
+          'diff_from_previous': analysisData['diff_from_previous'] ?? {},
+          'ml_scored': analysisData['metadata']?['ml_scored'] ?? false,
+        },
         'analyzed_at': analysisData['analyzed_at'] ?? DateTime.now().toIso8601String(),
         'created_at': analysisData['analyzed_at'] ?? DateTime.now().toIso8601String(),
         'updated_at': analysisData['last_updated'] ?? DateTime.now().toIso8601String(),
@@ -101,6 +105,8 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
       
       final analyses = results.map((item) {
         final historyItem = item as Map<String, dynamic>;
+        // Rec 3: carry diff_from_previous into metadata so _buildHistoryItem can render it
+        final diff = historyItem['diff_from_previous'] as Map<String, dynamic>? ?? {};
         return CVAnalysisModel(
           id: historyItem['id']?.toString() ?? '',
           cvProfileId: '',
@@ -118,7 +124,7 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
             details: {},
           ),
           benchmarkingData: null,
-          metadata: {},
+          metadata: {'diff_from_previous': diff},
           analyzedAt: _parseDateTime(historyItem['created_at']) ?? DateTime.now(),
           createdAt: _parseDateTime(historyItem['created_at']) ?? DateTime.now(),
           updatedAt: _parseDateTime(historyItem['created_at']) ?? DateTime.now(),
@@ -830,5 +836,36 @@ class CVIntelligenceRepositoryImpl implements CVIntelligenceRepository {
       return Map<String, dynamic>.from(statistics);
     }
     return {};
+  }
+
+  // ── Score Progression ────────────────────────────────────────────────────
+
+  @override
+  Future<Map<String, dynamic>> getScoreProgression({int limit = 10}) async {
+    try {
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        ApiConstants.cvScoreProgression,
+        queryParameters: {'limit': limit},
+      );
+
+      final apiResponse = ApiResponse<Map<String, dynamic>>.fromJson(
+        response.data!,
+        (data) => data as Map<String, dynamic>,
+      );
+
+      if (!apiResponse.success) {
+        throw AppException(
+          message: apiResponse.message ?? 'Failed to get score progression',
+        );
+      }
+
+      return apiResponse.data ?? {'has_data': false, 'snapshots': []};
+    } on DioException catch (e) {
+      final appException = e.error;
+      if (appException is AppException) throw appException;
+      throw AppException(message: 'Network error: ${e.message ?? "Connection failed"}');
+    } catch (e) {
+      throw AppException(message: 'Failed to get score progression: ${e.toString()}');
+    }
   }
 }

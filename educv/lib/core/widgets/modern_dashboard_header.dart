@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:intl/intl.dart';
 import '../theme/modern_saas_theme.dart';
-import 'responsive_layout.dart';
+import '../layout/responsive_layout.dart';
 
 class ModernDashboardHeader extends StatefulWidget {
   final String? userName;
@@ -392,7 +392,7 @@ class _ModernDashboardHeaderState extends State<ModernDashboardHeader> {
             right: compact ? 6 : 8,
             top: compact ? 6 : 8,
             child: Container(
-              min: 16,
+              constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
               height: 16,
               padding: const EdgeInsets.symmetric(horizontal: 4),
               decoration: BoxDecoration(

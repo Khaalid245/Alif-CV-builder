@@ -1,7 +1,10 @@
 import 'dart:io';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../../core/constants/api_constants.dart';
 import '../../../../core/network/api_client.dart';
+import '../../../../core/network/api_response.dart';
+import '../../../../core/storage/local_db_service.dart';
 import '../../domain/cv_repository.dart';
 import '../../data/models/cv_models.dart';
 import '../../data/repositories/cv_repository_impl.dart';
@@ -9,7 +12,8 @@ import '../../data/repositories/cv_repository_impl.dart';
 // Repository provider
 final cvRepositoryProvider = Provider<CVRepository>((ref) {
   final apiClient = ref.watch(apiClientProvider);
-  return CVRepositoryImpl(apiClient);
+  final localDbService = ref.watch(localDbServiceProvider);
+  return CVRepositoryImpl(apiClient, localDbService);
 });
 
 // Form step provider
@@ -383,3 +387,43 @@ class CertificationsNotifier extends AsyncNotifier<List<CertificationModel>> {
     ref.invalidate(cvProfileProvider);
   }
 }
+
+// ── Role Intelligence ──────────────────────────────────────────────────────────
+
+/// Fetches all available target roles from /api/v1/cv/roles/.
+/// Result is cached per session — roles change very rarely.
+final rolesProvider = FutureProvider<List<dynamic>>((ref) async {
+  final apiClient = ref.watch(apiClientProvider);
+  final response = await apiClient.get(ApiConstants.cvRoles);
+  final apiResponse = ApiResponse.fromJson(
+    response.data,
+    (data) => data,
+  );
+  final responseData = apiResponse.data as Map<String, dynamic>? ?? {};
+  return responseData['roles'] as List<dynamic>? ?? [];
+});
+
+/// Notifier for updating the user's selected target role.
+/// Calls PATCH /cv/profile/ with target_role_id and invalidates cvProfileProvider.
+class TargetRoleNotifier extends StateNotifier<AsyncValue<void>> {
+  final Ref _ref;
+  TargetRoleNotifier(this._ref) : super(const AsyncData(null));
+
+  Future<void> setTargetRole(String? roleId) async {
+    state = const AsyncLoading();
+    try {
+      final repo = _ref.read(cvRepositoryProvider);
+      await repo.updateProfile({'target_role_id': roleId});
+      _ref.invalidate(cvProfileProvider);
+      state = const AsyncData(null);
+    } catch (e, st) {
+      state = AsyncError(e, st);
+      rethrow;
+    }
+  }
+}
+
+final targetRoleProvider =
+    StateNotifierProvider<TargetRoleNotifier, AsyncValue<void>>(
+  (ref) => TargetRoleNotifier(ref),
+);

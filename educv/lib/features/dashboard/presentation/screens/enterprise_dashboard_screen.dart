@@ -188,7 +188,7 @@ class _EnterpriseDashboardScreenState extends State<EnterpriseDashboardScreen>
                 ),
                 const SizedBox(height: EnterpriseTheme.spacing8),
                 Text(
-                  'Your CV is looking great! Let\\'s make it even better with AI suggestions.',
+                  'Your CV is looking great! Let\'s make it even better with AI suggestions.',
                   style: EnterpriseTheme.bodyMedium.copyWith(
                     color: EnterpriseTheme.textSecondary,
                   ),
@@ -223,7 +223,7 @@ class _EnterpriseDashboardScreenState extends State<EnterpriseDashboardScreen>
                     ),
                     const SizedBox(height: EnterpriseTheme.spacing8),
                     Text(
-                      'Your CV is looking great! Let\\'s make it even better with AI suggestions.',
+                      'Your CV is looking great! Let\'s make it even better with AI suggestions.',
                       style: EnterpriseTheme.bodyLarge.copyWith(
                         color: EnterpriseTheme.textSecondary,
                       ),

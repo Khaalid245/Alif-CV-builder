@@ -8,6 +8,67 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
 
 
+class RoleIntelligenceConfig(models.Model):
+    """
+    Stores AI scoring configuration for each target role.
+    Linked to the existing template_engine.Role model via a OneToOne relationship.
+    This allows each role to have unique scoring criteria, required sections,
+    and keyword boosts — all configurable from the database with no code changes.
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    role = models.OneToOneField(
+        'template_engine.Role',
+        on_delete=models.CASCADE,
+        related_name='intelligence_config',
+        help_text='The role this intelligence configuration applies to'
+    )
+
+    # Sections that MUST be present for this role (e.g. github for engineers)
+    required_sections = models.JSONField(
+        default=list,
+        help_text='List of required CV section checks e.g. ["github", "projects"]'
+    )
+
+    # Keywords whose presence in bullet points boosts the score
+    priority_keywords = models.JSONField(
+        default=list,
+        help_text='Role-specific power keywords e.g. ["architected", "deployed", "scaled"]'
+    )
+
+    # Phrases that are particularly damaging for this role type
+    role_weak_patterns = models.JSONField(
+        default=list,
+        help_text='Role-specific weak phrases to penalize e.g. ["helped", "assisted"]'
+    )
+
+    # What kind of metric this role rewards most
+    recommended_metrics = models.JSONField(
+        default=list,
+        help_text='Metric types relevant to this role e.g. ["uptime", "latency", "users"]'
+    )
+
+    # Human-readable message shown to user when role-specific issue is found
+    role_specific_summary_guidance = models.TextField(
+        blank=True, default='',
+        help_text='One-sentence guidance for what the summary should emphasize for this role'
+    )
+
+    # Icon name (used by frontend for display)
+    icon = models.CharField(
+        max_length=50, blank=True, default='briefcase',
+        help_text='Lucide icon name for this role'
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'cv_role_intelligence_configs'
+
+    def __str__(self):
+        return f'Intelligence Config — {self.role.name}'
+
+
 class CVAnalysis(models.Model):
     """
     Comprehensive CV analysis results with detailed scoring breakdown.
@@ -77,6 +138,22 @@ class CVAnalysis(models.Model):
         help_text='Detailed analysis results and metrics'
     )
     
+    # ── Data Integrity fields (Recommendation 3) ─────────────────────────────
+    # True on the single canonical "current" analysis. Previous analyses are kept
+    # with is_latest=False instead of being deleted — giving us full audit history.
+    is_latest = models.BooleanField(
+        default=True,
+        db_index=True,
+        help_text='True only for the most recent analysis. Previous records are retained.'
+    )
+    
+    # Structured diff vs the immediately preceding analysis:
+    # { score_delta, resolved_issues: [...], new_issues: [...], improved_sections, regressed_sections }
+    diff_from_previous = models.JSONField(
+        default=dict,
+        help_text='Structured diff between this and the immediately preceding analysis'
+    )
+    
     # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -86,12 +163,15 @@ class CVAnalysis(models.Model):
         ordering = ['-created_at']
         indexes = [
             models.Index(fields=['user', '-created_at']),
+            models.Index(fields=['user', 'is_latest']),
             models.Index(fields=['overall_score']),
             models.Index(fields=['grade']),
         ]
     
     def __str__(self):
-        return f'CV Analysis - {self.user.email} ({self.grade})'
+        latest_tag = ' [LATEST]' if self.is_latest else ''
+        return f'CV Analysis - {self.user.email} ({self.grade}){latest_tag}'
+
 
 
 class AnalysisIssue(models.Model):
@@ -435,6 +515,14 @@ class CVAnalysisHistory(models.Model):
     total_recommendations = models.IntegerField(
         default=0,
         help_text='Total number of recommendations generated'
+    )
+    
+    # ── Data Integrity: structured diff vs the previous history record ────────
+    # Populated by CVAnalysisService._save_analysis_history().
+    # Drives the History tab's "You fixed X issues, Y new ones appeared" narrative.
+    diff_from_previous = models.JSONField(
+        default=dict,
+        help_text='Diff vs the immediately preceding history snapshot'
     )
     
     # Timestamps

@@ -7,13 +7,15 @@ import '../../../../core/errors/app_exception.dart';
 import '../../../../core/errors/error_handler.dart';
 import '../../../../core/network/api_client.dart';
 import '../../../../core/network/api_response.dart';
+import '../../../../core/storage/local_db_service.dart';
 import '../../domain/cv_repository.dart';
 import '../models/cv_models.dart';
 
 class CVRepositoryImpl implements CVRepository {
   final ApiClient _apiClient;
+  final LocalDbService _localDbService;
 
-  CVRepositoryImpl(this._apiClient);
+  CVRepositoryImpl(this._apiClient, this._localDbService);
 
   @override
   Future<CVProfileModel> getProfile() async {
@@ -32,8 +34,13 @@ class CVRepositoryImpl implements CVRepository {
         );
       }
 
+      await _localDbService.saveCvProfile(apiResponse.data);
       return CVProfileModel.fromJson(apiResponse.data);
     } catch (e) {
+      final cachedData = await _localDbService.getCvProfile();
+      if (cachedData != null) {
+        return CVProfileModel.fromJson(cachedData);
+      }
       throw ErrorHandler.handleError(e);
     }
   }

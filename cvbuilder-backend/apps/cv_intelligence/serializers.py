@@ -171,13 +171,14 @@ class CVAnalysisHistorySerializer(serializers.ModelSerializer):
             'id', 'overall_score', 'readiness_score', 'readiness_grade',
             'section_scores', 'recommendations', 'strengths', 'weaknesses',
             'analysis_version', 'total_recommendations', 'recommendation_count',
+            'diff_from_previous',
             'created_at', 'formatted_date'
         ]
         read_only_fields = fields
 
 
 class CVAnalysisHistoryListSerializer(serializers.ModelSerializer):
-    """Lightweight serializer for history list view."""
+    """Lightweight serializer for history list view — includes diff for History tab cards."""
     
     formatted_date = serializers.ReadOnlyField()
     recommendation_count = serializers.ReadOnlyField()
@@ -187,6 +188,7 @@ class CVAnalysisHistoryListSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'overall_score', 'readiness_score', 'readiness_grade',
             'total_recommendations', 'recommendation_count',
+            'diff_from_previous',
             'created_at', 'formatted_date'
         ]
         read_only_fields = fields

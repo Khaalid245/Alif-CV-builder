@@ -10,7 +10,7 @@ class VersionHistoryRepositoryImpl implements VersionHistoryRepository {
 
   @override
   Future<List<CVVersionModel>> getVersionHistory() async {
-    final response = await _apiClient.get('/api/v1/version-history/versions/');
+    final response = await _apiClient.get('/version-history/versions/');
     
     if (response.success && response.data != null) {
       final List<dynamic> results = response.data['results'] ?? [];
@@ -22,7 +22,7 @@ class VersionHistoryRepositoryImpl implements VersionHistoryRepository {
 
   @override
   Future<CVVersionModel> getVersion(String versionId) async {
-    final response = await _apiClient.get('/api/v1/version-history/versions/$versionId/');
+    final response = await _apiClient.get('/version-history/versions/$versionId/');
     
     if (response.success && response.data != null) {
       return CVVersionModel.fromJson(response.data);
@@ -34,7 +34,7 @@ class VersionHistoryRepositoryImpl implements VersionHistoryRepository {
   @override
   Future<VersionComparisonModel> compareVersions(int fromVersion, int toVersion) async {
     final response = await _apiClient.post(
-      '/api/v1/version-history/versions/compare/',
+      '/version-history/versions/compare/',
       data: {
         'from_version': fromVersion,
         'to_version': toVersion,
@@ -51,7 +51,7 @@ class VersionHistoryRepositoryImpl implements VersionHistoryRepository {
   @override
   Future<CVVersionModel> restoreVersion(int versionNumber) async {
     final response = await _apiClient.post(
-      '/api/v1/version-history/versions/$versionNumber/restore/',
+      '/version-history/versions/$versionNumber/restore/',
       data: {},
     );
     
@@ -64,7 +64,7 @@ class VersionHistoryRepositoryImpl implements VersionHistoryRepository {
 
   @override
   Future<VersionStatsModel> getVersionStats() async {
-    final response = await _apiClient.get('/api/v1/version-history/versions/stats/');
+    final response = await _apiClient.get('/version-history/versions/stats/');
     
     if (response.success && response.data != null) {
       return VersionStatsModel.fromJson(response.data);

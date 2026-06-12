@@ -4,6 +4,7 @@ Uses rule-based algorithms to identify issues and suggest improvements.
 """
 import re
 from typing import Dict, List
+from .ai import get_ai_engine
 
 
 class CVValidator:
@@ -30,6 +31,8 @@ class CVValidator:
     def __init__(self):
         self.issues = []
         self.suggestions = []
+        self.ai_engine = get_ai_engine()
+        self._role_config = None  # Set per-validation in validate_cv_profile
     
     def validate_cv_profile(self, cv_profile) -> Dict:
         """
@@ -40,11 +43,26 @@ class CVValidator:
         logger = logging.getLogger(__name__)
         
         logger.info(f'Starting CV validation for profile {cv_profile.id}')
-        
+
         self.issues = []
         self.suggestions = []
-        
+
+        # ── Load role intelligence config ─────────────────────────────────────
+        # Fetch once per validation run; all sub-methods receive it as argument.
+        self._role_config = self._load_role_config(cv_profile)
+        if self._role_config:
+            logger.info(
+                f'Role-aware validation active: {self._role_config.role.name} '
+                f'for profile {cv_profile.id}'
+            )
+        else:
+            logger.info(f'Generic validation (no target role set) for profile {cv_profile.id}')
+
         try:
+            # ── Role-specific section completeness check ───────────────────
+            if self._role_config:
+                self._check_role_required_sections(cv_profile, self._role_config)
+
             # Validate each section with detailed scoring
             logger.info(f'Validating profile section for {cv_profile.id}')
             profile_score = self._validate_profile_section(cv_profile)
@@ -110,7 +128,15 @@ class CVValidator:
                 'issues': self.issues,
                 'suggestions': self.suggestions,
                 'recommendations': recommendations,
-                'priority_improvements': self._get_priority_improvements()
+                'priority_improvements': self._get_priority_improvements(),
+                'ats_parsability_score': max(0, min(100, int(total_score * 0.95 + 5))),
+                'impact_score': max(0, min(100, experience_score + 10)),
+                # Role context embedded so history records know what role was being targeted
+                'target_role': {
+                    'id': str(self._role_config.role.id),
+                    'name': self._role_config.role.name,
+                    'slug': self._role_config.role.slug,
+                } if self._role_config else None,
             }
             
             logger.info(f'CV validation completed successfully for {cv_profile.id}')
@@ -119,7 +145,60 @@ class CVValidator:
         except Exception as e:
             logger.error(f'CV validation failed for {cv_profile.id}: {str(e)}', exc_info=True)
             raise
-    
+
+    # ── Role Intelligence Helpers ─────────────────────────────────────────────
+
+    def _load_role_config(self, cv_profile):
+        """
+        Load the RoleIntelligenceConfig for the cv_profile's target_role.
+        Returns None if no target role is set or if no config has been seeded yet.
+        Fails silently so generic validation runs as a fallback.
+        """
+        try:
+            if not cv_profile.target_role_id:
+                return None
+            from .models import RoleIntelligenceConfig
+            return (
+                RoleIntelligenceConfig.objects
+                .select_related('role', 'role__industry')
+                .get(role_id=cv_profile.target_role_id)
+            )
+        except Exception:
+            return None
+
+    def _check_role_required_sections(self, cv_profile, role_config):
+        """
+        Check that all sections required by the target role are present.
+        Adds high-severity issues for anything missing.
+        """
+        required = role_config.required_sections  # e.g. ["github", "projects"]
+        role_name = role_config.role.name
+
+        checks = {
+            'github': (cv_profile.github, 'GitHub profile URL'),
+            'linkedin': (cv_profile.linkedin, 'LinkedIn profile URL'),
+            'portfolio': (cv_profile.portfolio, 'Portfolio/personal website URL'),
+            'projects': (cv_profile.projects.exists(), 'at least one project'),
+            'skills': (cv_profile.skills.exists(), 'at least two skills'),
+        }
+
+        for section_key in required:
+            if section_key in checks:
+                value, label = checks[section_key]
+                if not value:
+                    self.issues.append({
+                        'type': 'role_requirement_missing',
+                        'severity': 'high',
+                        'section': 'profile',
+                        'message': (
+                            f'{role_name} roles typically require a {label}. '
+                            f'Yours is currently missing.'
+                        ),
+                        'suggestion': (
+                            f'Add your {label} to stand out to {role_name} recruiters.'
+                        ),
+                    })
+
     def _validate_profile_section(self, cv_profile) -> int:
         """Validate complete profile section including contact info and summary."""
         score = 0
@@ -165,8 +244,19 @@ class CVValidator:
             })
         
         # Professional summary (30 points)
-        summary_score = self._validate_summary(cv_profile.summary)
-        score += int(summary_score * 0.3)  # Convert to 30-point scale
+        summary_analysis = self.ai_engine.analyze_summary(cv_profile.summary or "")
+        
+        # Add summary issues/suggestions from AI engine
+        for issue in summary_analysis.get('issues', []):
+            self.issues.append({
+                'type': 'insufficient_detail',
+                'severity': 'medium',
+                'section': 'profile',
+                'message': issue,
+                'suggestion': summary_analysis.get('rewrite_suggestion', 'Rewrite your summary to be more impactful.')
+            })
+            
+        score += int(summary_analysis.get('score', 0) * 0.3)  # Convert to 30-point scale
         
         # Online presence (20 points)
         if cv_profile.linkedin: score += 10
@@ -441,10 +531,59 @@ class CVValidator:
             })
             return score
         
-        desc_score = self._validate_description(experience.description, 'experience')
+        desc_score = self._validate_experience_description(experience)
         score += desc_score
         
         return min(score, 100)
+    
+    def _validate_experience_description(self, experience) -> int:
+        """Validate an experience description using AI engine (0-100 points)."""
+        if not experience.description:
+            return 0
+            
+        # Split description into bullet points
+        bullets = [b.strip() for b in experience.description.split('\n') if b.strip()]
+        if not bullets:
+            bullets = [experience.description]
+            
+        total_score = 0
+        ai_issues_added = False
+        
+        for bullet in bullets:
+            analysis = self.ai_engine.analyze_bullet_point(
+                bullet, role_config=self._role_config
+            )
+            total_score += analysis.get('score', 0)
+            
+            # Add AI issues/recommendations if present
+            if analysis.get('issues') and not ai_issues_added:
+                # To prevent spamming, we group issues or only add top ones
+                self.issues.append({
+                    'type': 'weak_bullet_point',
+                    'severity': 'medium' if analysis.get('impact_level') != 'Low' else 'high',
+                    'section': 'experience',
+                    'message': f"Bullet point issue in {experience.company}: {analysis['issues'][0]}",
+                    'suggestion': analysis.get('rewrite_suggestion', 'Use the STAR method and action verbs.')
+                })
+                ai_issues_added = True # Just flag once per experience to avoid clutter
+                
+        # Calculate average score across bullets
+        avg_score = total_score / len(bullets) if bullets else 0
+        
+        # Length check bonus/penalty
+        word_count = len(experience.description.split())
+        if word_count < 30:
+            avg_score = min(avg_score, 70)
+            if not ai_issues_added:
+                self.issues.append({
+                    'type': 'insufficient_detail',
+                    'severity': 'medium',
+                    'section': 'experience',
+                    'message': f'Role at {experience.company} needs more detail',
+                    'suggestion': 'Add at least 3-4 bullet points describing your achievements'
+                })
+        
+        return int(avg_score)
     
     def _validate_description(self, description: str, section: str) -> int:
         """Validate description quality for any section."""

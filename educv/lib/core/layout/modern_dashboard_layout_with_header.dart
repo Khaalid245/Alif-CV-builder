@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../theme/modern_saas_theme.dart';
 import 'responsive_layout.dart';
-import 'responsive_sidebar_wrapper.dart';
-import 'modern_dashboard_header.dart';
+import '../widgets/responsive_sidebar_wrapper.dart';
+import '../widgets/modern_dashboard_header.dart';
 
 class ModernDashboardLayoutWithHeader extends StatefulWidget {
   final Widget child;
@@ -44,7 +44,7 @@ class ModernDashboardLayoutWithHeader extends StatefulWidget {
 }
 
 class _ModernDashboardLayoutWithHeaderState extends State<ModernDashboardLayoutWithHeader> {
-  final GlobalKey<_ResponsiveSidebarWrapperState> _sidebarKey = GlobalKey();
+  final GlobalKey<ResponsiveSidebarWrapperState> _sidebarKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -207,7 +207,7 @@ class ModernDashboardContentWithHeader extends StatelessWidget {
               Expanded(
                 child: SingleChildScrollView(
                   padding: padding ?? _getDefaultPadding(deviceType),
-                  child: _buildContent(deviceType),
+                  child: _buildContent(context, deviceType),
                 ),
               ),
             ],
@@ -217,14 +217,14 @@ class ModernDashboardContentWithHeader extends StatelessWidget {
     );
   }
 
-  Widget _buildContent(DeviceType deviceType) {
+  Widget _buildContent(BuildContext context, DeviceType deviceType) {
     switch (deviceType) {
       case DeviceType.mobile:
         return _buildMobileContent();
       case DeviceType.tablet:
         return _buildTabletContent();
       case DeviceType.desktop:
-        return _buildDesktopContent();
+        return _buildDesktopContent(context);
     }
   }
 
@@ -269,7 +269,7 @@ class ModernDashboardContentWithHeader extends StatelessWidget {
     );
   }
 
-  Widget _buildDesktopContent() {
+  Widget _buildDesktopContent(BuildContext context) {
     return Wrap(
       spacing: ModernSaaSDashboardTheme.spacingXl,
       runSpacing: ModernSaaSDashboardTheme.spacingXl,

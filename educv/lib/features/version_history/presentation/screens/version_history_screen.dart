@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
@@ -15,14 +15,14 @@ import '../widgets/version_comparison_dialog.dart';
 import '../widgets/version_item_card.dart';
 import '../widgets/version_stats_card.dart';
 
-class VersionHistoryScreen extends StatefulWidget {
+class VersionHistoryScreen extends ConsumerStatefulWidget {
   const VersionHistoryScreen({super.key});
 
   @override
-  State<VersionHistoryScreen> createState() => _VersionHistoryScreenState();
+  ConsumerState<VersionHistoryScreen> createState() => _VersionHistoryScreenState();
 }
 
-class _VersionHistoryScreenState extends State<VersionHistoryScreen> {
+class _VersionHistoryScreenState extends ConsumerState<VersionHistoryScreen> {
   final Set<int> _selectedVersions = {};
 
   @override
@@ -34,13 +34,15 @@ class _VersionHistoryScreenState extends State<VersionHistoryScreen> {
   }
 
   void _loadData() {
-    final provider = context.read<VersionHistoryProvider>();
+    final provider = ref.read(versionHistoryNotifierProvider.notifier);
     provider.loadVersionHistory();
     provider.loadVersionStats();
   }
 
   @override
   Widget build(BuildContext context) {
+    final provider = ref.watch(versionHistoryNotifierProvider);
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text('Version History'),
@@ -48,26 +50,16 @@ class _VersionHistoryScreenState extends State<VersionHistoryScreen> {
         foregroundColor: AppColors.textPrimary,
         elevation: 0,
         actions: [
-          Consumer<VersionHistoryProvider>(
-            builder: (context, provider, _) {
-              if (_selectedVersions.length == 2) {
-                return TextButton(
-                  onPressed: () => _compareVersions(provider),
-                  child: const Text('Compare'),
-                );
-              }
-              return const SizedBox.shrink();
-            },
-          ),
+          if (_selectedVersions.length == 2)
+            TextButton(
+              onPressed: () => _compareVersions(provider),
+              child: const Text('Compare'),
+            ),
         ],
       ),
-      body: Consumer<VersionHistoryProvider>(
-        builder: (context, provider, _) {
-          return RefreshIndicator(
-            onRefresh: () async => _loadData(),
-            child: _buildBody(provider),
-          );
-        },
+      body: RefreshIndicator(
+        onRefresh: () async => _loadData(),
+        child: _buildBody(provider),
       ),
     );
   }
@@ -116,11 +108,13 @@ class _VersionHistoryScreenState extends State<VersionHistoryScreen> {
             color: AppColors.primaryLight,
             child: Row(
               children: [
-                Text(
-                  '${_selectedVersions.length} version(s) selected',
-                  style: AppTypography.body2,
+                Expanded(
+                  child: Text(
+                    '${_selectedVersions.length} version(s) selected',
+                    style: AppTypography.body2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-                const Spacer(),
                 TextButton(
                   onPressed: () => setState(() => _selectedVersions.clear()),
                   child: const Text('Clear'),

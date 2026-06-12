@@ -4,6 +4,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../core/layout/improved_app_layout.dart';
 import '../features/auth/presentation/providers/auth_provider.dart';
+import '../features/auth/presentation/screens/local_auth_screen.dart';
+import '../features/auth/presentation/providers/local_auth_provider.dart';
 import '../features/auth/presentation/screens/login_screen.dart';
 import '../features/auth/presentation/screens/forgot_password_screen.dart';
 import '../features/auth/presentation/screens/register_screen.dart';
@@ -47,6 +49,7 @@ class AppRoutes {
   static const String login = '/login';
   static const String forgotPassword = '/forgot-password';
   static const String register = '/register';
+  static const String localAuth = '/local-auth';
   static const String onboarding = '/onboarding';
   static const String cvDashboard = '/cv/dashboard';
   static const String cvSections = '/cv/sections';
@@ -124,6 +127,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const RegisterScreen(),
       ),
       GoRoute(
+        path: AppRoutes.localAuth,
+        name: 'localAuth',
+        builder: (_, __) => const LocalAuthScreen(),
+      ),
+      GoRoute(
         path: AppRoutes.onboarding,
         name: 'onboarding',
         builder: (_, __) => const ImprovedOnboardingScreen(),
@@ -160,7 +168,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: AppRoutes.account,
-        builder: (context, state) => AppLayout(
+        builder: (context, state) => ImprovedAppLayout(
           currentRoute: state.uri.path,
           child: const AccountScreen(),
         ),
@@ -179,56 +187,56 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: AppRoutes.cvPreview,
-        builder: (context, state) => AppLayout(
+        builder: (context, state) => ImprovedAppLayout(
           currentRoute: state.uri.path,
           child: const CVPreviewScreen(),
         ),
       ),
       GoRoute(
         path: AppRoutes.changePassword,
-        builder: (context, state) => AppLayout(
+        builder: (context, state) => ImprovedAppLayout(
           currentRoute: state.uri.path,
           child: const ChangePasswordScreen(),
         ),
       ),
       GoRoute(
         path: AppRoutes.pdfResult,
-        builder: (context, state) => AppLayout(
+        builder: (context, state) => ImprovedAppLayout(
           currentRoute: state.uri.path,
           child: const PDFResultScreen(),
         ),
       ),
       GoRoute(
         path: AppRoutes.versionHistory,
-        builder: (context, state) => AppLayout(
+        builder: (context, state) => ImprovedAppLayout(
           currentRoute: state.uri.path,
           child: const VersionHistoryScreen(),
         ),
       ),
       GoRoute(
         path: AppRoutes.notificationCenter,
-        builder: (context, state) => AppLayout(
+        builder: (context, state) => ImprovedAppLayout(
           currentRoute: state.uri.path,
           child: const NotificationCenterScreen(),
         ),
       ),
       GoRoute(
         path: AppRoutes.notificationPreferences,
-        builder: (context, state) => AppLayout(
+        builder: (context, state) => ImprovedAppLayout(
           currentRoute: state.uri.path,
           child: const NotificationPreferencesScreen(),
         ),
       ),
       GoRoute(
         path: AppRoutes.analytics,
-        builder: (context, state) => AppLayout(
+        builder: (context, state) => ImprovedAppLayout(
           currentRoute: state.uri.path,
           child: const AnalyticsDashboardScreen(),
         ),
       ),
       GoRoute(
         path: AppRoutes.templateCatalog,
-        builder: (context, state) => AppLayout(
+        builder: (context, state) => ImprovedAppLayout(
           currentRoute: state.uri.path,
           child: const TemplateCatalogScreen(),
         ),
@@ -237,7 +245,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.templateDetail,
         builder: (context, state) {
           final slug = state.pathParameters['slug']!;
-          return AppLayout(
+          return ImprovedAppLayout(
             currentRoute: state.uri.path,
             child: TemplateDetailScreen(templateSlug: slug),
           );
@@ -247,7 +255,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/pdf/preview/:id',
         builder: (context, state) {
           final id = state.pathParameters['id']!;
-          return AppLayout(
+          return ImprovedAppLayout(
             currentRoute: state.uri.path,
             child: PDFPreviewScreen(generatedCvId: id),
           );
@@ -276,6 +284,17 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         // Use in-memory auth state first (set immediately on login)
         final authState = ref.read(authProvider);
         final isAuthenticated = authState.isAuthenticated;
+        
+        final localAuthState = ref.read(localAuthProvider);
+
+        if (isAuthenticated && localAuthState.isSupported && !localAuthState.isVerified) {
+          if (currentPath != AppRoutes.localAuth && currentPath != AppRoutes.splash) {
+            return AppRoutes.localAuth;
+          }
+        } else if (currentPath == AppRoutes.localAuth && localAuthState.isVerified) {
+          final role = authState.user?.role;
+          return role == 'admin' ? AppRoutes.admin : AppRoutes.cvDashboard;
+        }
 
         // Unauthenticated — block protected routes
         if (!isAuthenticated) {
@@ -315,14 +334,17 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 // Bridges Riverpod authProvider to GoRouter's refreshListenable
 class _AuthChangeNotifier extends ChangeNotifier {
   _AuthChangeNotifier(Ref ref) {
-    _sub = ref.listen<AuthState>(authProvider, (_, __) => notifyListeners());
+    _sub1 = ref.listen<AuthState>(authProvider, (_, __) => notifyListeners());
+    _sub2 = ref.listen<LocalAuthState>(localAuthProvider, (_, __) => notifyListeners());
   }
 
-  late final ProviderSubscription<AuthState> _sub;
+  late final ProviderSubscription<AuthState> _sub1;
+  late final ProviderSubscription<LocalAuthState> _sub2;
 
   @override
   void dispose() {
-    _sub.close();
+    _sub1.close();
+    _sub2.close();
     super.dispose();
   }
 }

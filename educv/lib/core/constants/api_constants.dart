@@ -1,11 +1,11 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import '../config/env.dart';
 
 class ApiConstants {
   static String get baseUrl {
     try {
       const buildTimeUrl = String.fromEnvironment('API_BASE_URL');
       final url =
-          buildTimeUrl.isNotEmpty ? buildTimeUrl : dotenv.env['API_BASE_URL'];
+          buildTimeUrl.isNotEmpty ? buildTimeUrl : Env.apiBaseUrl;
       
       // CRITICAL: Fail fast if API URL is not configured
       if (url == null || url.isEmpty) {
@@ -38,7 +38,7 @@ class ApiConstants {
     const buildTimeEnv = String.fromEnvironment('ENVIRONMENT');
     final env = buildTimeEnv.isNotEmpty
         ? buildTimeEnv
-        : dotenv.env['ENVIRONMENT'] ?? 'development';
+        : Env.environment;
     return env.toLowerCase() == 'production';
   }
 
@@ -74,10 +74,12 @@ class ApiConstants {
   static const String cvAnalyze = '/cv/analyze/';
   static const String cvScore = '/cv/score/';
   static const String cvDashboard = '/cv/dashboard/';
-  static const String cvAnalysisHistory = '/cv/intelligence/analysis/history/';
-  static String cvAnalysisHistoryDetail(String historyId) => '/cv/intelligence/analysis/history/$historyId/';
+  static const String cvAnalysisHistory = '/cv/analysis/history/';
+  static String cvAnalysisHistoryDetail(String historyId) => '/cv/analysis/history/$historyId/';
   static const String cvBenchmarking = '/cv/benchmarking/';
   static const String cvExportAnalysis = '/cv/export-analysis/';
+  static const String cvRoles = '/cv/roles/';
+  static const String cvScoreProgression = '/cv/analysis/history/progression/';
 
   // CV Intelligence - Legacy endpoints for backward compatibility
   static const String cvIntelligenceAnalysisHistory = '/cv/analysis/history/';

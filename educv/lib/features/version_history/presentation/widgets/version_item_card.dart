@@ -86,10 +86,13 @@ class VersionItemCard extends StatelessWidget {
                     color: AppColors.textHint,
                   ),
                   const SizedBox(width: AppSpacing.xs),
-                  Text(
-                    version.changedBy ?? 'System',
-                    style: AppTypography.caption.copyWith(
-                      color: AppColors.textHint,
+                  Expanded(
+                    child: Text(
+                      version.changedBy ?? 'System',
+                      style: AppTypography.caption.copyWith(
+                        color: AppColors.textHint,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   const SizedBox(width: AppSpacing.md),

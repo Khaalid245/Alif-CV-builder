@@ -244,10 +244,13 @@ class _PremiumEnterpriseSidebarState extends State<PremiumEnterpriseSidebar>
       ),
       child: Material(
         color: Colors.transparent,
-        child: InkWell(
-          onTap: () => widget.onNavigate(item.route),
-          borderRadius: BorderRadius.circular(PremiumSaaSTheme.radiusLg),
-          child: AnimatedContainer(
+        child: Tooltip(
+          message: widget.isCollapsed ? item.label : '',
+          preferBelow: false,
+          child: InkWell(
+            onTap: () => widget.onNavigate(item.route),
+            borderRadius: BorderRadius.circular(PremiumSaaSTheme.radiusLg),
+            child: AnimatedContainer(
             duration: PremiumSaaSTheme.animationFast,
             padding: EdgeInsets.symmetric(
               horizontal: PremiumSaaSTheme.space4,
@@ -327,6 +330,7 @@ class _PremiumEnterpriseSidebarState extends State<PremiumEnterpriseSidebar>
             ),
           ),
         ),
+      ),
       ),
     );
   }

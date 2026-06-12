@@ -5,12 +5,16 @@ import '../../../../core/exceptions/app_exception.dart';
 import '../../domain/cv_intelligence_repository.dart';
 import '../../data/repositories/cv_intelligence_repository_impl.dart';
 import '../models/cv_intelligence_models.dart';
+import '../../domain/local_heuristics_engine.dart';
+import '../../../cv/presentation/providers/cv_provider.dart';
 
 // Repository provider
 final cvIntelligenceRepositoryProvider = Provider<CVIntelligenceRepository>((ref) {
   final apiClient = ref.watch(apiClientProvider);
   return CVIntelligenceRepositoryImpl(apiClient);
 });
+
+final localHeuristicsEngineProvider = Provider((ref) => LocalHeuristicsEngine());
 
 // Analysis state
 class AnalysisState {
@@ -44,8 +48,9 @@ class AnalysisState {
 // Analysis provider
 class AnalysisNotifier extends StateNotifier<AnalysisState> {
   final CVIntelligenceRepository _repository;
+  final Ref _ref;
 
-  AnalysisNotifier(this._repository) : super(const AnalysisState()) {
+  AnalysisNotifier(this._repository, this._ref) : super(const AnalysisState()) {
     _loadLatestAnalysis();
   }
 
@@ -77,6 +82,16 @@ class AnalysisNotifier extends StateNotifier<AnalysisState> {
   Future<void> analyzeCV({Map<String, dynamic>? options}) async {
     try {
       state = state.copyWith(isLoading: true, error: null);
+      
+      // 1. Instant Local Heuristics
+      final profile = _ref.read(cvProfileProvider).valueOrNull;
+      if (profile != null) {
+        final localEngine = _ref.read(localHeuristicsEngineProvider);
+        final localAnalysis = localEngine.analyzeCompleteness(profile);
+        state = state.copyWith(analysis: localAnalysis, isLoading: true);
+      }
+
+      // 2. Heavy Backend ML
       final analysis = await _repository.analyzeCV(options: options);
       state = state.copyWith(
         analysis: analysis,
@@ -116,6 +131,14 @@ class AnalysisNotifier extends StateNotifier<AnalysisState> {
         if (hasCVProfile && previousAnalysis != null) {
           // User has CV and had previous analysis - try to re-analyze
           try {
+            // Instant Local Heuristics Fallback
+            final profile = _ref.read(cvProfileProvider).valueOrNull;
+            if (profile != null) {
+              final localEngine = _ref.read(localHeuristicsEngineProvider);
+              final localAnalysis = localEngine.analyzeCompleteness(profile);
+              state = state.copyWith(analysis: localAnalysis, isLoading: true);
+            }
+
             final newAnalysis = await _repository.analyzeCV();
             state = state.copyWith(
               analysis: newAnalysis,
@@ -167,7 +190,7 @@ class AnalysisNotifier extends StateNotifier<AnalysisState> {
 
 final analysisProvider = StateNotifierProvider<AnalysisNotifier, AnalysisState>((ref) {
   final repository = ref.watch(cvIntelligenceRepositoryProvider);
-  return AnalysisNotifier(repository);
+  return AnalysisNotifier(repository, ref);
 });
 
 // Analysis history state
@@ -442,4 +465,12 @@ final analysisConfigProvider = FutureProvider<Map<String, dynamic>>((ref) async 
 final specificAnalysisProvider = FutureProvider.family<CVAnalysisModel, String>((ref, analysisId) async {
   final repository = ref.watch(cvIntelligenceRepositoryProvider);
   return repository.getAnalysisById(analysisId);
+});
+
+// Score progression provider
+// Powers the "You improved from 62 → 78" timeline chart in the History tab.
+// Automatically invalidated when a new analysis is run (via analysisProvider).
+final scoreProgressionProvider = FutureProvider<Map<String, dynamic>>((ref) async {
+  final repository = ref.watch(cvIntelligenceRepositoryProvider);
+  return repository.getScoreProgression();
 });

@@ -4,8 +4,9 @@ URL patterns for CV Intelligence API endpoints.
 from django.urls import path
 from .views import (
     CVAnalysisView, CVScoreView, cv_intelligence_dashboard,
-    CVAnalysisHistoryView, CVAnalysisHistoryDetailView, 
-    CVBenchmarkingView, CVAnalysisExportView
+    CVAnalysisHistoryView, CVAnalysisHistoryDetailView,
+    CVBenchmarkingView, CVAnalysisExportView, CVRolesView,
+    CVScoreProgressionView,
 )
 
 app_name = 'cv_intelligence'
@@ -18,6 +19,7 @@ urlpatterns = [
     
     # Analysis History
     path('analysis/history/', CVAnalysisHistoryView.as_view(), name='analysis_history'),
+    path('analysis/history/progression/', CVScoreProgressionView.as_view(), name='score_progression'),
     path('analysis/history/<uuid:history_id>/', CVAnalysisHistoryDetailView.as_view(), name='analysis_history_detail'),
     
     # Benchmarking
@@ -25,4 +27,7 @@ urlpatterns = [
     
     # Export
     path('export-analysis/', CVAnalysisExportView.as_view(), name='export_analysis'),
+
+    # Role Intelligence — list of target roles for the role picker
+    path('roles/', CVRolesView.as_view(), name='cv_roles'),
 ]

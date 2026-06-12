@@ -176,7 +176,7 @@ class CVBenchmarkingService:
         # Apply grouping filters if specified and data is available
         if comparison_group and hasattr(user, 'profile'):
             profile = user.profile
-            
+
             if comparison_group == 'faculty' and hasattr(profile, 'faculty'):
                 base_queryset = base_queryset.filter(user__profile__faculty=profile.faculty)
             elif comparison_group == 'major' and hasattr(profile, 'major'):
@@ -185,7 +185,19 @@ class CVBenchmarkingService:
                 base_queryset = base_queryset.filter(user__profile__graduation_year=profile.graduation_year)
             elif comparison_group == 'experience' and hasattr(profile, 'experience_level'):
                 base_queryset = base_queryset.filter(user__profile__experience_level=profile.experience_level)
-        
+
+        # Role-based comparison — filter peers targeting the same role
+        # Handled separately so it works regardless of whether 'profile' exists
+        if comparison_group == 'role':
+            try:
+                target_role_id = user.cv_profile.target_role_id
+                if target_role_id:
+                    base_queryset = base_queryset.filter(
+                        user__cv_profile__target_role_id=target_role_id
+                    )
+            except Exception:
+                pass  # Fall back to all-students if cv_profile unavailable
+
         return base_queryset
     
     def _calculate_basic_statistics(self, queryset) -> Dict:

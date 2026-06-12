@@ -5,6 +5,7 @@ Each section also has its own serializer for individual CRUD operations.
 """
 from rest_framework import serializers
 from .models import CVProfile, Education, Experience, Skill, Language, Project, Certification
+from apps.template_engine.models import Role
 
 
 # ── Section Serializers ────────────────────────────────────────────────────────
@@ -137,6 +138,15 @@ class CertificationSerializer(serializers.ModelSerializer):
 
 # ── CVProfile Serializers ──────────────────────────────────────────────────────
 
+class TargetRoleSerializer(serializers.ModelSerializer):
+    """Lightweight read-only serializer for the target role FK."""
+    industry_name = serializers.CharField(source='industry.name', read_only=True)
+
+    class Meta:
+        model = Role
+        fields = ['id', 'name', 'slug', 'industry_name']
+
+
 class CVProfileSerializer(serializers.ModelSerializer):
     """
     Full nested CV serializer.
@@ -156,12 +166,16 @@ class CVProfileSerializer(serializers.ModelSerializer):
     projects       = ProjectSerializer(many=True, read_only=True)
     certifications = CertificationSerializer(many=True, read_only=True)
 
+    # Target role — nested read-only object
+    target_role = TargetRoleSerializer(read_only=True)
+
     class Meta:
         model  = CVProfile
         fields = [
             'id', 'full_name', 'email', 'student_id',
             'phone', 'address', 'city', 'country', 'summary',
             'linkedin', 'github', 'portfolio', 'photo',
+            'target_role', 'custom_role_name',
             'completion_percentage',
             'educations', 'experiences', 'skills',
             'languages', 'projects', 'certifications',
@@ -175,11 +189,22 @@ class CVProfileUpdateSerializer(serializers.ModelSerializer):
     Used for PUT /api/v1/cv/profile/ — updates only the profile fields.
     Nested sections are not updatable through this serializer.
     """
+    # Write-only UUID; the nested object is returned via CVProfileSerializer
+    target_role_id = serializers.PrimaryKeyRelatedField(
+        queryset=Role.objects.filter(is_active=True),
+        source='target_role',
+        allow_null=True,
+        required=False,
+        help_text='UUID of the target role from /api/v1/cv/roles/'
+    )
+
     class Meta:
         model  = CVProfile
         fields = [
             'phone', 'address', 'city', 'country', 'summary',
             'linkedin', 'github', 'portfolio', 'photo',
+            'target_role_id',
+            'custom_role_name',  # Free-text major for "Other" option
         ]
 
     def validate_photo(self, value):

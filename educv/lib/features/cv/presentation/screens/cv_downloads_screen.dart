@@ -250,7 +250,7 @@ class _CVDownloadsScreenState extends ConsumerState<CVDownloadsScreen> {
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
         border: Border.all(
-          color: isFeatured ? const Color(0xFF1565C0) : AppColors.divider,
+          color: isFeatured ? AppColors.primary : AppColors.divider,
           width: isFeatured ? 1.0 : 0.5,
         ),
         borderRadius: BorderRadius.circular(12),
@@ -333,7 +333,7 @@ class _CVDownloadsScreenState extends ConsumerState<CVDownloadsScreen> {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: isFeatured ? const Color(0xFF1565C0) : AppColors.surface,
+          color: isFeatured ? AppColors.primary : AppColors.surface,
           border: isFeatured
               ? null
               : Border.all(
@@ -370,7 +370,7 @@ class _CVDownloadsScreenState extends ConsumerState<CVDownloadsScreen> {
     Color primaryColor;
     switch (template) {
       case 'classic':
-        primaryColor = const Color(0xFF1565C0);
+        primaryColor = AppColors.primary;
         break;
       case 'modern':
         primaryColor = const Color(0xFF00ACC1);
@@ -379,7 +379,7 @@ class _CVDownloadsScreenState extends ConsumerState<CVDownloadsScreen> {
         primaryColor = const Color(0xFF8E24AA);
         break;
       default:
-        primaryColor = const Color(0xFF1565C0);
+        primaryColor = AppColors.primary;
     }
 
     return Container(
@@ -391,7 +391,7 @@ class _CVDownloadsScreenState extends ConsumerState<CVDownloadsScreen> {
           width: 0.5,
         ),
         borderRadius: BorderRadius.circular(4),
-        color: isFeatured ? const Color(0xFFEAF2FF) : AppColors.surface,
+        color: isFeatured ? AppColors.primary.withOpacity(0.1) : AppColors.surface,
       ),
       padding: const EdgeInsets.all(4),
       child: Column(
@@ -531,13 +531,13 @@ class _CVDownloadsScreenState extends ConsumerState<CVDownloadsScreen> {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFEAF2FF),
+                  color: AppColors.primary.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Icon(
                   LucideIcons.share2,
                   size: 20,
-                  color: Color(0xFF1565C0),
+                  color: AppColors.primary,
                 ),
               ),
               title: const Text(

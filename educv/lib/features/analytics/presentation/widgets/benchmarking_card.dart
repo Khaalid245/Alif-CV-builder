@@ -18,6 +18,7 @@ class BenchmarkingCard extends StatelessWidget {
     final currentScore = (benchmarkingData['current_score'] ?? 0.0).toDouble();
     final percentileRank = (benchmarkingData['percentile_rank'] ?? 0.0).toDouble();
     final totalPeers = benchmarkingData['total_peers'] ?? 0;
+    final roleName = benchmarkingData['role_name'] as String?;
 
     return Card(
       child: Padding(
@@ -32,19 +33,34 @@ class BenchmarkingCard extends StatelessWidget {
                   color: AppColors.primary,
                 ),
                 const SizedBox(width: AppSpacing.sm),
-                Text(
-                  'Peer Benchmarking',
-                  style: AppTypography.h6.copyWith(
-                    fontWeight: FontWeight.w600,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Peer Benchmarking',
+                        style: AppTypography.h6.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      if (roleName != null)
+                        Text(
+                          'vs $roleName peers',
+                          style: AppTypography.caption.copyWith(
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                    ],
                   ),
                 ),
               ],
             ),
             
             const SizedBox(height: AppSpacing.lg),
-            
+
             if (!isCompact) ...[
-              _buildPercentileVisualization(percentileRank),
+              _buildPercentileVisualization(percentileRank, roleName),
               const SizedBox(height: AppSpacing.lg),
             ],
             
@@ -77,7 +93,9 @@ class BenchmarkingCard extends StatelessWidget {
                   Expanded(
                     child: _buildMetricCard(
                       'Total Peers',
-                      totalPeers.toString(),
+                      roleName != null
+                          ? '$totalPeers ${roleName}s'
+                          : totalPeers.toString(),
                       Icons.group,
                       AppColors.textSecondary,
                     ),
@@ -128,12 +146,14 @@ class BenchmarkingCard extends StatelessWidget {
     );
   }
 
-  Widget _buildPercentileVisualization(double percentileRank) {
+  Widget _buildPercentileVisualization(double percentileRank, String? roleName) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Your Position Among Peers',
+          roleName != null
+              ? 'Your Position Among $roleName Peers'
+              : 'Your Position Among Peers',
           style: AppTypography.body2.copyWith(
             fontWeight: FontWeight.w500,
           ),

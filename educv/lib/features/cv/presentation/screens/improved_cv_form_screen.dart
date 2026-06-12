@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
-import '../../../../core/theme/premium_portfolio_colors.dart';
+import '../../../../core/theme/premium_saas_theme.dart';
 import '../providers/cv_provider.dart';
 import '../widgets/form_steps/personal_info_step.dart';
 import '../widgets/form_steps/education_step.dart';
@@ -12,7 +12,9 @@ import '../widgets/form_steps/skills_step.dart';
 import '../widgets/form_steps/languages_step.dart';
 import '../widgets/form_steps/projects_step.dart';
 import '../widgets/form_steps/certifications_step.dart';
-import '../../../../core/widgets/breadcrumb_navigation.dart';
+import '../widgets/cv_form_step_shell.dart';
+import '../widgets/cv_form_bottom_bar.dart';
+import '../../../../core/layout/responsive_layout.dart';
 
 class ImprovedCVFormScreen extends ConsumerStatefulWidget {
   final int initialStep;
@@ -118,688 +120,222 @@ class _ImprovedCVFormScreenState extends ConsumerState<ImprovedCVFormScreen>
     final isLoading = ref.watch(cvFormLoadingProvider);
     final cvProfile = ref.watch(cvProfileProvider);
 
-    return Scaffold(
-      backgroundColor: PremiumPortfolioColors.background,
-      body: SafeArea(
-        child: FadeTransition(
-          opacity: _fadeAnimation,
-          child: Column(
+    final completion = cvProfile.value?.completionPercentage ?? 0;
+
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: ResponsiveBuilder(
+        builder: (context, deviceType) {
+          final step = _steps[currentStep];
+          final isLastStep = currentStep == _steps.length - 1;
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Breadcrumb Navigation
-              BreadcrumbNavigation(
-                items: AppBreadcrumbs.cvForm(currentStep),
-                onNavigate: (route) => context.go(route),
-              ),
-              
-              // Modern Header with Progress
-              _buildModernHeader(currentStep, cvProfile.value?.completionPercentage ?? 0),
-              
-              // Step Navigation Pills
-              _buildStepNavigation(currentStep),
-              
-              // Main Content Area
+              _buildFormToolbar(currentStep, completion, deviceType),
               Expanded(
-                child: Row(
-                  children: [
-                    // Left Sidebar - Step Overview
-                    _buildStepSidebar(currentStep),
-                    
-                    // Main Form Content
-                    Expanded(
-                      flex: 3,
-                      child: Container(
-                        margin: const EdgeInsets.all(24),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
-                              blurRadius: 20,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(16),
-                          child: PageView(
-                            controller: _pageController,
-                            physics: const NeverScrollableScrollPhysics(),
-                            onPageChanged: (index) {
-                              ref.read(cvFormStepProvider.notifier).state = index;
-                            },
-                            children: const [
-                              PersonalInfoStep(),
-                              EducationStep(),
-                              ExperienceStep(),
-                              SkillsStep(),
-                              LanguagesStep(),
-                              ProjectsStep(),
-                              CertificationsStep(),
-                            ],
-                          ),
-                        ),
-                      ),
+                child: ColoredBox(
+                  color: PremiumSaaSTheme.lightBackground,
+                  child: PageView(
+                    controller: _pageController,
+                    physics: const NeverScrollableScrollPhysics(),
+                    onPageChanged: (index) {
+                      ref.read(cvFormStepProvider.notifier).state = index;
+                    },
+                    children: List.generate(
+                      _steps.length,
+                      (index) => _buildStepPage(index),
                     ),
-                  ],
+                  ),
                 ),
               ),
-              
-              // Modern Bottom Navigation
-              _buildModernBottomNavigation(currentStep, isLoading),
+              CVFormBottomBar(
+                currentStep: currentStep,
+                totalSteps: _steps.length,
+                stepTitle: step.title,
+                isLoading: isLoading,
+                showPrevious: currentStep > 0,
+                onPrevious: _goToPreviousStep,
+                onPrimary: isLoading ? null : _goToNextStep,
+                primaryLabel:
+                    isLastStep ? 'Preview CV' : 'Save & continue',
+                primaryIcon:
+                    isLastStep ? LucideIcons.eye : LucideIcons.arrowRight,
+              ),
             ],
-          ),
-        ),
+          );
+        },
       ),
     );
   }
 
-  Widget _buildModernHeader(int currentStep, int completionPercentage) {
+  /// Single compact toolbar — clear hierarchy, no stacked headers.
+  Widget _buildFormToolbar(
+    int currentStep,
+    int completionPercentage,
+    DeviceType deviceType,
+  ) {
     final step = _steps[currentStep];
-    
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+    final horizontalPadding = deviceType.isMobile ? 12.0 : 20.0;
+
+    return Material(
+      color: PremiumSaaSTheme.lightSurface,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          // Top Row - Back button and completion
-          Row(
-            children: [
-              // Back to Dashboard
-              Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () => _showExitConfirmation(),
-                  borderRadius: BorderRadius.circular(12),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: PremiumPortfolioColors.borderLight),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          LucideIcons.arrowLeft,
-                          size: 16,
-                          color: PremiumPortfolioColors.secondaryText,
+          Padding(
+            padding: EdgeInsets.fromLTRB(
+              horizontalPadding,
+              deviceType.isMobile ? 8 : 12,
+              horizontalPadding,
+              8,
+            ),
+            child: Row(
+              children: [
+                IconButton(
+                  onPressed: _showExitConfirmation,
+                  icon: const Icon(LucideIcons.arrowLeft, size: 20),
+                  color: PremiumSaaSTheme.textSecondary,
+                  tooltip: 'Back to dashboard',
+                  visualDensity: VisualDensity.compact,
+                ),
+                Expanded(
+                  child: PopupMenuButton<int>(
+                    offset: const Offset(0, 40),
+                    onSelected: _goToStep,
+                    itemBuilder: (context) => List.generate(_steps.length, (i) {
+                      final s = _steps[i];
+                      return PopupMenuItem(
+                        value: i,
+                        child: Row(
+                          children: [
+                            if (i < currentStep)
+                              const Icon(
+                                LucideIcons.check,
+                                size: 16,
+                                color: PremiumSaaSTheme.accentGreen,
+                              )
+                            else
+                              const SizedBox(width: 16),
+                            const SizedBox(width: 8),
+                            Expanded(child: Text(s.title)),
+                          ],
                         ),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Back to Dashboard',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: PremiumPortfolioColors.secondaryText,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              
-              const Spacer(),
-              
-              // Completion Badge
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      PremiumPortfolioColors.success.withOpacity(0.1),
-                      PremiumPortfolioColors.accentBlue.withOpacity(0.1),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: PremiumPortfolioColors.success.withOpacity(0.3),
-                  ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      LucideIcons.checkCircle2,
-                      size: 16,
-                      color: PremiumPortfolioColors.success,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      '$completionPercentage% Complete',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: PremiumPortfolioColors.success,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          
-          const SizedBox(height: 24),
-          
-          // Main Title Section
-          Row(
-            children: [
-              // Step Icon
-              Container(
-                width: 64,
-                height: 64,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      PremiumPortfolioColors.accentPurple,
-                      PremiumPortfolioColors.accentBlue,
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: PremiumPortfolioColors.accentPurple.withOpacity(0.3),
-                      blurRadius: 12,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Icon(
-                  step.icon,
-                  color: Colors.white,
-                  size: 28,
-                ),
-              ),
-              
-              const SizedBox(width: 20),
-              
-              // Step Info
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+                      );
+                    }),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           'Step ${currentStep + 1} of ${_steps.length}',
                           style: TextStyle(
-                            fontSize: 14,
+                            fontSize: 12,
                             fontWeight: FontWeight.w500,
-                            color: PremiumPortfolioColors.accentPurple,
+                            color: PremiumSaaSTheme.textSecondary,
                           ),
                         ),
-                        if (step.isRequired) ...[
-                          const SizedBox(width: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                            decoration: BoxDecoration(
-                              color: PremiumPortfolioColors.error.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              'Required',
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.w600,
-                                color: PremiumPortfolioColors.error,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      step.title,
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.w700,
-                        color: PremiumPortfolioColors.primaryText,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      step.description,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: PremiumPortfolioColors.secondaryText,
-                        height: 1.5,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          
-          const SizedBox(height: 24),
-          
-          // Progress Bar
-          Container(
-            height: 8,
-            decoration: BoxDecoration(
-              color: PremiumPortfolioColors.borderLight,
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: FractionallySizedBox(
-              alignment: Alignment.centerLeft,
-              widthFactor: (currentStep + 1) / _steps.length,
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      PremiumPortfolioColors.accentPurple,
-                      PremiumPortfolioColors.accentBlue,
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStepNavigation(int currentStep) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: _steps.asMap().entries.map((entry) {
-            final index = entry.key;
-            final step = entry.value;
-            final isActive = index == currentStep;
-            final isCompleted = index < currentStep;
-            
-            return GestureDetector(
-              onTap: () => _goToStep(index),
-              child: Container(
-                margin: const EdgeInsets.only(right: 12),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                decoration: BoxDecoration(
-                  color: isActive 
-                    ? PremiumPortfolioColors.accentPurple.withOpacity(0.1)
-                    : isCompleted
-                      ? PremiumPortfolioColors.success.withOpacity(0.1)
-                      : Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: isActive 
-                      ? PremiumPortfolioColors.accentPurple
-                      : isCompleted
-                        ? PremiumPortfolioColors.success
-                        : PremiumPortfolioColors.borderLight,
-                  ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      isCompleted ? LucideIcons.check : step.icon,
-                      size: 16,
-                      color: isActive 
-                        ? PremiumPortfolioColors.accentPurple
-                        : isCompleted
-                          ? PremiumPortfolioColors.success
-                          : PremiumPortfolioColors.secondaryText,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      step.title,
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: isActive 
-                          ? PremiumPortfolioColors.accentPurple
-                          : isCompleted
-                            ? PremiumPortfolioColors.success
-                            : PremiumPortfolioColors.secondaryText,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildStepSidebar(int currentStep) {
-    return Container(
-      width: 300,
-      margin: const EdgeInsets.only(left: 24, top: 24, bottom: 24),
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 20,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'CV Builder Guide',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: PremiumPortfolioColors.primaryText,
-            ),
-          ),
-          
-          const SizedBox(height: 16),
-          
-          Text(
-            'Complete each section to build your professional CV. Required sections are marked with a red badge.',
-            style: TextStyle(
-              fontSize: 14,
-              color: PremiumPortfolioColors.secondaryText,
-              height: 1.5,
-            ),
-          ),
-          
-          const SizedBox(height: 24),
-          
-          // Steps List
-          Expanded(
-            child: ListView.builder(
-              itemCount: _steps.length,
-              itemBuilder: (context, index) {
-                final step = _steps[index];
-                final isActive = index == currentStep;
-                final isCompleted = index < currentStep;
-                
-                return Container(
-                  margin: const EdgeInsets.only(bottom: 12),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () => _goToStep(index),
-                      borderRadius: BorderRadius.circular(12),
-                      child: Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: isActive 
-                            ? PremiumPortfolioColors.accentPurple.withOpacity(0.05)
-                            : Colors.transparent,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: isActive 
-                              ? PremiumPortfolioColors.accentPurple.withOpacity(0.2)
-                              : Colors.transparent,
-                          ),
-                        ),
-                        child: Row(
+                        Row(
                           children: [
-                            Container(
-                              width: 32,
-                              height: 32,
-                              decoration: BoxDecoration(
-                                color: isCompleted
-                                  ? PremiumPortfolioColors.success
-                                  : isActive
-                                    ? PremiumPortfolioColors.accentPurple
-                                    : PremiumPortfolioColors.borderLight,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Icon(
-                                isCompleted ? LucideIcons.check : step.icon,
-                                size: 16,
-                                color: isCompleted || isActive 
-                                  ? Colors.white 
-                                  : PremiumPortfolioColors.secondaryText,
+                            Flexible(
+                              child: Text(
+                                step.title,
+                                style: TextStyle(
+                                  fontSize: deviceType.isMobile ? 16 : 18,
+                                  fontWeight: FontWeight.w700,
+                                  color: PremiumSaaSTheme.textPrimary,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            
-                            const SizedBox(width: 12),
-                            
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          step.title,
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600,
-                                            color: isActive 
-                                              ? PremiumPortfolioColors.accentPurple
-                                              : PremiumPortfolioColors.primaryText,
-                                          ),
-                                        ),
-                                      ),
-                                      if (step.isRequired)
-                                        Container(
-                                          width: 6,
-                                          height: 6,
-                                          decoration: BoxDecoration(
-                                            color: PremiumPortfolioColors.error,
-                                            borderRadius: BorderRadius.circular(3),
-                                          ),
-                                        ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    step.subtitle,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: PremiumPortfolioColors.secondaryText,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                            const Icon(
+                              LucideIcons.chevronDown,
+                              size: 18,
+                              color: PremiumSaaSTheme.textSecondary,
                             ),
                           ],
                         ),
-                      ),
+                      ],
                     ),
                   ),
-                );
-              },
-            ),
-          ),
-          
-          // Help Section
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  PremiumPortfolioColors.accentBlue.withOpacity(0.05),
-                  PremiumPortfolioColors.accentPurple.withOpacity(0.05),
-                ],
-              ),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: PremiumPortfolioColors.accentBlue.withOpacity(0.2),
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Icon(
-                      LucideIcons.helpCircle,
-                      size: 16,
-                      color: PremiumPortfolioColors.accentBlue,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Need Help?',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: PremiumPortfolioColors.accentBlue,
-                      ),
-                    ),
-                  ],
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  'Fill out each section with accurate information. You can always come back and edit later.',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: PremiumPortfolioColors.secondaryText,
-                    height: 1.4,
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
                   ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildModernBottomNavigation(int currentStep, bool isLoading) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          // Previous Button
-          if (currentStep > 0)
-            Expanded(
-              child: _buildNavigationButton(
-                text: 'Previous',
-                icon: LucideIcons.arrowLeft,
-                onPressed: _goToPreviousStep,
-                isPrimary: false,
-              ),
-            )
-          else
-            const Expanded(child: SizedBox()),
-          
-          const SizedBox(width: 16),
-          
-          // Save & Continue / Finish Button
-          Expanded(
-            flex: 2,
-            child: _buildNavigationButton(
-              text: currentStep == _steps.length - 1 ? 'Preview CV' : 'Save & Continue',
-              icon: currentStep == _steps.length - 1 ? LucideIcons.eye : LucideIcons.arrowRight,
-              onPressed: isLoading ? null : _goToNextStep,
-              isPrimary: true,
-              isLoading: isLoading,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNavigationButton({
-    required String text,
-    required IconData icon,
-    required VoidCallback? onPressed,
-    required bool isPrimary,
-    bool isLoading = false,
-  }) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onPressed,
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          height: 56,
-          decoration: BoxDecoration(
-            gradient: isPrimary ? LinearGradient(
-              colors: [
-                PremiumPortfolioColors.accentPurple,
-                PremiumPortfolioColors.accentBlue,
-              ],
-            ) : null,
-            color: isPrimary ? null : Colors.transparent,
-            borderRadius: BorderRadius.circular(12),
-            border: isPrimary ? null : Border.all(
-              color: PremiumPortfolioColors.borderLight,
-            ),
-            boxShadow: isPrimary ? [
-              BoxShadow(
-                color: PremiumPortfolioColors.accentPurple.withOpacity(0.3),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ] : null,
-          ),
-          child: Center(
-            child: isLoading ? 
-              SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    isPrimary ? Colors.white : PremiumPortfolioColors.accentPurple,
+                  decoration: BoxDecoration(
+                    color: PremiumSaaSTheme.primaryPurple
+                        .withOpacity(0.08),
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                ),
-              ) :
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (!isPrimary) ...[
-                    Icon(
-                      icon,
-                      size: 18,
-                      color: PremiumPortfolioColors.secondaryText,
-                    ),
-                    const SizedBox(width: 8),
-                  ],
-                  Text(
-                    text,
+                  child: Text(
+                    '$completionPercentage%',
                     style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: isPrimary ? Colors.white : PremiumPortfolioColors.secondaryText,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                      color: PremiumSaaSTheme.primaryPurple,
                     ),
                   ),
-                  if (isPrimary) ...[
-                    const SizedBox(width: 8),
-                    Icon(
-                      icon,
-                      size: 18,
-                      color: Colors.white,
-                    ),
-                  ],
-                ],
-              ),
+                ),
+              ],
+            ),
           ),
-        ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(horizontalPadding, 0, horizontalPadding, 10),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(2),
+              child: LinearProgressIndicator(
+                value: (currentStep + 1) / _steps.length,
+                minHeight: 3,
+                backgroundColor: PremiumSaaSTheme.lightBorder,
+                valueColor: const AlwaysStoppedAnimation<Color>(
+                  PremiumSaaSTheme.primaryPurple,
+                ),
+              ),
+            ),
+          ),
+          const Divider(height: 1, color: PremiumSaaSTheme.lightBorder),
+        ],
       ),
+    );
+  }
+
+  Widget _buildStepPage(int index) {
+    final step = _steps[index];
+    final Widget body;
+    switch (index) {
+      case 0:
+        body = const PersonalInfoStep();
+        break;
+      case 1:
+        body = const EducationStep();
+        break;
+      case 2:
+        body = const ExperienceStep();
+        break;
+      case 3:
+        body = const SkillsStep();
+        break;
+      case 4:
+        body = const LanguagesStep();
+        break;
+      case 5:
+        body = const ProjectsStep();
+        break;
+      case 6:
+        body = const CertificationsStep();
+        break;
+      default:
+        body = const SizedBox.shrink();
+    }
+
+    return CVFormStepShell(
+      icon: step.icon,
+      title: step.title,
+      description: step.description,
+      isRequired: step.isRequired,
+      child: body,
     );
   }
 
@@ -851,7 +387,7 @@ class _ImprovedCVFormScreenState extends ConsumerState<ImprovedCVFormScreen>
           children: [
             Icon(
               LucideIcons.alertTriangle,
-              color: PremiumPortfolioColors.warning,
+              color: PremiumSaaSTheme.accentAmber,
               size: 24,
             ),
             const SizedBox(width: 12),
@@ -860,7 +396,7 @@ class _ImprovedCVFormScreenState extends ConsumerState<ImprovedCVFormScreen>
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: PremiumPortfolioColors.primaryText,
+                color: PremiumSaaSTheme.textPrimary,
               ),
             ),
           ],
@@ -869,7 +405,7 @@ class _ImprovedCVFormScreenState extends ConsumerState<ImprovedCVFormScreen>
           'Are you sure you want to go back to the dashboard? Any unsaved changes will be lost.',
           style: TextStyle(
             fontSize: 14,
-            color: PremiumPortfolioColors.secondaryText,
+            color: PremiumSaaSTheme.textSecondary,
             height: 1.5,
           ),
         ),
@@ -881,7 +417,7 @@ class _ImprovedCVFormScreenState extends ConsumerState<ImprovedCVFormScreen>
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
-                color: PremiumPortfolioColors.secondaryText,
+                color: PremiumSaaSTheme.textSecondary,
               ),
             ),
           ),
@@ -891,7 +427,7 @@ class _ImprovedCVFormScreenState extends ConsumerState<ImprovedCVFormScreen>
               context.go('/cv/dashboard');
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: PremiumPortfolioColors.error,
+              backgroundColor: PremiumSaaSTheme.accentRose,
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),

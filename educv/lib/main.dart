@@ -1,24 +1,18 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import 'app.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Load local development config. Release builds should pass public config
-  // with --dart-define instead of bundling environment files.
-  try {
-    if (!kReleaseMode) {
-      await dotenv.load(fileName: 'assets/env/.env');
-    }
-  } catch (e) {
-    debugPrint('Error loading .env file: $e');
-  }
-
+  
+  // Initialize Hive for offline storage
+  await Hive.initFlutter();
+  
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -33,9 +27,16 @@ Future<void> main() async {
     overlays: [SystemUiOverlay.top],
   );
 
-  runApp(
-    const ProviderScope(
-      child: App(),
+  await SentryFlutter.init(
+    (options) {
+      // TODO: Add your actual Sentry DSN here
+      options.dsn = const String.fromEnvironment('SENTRY_DSN', defaultValue: '');
+      options.tracesSampleRate = 1.0; // Capture 100% of transactions for performance monitoring
+    },
+    appRunner: () => runApp(
+      const ProviderScope(
+        child: App(),
+      ),
     ),
   );
 }
