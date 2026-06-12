@@ -45,6 +45,7 @@ class LocalHeuristicsEngine {
         actionText: 'Edit Summary',
         isImplemented: false,
         createdAt: DateTime.now(),
+        metadata: const {},
       ));
     }
 
@@ -72,6 +73,7 @@ class LocalHeuristicsEngine {
         actionText: 'Edit Experience',
         isImplemented: false,
         createdAt: DateTime.now(),
+        metadata: const {},
       ));
     }
 
@@ -88,6 +90,7 @@ class LocalHeuristicsEngine {
         actionText: 'Add Skills',
         isImplemented: false,
         createdAt: DateTime.now(),
+        metadata: const {},
       ));
     }
 
@@ -104,13 +107,14 @@ class LocalHeuristicsEngine {
         actionText: 'Edit Contact Info',
         isImplemented: false,
         createdAt: DateTime.now(),
+        metadata: const {},
       ));
     }
 
     return CVAnalysisModel(
       id: 'local_analysis_${DateTime.now().millisecondsSinceEpoch}',
       cvProfileId: profile.id,
-      userId: profile.userId,
+      userId: profile.studentId,
       overallScore: totalScore.clamp(0.0, 100.0),
       sectionScores: {
         'profile': SectionScoreModel(

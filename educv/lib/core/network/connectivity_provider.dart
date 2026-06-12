@@ -19,9 +19,8 @@ class ConnectivityNotifier extends StateNotifier<bool> {
     Connectivity().onConnectivityChanged.listen(_updateStatus);
   }
 
-  void _updateStatus(List<ConnectivityResult> results) {
-    // connectivity_plus 5.x.x returns a List of results
-    final isOffline = results.every((r) => r == ConnectivityResult.none);
+  void _updateStatus(ConnectivityResult result) {
+    final isOffline = result == ConnectivityResult.none;
     if (state != isOffline) {
       state = isOffline;
     }
