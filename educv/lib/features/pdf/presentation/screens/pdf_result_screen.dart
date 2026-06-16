@@ -12,6 +12,7 @@ import '../../../../core/utils/file_saver.dart';
 import '../../../../core/utils/date_formatter.dart';
 import '../providers/pdf_provider.dart';
 import '../../data/models/generated_cv_model.dart';
+import '../../domain/cv_design_tokens.dart';
 
 class PDFResultScreen extends ConsumerStatefulWidget {
   const PDFResultScreen({super.key});
@@ -496,25 +497,43 @@ class _CVTemplateCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              // Template thumbnail
+              // Template thumbnail — uses per-template colors from design tokens
               Container(
-                width: 48,
-                height: 64,
+                width: CvDesignTokens.thumbWidth,
+                height: CvDesignTokens.thumbHeight,
                 decoration: BoxDecoration(
-                  color: AppColors.primaryLight,
-                  border: Border.all(color: AppColors.divider),
-                  borderRadius: BorderRadius.circular(6),
+                  color: CvDesignTokens.bgSubtleForTemplate(cv.template),
+                  border: Border.all(
+                    color: CvDesignTokens.ruleForTemplate(cv.template),
+                  ),
+                  borderRadius: BorderRadius.circular(CvDesignTokens.radiusCard),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(height: 4, width: 30, color: AppColors.primary),
-                    const SizedBox(height: 4),
-                    Container(height: 2, width: 40, color: AppColors.divider),
+                    Container(
+                      height: 4,
+                      width: 30,
+                      color: CvDesignTokens.primaryForTemplate(cv.template),
+                    ),
+                    const SizedBox(height: CvDesignTokens.spacingTight),
+                    Container(
+                      height: 2,
+                      width: 40,
+                      color: CvDesignTokens.ruleForTemplate(cv.template),
+                    ),
                     const SizedBox(height: 2),
-                    Container(height: 2, width: 35, color: AppColors.divider),
+                    Container(
+                      height: 2,
+                      width: 35,
+                      color: CvDesignTokens.ruleForTemplate(cv.template),
+                    ),
                     const SizedBox(height: 2),
-                    Container(height: 2, width: 38, color: AppColors.divider),
+                    Container(
+                      height: 2,
+                      width: 38,
+                      color: CvDesignTokens.ruleForTemplate(cv.template),
+                    ),
                   ],
                 ),
               ),
@@ -643,23 +662,37 @@ class _HistoryTile extends StatelessWidget {
     return SectionCard(
       child: Row(
         children: [
-          // Template thumbnail (smaller)
+          // Template thumbnail (smaller) — per-template color from design tokens
           Container(
-            width: 36,
-            height: 48,
+            width: CvDesignTokens.thumbWidthSm,
+            height: CvDesignTokens.thumbHeightSm,
             decoration: BoxDecoration(
-              color: AppColors.primaryLight,
-              border: Border.all(color: AppColors.divider),
-              borderRadius: BorderRadius.circular(4),
+              color: CvDesignTokens.bgSubtleForTemplate(cv.template),
+              border: Border.all(
+                color: CvDesignTokens.ruleForTemplate(cv.template),
+              ),
+              borderRadius: BorderRadius.circular(CvDesignTokens.radiusBadge),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(height: 3, width: 24, color: AppColors.primary),
-                const SizedBox(height: 3),
-                Container(height: 2, width: 28, color: AppColors.divider),
+                Container(
+                  height: 3,
+                  width: 24,
+                  color: CvDesignTokens.primaryForTemplate(cv.template),
+                ),
+                const SizedBox(height: CvDesignTokens.spacingTight),
+                Container(
+                  height: 2,
+                  width: 28,
+                  color: CvDesignTokens.ruleForTemplate(cv.template),
+                ),
                 const SizedBox(height: 2),
-                Container(height: 2, width: 26, color: AppColors.divider),
+                Container(
+                  height: 2,
+                  width: 26,
+                  color: CvDesignTokens.ruleForTemplate(cv.template),
+                ),
               ],
             ),
           ),

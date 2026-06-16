@@ -7,7 +7,10 @@ Future<void> savePdfFileForPlatform({
   required List<int> bytes,
   required String fileName,
 }) async {
-  final blob = web.Blob([Uint8List.fromList(bytes).toJS].toJS);
+  final blob = web.Blob(
+    [Uint8List.fromList(bytes).toJS].toJS,
+    web.BlobPropertyBag(type: 'application/pdf'),
+  );
   final url = web.URL.createObjectURL(blob);
   final anchor = web.HTMLAnchorElement()
     ..href = url

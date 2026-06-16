@@ -19,6 +19,7 @@ urlpatterns = [
     path('cv/', include('apps.cv.urls')),
     path('cv/', include('apps.pdf_generator.urls')),
     path('cv/', include('apps.cv_intelligence.urls')),
+    path('cv/review/', include('apps.resume_review.urls')),
 
     # Workflow Control System
     path('workflow/', include('apps.workflow.urls')),

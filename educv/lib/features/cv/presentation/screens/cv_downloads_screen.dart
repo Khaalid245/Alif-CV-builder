@@ -371,7 +371,15 @@ class _CVDownloadsScreenState extends ConsumerState<CVDownloadsScreen> {
   void _downloadCV(GeneratedCVModel cv) async {
     try {
       final repository = ref.read(pdfRepositoryProvider);
-      await repository.downloadPDF(cv.id);
+      final bytes = await repository.downloadPDF(cv.id);
+
+      final path = await FileSaver.savePDF(
+        bytes: bytes,
+        fileName: '${cv.templateDisplay}_CV.pdf',
+        templateName: cv.templateDisplay,
+      );
+
+      await FileSaver.openFile(path);
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

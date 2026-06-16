@@ -16,6 +16,7 @@ import 'package:educv/features/auth/presentation/providers/auth_provider.dart';
 import '../../providers/cv_provider.dart';
 import '../section_divider.dart';
 import '../target_role_picker.dart';
+import '../../providers/live_cv_provider.dart';
 
 class PersonalInfoStep extends ConsumerStatefulWidget {
   const PersonalInfoStep({super.key});
@@ -45,6 +46,26 @@ class _PersonalInfoStepState extends ConsumerState<PersonalInfoStep>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(cvFormSaveProvider.notifier).state = _saveData;
     });
+
+    _phoneController.addListener(_updateLiveProfile);
+    _cityController.addListener(_updateLiveProfile);
+    _countryController.addListener(_updateLiveProfile);
+    _linkedinController.addListener(_updateLiveProfile);
+    _githubController.addListener(_updateLiveProfile);
+    _portfolioController.addListener(_updateLiveProfile);
+    _summaryController.addListener(_updateLiveProfile);
+  }
+
+  void _updateLiveProfile() {
+    ref.read(liveCvProfileProvider.notifier).updateWith(
+      phone: _phoneController.text,
+      city: _cityController.text,
+      country: _countryController.text,
+      linkedin: _linkedinController.text,
+      github: _githubController.text,
+      portfolio: _portfolioController.text,
+      summary: _summaryController.text,
+    );
   }
 
   @override

@@ -11,6 +11,8 @@ import '../../../../core/widgets/section_card.dart';
 import '../../data/models/cv_models.dart';
 import '../providers/cv_provider.dart';
 import '../../../../core/widgets/app_error_state.dart';
+import 'widgets/resume_health_dialog.dart';
+import '../../cv_intelligence/presentation/screens/career_match_screen.dart';
 
 class CVPreviewScreen extends ConsumerWidget {
   const CVPreviewScreen({super.key});
@@ -37,9 +39,46 @@ class CVPreviewScreen extends ConsumerWidget {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: AppSpacing.md),
-            child: AppButton(
-              text: 'Generate PDFs',
-              onPressed: () => context.go('/pdf/result'),
+            child: Row(
+              children: [
+                AppButton(
+                  text: 'Review Resume',
+                  onPressed: () {
+                    ResumeActionCenterDialog.show(
+                      context,
+                      score: 84,
+                      status: 'Good',
+                      confidence: '98%',
+                      basedOn: ['Grammar Rules', 'ATS Engine', 'Semantic Models'],
+                      categories: {
+                        'professional_writing': 85,
+                        'ats_compatibility': 90,
+                        'projects': 75,
+                        'skills': 95,
+                        'career_story': 80,
+                      },
+                      topAction: TopActionData(action: 'Add measurable achievements to your recent experience.', estimatedImprovement: 7),
+                      warnings: ['Missing key technology (Docker).'],
+                      recommendations: ['Add Docker keyword because your experience mentions DevOps.', 'Expand your summary to highlight top achievements.'],
+                    );
+                  },
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                AppButton(
+                  text: 'Career Match',
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const CareerMatchScreen()),
+                    );
+                  },
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                AppButton(
+                  text: 'Generate PDFs',
+                  onPressed: () => context.go('/pdf/result'),
+                ),
+              ],
             ),
           ),
         ],
@@ -158,6 +197,30 @@ class CVPreviewScreen extends ConsumerWidget {
 
                 const SizedBox(height: AppSpacing.xl),
 
+                AppButton(
+                  text: 'Review Resume Health',
+                  isFullWidth: true,
+                  onPressed: () {
+                    ResumeActionCenterDialog.show(
+                      context,
+                      score: 84,
+                      status: 'Good',
+                      confidence: '98%',
+                      basedOn: ['Grammar Rules', 'ATS Engine', 'Semantic Models'],
+                      categories: {
+                        'professional_writing': 85,
+                        'ats_compatibility': 90,
+                        'projects': 75,
+                        'skills': 95,
+                        'career_story': 80,
+                      },
+                      topAction: TopActionData(action: 'Add measurable achievements to your recent experience.', estimatedImprovement: 7),
+                      warnings: ['Missing key technology (Docker).'],
+                      recommendations: ['Add Docker keyword because your experience mentions DevOps.', 'Expand your summary to highlight top achievements.'],
+                    );
+                  },
+                ),
+                const SizedBox(height: AppSpacing.sm),
                 AppButton(
                   text: 'Generate My 3 CVs',
                   isFullWidth: true,

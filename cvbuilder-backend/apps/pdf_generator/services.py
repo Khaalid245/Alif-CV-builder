@@ -19,6 +19,8 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils import timezone
 
+from .text_processor import TextProcessor
+
 logger = logging.getLogger(__name__)
 
 
@@ -43,6 +45,8 @@ class CVGenerationService:
         Raises CVGenerationError on any failure.
         """
         self._validate_minimum_data()
+        self._run_quality_validation()
+        
         context = self._fetch_student_data()
         output_dir = self._ensure_output_directory()
 
@@ -101,19 +105,61 @@ class CVGenerationService:
         if errors:
             raise CVGenerationError(' '.join(errors))
 
+    def _run_quality_validation(self):
+        """
+        Executes the ResumeValidator pipeline.
+        Blocks generation if CRITICAL errors are found (ERROR level).
+        Logs WARNING level issues for advisory purposes.
+        """
+        try:
+            from apps.cv_intelligence.validators import CVValidator
+            validator = CVValidator()
+            
+            # The validator calculates the 0-100 Quality Score and ATS parsability
+            result = validator.validate_cv_profile(self.student.cv_profile)
+            
+            # Differentiate between ERROR (critical) and WARNING (high/medium/low)
+            critical_errors = [
+                issue for issue in result.get('issues', [])
+                if issue.get('severity') == 'critical'
+            ]
+            
+            if critical_errors:
+                error_msgs = " | ".join(
+                    f"{e.get('section', 'CV').title()}: {e.get('message')}" 
+                    for e in critical_errors
+                )
+                raise CVGenerationError(f"CV Quality Check Failed: {error_msgs}. Please fix these critical issues before generating.")
+                
+            logger.info("CV Quality Validation passed with score: %s", result.get('overall_score'))
+            
+        except ImportError:
+            logger.warning("CVValidator not found, skipping quality validation.")
+        except CVGenerationError:
+            raise
+        except Exception as e:
+            logger.error("Error during CV quality validation: %s", e)
+            # Do not block generation if the validator itself crashes
+            pass
+
     # ── Data Fetching ──────────────────────────────────────────────────────────
 
     def _fetch_student_data(self) -> dict:
         """
-        Fetches all CV data and returns it as a flat context dict
-        ready to be passed into Django templates.
+        Fetches all CV data, runs it through the TextProcessor normalization
+        pipeline, and returns a clean context dict ready for Django templates.
+
+        Phase 1 — Text Quality Pipeline:
+          1. Fetch raw data from DB
+          2. Run TextProcessor (spell fix, wording, title case, dedup)
+          3. Return cleaned context
         """
         cv = self.student.cv_profile
 
         # Fetch skills once and filter in Python — avoids 3 separate DB queries
         all_skills = list(cv.skills.all().order_by('order', 'category', 'name'))
 
-        return {
+        raw_context = {
             'full_name':  self.student.full_name,
             'email':      self.student.email,
             'student_id': self.student.student_id,
@@ -139,6 +185,39 @@ class CVGenerationService:
             'other_skills':     [s for s in all_skills if s.category not in ('technical', 'soft')],
             'generated_at': timezone.now(),
         }
+
+        # Issue 8: Semantic Section Ordering
+        # Determine candidate type to decide section order
+        # Default order: Summary, Education, Experience, Skills, Projects, Certifications, Languages
+        section_order = ['summary', 'education', 'experience', 'skills', 'projects', 'certifications', 'languages']
+        
+        # Determine if they are Academic (target role or custom role implies academia, or many publications)
+        is_academic = False
+        target_role_name = (cv.target_role.name.lower() if cv.target_role else '')
+        custom_role_name = (cv.custom_role_name.lower() if cv.custom_role_name else '')
+        
+        if 'research' in target_role_name or 'research' in custom_role_name or 'phd' in custom_role_name or 'professor' in custom_role_name:
+            is_academic = True
+            
+        # Determine if they are Student (little experience, recent education)
+        is_student = False
+        if cv.educations.filter(is_current=True).exists() and cv.experiences.count() <= 1:
+            is_student = True
+            
+        if is_academic:
+            # Academic: Education, Research (Experiences), Publications (Projects), Awards (Certs), Skills, Languages
+            section_order = ['summary', 'education', 'experience', 'projects', 'certifications', 'skills', 'languages']
+        elif is_student:
+            # Student: Education, Projects, Skills, Experience
+            section_order = ['summary', 'education', 'projects', 'skills', 'experience', 'certifications', 'languages']
+        else:
+            # Professional: Summary, Experience, Skills, Projects, Education
+            section_order = ['summary', 'experience', 'skills', 'projects', 'education', 'certifications', 'languages']
+            
+        raw_context['section_order'] = section_order
+
+        # Phase 1 — run the text quality pipeline
+        return TextProcessor(raw_context).process()
 
     # ── Template Rendering ─────────────────────────────────────────────────────
 

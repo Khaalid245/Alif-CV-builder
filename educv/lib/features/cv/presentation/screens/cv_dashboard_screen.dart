@@ -8,6 +8,7 @@ import '../../../../core/theme/premium_saas_theme.dart';
 import '../../../../core/widgets/cv_dashboard_skeleton.dart';
 import '../../../../core/widgets/enterprise_loading.dart';
 import '../../../../core/utils/time_utils.dart';
+import '../../../../core/utils/file_saver.dart';
 import '../../../../core/widgets/breadcrumb_navigation.dart';
 import '../../../../core/widgets/help_tooltip.dart';
 import '../../../../core/layout/responsive_layout.dart';
@@ -1243,7 +1244,15 @@ class _CVDashboardScreenState extends ConsumerState<CVDashboardScreen>
   void _downloadCV(GeneratedCVModel cv) async {
     try {
       final repository = ref.read(pdfRepositoryProvider);
-      await repository.downloadPDF(cv.id);
+      final bytes = await repository.downloadPDF(cv.id);
+
+      final path = await FileSaver.savePDF(
+        bytes: bytes,
+        fileName: '${cv.templateDisplay}_CV.pdf',
+        templateName: cv.templateDisplay,
+      );
+
+      await FileSaver.openFile(path);
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

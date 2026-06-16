@@ -1,187 +1,241 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ full_name }} - CV</title>
-    <style>
-        * { box-sizing: border-box; }
-        body { 
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; 
-            margin: 0; 
-            padding: 0; 
-            color: #333;
-            line-height: 1.5;
-            display: flex;
-        }
-        /* Left Sidebar */
-        .sidebar {
-            width: 30%;
-            background-color: #10B981; /* Emerald Green */
-            color: white;
-            padding: 40px 20px;
-            min-height: 100vh;
-        }
-        .sidebar h1 {
-            font-size: 24px;
-            margin: 0 0 5px 0;
-            line-height: 1.2;
-        }
-        .sidebar .role {
-            font-size: 14px;
-            font-weight: 300;
-            opacity: 0.9;
-            margin-bottom: 30px;
-        }
-        .contact-info {
-            margin-bottom: 30px;
-            font-size: 12px;
-        }
-        .contact-info p { margin: 5px 0; }
-        .sidebar-section {
-            margin-bottom: 30px;
-        }
-        .sidebar-section h3 {
-            font-size: 16px;
-            text-transform: uppercase;
-            border-bottom: 1px solid rgba(255,255,255,0.3);
-            padding-bottom: 5px;
-            margin-bottom: 15px;
-        }
-        .skill-tag {
-            display: inline-block;
-            background: rgba(255,255,255,0.2);
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            margin: 0 4px 6px 0;
-        }
-        
-        /* Right Main Content */
-        .main-content {
-            width: 70%;
-            padding: 40px 40px;
-            background: white;
-        }
-        .section-title {
-            color: #10B981;
-            font-size: 20px;
-            text-transform: uppercase;
-            border-bottom: 2px solid #e0e0e0;
-            padding-bottom: 5px;
-            margin-bottom: 20px;
-            margin-top: 0;
-        }
-        .summary {
-            font-size: 13px;
-            margin-bottom: 30px;
-            color: #555;
-        }
-        
-        .item {
-            margin-bottom: 20px;
-        }
-        .item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 5px;
-        }
-        .item-title {
-            font-weight: bold;
-            font-size: 16px;
-            color: #222;
-        }
-        .item-subtitle {
-            font-style: italic;
-            color: #10B981;
-            font-size: 14px;
-        }
-        .item-date {
-            font-size: 12px;
-            color: #777;
-            font-weight: bold;
-        }
-        .item-desc {
-            font-size: 13px;
-            color: #555;
-            margin-top: 5px;
-        }
-    </style>
-</head>
-<body>
-    <div class="sidebar">
-        <h1>{{ full_name }}</h1>
-        <div class="role">Professional CV</div>
-        
-        <div class="contact-info">
-            <p>{{ email }}</p>
-            <p>{{ phone }}</p>
-            {% if city and country %}<p>{{ city }}, {{ country }}</p>{% endif %}
-        </div>
-        
-        {% if skills %}
-        <div class="sidebar-section">
-            <h3>Skills</h3>
-            <div>
-                {% for skill in skills %}
-                <span class="skill-tag">{{ skill.name }}</span>
-                {% endfor %}
-            </div>
-        </div>
-        {% endif %}
-        
-        {% if languages %}
-        <div class="sidebar-section">
-            <h3>Languages</h3>
-            <div>
-                {% for lang in languages %}
-                <p style="margin:0 0 5px 0; font-size:12px;">{{ lang.language }} - <span style="opacity:0.8">{{ lang.proficiency }}</span></p>
-                {% endfor %}
-            </div>
-        </div>
-        {% endif %}
+{% extends "cv_templates/base_cv.html" %}
+
+{% block theme_vars %}
+/*
+ * Modern Theme — Corporate Gray
+ * Palette: Near-black primary, sans-serif throughout, dark banner header.
+ * Character: Contemporary, tech-forward, startup/agency aesthetic.
+ * Best for: Technology, Design, Marketing, Product Management.
+ *
+ * To switch to Corporate Green — change only:
+ *   --color-primary:   #1a6b3a;
+ *   --color-header-bg: #1a6b3a;
+ */
+:root {
+  --color-primary:     #1c1c1c;   /* Corporate Gray — near-black */
+  --color-accent:      #444444;
+  --color-text:        #111111;
+  --color-muted:       #666666;
+  --color-rule:        #d0d0d0;
+  --color-bg-subtle:   #f8f8f8;
+  --color-header-bg:   #1c1c1c;   /* Dark banner — same as primary */
+  --color-header-text: #ffffff;
+  --font-primary:      'Trebuchet MS', 'Helvetica Neue', Arial, sans-serif;
+  --font-secondary:    'Trebuchet MS', 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Modern: clean sans-serif throughout — overrides base serif body */
+body {
+  font-family: var(--font-primary);
+}
+
+/* Modern: tighter letter-spacing, smaller section title for denser typographic rhythm */
+.section-title {
+  letter-spacing:    0.15em;
+  font-size:         7.5pt;
+  color:             var(--color-accent);
+  border-bottom-color: var(--color-rule);
+}
+
+/* Modern: slightly smaller entry titles for denser layout */
+.entry-title {
+  font-size: 10pt;
+}
+
+/* Modern: summary panel has a bolder left accent */
+.summary-panel {
+  border-left-width: 4pt;
+  border-left-color: var(--color-accent);
+  background:        var(--color-bg-subtle);
+}
+
+/* Modern: entry subtitle uses normal style (no italic) */
+.entry-subtitle {
+  font-style: normal;
+  font-weight: 500;
+}
+{% endblock %}
+
+{% block header %}
+<div class="header-dark">
+  <div class="header-name">{{ full_name }}</div>
+
+  <div class="header-tagline">
+    {% if educations %}{{ educations.0.field_of_study|default:educations.0.degree }}{% if educations.0.institution %}&nbsp;·&nbsp;{{ educations.0.institution }}{% endif %}{% endif %}
+    {% if city or country %}&nbsp;·&nbsp;{% if city %}{{ city }}{% if country %}, {% endif %}{% endif %}{{ country }}{% endif %}
+  </div>
+
+  <div class="header-contact">
+    {{ email }}
+    {% if phone %}&nbsp;·&nbsp;{{ phone }}{% endif %}
+    {% if linkedin %}&nbsp;·&nbsp;{{ linkedin }}{% endif %}
+    {% if github %}&nbsp;·&nbsp;{{ github }}{% endif %}
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+
+{% for section in section_order %}
+
+{% if section == 'summary' %}
+{# ── Personal Profile (Summary) ────────────────────────────────────────────── #}
+{% if summary %}
+<div class="section">
+  <div class="section-title">Personal Profile</div>
+  <div class="summary-panel">
+    <p class="summary-text">{{ summary }}</p>
+  </div>
+</div>
+{% endif %}
+{% endif %}
+
+{% elif section == 'skills' %}
+{# ── Key Skills — technical + soft combined ────────────────────────────────── #}
+{% if technical_skills or soft_skills %}
+<div class="section">
+  <div class="section-title">Key Skills</div>
+  <ul class="skills-bullets">
+    {% for skill in technical_skills %}
+    <li>
+      {{ skill.name }}
+      {% if skill.level and skill.level != 'intermediate' %}
+      <span class="skill-level">({{ skill.get_level_display }})</span>
+      {% endif %}
+    </li>
+    {% endfor %}
+    {% for skill in soft_skills %}
+    <li>{{ skill.name }}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+{% endif %}
+
+{% elif section == 'experience' %}
+{# ── Work Experience ───────────────────────────────────────────────────────── #}
+{% if experiences %}
+<div class="section">
+  <div class="section-title">Work Experience</div>
+  {% for exp in experiences %}
+  <div class="entry">
+    <div class="entry-header">
+      <span class="entry-title">{{ exp.job_title }}</span>
+      <span class="entry-date">
+        {{ exp.start_date|date:"M Y" }} – {% if exp.is_current %}Present{% else %}{{ exp.end_date|date:"M Y" }}{% endif %}
+      </span>
     </div>
-    
-    <div class="main-content">
-        {% if summary %}
-        <h2 class="section-title">Profile</h2>
-        <div class="summary">
-            {{ summary }}
-        </div>
-        {% endif %}
-        
-        {% if experiences %}
-        <h2 class="section-title">Experience</h2>
-        <div class="experience-list">
-            {% for exp in experiences %}
-            <div class="item">
-                <div class="item-header">
-                    <span class="item-title">{{ exp.position }}</span>
-                    <span class="item-date">{{ exp.start_date }} - {{ exp.end_date|default:"Present" }}</span>
-                </div>
-                <div class="item-subtitle">{{ exp.company }}</div>
-                {% if exp.description %}
-                <div class="item-desc">{{ exp.description }}</div>
-                {% endif %}
-            </div>
-            {% endfor %}
-        </div>
-        {% endif %}
-        
-        {% if educations %}
-        <h2 class="section-title">Education</h2>
-        <div class="education-list">
-            {% for edu in educations %}
-            <div class="item">
-                <div class="item-header">
-                    <span class="item-title">{{ edu.degree }}</span>
-                    <span class="item-date">{{ edu.start_year }} - {{ edu.end_year|default:"Present" }}</span>
-                </div>
-                <div class="item-subtitle">{{ edu.institution }}</div>
-            </div>
-            {% endfor %}
-        </div>
-        {% endif %}
+    <div class="entry-subtitle">
+      {{ exp.company }}{% if exp.location %}, {{ exp.location }}{% endif %}
     </div>
-</body>
-</html>
+    {% if exp.description %}
+    <ul class="entry-bullets">
+      {% for line in exp.description.splitlines %}
+      {% if line.strip %}<li>{{ line.strip }}</li>{% endif %}
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endif %}
+
+{% elif section == 'education' %}
+{# ── Education ─────────────────────────────────────────────────────────────── #}
+{% if educations %}
+<div class="section">
+  <div class="section-title">Education</div>
+  {% for edu in educations %}
+  <div class="entry">
+    <div class="entry-header">
+      <span class="entry-title">
+        {{ edu.degree }}{% if edu.field_of_study %} &mdash; {{ edu.field_of_study }}{% endif %}
+      </span>
+      <span class="entry-date">
+        {{ edu.start_year }} – {% if edu.is_current %}Present{% else %}{{ edu.end_year }}{% endif %}
+      </span>
+    </div>
+    <div class="entry-subtitle">
+      {{ edu.institution }}{% if edu.gpa %}&nbsp;·&nbsp;GPA: {{ edu.gpa|floatformat:2 }} / 4.00{% endif %}
+    </div>
+    {% if edu.description %}
+    <ul class="entry-bullets">
+      {% for line in edu.description.splitlines %}
+      {% if line.strip %}<li>{{ line.strip }}</li>{% endif %}
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endif %}
+
+{% elif section == 'projects' %}
+{# ── Projects ──────────────────────────────────────────────────────────────── #}
+{% if projects %}
+<div class="section">
+  <div class="section-title">Projects</div>
+  {% for proj in projects %}
+  <div class="entry">
+    <div class="entry-header">
+      <span class="entry-title">{{ proj.title }}</span>
+      {% if proj.start_date %}
+      <span class="entry-date">
+        {{ proj.start_date|date:"M Y" }}{% if proj.end_date %} – {{ proj.end_date|date:"M Y" }}{% endif %}
+      </span>
+      {% endif %}
+    </div>
+    {% if proj.description %}
+    <ul class="entry-bullets">
+      {% for line in proj.description.splitlines %}
+      {% if line.strip %}<li>{{ line.strip }}</li>{% endif %}
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% if proj.link %}
+    <p style="font-size: var(--fs-meta); color: var(--color-muted); margin-top: var(--sp-1);">
+      {{ proj.link }}
+    </p>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endif %}
+
+{% elif section == 'certifications' %}
+{# ── Certifications ────────────────────────────────────────────────────────── #}
+{% if certifications %}
+<div class="section">
+  <div class="section-title">Certifications</div>
+  {% for cert in certifications %}
+  <div class="cert-row">
+    <span class="cert-name">{{ cert.name }} ({{ cert.issuer }}, {{ cert.issue_date|date:"Y" }})</span>
+    <span class="cert-year"></span>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endif %}
+
+{% elif section == 'languages' %}
+{# ── Languages ─────────────────────────────────────────────────────────────── #}
+{% if languages %}
+<div class="section">
+  <div class="section-title">Languages</div>
+  <ul class="skills-bullets">
+    {% for lang in languages %}
+    <li>{{ lang.language }} <span class="skill-level">({{ lang.get_proficiency_display }})</span></li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+</div>
+{% endif %}
+
+{% endif %}
+{% endfor %}
+
+{% endblock %}

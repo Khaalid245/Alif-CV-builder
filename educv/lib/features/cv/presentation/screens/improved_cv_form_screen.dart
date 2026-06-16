@@ -15,6 +15,7 @@ import '../widgets/form_steps/certifications_step.dart';
 import '../widgets/cv_form_step_shell.dart';
 import '../widgets/cv_form_bottom_bar.dart';
 import '../../../../core/layout/responsive_layout.dart';
+import '../widgets/live_preview/cv_live_preview_widget.dart';
 
 class ImprovedCVFormScreen extends ConsumerStatefulWidget {
   final int initialStep;
@@ -132,7 +133,7 @@ class _ImprovedCVFormScreenState extends ConsumerState<ImprovedCVFormScreen>
           final step = _steps[currentStep];
           final isLastStep = currentStep == _steps.length - 1;
 
-          return Column(
+          final formColumn = Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               _buildFormToolbar(currentStep, completion, deviceType),
@@ -166,6 +167,25 @@ class _ImprovedCVFormScreenState extends ConsumerState<ImprovedCVFormScreen>
               ),
             ],
           );
+
+          if (!deviceType.isMobile) {
+            // Split Screen Layout
+            return Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: formColumn,
+                ),
+                Container(width: 1, color: PremiumSaaSTheme.lightBorder),
+                const Expanded(
+                  flex: 1,
+                  child: CVLivePreviewWidget(),
+                ),
+              ],
+            );
+          }
+
+          return formColumn;
         },
       ),
     );

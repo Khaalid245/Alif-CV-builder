@@ -5,6 +5,7 @@ import '../../../../core/layout/responsive_layout.dart';
 import '../../../../core/widgets/enterprise_ui_components.dart';
 import '../../../../core/widgets/modern_sidebar.dart';
 import '../../../../core/widgets/modern_top_bar.dart';
+import '../../cv/presentation/widgets/resume_health_dialog.dart';
 
 class EnterpriseDashboardScreen extends StatefulWidget {
   const EnterpriseDashboardScreen({super.key});
@@ -337,10 +338,28 @@ class _EnterpriseDashboardScreenState extends State<EnterpriseDashboardScreen>
                   accentColor: EnterpriseTheme.accentBlue,
                 ),
                 ActionCard(
-                  title: 'Improve with AI',
-                  description: 'Get AI-powered suggestions and optimizations',
-                  icon: LucideIcons.sparkles,
-                  onTap: () {},
+                  title: 'Resume Health',
+                  description: 'Review your CV score, warnings, and recommendations',
+                  icon: LucideIcons.activity,
+                  onTap: () {
+                    ResumeActionCenterDialog.show(
+                      context,
+                      score: 84,
+                      status: 'Good',
+                      confidence: '98%',
+                      basedOn: ['Grammar Rules', 'ATS Engine', 'Semantic Models'],
+                      categories: {
+                        'professional_writing': 85,
+                        'ats_compatibility': 90,
+                        'projects': 75,
+                        'skills': 95,
+                        'career_story': 80,
+                      },
+                      topAction: TopActionData(action: 'Add measurable achievements to your recent experience.', estimatedImprovement: 7),
+                      warnings: ['Missing key technology (Docker).'],
+                      recommendations: ['Add Docker keyword because your experience mentions DevOps.', 'Expand your summary to highlight top achievements.'],
+                    );
+                  },
                   accentColor: EnterpriseTheme.accentTeal,
                 ),
               ],

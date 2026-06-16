@@ -71,7 +71,13 @@ class SkillSerializer(serializers.ModelSerializer):
         read_only_fields = ['id']
 
     def validate_name(self, value):
-        """Prevent duplicate skill names within the same CV."""
+        """Prevent duplicate skill names and enforce strict schema (max 4 words)."""
+        words = value.strip().split()
+        if len(words) > 4:
+            raise serializers.ValidationError(
+                "Skill name must be concise (maximum 4 words). Do not mix experience into skills."
+            )
+        
         request = self.context.get('request')
         if not request:
             return value
@@ -117,6 +123,17 @@ class ProjectSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {'end_date': 'End date cannot be before start date.'}
             )
+            
+        instance = getattr(self, 'instance', None)
+        description = attrs.get('description')
+        if description is None and instance:
+            description = instance.description
+            
+        if not description or len(description.strip()) < 20:
+            raise serializers.ValidationError(
+                {'description': 'Project description must be at least 20 characters.'}
+            )
+            
         return attrs
 
 

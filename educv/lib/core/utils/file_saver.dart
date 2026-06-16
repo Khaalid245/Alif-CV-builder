@@ -1,4 +1,7 @@
-import '../utils/date_formatter.dart';
+import 'dart:typed_data';
+import 'date_formatter.dart';
+import 'file_saver_platform_io.dart'
+    if (dart.library.html) 'file_saver_platform_web.dart';
 
 class FileSaver {
   static Future<String> saveFile({
@@ -8,10 +11,8 @@ class FileSaver {
   }) async {
     final timestamp = DateFormatter.fileDate(DateTime.now());
     final finalFileName = '${timestamp}_$fileName';
-
-    // In a real implementation, this would save to device storage
-    // For now, return a mock path
-    return '/downloads/$finalFileName';
+    final uint8list = bytes is Uint8List ? bytes : Uint8List.fromList(bytes);
+    return savePdfForPlatform(bytes: uint8list, fileName: finalFileName);
   }
 
   static Future<String> savePDF({
@@ -20,14 +21,21 @@ class FileSaver {
     String? templateName, // Optional alias for backward compatibility
     String? directory,
   }) async {
-    // Use templateName if provided, otherwise use fileName
-    final finalFileName = templateName ?? fileName;
+    // Ensure the filename has .pdf extension
+    String finalFileName = templateName ?? fileName;
+    if (!finalFileName.toLowerCase().endsWith('.pdf')) {
+      finalFileName = '${finalFileName}_CV.pdf';
+    }
     return saveFile(
         bytes: bytes, fileName: finalFileName, directory: directory);
   }
 
   static Future<bool> openFile(String filePath) async {
-    // Mock implementation - would use url_launcher or similar
-    return true;
+    try {
+      await openFileForPlatform(filePath);
+      return true;
+    } catch (_) {
+      return false;
+    }
   }
 }
